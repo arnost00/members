@@ -1,0 +1,30 @@
+<?
+
+/*
+
+	Configuration data
+	Copy this file as '_globals.php' and set your real data for running members
+
+*/
+
+//==================================================================
+// global values file
+//==================================================================
+// Copyright (c) 2003 by Arnost & Kenia
+//==================================================================
+
+// pocet dni pro zobrazeni zavodu ve vyhledu
+define ('GC_SHOW_RACE_DAYS',60);
+
+// pocet dni pro zobrazeni prihlasek ve vyhledu
+define ('GC_SHOW_REG_DAYS',60);
+
+// pocet zobrazenych novinek
+define ('GC_NEWS_LIMIT',20);
+
+// minimalni nezobrazeny vek
+define ('GC_SHOW_AGE_LIMIT',21);
+
+// minimalni pocet zavodu pro zobrazeni odkazu na aktualni zavody
+define ('GC_MIN_RACES_2_SHOW_LINK',25)
+?>

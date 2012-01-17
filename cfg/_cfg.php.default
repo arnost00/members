@@ -1,0 +1,72 @@
+<?
+
+/*
+
+	Configuration data
+	Copy this file as '_cfg.php' and set your real data for running members
+
+*/
+
+//==================================================================
+// config file
+//==================================================================
+// Copyright (c) 2002-2003 by Arnost & Kenia
+//==================================================================
+
+//==================================================================
+// db server
+//==================================================================
+// adresa db serveru
+$g_dbserver='localhost';
+
+// uzivatelske informace
+$g_dbuser='root';
+$g_dbpass='root';
+
+// jmeno databaze
+$g_dbname='members';
+
+// typ ceskeho trideni v db. (1 = cs-iso, 2 = cs-win1250)
+$g_czech_sort=2;
+
+//==================================================================
+// http server
+//==================================================================
+// jmeno WWW serveru
+$g_shortcut='ZBM';
+$g_fullname='SK Žabovøesky Brno';
+$g_www_title= $g_shortcut.' :: '.$g_fullname;
+$g_www_name= $g_shortcut.' - '.$g_fullname;
+
+$g_www_meta_description = "Stránky oddílu orientaèního bìhu ".$g_fullname;
+$g_www_meta_keyword = $g_shortcut.", Žabovøesky, Zabovresky";
+
+// zakladni URL adresa WWW serveru (ukoncen "/" !!)
+$g_baseadr='http://localhost/members/';
+
+// adresa hlavnich stranek oddilu
+$g_mainwww='http://localhost/';
+
+// e-mailove adresy
+$g_emailadr='email@eob.cz';
+// Logovat informace o neuspesnem prihlaseni
+$g_log_loginfailed=true;
+
+$g_is_release = true;
+
+//==================================================================
+// customization
+//==================================================================
+$g_mail_in_public_directory = true;
+
+// vedouci na zavody
+$g_enable_race_boss = true;
+
+define ('GURRT_COMBOBOX',1);	// combo box
+define ('GURRT_EDITBOX',2);		// edit box with buttons
+$g_user_race_reg_type = GURRT_EDITBOX;
+
+$g_club_logo_size['H'] = 70;
+$g_club_logo_size['W'] = 156;
+
+?>
