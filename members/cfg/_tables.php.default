@@ -1,0 +1,24 @@
+<?
+
+/*
+
+	Configuration data
+	Copy this file as '_tables.php' and set your real data for running members
+
+*/
+
+//==================================================================
+// tables defines file
+//==================================================================
+// Copyright (c) 2002-2003 by Arnost & Kenia
+//==================================================================
+
+define ('TBL_RACE','zavod');
+define ('TBL_NEWS','news');
+define ('TBL_USER','users');
+define ('TBL_ACCOUNT','accounts');
+define ('TBL_USXUS','usxus');
+define ('TBL_ZAVXUS','zavxus');
+define ('TBL_MODLOG','modify_log');
+
+?>
