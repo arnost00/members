@@ -1,5 +1,8 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?php /* adminova stranka - oprava tabulky usxzav */
+
+@extract($_REQUEST);
+
 require ("./connect.inc.php");
 require ("./sess.inc.php");
 

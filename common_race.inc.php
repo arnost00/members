@@ -18,31 +18,81 @@ $g_zebricek [6]['nm'] = 'Veøejný';
 
 $g_zebricek_cnt = 7;
 
+$g_racetype [0]['id'] = 0x0001;
+$g_racetype [0]['nm'] = 'OB';
+$g_racetype [0]['enum'] = 'ob';
+$g_racetype [0]['img'] = 'fot';
+$g_racetype [1]['id'] = 0x0002;
+$g_racetype [1]['nm'] = 'MTBO';
+$g_racetype [1]['enum'] = 'mtbo';
+$g_racetype [1]['img'] = 'mbo';
+$g_racetype [2]['id'] = 0x0004;
+$g_racetype [2]['nm'] = 'LOB';
+$g_racetype [2]['enum'] = 'lob';
+$g_racetype [2]['img'] = 'ski';
+$g_racetype [3]['id'] = 0x0008;
+$g_racetype [3]['nm'] = 'O-Trail';
+$g_racetype [3]['enum'] = 'trail';
+$g_racetype [3]['img'] = 'trl';
+$g_racetype [4]['id'] = 0x0010;
+$g_racetype [4]['nm'] = 'Jiné';
+$g_racetype [4]['enum'] = 'jine';
+$g_racetype [4]['img'] = 'mcs';
+
+$g_racetype_cnt = 5;
+
+$g_modify_flag [0]['id'] = 0x0001;
+$g_modify_flag [0]['nm'] = 'Termín pøihlášek';
+$g_modify_flag [1]['id'] = 0x0002;
+$g_modify_flag [1]['nm'] = 'Závod pøidán';
+$g_modify_flag [2]['id'] = 0x0004;
+$g_modify_flag [2]['nm'] = 'Termin závodu';
+
+$g_modify_flag_cnt = 3;
+
 function GetRaceTypeName($value)
 {
-	switch ($value)
+	global $g_racetype_cnt;
+	global $g_racetype;
+
+	for($ii=0; $ii<$g_racetype_cnt; $ii++)
 	{
-	case 'ob' : return 'OB';
-	case 'mtbo' : return 'MTBO';
-	case 'lob' : return 'LOB';
-	case 'jine': return 'jiné';
-	default : return '-';
+		if($value == $g_racetype [$ii]['enum'])
+			return $g_racetype [$ii]['nm'];
 	}
+	return '-';
+}
+
+function GetRaceTypeNameSpec($value)
+{
+	global $g_racetype_cnt;
+	global $g_racetype;
+
+	$result = '';
+	for($ii=0; $ii<$g_racetype_cnt; $ii++)
+	{
+		if(($value & $g_racetype [$ii]['id']) != 0)
+			$result .= $g_racetype [$ii]['nm'].', ';
+	}
+	if(strlen($result) > 0)
+		return substr($result,0,strlen($result)-2);
+	else
+		return '-';
 }
 
 function GetRaceTypeImg(&$value)
 {
-	$img = '';
-	$alt = '';
-	switch ($value)
+	global $g_racetype_cnt;
+	global $g_racetype;
+
+	for($ii=0; $ii<$g_racetype_cnt; $ii++)
 	{
-	case 'mtbo' : $img = 'mbo'; $alt = 'MTBO'; break;
-	case 'lob' : $img = 'ski'; $alt = 'LOB'; break;
-	case 'jine': $img = 'mcs'; $alt = 'jiné'; break;
-	case 'ob' :
-	default : $img = 'fot'; $alt = 'OB';
+		if($value == $g_racetype [$ii]['enum'])
+		{
+			return '<img src="imgs/'.$g_racetype [$ii]['img'].'16.gif" width="16" height="16" alt='.$g_racetype [$ii]['nm'].'>';
+		}
 	}
-	return '<img src="imgs/'.$img.'16.gif" width="16" height="16" alt='.$alt.'>';
+	return '?';
 }
 
 function GetZebricekName2($value)
@@ -70,8 +120,50 @@ function CreateZebricekNumber(&$zebricek)
 	$result = 0;
 	for($ii=0; $ii<$g_zebricek_cnt; $ii++)
 	{
-		if($zebricek[$ii] == 1)
+		if(isset($zebricek[$ii]) && $zebricek[$ii] == 1)
 			$result += $g_zebricek [$ii]['id'];
+	}
+	return $result;
+}
+
+function CreateRaceTypeNumber(&$racetype)
+{
+	global $g_racetype_cnt;
+	global $g_racetype;
+
+	$result = 0;
+	for($ii=0; $ii<$g_racetype_cnt; $ii++)
+	{
+		if(isset($racetype[$ii]) && $racetype[$ii] == 1)
+			$result += $g_racetype [$ii]['id'];
+	}
+	return $result;
+}
+
+function CreateModifyFlag(&$mflags)
+{
+	global $g_modify_flag_cnt;
+	global $g_modify_flag;
+
+	$result = 0;
+	for($ii=0; $ii<$g_modify_flag_cnt; $ii++)
+	{
+		if(isset($mflags[$ii]) && $mflags[$ii] == 1)
+			$result += $g_modify_flag [$ii]['id'];
+	}
+	return $result;
+}
+
+function GetModifyFlagDesc(&$mflags)
+{
+	global $g_modify_flag_cnt;
+	global $g_modify_flag;
+
+	$result = '';
+	for($ii=0; $ii<$g_modify_flag_cnt; $ii++)
+	{
+		if(($mflags & $g_modify_flag[$ii]['id']) != 0)
+			$result .= (($result != '')?', ':'').$g_modify_flag [$ii]['nm'];
 	}
 	return $result;
 }
@@ -97,7 +189,7 @@ $g_kategorie ['oblz_vetsi'] = 'D10N;D12C;D14C;D16C;D18C;D21C;D21D;D35C;D45C;D55C
 $g_kategorie ['becka'] = 'D12B;D14B;D16B;D18B;D20B;D21B;D21C;D35B;D40B;D45B;D50B;D55B;D60B;D65B;H12B;H14B;H16B;H18B;H20B;H21B;H21C;H35B;H40B;H45B;H50B;H55B;H60B;H65B;H70B;H75B;';
 $g_kategorie ['acka'] = 'D16A;D18A;D20A;D21A;D21E;H16A;H18A;H20A;H21A;H21E;';
 $g_kategorie ['stafety'] = 'D14;D18;D21;D105;D140;H14;H18;H21;H105;H140;H165;dorost;dospìlí;HD175;HD235;';
-$g_kategorie ['MTBO'] = 'HE;DE;H19-39A;H19-39B;D;H14-18;D14-18;H40;';
+$g_kategorie ['MTBO'] = 'H21E;D21E;H21A;H21B;H21C;D21;H14;H17;H20;D14;D17;D20;H40;D40;';
 
 require('./common_race2.inc.php');
 

@@ -36,6 +36,13 @@ header("Pragma: no-cache");
 	//-->
 	</script>
 </HEAD>
+
+<?
+if (!isset($g_colors))
+{
+require("./cfg/_colors.php");
+}
+?>
 <BODY text="<? echo $g_colors['body_text'];?>" bgcolor="<? echo $g_colors['body_bgcolor'];?>">
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">

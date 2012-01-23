@@ -1,5 +1,6 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
+@extract($_REQUEST);
 
 require ("./timestamp.inc.php");
 _set_global_RT_Start();
@@ -50,6 +51,7 @@ $col = 0;
 $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $i=0;
 $races_arr = array();
+$race_msg = array();
 while ($race=MySQL_Fetch_Array($races))
 {
 	$datum= Date2StringDM($race["datum"]);
@@ -120,6 +122,9 @@ for($ii=0; $ii<sizeof($races_arr); $ii++)
 echo $data_tbl->get_new_row_arr($tbl_row)."\n";
 
 echo $data_tbl->get_footer()."\n";
+
+if (sizeof($race_msg) > 0)
+{
 ?>
 
 <script src="tooltip.js" type="text/javascript"></script>
@@ -136,6 +141,8 @@ echo $data_tbl->get_footer()."\n";
 </script>
 <div id="tipDiv" style="position:absolute; visibility:hidden; z-index:100"></div>
 <?
+}
+
 _set_global_RT_End();
 if (!$g_is_release || IsLoggedAdmin())
 {

@@ -25,7 +25,14 @@ $fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
 $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB);
 
-@$vysledek=MySQL_Query("SELECT id,datum,typ,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum');
+if (!$g_is_release)
+{	// pri debug zobrazit
+	@$vysledek=MySQL_Query("SELECT id,datum,typ,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto,modify_flag FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum');
+}
+else
+{
+	@$vysledek=MySQL_Query("SELECT id,datum,typ,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum');
+}
 
 ShowRefreshInfo(true);
 
@@ -39,7 +46,10 @@ $data_tbl->set_header_col($col++,'T',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'W',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Kat',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Úpravy',ALIGN_CENTER);
-
+if (!$g_is_release)
+{	// pri debug zobrazit
+	$data_tbl->set_header_col($col++,'Zmìny',ALIGN_CENTER);
+}
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
@@ -73,6 +83,10 @@ if($vysledek && ($num_rows = mysql_num_rows($vysledek)) > 0)
 		$row[] = GetRaceLinkHTML($zaznam['odkaz']);
 		$row[] = (strlen($zaznam['kategorie']) > 0) ? 'A' :'<span class="TextAlertBold">N</span>';
 		$row [] = "<A HREF=\"javascript:open_win('./race_edit.php?id=".$zaznam['id']."','')\">Edit</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_kat.php?id=".$zaznam['id']."','')\">Kategorie</A>&nbsp;/&nbsp;<A HREF=\"./race_del_exc.php?id=".$zaznam["id"]."\" onclick=\"return confirm_delete();\" class=\"Erase\">Smazat</A>";
+		if (!$g_is_release)
+		{	// pri debug zobrazit
+			$row[] = GetModifyFlagDesc($zaznam['modify_flag']);
+		}
 		if (!$brk_tbl && $zaznam['datum'] >= GetCurrentDate())
 		{
 			if($i != 1)

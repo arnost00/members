@@ -1,5 +1,5 @@
 <?
-	$file_name = '.browser_log.txt';
+	$file_name = dirname(__FILE__) . '/logs/.browser_log.txt';
 	$fp = fopen( $file_name, 'a');
 	
 	$ipa = getenv ('REMOTE_ADDR');

@@ -1,5 +1,7 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
+@extract($_REQUEST);
+
 require ("./connect.inc.php");
 require ("./sess.inc.php");
 require("./cfg/_colors.php");
@@ -70,10 +72,13 @@ else
 	<TD width="5"></TD>
 	<TD>
 		<select name='typ'>
-			<option value='ob' SELECTED><? echo GetRaceTypeName ('ob') ?></option>
-			<option value='mtbo'><? echo GetRaceTypeName ('mtbo') ?></option>
-			<option value='lob'><? echo GetRaceTypeName ('lob') ?></option>
-			<option value='jine'><? echo GetRaceTypeName ('jine') ?></option>
+<?
+		$tmp_typ = $g_racetype [0]['enum'];
+		for ($ii = 0; $ii < $g_racetype_cnt; $ii++)
+		{
+			echo("\t\t\t<option value='".$g_racetype [$ii]['enum']."'".(($tmp_typ==$g_racetype [$ii]['enum'])?' SELECTED':'').">".$g_racetype [$ii]['nm']."</option>\n");
+		}
+?>
 		</select>
 	</TD>
 </TR>

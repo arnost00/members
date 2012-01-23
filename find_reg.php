@@ -1,4 +1,6 @@
 <?
+@extract($_REQUEST);
+
 $reg = (isset($reg)) ? $reg : '';
 $year = (isset($year)) ? (int)$year : 0;
 $sex = (isset($sex)) ? $sex : 'H';

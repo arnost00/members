@@ -1,5 +1,7 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?php /* novinky - editace (pridavani) novinek */
+@extract($_REQUEST);
+
 require ('./connect.inc.php');
 require ('./sess.inc.php');
 require ('./common.inc.php');

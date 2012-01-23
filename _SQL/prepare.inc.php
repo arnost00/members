@@ -1,4 +1,5 @@
 <?
+@extract($_REQUEST);
 $this_file_name = 'zmeny_'.$version_upd.'.sql.php';
 
 require ('connect.inc.php');

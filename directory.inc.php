@@ -27,10 +27,10 @@ DrawPageTitle('Adresáø èlenù oddílu',false);
 include ("./common_user.inc.php");
 
 $columns = 'id, prijmeni,jmeno,email,hidden,reg';
-@$vysledek=MySQL_Query("SELECT ".$columns." FROM ".TBL_USER." ORDER BY sort_name ASC")
-	or die("Chyba pøi provádìní dotazu do databáze.");
+@$vysledek=MySQL_Query("SELECT ".$columns." FROM ".TBL_USER." ORDER BY sort_name ASC");
 
-
+if (($vysledek != FALSE) && mysql_num_rows($vysledek) > 0)
+{ // aspon jeden zaznam
 $data_tbl = new html_table_mc();
 $col = 0;
 
@@ -78,5 +78,11 @@ E-mailové adresy v neupravené podobì se zobrazují po pøihlášení se do systému.<b
 Jiná možnost jak získat správnou e-mailovou adresu je nahrazením textu "(zavináè)" znakem "<? echo($char_at);?>" a "(teèka)" znakem ".".<br>
 <?
 }
-?><BR>
+} // aspon jeden zaznam
+else
+{
+	echo "Seznam èlenù oddílu je prázdný.<BR>";
+}
+?>
+<BR>
 </CENTER>

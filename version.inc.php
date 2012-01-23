@@ -9,12 +9,12 @@ if (!defined('SYSTEM_VERSION_INCLUDED'))
 
 	function GetCodeVersion()
 	{
-		return "v2.1.0.82 dbg";
+		return "v2.1.0.88 dbg";
 	}
 
 	function GetDevelopYears()
 	{
-		return "2002-2010";
+		return "2002-2012";
 	}
 
 }	// define (SYSTEM_VERSION_INCLUDED)

@@ -1,5 +1,7 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
+@extract($_REQUEST);
+
 require("./cfg/_cfg.php");
 require ("./sess.inc.php");
 require ("./common.inc.php");
@@ -20,6 +22,7 @@ if (IsSet($code) && $code != 0)
 		31 => 'Nemáte pøístupová práva pro psaní a mazání novinek, kontaktujte správce stránek.',
 		32 => 'Je potøeba zadat nìjaké údaje pro vytvoøení novinky.',
 		42 => 'Je potøeba zadat nìjaké údaje pro vytvoøení závodu.',
+		52 => 'Je potøeba zadat nìjaké údaje pro zmìnu upozoròování na email.',
 		101 => 'Neexistující uživatel. Zadejte správné uživatelské jméno.',
 		102 => 'Špatnì zadané heslo! Zkuste zadat heslo znovu.',
 		103 => 'Uèet je zablokován! Pokud nevíte dùvod, kontaktujte správce stránek.',
@@ -39,7 +42,7 @@ if (IsSet($code) && $code != 0)
 		$scd = $cd["mday"].".".$cd["mon"].".".$cd["year"]." - ".$cd["hours"].":".$cd["minutes"].".".$cd["seconds"];
 		$hr = (IsSet($HTTP_REFERER)) ? $HTTP_REFERER : '?';
 		$str = $ipa."\t".$scd."\terr:".$code."\t".$www."\t".gethostbyaddr($ipa)."\tREF[".$hr."]\r\n";
-		LogToFile('.errors.txt',$str);
+		LogToFile(dirname(__FILE__) . '/logs/.errors.txt',$str);
 	}
 	//<-- log file
 }

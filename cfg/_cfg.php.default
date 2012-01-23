@@ -69,4 +69,8 @@ $g_user_race_reg_type = GURRT_EDITBOX;
 $g_club_logo_size['H'] = 70;
 $g_club_logo_size['W'] = 156;
 
+$g_enable_mailinfo = true;
+$g_mailinfo_minimal_daysbefore = 1;
+$g_mailinfo_maximal_daysbefore = 14;
+
 ?>

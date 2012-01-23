@@ -1,5 +1,6 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
+@extract($_REQUEST);
 
 require("./cfg/_colors.php");
 require ("./connect.inc.php");

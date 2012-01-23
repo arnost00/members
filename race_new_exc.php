@@ -1,5 +1,7 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
+@extract($_REQUEST);
+
 require ("./connect.inc.php");
 require ("./sess.inc.php");
 include ("./common.inc.php");
@@ -30,6 +32,7 @@ else
 }
 
 $zebricek2 = CreateZebricekNumber($zebricek);
+$modify_flag = $g_modify_flag [1]['id'];
 
 $prihlasky1 = String2DateDMY($prihlasky1);
 $prihlasky2 = String2DateDMY($prihlasky2);
@@ -53,7 +56,7 @@ if ($datum=='' || ($datum2=='' && $rtype == 1) || $nazev=='')
 }
 else
 {
-	$result=MySQL_Query("INSERT INTO ".TBL_RACE." (datum, datum2, nazev, misto, typ, zebricek, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, etap, poznamka, vicedenni, oddil) VALUES ('$datum', '$datum2', '$nazev', '$misto', '$typ', '$zebricek2', '$ranking', '$odkaz', '$prihlasky', '$prihlasky1', '$prihlasky2', '$prihlasky3', '$prihlasky4', '$prihlasky5', '$etap', '$poznamka', '$vicedenni', '$oddil')")
+	$result=MySQL_Query("INSERT INTO ".TBL_RACE." (datum, datum2, nazev, misto, typ, zebricek, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, etap, poznamka, vicedenni, oddil,modify_flag) VALUES ('$datum', '$datum2', '$nazev', '$misto', '$typ', '$zebricek2', '$ranking', '$odkaz', '$prihlasky', '$prihlasky1', '$prihlasky2', '$prihlasky3', '$prihlasky4', '$prihlasky5', '$etap', '$poznamka', '$vicedenni', '$oddil', '$modify_flag')")
 		or die("Chyba pøi provádìní dotazu do databáze.");
 	if ($result == FALSE)
 		die ("Nepodaøilo se vložit údaje o závodì.");

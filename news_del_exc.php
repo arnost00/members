@@ -1,4 +1,6 @@
 <?php /* novinky - mazani novinek */
+@extract($_REQUEST);
+
 require ("./connect.inc.php");
 require ("./sess.inc.php");
 
