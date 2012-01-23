@@ -344,7 +344,7 @@ function GetRaceLinkHTML($link,$img=true)
 	if ($link != '')
 	{
 		$odkaz = '<A href="'.cononize_url($link,1).'" target="_blank">';
-		$odkaz .= ($img) ? '<img src="imgs/web.gif" border="0" align="middle">' : 'zde';
+		$odkaz .= ($img) ? '<img src="imgs/web.gif" border="0" valign="middle">' : 'zde';
 		$odkaz .= '</A>';
 	}
 	else

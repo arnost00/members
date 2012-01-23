@@ -28,7 +28,7 @@ if (!IsLogged())
 			$cd = getdate();
 			$scd = $cd['mday'].'.'.$cd['mon'].'.'.$cd['year'].' - '.$cd['hours'].':'.$cd['minutes'].'.'.$cd['seconds'];
 			$msg = 'username | '.$scd.' | user : '.$login.' | IP : '.$ipa.' ('.gethostbyaddr($ipa).")\r\n";
-			LogToFile('.bad_login.txt',$msg);
+			LogToFile(dirname(__FILE__) . '/logs/.bad_login.txt',$msg);
 		}
 		header("location: ".$g_baseadr."error.php?code=101");
 		exit;
@@ -41,7 +41,7 @@ if (!IsLogged())
 			$cd = getdate();
 			$scd = $cd['mday'].'.'.$cd['mon'].'.'.$cd['year'].' - '.$cd['hours'].':'.$cd['minutes'].'.'.$cd['seconds'];
 			$msg = 'password | '.$scd.' | user : '.$login.' | IP : '.$ipa.' ('.gethostbyaddr($ipa).")\r\n";
-			LogToFile('.bad_login.txt',$msg);
+			LogToFile(dirname(__FILE__) . '/logs/.bad_login.txt',$msg);
 		}
 		header("location:".$g_baseadr."error.php?code=102");
 		exit;

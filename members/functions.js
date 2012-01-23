@@ -54,4 +54,17 @@ function close_win()
 	window.close();
 }
 
+function checkAll( field, flag )
+{
+	var elements = document.getElementById(field).getElementsByTagName('input');
+	if(!elements)
+		return;
+
+	for (i = 0; i < elements.length; i++)
+	{
+		if ( elements[i].type == 'checkbox' )
+			elements[i].checked = flag ;
+	}
+}
+
 //-->

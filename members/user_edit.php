@@ -1,6 +1,8 @@
 <?php /* adminova stranka - editace clena */
 define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
+@extract($_REQUEST);
+
 require ("./connect.inc.php");
 require ("./sess.inc.php");
 if (!IsLoggedAdmin() && !IsLoggedManager())
@@ -17,7 +19,7 @@ include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 include ("./common.inc.php");
 include ("./common_user.inc.php");
 
-DrawPageTitle('>Èlenská základna - Editace uživatele', false);
+DrawPageTitle('Èlenská základna - Editace uživatele', false);
 ?>
 <TABLE width="100%" cellpadding="0" cellspacing="0" border="0">
 <TR>

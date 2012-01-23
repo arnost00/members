@@ -1,5 +1,8 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?php /* adminova stranka -oprava ceskych(tridicich) jmen v db.uzivatelu */
+
+@extract($_REQUEST);
+
 require ("./connect.inc.php");
 require ("./sess.inc.php");
 

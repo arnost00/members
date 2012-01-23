@@ -81,6 +81,8 @@ function DrawMenuGroupHeader($name)
 		DrawMenuItem('Pøihlášky na závody',_USER_GROUP_ID_,2);
 		DrawMenuItem('Nastavení pøístupu',_USER_GROUP_ID_,1);
 		DrawMenuItem('Nastavení zákl.údajù',_USER_GROUP_ID_,3);
+		if ($g_enable_mailinfo)
+			DrawMenuItem('Upozoròování',_USER_GROUP_ID_,4);
 	}
 	if(IsLoggedRegistrator())
 	{

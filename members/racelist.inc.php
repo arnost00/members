@@ -22,7 +22,7 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 
 @$vysledek=MySQL_Query('SELECT * FROM '.TBL_RACE.$sql_sub_query.' ORDER BY datum');
 
-$num_rows = mysql_num_rows($vysledek);
+$num_rows = ($vysledek != FALSE) ? mysql_num_rows($vysledek) : 0;
 $old_year = 0;
 if ($num_rows > 0)
 {

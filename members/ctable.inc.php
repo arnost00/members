@@ -16,6 +16,7 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 	class html_table_base
 	{	// common table class
 		var $class_name ='ctbl';
+		var $bgc_header;
 		var $bgc_row_select, $bgc_row1, $bgc_row2,$bgc_row_hglt;
 		var $cellpadding, $cellspacing;
 		var $table_width;
@@ -30,6 +31,7 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 		function html_table_base()
 		{
 			global $g_colors;
+			$this->bgc_header = $g_colors["table_header"];
 			$this->bgc_row_select = $g_colors['table_row_select'];
 			$this->bgc_row1 = $g_colors['table_row1'];
 			$this->bgc_row2 = $g_colors['table_row2'];
@@ -121,7 +123,6 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 //==================================================================
 	class html_table_mc extends html_table_base
 	{	// multicolumn table with header
-		var $bgc_header;
 		var $header_row;
 		var $sort_row;
 		var $cols_align;
@@ -133,7 +134,6 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 		{
 			html_table_base::html_table_base();
 			global $g_colors;
-			$this->bgc_header = $g_colors["table_header"];
 			$this->header_row = array();
 			$this->sort_row = array();
 			$this->row_idx = 0;

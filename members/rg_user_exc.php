@@ -3,6 +3,7 @@
 
 exit; // <-- temporary disabled
 
+@extract($_REQUEST);
 require ("./connect.inc.php");
 require ("./sess.inc.php");
 

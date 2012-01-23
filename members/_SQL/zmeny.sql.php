@@ -1,4 +1,5 @@
 <?
+@extract($_REQUEST);
 
 $zmeny_list = array();
 function AddZmenyFile($version)
@@ -22,6 +23,7 @@ AddZmenyFile('1.8.3.65');
 AddZmenyFile('1.8.3.65-post');
 AddZmenyFile('1.8.4.67');
 AddZmenyFile('2.0.1.75');
+AddZmenyFile('2.0.6.85');
 
 //#############################################################################
 

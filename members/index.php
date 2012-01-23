@@ -1,5 +1,7 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
+@extract($_REQUEST);
+
 $id = (IsSet($_GET['id']) && is_numeric($_GET['id'])) ? (int)$_GET['id'] : 0;
 $subid = (IsSet($_GET['subid']) && is_numeric($_GET['subid'])) ? (int)$_GET['subid'] : 0;
 
@@ -97,6 +99,12 @@ if($g_is_system_running || IsLoggedAdmin())
 						break;
 					case 3:
 						include "./us_user_edit.inc.php";
+						break;
+					case 4:
+						if ($g_enable_mailinfo)
+							include "./us_mailinfo.inc.php";
+						else
+							include "./news.inc.php";
 						break;
 					default:
 						include "./news.inc.php";
@@ -255,9 +263,9 @@ echo 'Vars: Admin : '.$usr->policy_admin.', Reg : '.$usr->policy_reg.', Mng : '.
 echo 'Logged : '.$usr->logged.', UserID : '.$usr->user_id.', AccountID : '.$usr->account_id.', CrossID : '.$usr->cross_id."<BR>\n";
 echo '<U>System & Browser</U>'."<BR>\n";
 echo 'PHP Session ID = '._CURR_SESS_ID_."<BR>\n";
-echo 'WWW Browser = ['.$HTTP_USER_AGENT."]<BR>\n";
+echo 'WWW Browser = ['.(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '')."]<BR>\n";
 echo 'URL opened = ['.$_SERVER['PHP_SELF']."]<BR>\n";
-echo 'Referer URL  = ['.$HTTP_REFERER."]<BR>\n";
+echo 'Referer URL  = ['.(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '')."]<BR>\n";
 echo 'header = ["Last-Modified: '. gmdate("D, d M Y H:i:s") .' GMT"]'."<BR>\n";
 echo '<HR>';
 } ?>

@@ -19,10 +19,6 @@ function confirm_delete(date) {
 </script>
 <?
 }
-?>
-<TABLE width="100%">
-
-<?	
 // news_sh
 $news = (IsSet($news) && is_numeric($news) && $news > 0) ? 1 : 0;
 
@@ -31,9 +27,12 @@ if ($news != 1)
 	$sql_query .= " LIMIT ".GC_NEWS_LIMIT;
 
 @$vysledek=MySQL_Query($sql_query);
-$cnt=mysql_num_rows($vysledek);
+$cnt= ($vysledek != FALSE) ? mysql_num_rows($vysledek) : 0;
 if($cnt > 0)
 {
+?>
+<TABLE width="100%">
+<?
 	if ( IsLoggedAdmin() )
 	{
 		echo '<TR><TD></TD><TD class="LastDate">';
@@ -58,14 +57,18 @@ if($cnt > 0)
 			echo '&nbsp;&nbsp;<A HREF="./news_del_exc.php?id='.$zaznam['id'].'" onclick="return confirm_delete(\''.$datum.'\')" class="NewsErase">Smazat</A>';
 		echo '</TD></TR>';
 	}
-}
 //	news_sh
 ?>
-
 </TABLE>
 <?
 if ($news != 1)
 	echo '<BR><BR><CENTER><A href="index.php?id=0&news=1">Zobrazit všechny novinky</A></CENTER><BR>'."\n";
+} // aspon jeden zaznam
+else
+{
+	echo "Seznam novinek je prázdný.<BR>";
+}
+//	news_sh
 
 if (IsLoggedEditor ())
 	{
