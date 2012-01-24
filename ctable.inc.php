@@ -124,6 +124,7 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 	class html_table_mc extends html_table_base
 	{	// multicolumn table with header
 		var $header_row;
+		var $header_row2;
 		var $sort_row;
 		var $cols_align;
 		var $row_idx;
@@ -135,6 +136,7 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 			html_table_base::html_table_base();
 			global $g_colors;
 			$this->header_row = array();
+			$this->header_row2 = array();
 			$this->sort_row = array();
 			$this->row_idx = 0;
 			$this->cols = 0;
@@ -207,6 +209,29 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 			}
 
 			$row .= '</TR>';
+			return $row;
+		}
+		
+		function get_header_row_with_sort()
+		{// pri prvnim prubehu vytvori z pole 'header_row' string. Pri dalsich ho jen vraci.
+			if (is_string($this->header_row2))
+				return $this->header_row2;
+			$row = '<TR class="head" height="20">';
+			foreach($this->header_row as $idx => $col)
+			{
+				$row .= '<TD class="'.$this->class_name.'_header_'.$col['class'].'"';
+				if ($col['width'] != 0)
+					$row .= ' width="'.$col['width'].'"';
+				if ($col['ex_td'] != '')
+					$row .= ' '.$col['ex_td'];
+				$row .= '>'.$col['text'];
+				if ($this->sort_row[$idx] != '')
+					$row .= ' '.$this->sort_row[$idx];
+				$row .= '</TD>';
+				$this->cols++;
+			}
+			$row .= '</TR>';
+			$this->header_row2 = $row;
 			return $row;
 		}
 

@@ -42,11 +42,12 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 
 	echo $data_tbl->get_css()."\n";
 	echo $data_tbl->get_header()."\n";
-	echo $data_tbl->get_header_row()."\n";
+//	echo $data_tbl->get_header_row()."\n";
 
 	$data_tbl->set_sort_col(1,$sc->get_col_content(0));
 	$data_tbl->set_sort_col(3,$sc->get_col_content(1));
-	echo $data_tbl->get_sort_row()."\n";
+//	echo $data_tbl->get_sort_row()."\n";
+	echo $data_tbl->get_header_row_with_sort()."\n";
 
 	while ($zaznam=MySQL_Fetch_Array($vysledek))
 	{
