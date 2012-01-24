@@ -91,9 +91,8 @@ if ($num_rows > 0)
 		if(!$race_is_old || IsLoggedAdmin())
 		{
 			$s1 = "<A HREF=\"javascript:open_win2('./race_reg_form.php?id_zav=".$zaznam['id']."','')\">Vý.</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win2('./race_reg_chip.php?id_zav=".$zaznam['id']."','')\">SI</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_1.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$zaznam['id']."','')\">P.1</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_all.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$zaznam['id']."','')\">P.V</A>&nbsp;/&nbsp;";
-			$s2 = ($zaznam['prihlasky'] > 1) ? ("<A HREF=\"javascript:open_win('./race_regs_off.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$zaznam['id']."','')\" class=\"Erase\">Od.</A>&nbsp;/&nbsp;") : '';
-			$s3 = "<A HREF=\"javascript:open_win_ex('./race_reg_view.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$zaznam['id']."','',600,600)\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
-			$row[] = $s1.$s2.$s3;
+			$s2 = "<A HREF=\"javascript:open_win_ex('./race_reg_view.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$zaznam['id']."','',600,600)\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
+			$row[] = $s1.$s2;
 		}
 		else
 		{
@@ -137,7 +136,6 @@ Vý. = Export pøihlášky ve formátu ÈSOB.<BR>
 SI = Editace (Doplnìní) SI èipù pro vybraný závod.<BR>
 P.1 = pøihlašování po jednom èlenu.<BR>
 P.V = pøihlašování všech èlenù naráz.<BR>
-Od. = ohlašování èlenù - platí pro starší termíny pøihlášek u vícedenních závodù.<BR>
 Zbr = zobrazení pøihlášených èlenù.<BR>
 OP = Odeslána pøihláška.<BR>
 </p>
