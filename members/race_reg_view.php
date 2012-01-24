@@ -53,7 +53,7 @@ if ($us == 0)
 	$data_tbl->set_header_col($col++,'SI èip',ALIGN_RIGHT);
 }
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
-if($zaznam_z['vicedenni'])
+if($zaznam_z['prihlasky'] > 1)
 	$data_tbl->set_header_col($col++,'Termín',ALIGN_CENTER);
 if (IsLogged())
 {
@@ -84,7 +84,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 				$row[] = (($zaznam['t_si_chip'] != 0) ? '<span class="TemporaryChip">'.SINumToStr($zaznam['t_si_chip']).'</span>' : '');
 		}
 		$row[] = '<B>'.$zaznam['kat'].'</B>';
-		if($zaznam_z['vicedenni'])
+		if($zaznam_z['prihlasky'] > 1)
 			$row[] = $zaznam['termin'];
 		if(IsLogged())
 		{

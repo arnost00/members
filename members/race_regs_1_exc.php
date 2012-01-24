@@ -74,7 +74,9 @@ if($termin != 0)
 	}
 }
 //echo " -".$kateg." u clena ".$user_id." a s pozn.: '".$pozn."'<BR>";
-
-header("location: ".$g_baseadr."race_regs_1.php?id=".$id);
+if ($is_termin_show_on)
+	header("location: ".$g_baseadr."race_regs_1.php?gr_id=".$gr_id."&id=".$id);
+else
+	header("location: ".$g_baseadr."race_regs_1.php?id=".$id);
 exit;
 ?>
