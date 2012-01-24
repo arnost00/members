@@ -34,6 +34,8 @@ $query = 'SELECT '.TBL_RACE.'.id, datum, datum2, nazev, typ, ranking, odkaz, pri
 <?
 ShowRefreshInfo();
 
+$curr_date = GetCurrentDate();
+
 $num_rows = mysql_num_rows($vysledek);
 if ($num_rows > 0)
 {
@@ -56,6 +58,7 @@ if ($num_rows > 0)
 
 	$i = 1;
 	$brk_tbl = false;
+	$old_year = 0;
 	while ($zaznam=MySQL_Fetch_Array($vysledek))
 	{
 		$row = array();
@@ -77,7 +80,7 @@ if ($num_rows > 0)
 		$time_to_reg = GetTimeToReg($prihlasky_curr[0]);
 		$termin = raceterms::ColorizeTermUser($time_to_reg,$prihlasky_curr,$prihlasky_out_term);
 
-		$prihl_finish = ($time_to_reg == -1 && $prihlasky_curr[0] != 0) || ($prihlasky_curr[0] == 0 && $zaznam['datum'] <= GetCurrentDate());
+		$prihl_finish = ($time_to_reg == -1 && $prihlasky_curr[0] != 0) || ($prihlasky_curr[0] == 0 && $zaznam['datum'] <= $curr_date);
 
 		if($zaznam['kat'] == NULL)
 		{	// neni prihlasen
@@ -110,14 +113,19 @@ if ($num_rows > 0)
 
 		$row[] = raceterms::ColorizeTermUser($time_to_reg,$prihlasky_curr,$prihlasky_out_term);
 
-		if (!$brk_tbl && $zaznam['datum'] >= GetCurrentDate())
+		if (!$brk_tbl && $zaznam['datum'] >= $curr_date)
 		{
 			if($i != 1)
 				echo $data_tbl->get_break_row()."\n";
 			$brk_tbl = true;
 		}
+		else if($i != 1 && Date2Year($zaznam['datum']) != $old_year)
+		{
+				echo $data_tbl->get_break_row(true)."\n";
+		}
 
 		echo $data_tbl->get_new_row_arr($row)."\n";
+		$old_year = Date2Year($zaznam['datum']);
 		$i++;
 	}
 	echo $data_tbl->get_footer()."\n";
