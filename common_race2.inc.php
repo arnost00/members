@@ -5,7 +5,7 @@ class raceterms
 {
 /////////////////////////////////////////////////////////////////////////
 
-function GetCurr4RegTerm(&$zaznam)
+public static function GetCurr4RegTerm(&$zaznam)
 // For reg/unreg
 // 1 .. 5 - active term
 // 0 - any active term / cannot process
@@ -28,24 +28,24 @@ function GetCurr4RegTerm(&$zaznam)
 }
 /////////////////////////////////////////////////////////////////////////
 
-function GetMngCurr4RegIdx(&$zaznam)
+public static function GetMngCurr4RegIdx(&$zaznam)
 {	//?
 	return 0;
 }
 
-function GetRegCurr4RegIdx(&$zaznam)
-{	//?
-	return 0;
-}
-/////////////////////////////////////////////////////////////////////////
-
-function GetCurr4InfoIdx(&$zaznam)
+public static function GetRegCurr4RegIdx(&$zaznam)
 {	//?
 	return 0;
 }
 /////////////////////////////////////////////////////////////////////////
 
-function GetActiveRegDate(&$zaznam)
+public static function GetCurr4InfoIdx(&$zaznam)
+{	//?
+	return 0;
+}
+/////////////////////////////////////////////////////////////////////////
+
+public static function GetActiveRegDate(&$zaznam)
 {
 	if ($zaznam['prihlasky'] == 0)
 		return 0;
@@ -63,7 +63,7 @@ function GetActiveRegDate(&$zaznam)
 }
 /////////////////////////////////////////////////////////////////////////
 
-function GetActiveRegDateArr(&$zaznam)
+public static function GetActiveRegDateArr(&$zaznam)
 //	0. - reg. date
 //	1. - termin
 {
@@ -84,7 +84,7 @@ function GetActiveRegDateArr(&$zaznam)
 
 /////////////////////////////////////////////////////////////////////////
 
-function GetActiveRegDateArrPrev(&$zaznam)
+public static function GetActiveRegDateArrPrev(&$zaznam)
 //	0. - reg. date
 //	1. - termin
 {
@@ -147,7 +147,7 @@ function GetActiveRaceRegTerm(&$zaznam)
 }
 */
 /////////////////////////////////////////////////////////////////////////
-function ListRegDates(&$zaznam)
+public static function ListRegDates(&$zaznam)
 {
 	if($zaznam['prihlasky'] == 0)
 		return '';
@@ -172,7 +172,7 @@ function ListRegDates(&$zaznam)
 
 /////////////////////////////////////////////////////////////////////////
 
-function ColorizeTermUser($time_to_reg,$prihlasky_curr,$prihlasky_text)
+public static function ColorizeTermUser($time_to_reg,$prihlasky_curr,$prihlasky_text)
 {
 	if ($prihlasky_curr != 0 && $time_to_reg < 22)
 	{

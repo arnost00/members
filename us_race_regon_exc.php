@@ -19,9 +19,7 @@ if ($kat != '')
 	@$vysledek_z=MySQL_Query("SELECT datum, vicedenni, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5 FROM ".TBL_RACE." WHERE id=$id_zav");
 	$zaznam_z = MySQL_Fetch_Array($vysledek_z);
 
-	$termin = GetActiveRaceRegTerm($zaznam_z);
-	if($termin == 0)
-		$termin = 1;
+	$termin = raceterms::GetCurr4RegTerm($zaznam_z);
 
 	if ($novy)
 	{
