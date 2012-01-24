@@ -14,7 +14,9 @@ if (!IsLoggedRegistrator())
 require ("./common.inc.php");
 require ("./common_race.inc.php");
 
-$gr_id = (IsSet($gr_id) && is_numeric($gr_id)) ? $gr_id : 0;
+$gr_id = (IsSet($gr_id) && is_numeric($gr_id)) ? (int)$gr_id : 0;
+$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+
 db_Connect();
 
 @$vysledek=MySQL_Query("SELECT id_user FROM ".TBL_ZAVXUS." WHERE $id=id_zavod");
