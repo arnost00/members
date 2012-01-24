@@ -185,10 +185,10 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 	$row[] = $zaznam['jmeno'];
 	$row[] = $zaznam['prijmeni'];
 	$row[] = $g_shortcut.RegNumToStr($zaznam['reg']);
-	if ($zaznam['si_chip'] != 0)
-		$row[] = SINumToStr($zaznam['si_chip']);
-	else
+	if ($zaznam['si_chip'] == 0)
 		$row[] = (($zaznam['t_si_chip'] != 0) ? '<span class="TemporaryChip">'.SINumToStr($zaznam['t_si_chip']).'</span>' : '');
+	else
+		$row[] = (($zaznam['t_si_chip'] != 0) ? '<span class="TemporaryChip">'.SINumToStr($zaznam['t_si_chip']).'</span>' : SINumToStr($zaznam['si_chip']));
 	$row[] = '<B>'.$zaznam['kat'].'</B>';
 	if (check_kat($zaznam['kat']))
 		$kres = '<span class="TextCheckOk">OK';

@@ -24,7 +24,8 @@ db_Connect();
 
 $id_zav = (isset($id_zav) && is_numeric($id_zav)) ? (int)$id_zav : 0;
 
-$query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.si_chip as t_si_chip FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' AND u.si_chip = 0 AND u.hidden = 0 ORDER BY z.id ASC';
+//$query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.si_chip as t_si_chip FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' AND u.si_chip = 0 AND u.hidden = 0 ORDER BY z.id ASC';
+$query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.si_chip as t_si_chip FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' AND u.hidden = 0 ORDER BY z.id ASC';
 
 @$vysledek=MySQL_Query($query);
 
@@ -53,7 +54,7 @@ if (mysql_num_rows($vysledek) > 0)
 	$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Reg.',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'SI èip',ALIGN_RIGHT);
+	$data_tbl->set_header_col($col++,'SI èip',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Poznámka',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Poznámka (interní)',ALIGN_CENTER);
@@ -72,7 +73,14 @@ if (mysql_num_rows($vysledek) > 0)
 		$row[] = $zaznam['jmeno'];
 		$row[] = $zaznam['prijmeni'];
 		$row[] = $g_shortcut.RegNumToStr($zaznam['reg']);
-		$row[] = '<input type="text" name="chip['.$zaznam['id'].']" SIZE=9 MAXLENGTH=9 value="'.$zaznam['t_si_chip'].'">';
+		if ($zaznam['si_chip'] != 0)
+		{
+			$si = ($zaznam['t_si_chip'] != 0) ? $zaznam['t_si_chip'] : $zaznam['si_chip'];
+			$row[] = '<input type="text" name="chip['.$zaznam['id'].']" SIZE=9 MAXLENGTH=9 value="'.$si.'"> ('.$zaznam['si_chip'].')';
+		}
+		else
+			$row[] = '<input type="text" name="chip['.$zaznam['id'].']" SIZE=9 MAXLENGTH=9 value="'.$zaznam['t_si_chip'].'">';
+		
 		$row[] = '<B>'.$zaznam['kat'].'</B>';
 		$row[] = $zaznam['pozn'];
 		$row[] = $zaznam['pozn_in'];
@@ -88,7 +96,7 @@ if (mysql_num_rows($vysledek) > 0)
 }
 else
 {
-	echo('Nejsou pøihlášení žádní závodníci bez vlastních èipù.<br>');
+	echo('Nejsou pøihlášení žádní závodníci.<br>');
 }
 ?>
 <BR>
