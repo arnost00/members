@@ -115,7 +115,7 @@ if (mysql_num_rows($vysledek) > 0)
 	$data_tbl->set_header_col($col++,'W',ALIGN_CENTER);
 	if(SHOW_USER)
 		$data_tbl->set_header_col($col++,'Pøihlášen',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Termín pøihlášek',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'Pøihlášky',ALIGN_CENTER);
 	if($g_enable_race_boss)
 		$data_tbl->set_header_col($col++,'Vedoucí',ALIGN_CENTER);
 	echo $data_tbl->get_css()."\n";

@@ -15,7 +15,7 @@ if (IsLogged())
 		$zaznam['datum'] = '';
 		$zaznam['adresa'] = '';
 		$zaznam['mesto'] = '';
-		$zaznam['psc'] = '000 00';
+		$zaznam['psc'] = '';
 		$zaznam['email'] = '';
 		$zaznam['tel_domu'] = '';
 		$zaznam['tel_zam'] = '';

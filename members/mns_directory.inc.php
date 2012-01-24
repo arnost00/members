@@ -38,7 +38,7 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 	$data_tbl->set_header_col($col++,'Lic.',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'L.MTBO',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'L.LOB',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Editace',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'Monosti',ALIGN_CENTER);
 
 	echo $data_tbl->get_css()."\n";
 	echo $data_tbl->get_header()."\n";

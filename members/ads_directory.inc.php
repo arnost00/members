@@ -34,7 +34,7 @@ $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Reg.è.',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Info',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Práva',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Editace',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'Monosti',ALIGN_CENTER);
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
