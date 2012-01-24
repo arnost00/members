@@ -41,7 +41,7 @@ if ($num_rows > 0)
 	$data_tbl->set_header_col($col++,'T',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'W',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Monosti',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Termín p.',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'Pøihlášky',ALIGN_CENTER);
 
 	echo $data_tbl->get_css()."\n";
 	echo $data_tbl->get_header()."\n";

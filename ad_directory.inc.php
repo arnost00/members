@@ -42,7 +42,7 @@ $data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Reg.è.',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Úèet',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Editace',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'Monosti',ALIGN_CENTER);
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";

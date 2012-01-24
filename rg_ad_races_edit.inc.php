@@ -45,7 +45,7 @@ $data_tbl->set_header_col($col++,'Poø.',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'T',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'W',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Kat',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Úpravy',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 if (!$g_is_release)
 {	// pri debug zobrazit
 	$data_tbl->set_header_col($col++,'Zmìny',ALIGN_CENTER);

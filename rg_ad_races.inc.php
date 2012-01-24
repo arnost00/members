@@ -34,10 +34,10 @@ if ($num_rows > 0)
 	$data_tbl->set_header_col($col++,'Poø.',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'T',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'W',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Úpravy',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'Monosti',ALIGN_CENTER);
 	if($g_enable_race_boss)
 		$data_tbl->set_header_col($col++,'Vedoucí',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Datum p.',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'Pøihlášky',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'OP',ALIGN_CENTER);
 
 	echo $data_tbl->get_css()."\n";
