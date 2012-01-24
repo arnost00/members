@@ -100,52 +100,6 @@ public static function GetActiveRegDateArrPrev(&$zaznam)
 		return array($zaznam['prihlasky4'],4);
 	return array(0,0);	// safety return.
 }
-/*
-function GetActiveRaceRegDateArrPrev(&$zaznam)
-{
-	if(GetTimeToRace($zaznam['datum']) <= 0 || $zaznam['prihlasky'] == 0)
-		return array(0,0);
-	else if($zaznam['vicedenni'])
-	{
-		if ($zaznam['prihlasky'] == 1 || GetTimeToReg($zaznam['prihlasky1']) != -1 )
-			return array(0,0);
-		if ($zaznam['prihlasky'] == 2 || GetTimeToReg($zaznam['prihlasky2']) != -1 )
-			return array($zaznam['prihlasky1'],1);
-		if ($zaznam['prihlasky'] == 3 || GetTimeToReg($zaznam['prihlasky3']) != -1 )
-			return array($zaznam['prihlasky2'],2);
-		if ($zaznam['prihlasky'] == 4 || GetTimeToReg($zaznam['prihlasky4']) != -1 )
-			return array($zaznam['prihlasky3'],3);
-		if ($zaznam['prihlasky'] == 5 || GetTimeToReg($zaznam['prihlasky5']) != -1 )
-			return array($zaznam['prihlasky4'],4);
-	}
-	else
-		return array(0,0);
-	return array(0,0);	// safety return.
-}
-
-
-function GetActiveRaceRegTerm(&$zaznam)
-{
-	if(GetTimeToRace($zaznam['datum']) <= 0 || $zaznam['prihlasky'] == 0)
-		return 0;
-	else if($zaznam['vicedenni'])
-	{
-		if ($zaznam['prihlasky'] == 1 || GetTimeToReg($zaznam['prihlasky1']) != -1 )
-			return 1;
-		if ($zaznam['prihlasky'] == 2 || GetTimeToReg($zaznam['prihlasky2']) != -1 )
-			return 2;
-		if ($zaznam['prihlasky'] == 3 || GetTimeToReg($zaznam['prihlasky3']) != -1 )
-			return 3;
-		if ($zaznam['prihlasky'] == 4 || GetTimeToReg($zaznam['prihlasky4']) != -1 )
-			return 4;
-		if ($zaznam['prihlasky'] == 5 || GetTimeToReg($zaznam['prihlasky5']) != -1 )
-			return 5;
-	}
-	else
-		return 1;
-	return 0;	// safety return.
-}
-*/
 /////////////////////////////////////////////////////////////////////////
 public static function ListRegDates(&$zaznam)
 {

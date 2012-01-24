@@ -167,7 +167,7 @@ $data_tbl->set_header_col($col++,'Poø.',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
-if($zaznam_z['vicedenni'])
+if($zaznam_z['prihlasky'] > 1)
 	$data_tbl->set_header_col($col++,'Termín',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Pozn.',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Pozn.(i)',ALIGN_LEFT);
@@ -188,7 +188,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 	$row[] = $zaznam1['jmeno'];
 	$row[] = $zaznam1['prijmeni'];
 	$row[] = '<B>'.$zaznam['kat'].'</B>';
-	if($zaznam_z['vicedenni'])
+	if($zaznam_z['prihlasky'] > 1)
 		$row[] = $zaznam['termin'];
 	$row[] = $zaznam['pozn'];
 	$row[] = $zaznam['pozn_in'];

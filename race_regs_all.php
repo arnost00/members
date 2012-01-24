@@ -2,7 +2,6 @@
 <?
 @extract($_REQUEST);
 
-/* not revised !!! */
 require("./cfg/_colors.php");
 require("./cfg/_globals.php");
 require ("./connect.inc.php");
@@ -142,12 +141,10 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 	$row[] = ($age != -1) ? (($age < GC_SHOW_AGE_LIMIT)? $age :'') : '?';
 	$u=$zaznam['id'];
 	if ($zaznam['kat'] != NULL)
-	{
-		if($zaznam['termin'] == $termin || $is_termin_show_on)
-		{
-!!! problem pri jednom terminu a prihlaskach ve vice terminech + resit proc tento if - else
-
-			$row[] = '<INPUT TYPE="text" NAME="kateg['.$u.']" SIZE=5 value="'.$zaznam['kat'].'" onfocus="javascript:select_row('.$u.');">'; // disabled readonly
+	{	// jiz prihlasen
+		if($zaznam['termin'] == $termin || $is_termin_show_on || $zaznam_z['prihlasky'] == 1)
+		{	// aktualni termin nebo povelena komplet editace
+			$row[] = /*$zaznam['termin'].'/'.$termin.*/'<INPUT TYPE="text" NAME="kateg['.$u.']" SIZE=5 value="'.$zaznam['kat'].'" onfocus="javascript:select_row('.$u.');">';
 			if($is_termin_show_on)
 				$row[] = '<INPUT TYPE="text" NAME="term['.$u.']" SIZE=1 value="'.$zaznam['termin'].'" onfocus="javascript:select_row('.$u.');">';
 			$row[] = '<INPUT TYPE="text" NAME="pozn['.$u.']" size="25" maxlength="250" value="'.$zaznam['pozn'].'" onfocus="javascript:select_row('.$u.');">';
@@ -155,16 +152,15 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 		}
 		else
 		{
-			$row[] = 'X';
-/*			$row[] = '<INPUT TYPE="text" NAME="kateg['.$u.']" SIZE=5 value="'.$zaznam['kat'].'" onfocus="javascript:select_row('.$u.');">';
+			$row[] = /*$zaznam['termin'].'/'.$termin.*/'<INPUT TYPE="text" NAME="kateg['.$u.']" SIZE=5 value="'.$zaznam['kat'].'" onfocus="javascript:select_row('.$u.');" disabled readonly>';
 			if($is_termin_show_on)
-				$row[] = '<INPUT TYPE="text" NAME="term['.$u.']" SIZE=1 value="'.$zaznam['termin'].'" onfocus="javascript:select_row('.$u.');">';
+				$row[] = '<INPUT TYPE="text" NAME="term['.$u.']" SIZE=1 value="'.$zaznam['termin'].'" onfocus="javascript:select_row('.$u.');" disabled readonly>';
 			$row[] = '<INPUT TYPE="text" NAME="pozn['.$u.']" size="25" maxlength="250" value="'.$zaznam['pozn'].'" onfocus="javascript:select_row('.$u.');">';
-			$row[] = '<INPUT TYPE="text" NAME="pozn2['.$u.']" size="25" maxlength="250" value="'.$zaznam['pozn_in'].'" onfocus="javascript:select_row('.$u.');">';*/
+			$row[] = '<INPUT TYPE="text" NAME="pozn2['.$u.']" size="25" maxlength="250" value="'.$zaznam['pozn_in'].'" onfocus="javascript:select_row('.$u.');">';
 		}
 	}
 	else
-	{
+	{	// neprihlasen
 		$row[] = '<INPUT TYPE="text" NAME="kateg['.$u.']" SIZE=5 onfocus="javascript:select_row('.$u.');">';
 		if($is_termin_show_on)
 			$row[] = '<INPUT TYPE="text" NAME="term['.$u.']" SIZE=1 value="'.(($termin != 0) ? $termin : $zaznam_z['prihlasky']).'" onfocus="javascript:select_row('.$u.');">';

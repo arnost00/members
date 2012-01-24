@@ -16,7 +16,7 @@ if (!IsLoggedRegistrator())
 db_Connect();
 
 $boss = (IsSet($boss) && is_numeric($boss)) ? (int)$boss : 0;
-$id = (IsSet($id) && is_numeric($if)) ? (int)$id : 0;
+$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
 if($id > 0)
 {

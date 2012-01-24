@@ -4,7 +4,6 @@
 
 require ("./connect.inc.php");
 require ("./sess.inc.php");
-
 if (!IsLoggedRegistrator() && !IsLoggedManager()&& !IsLoggedSmallManager())
 {
 	header("location: ".$g_baseadr."error.php?code=21");
@@ -14,92 +13,74 @@ if (!IsLoggedRegistrator() && !IsLoggedManager()&& !IsLoggedSmallManager())
 require ("./common.inc.php");
 require ("./common_race.inc.php");
 
-$gr_id = (IsSet($gr_id) && is_numeric($gr_id)) ? $gr_id : 0;
+$gr_id = (IsSet($gr_id) && is_numeric($gr_id)) ? (int)$gr_id : 0;
+$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+
 db_Connect();
 
-@$vysledek=MySQL_Query("SELECT id_user FROM ".TBL_ZAVXUS." WHERE $id=id_zavod");
+$sub_query = (IsLoggedRegistrator() || IsLoggedManager()) ? '' : ' AND '.TBL_USER.'.chief_id = '.$usr->user_id.' OR '.TBL_USER.'.id = '.$usr->user_id;
 
-while ($zaznam=MySQL_Fetch_Array($vysledek))
-{
-	$zaz_db[]=$zaznam["id_user"];
-}
+$query = 'SELECT '.TBL_USER.'.id, kat, termin FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query;
 
-@$vysledekZ=MySQL_Query("SELECT id,hidden FROM ".TBL_USER);
+@$vysledek=MySQL_Query($query);
 
 @$vysledek_z=MySQL_Query("SELECT * FROM ".TBL_RACE." WHERE id=$id");
 $zaznam_z = MySQL_Fetch_Array($vysledek_z);
 
-$is_registrator_on = false;
+$is_registrator_on = IsCalledByRegistrator($gr_id);
+$is_termin_show_on = $is_registrator_on && ($zaznam_z['prihlasky'] > 1);
 
-if($zaznam_z['vicedenni'])
+$termin = raceterms::GetCurr4RegTerm($zaznam_z);
+
+while ($zaznamZ=MySQL_Fetch_Array($vysledek))
 {
-	if(IsCalledByManager($gr_id) || IsCalledBySmallManager($gr_id))
+	$user=$zaznamZ["id"];
+	if (IsSet($kateg[$user]))
 	{
-		$termin = GetActiveRaceRegTerm($zaznam_z);
-	}
-	else if(IsCalledByRegistrator ($gr_id) || IsCalledByAdmin ($gr_id))
-	{
-		$is_registrator_on = true;
-		$termin_curr = GetActiveRaceRegTerm($zaznam_z);
-		$termin = 0;
-	}
-	else
-		$termin = 1;
-}
-else
-	$termin = 1;
-
-if($termin == 0)
-	$termin = 1;
-
-while ($zaznamZ=MySQL_Fetch_Array($vysledekZ))
-{
-	if ($zaznamZ["hidden"] == 0)
-	{
-		$user=$zaznamZ["id"];
-		if (IsSet($kateg[$user]))
+		$kat = $kateg[$user];
+		$poz = $pozn[$user];
+		$poz2 = $pozn2[$user];
+		$cterm = $termin;
+		if($is_registrator_on)
 		{
-			$kat = $kateg[$user];
-			$poz = $pozn[$user];
-			$poz2 = $pozn2[$user];
-			if($is_registrator_on)
-			{
-				$termin = ($term[$user] > 0 && $term[$user] <= $termin_curr) ? $term[$user] : $termin_curr;
-				if($termin == 0)
-					$termin = 1;
-			}
-			if (IsSet($zaz_db) && count($zaz_db) > 0 && in_array($user,$zaz_db))
-			{
-				if ($kat == "")
-				{	// del
-	//				echo "DEL";
-					$result=MySQL_Query("DELETE FROM ".TBL_ZAVXUS." WHERE id_zavod = '$id' AND id_user = '$user'")
-						or die("Chyba pøi provádìní dotazu do databáze.");
-					if ($result == FALSE)
-						die ("Nepodaøilo se zmìnit pøihlášku èlena.");
-				}
-				else
-				{	// update
-	//				echo "UPD";
-					$result=MySQL_Query("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$poz', pozn_in='$poz2', termin='$termin' WHERE id_zavod = '$id' AND id_user = '$user'")
-						or die("Chyba pøi provádìní dotazu do databáze.");
-					if ($result == FALSE)
-						die ("Nepodaøilo se zmìnit pøihlášku èlena.");
-				}
+			if($is_termin_show_on && $term[$user] != 0)
+				$cterm = $term[$user];
+		}
+		if ($cterm == 0)
+			$cterm = 1;
+		
+		if ($zaznamZ['kat'] != NULL)
+		{	// jiz prihlasen
+			if ($kat == "")
+			{	// del
+//				echo "DEL";
+				$result=MySQL_Query("DELETE FROM ".TBL_ZAVXUS." WHERE id_zavod = '$id' AND id_user = '$user'")
+					or die("Chyba pøi provádìní dotazu do databáze.");
+				if ($result == FALSE)
+					die ("Nepodaøilo se zmìnit pøihlášku èlena.");
 			}
 			else
-			{
-				if ($kat != "")
-				{	// new
-	//				echo "NEW";
-					$result=MySQL_Query("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in,termin) VALUES ('$user','$id','$kat', '$poz','$poz2','$termin')")
-						or die("Chyba pøi provádìní dotazu do databáze.");
-					if ($result == FALSE)
-						die ("Nepodaøilo se zmìnit pøihlášku èlena.");
-				}
+			{	// update
+//				echo "UPD";
+				$result=MySQL_Query("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$poz', pozn_in='$poz2', termin='$cterm' WHERE id_zavod = '$id' AND id_user = '$user'")
+					or die("Chyba pøi provádìní dotazu do databáze.");
+				if ($result == FALSE)
+					die ("Nepodaøilo se zmìnit pøihlášku èlena.");
 			}
-	//		echo " -".$kat." u clena ".$user." a s pozn.: '".$poz."'<BR>";
 		}
+		else
+		{
+			if ($kat != "")
+			{	// new
+//				echo "NEW";
+				$result=MySQL_Query("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in,termin) VALUES ('$user','$id','$kat', '$poz','$poz2','$cterm')")
+					or die("Chyba pøi provádìní dotazu do databáze.");
+				if ($result == FALSE)
+					die ("Nepodaøilo se zmìnit pøihlášku èlena.");
+			}
+			// jinak stale neprihlasen
+		}
+//		echo " -".$kat." u clena ".$user.", t:".$cterm." a s pozn.: '".$poz."'<BR>";
 	}
 }
 ?>

@@ -61,7 +61,7 @@ if($cnt > 0)
 ?>
 </TABLE>
 <?
-if ($news != 1)
+if ($news != 1 && $cnt == GC_NEWS_LIMIT)
 	echo '<BR><BR><CENTER><A href="index.php?id=0&news=1">Zobrazit všechny novinky</A></CENTER><BR>'."\n";
 } // aspon jeden zaznam
 else
