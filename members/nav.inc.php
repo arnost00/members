@@ -60,7 +60,8 @@ function DrawMenuGroupHeader($name)
 <?
 	DrawMenuItem('Novinky',0,0);
 	DrawMenuItem('Adresáø',1,0);
-	DrawMenuItem('Oddílová termínovka',2,0);
+	if(!IsLogged())
+		DrawMenuItem('Oddílová termínovka',2,0);
 	if(!IsLogged() || IsLoggedAdmin())
 	{
 		DrawMenuItem('Aktualitky',4,0);

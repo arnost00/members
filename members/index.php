@@ -61,7 +61,10 @@ if($g_is_system_running || IsLoggedAdmin())
 			include "./directory.inc.php";
 			break;
 		case 2: //terminovka
-			include "./racelist.inc.php";
+			if (!IsLogged())
+				include './racelist.inc.php';
+			else
+				include "./news.inc.php";
 			break;
 		case 3: //prihlasky clena
 			if (IsLogged())
