@@ -46,9 +46,9 @@ if($id_zav > 0)
 	@$vysledek_z=MySQL_Query("SELECT typ FROM ".TBL_RACE." WHERE id=$id_zav");
 	$zaznam_z = MySQL_Fetch_Array($vysledek_z);
 
-	$sub_query = ($termin != 0) ? ' u.termin='.$termin : '';
+	$sub_query = ($termin != 0) ? ' AND z.termin='.$termin : '';
 		
-	$query = 'SELECT u.jmeno, u.prijmeni, u.reg, u.si_chip, u.datum, u.lic, u.lic_mtbo, u.lic_lob, z.kat, z.pozn, z.termin, z.si_chip as t_si_chip FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' AND u.hidden = 0'.$sub_query.' ORDER by reg ORDER BY z.termin ASC, z.id ASC';
+	$query = 'SELECT u.jmeno, u.prijmeni, u.reg, u.si_chip, u.datum, u.lic, u.lic_mtbo, u.lic_lob, z.kat, z.pozn, z.termin, z.si_chip as t_si_chip FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' AND u.hidden = 0'.$sub_query.' ORDER by reg, z.termin ASC, z.id ASC';
 
 	$race_type = ($zaznam_z['typ']=='mtbo') ? 2 : (($zaznam_z['typ']=='lob')? 1 : 0);
 }
@@ -62,7 +62,6 @@ else
 
 @$vysledek=MySQL_Query($query);
 
-
 if (mysql_num_rows($vysledek) == 0)
 {
 	echo "Nikdo není pøihlášen.";
@@ -75,9 +74,10 @@ else
 		$str = RegNumToStr($zaznam['reg']).SPACE_CHAR;
 		$str .= str_pad(($id_zav > 0) ? $zaznam['kat'] : '',KAT_LEN,SPACE_CHAR).SPACE_CHAR;
 		$si_chip = (int)$zaznam['si_chip'];
-		if($si_chip == 0 && $id_zav > 0)
+		if($id_zav > 0)
 		{
-			$si_chip = $zaznam['t_si_chip'];
+			if ($si_chip == 0 || $zaznam['t_si_chip'] != 0)
+				$si_chip = $zaznam['t_si_chip'];
 		}
 		if($ver == 1)
 			$str .= str_pad($si_chip,SI_LEN2005,'0',STR_PAD_LEFT).SPACE_CHAR;
