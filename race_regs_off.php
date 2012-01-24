@@ -2,7 +2,6 @@
 <?
 @extract($_REQUEST);
 
-/* not revised !!! */
 require("./cfg/_colors.php");
 require ("./connect.inc.php");
 require ("./sess.inc.php");
@@ -21,7 +20,9 @@ include ("./common_user.inc.php");
 include ('./url.inc.php');
 DrawPageTitle('Hromadná odhláška ze závodu');
 
-$gr_id = (IsSet($gr_id) && is_numeric($gr_id)) ? $gr_id : 0;
+$gr_id = (IsSet($gr_id) && is_numeric($gr_id)) ? (int)$gr_id : 0;
+$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+
 db_Connect();
 
 @$vysledek_z=MySQL_Query("SELECT * FROM ".TBL_RACE." WHERE id=$id");
@@ -63,14 +64,22 @@ function zmen_kat(kat)
 
 //-->
 </SCRIPT>
+<?
+$termin = raceterms::GetCurr4RegTerm($zaznam_z);
 
+if($termin == 0 && !IsLoggedAdmin() && !IsLoggedRegistrator())
+{
+	echo('Nelze provádìt pøihlášky, nejspíš už vypršely všechny termíny pøihlášek, je po závodì, èi není aktivní žádný termín pro pøihlášení.');
+}
+else
+{
+?>
 <FORM METHOD=POST ACTION="./race_regs_off_exc.php?gr_id=<?echo $gr_id;?>&id=<?echo $id;?>" name="form1">
 <?
 
-@$vysledek=MySQL_Query("SELECT * FROM ".TBL_USER." ORDER BY reg ASC");
-@$vysledek_p=MySQL_Query("SELECT * FROM ".TBL_ZAVXUS." WHERE $id=id_zavod");
+$query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, datum, kat, pozn, pozn_in, termin FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0';
 
-echo "Poèet již pøihlášených èlenù je ".mysql_num_rows($vysledek_p).".<BR>";
+@$vysledek=MySQL_Query($query);
 
 $data_tbl = new html_table_mc();
 $col = 0;
@@ -87,42 +96,24 @@ echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
-while ($zaznam_p=MySQL_Fetch_Array($vysledek_p))
-{
-	$z=$zaznam_p["id_user"];
-	$a_kat[$z]=$zaznam_p["kat"];
-	$a_pozn[$z]=$zaznam_p["pozn"];
-	$a_pozn2[$z]=$zaznam_p["pozn_in"];
-	$a_term[$z]=$zaznam_p["termin"];
-	$zaz[]=$zaznam_p["id_user"];
-}
-
-$termin = GetActiveRaceRegTerm($zaznam_z);
-
 $i=1;
 while ($zaznam=MySQL_Fetch_Array($vysledek))
 {
-	if ($zaznam["hidden"] == 0)
-	{
-		$u=$zaznam["id"];
-		if (IsSet($zaz) && count($zaz) > 0 && in_array($u,$zaz))
-		{
-			if($a_term[$u] != $termin)
-			{
-				$row = array();
-				$row[] = $i++;
-				$row[] = RegNumToStr($zaznam['reg']);
-				$row[] = $zaznam['prijmeni'];
-				$row[] = $zaznam['jmeno'];
-				$row[] = '<INPUT TYPE="text" NAME="kateg['.$u.']" SIZE=5 value="'.$a_kat[$u].'" onfocus="javascript:select_row('.$u.');">';
-				$row[] = '<INPUT TYPE="text" NAME="term['.$u.']" SIZE=1 value="'.$a_term[$u].'" onfocus="javascript:select_row('.$u.');">';
-				$row[] = '<INPUT TYPE="text" NAME="pozn['.$u.']" SIZE=25 value="'.$a_pozn[$u].'" onfocus="javascript:select_row('.$u.');">';
-				$row[] = '<INPUT TYPE="text" NAME="pozn2['.$u.']" SIZE=25 value="'.$a_pozn2[$u].'" onfocus="javascript:select_row('.$u.');">';
-				if ($zaznam['id'] == $usr->user_id) 
-					$data_tbl->set_next_row_highlighted();
-				echo $data_tbl->get_new_row_arr($row)."\n";
-			}
-		}
+	if ($zaznam['kat'] != NULL && $zaznam['termin'] < $termin)
+	{	// jiz prihlasen
+		$u=$zaznam['id'];
+		$row = array();
+		$row[] = $i++;
+		$row[] = RegNumToStr($zaznam['reg']);
+		$row[] = $zaznam['prijmeni'];
+		$row[] = $zaznam['jmeno'];
+		$row[] = $zaznam['termin'].'/'.$termin.'<INPUT TYPE="text" NAME="kateg['.$u.']" SIZE=5 value="'.$zaznam['kat'].'" onfocus="javascript:select_row('.$u.');">';
+		$row[] = '<INPUT TYPE="text" NAME="term['.$u.']" SIZE=1 value="'.$zaznam['termin'].'" onfocus="javascript:select_row('.$u.');">';
+		$row[] = '<INPUT TYPE="text" NAME="pozn['.$u.']" SIZE=25 value="'.$zaznam['pozn'].'" onfocus="javascript:select_row('.$u.');">';
+		$row[] = '<INPUT TYPE="text" NAME="pozn2['.$u.']" SIZE=25 value="'.$zaznam['pozn_in'].'" onfocus="javascript:select_row('.$u.');">';
+		if ($zaznam['id'] == $usr->user_id) 
+			$data_tbl->set_next_row_highlighted();
+		echo $data_tbl->get_new_row_arr($row)."\n";
 	}
 }
 echo $data_tbl->get_footer()."\n";
@@ -141,6 +132,9 @@ Vyberte závodníka klepnutím do políèka kategorie u závodníka a následnì vložte v
 <BR>
 <INPUT TYPE="submit" value='Proveï zmìny'>
 </FORM>
+<?
+}
+?>
 <BR>
 <BUTTON onclick="javascript:close_popup();">Zpìt</BUTTON>
 </BODY>
