@@ -25,7 +25,6 @@ $sc->set_url('index.php?id=300&subid=3',true);
 $sub_query = $sc->get_sql_string();
 
 $query = "SELECT id,prijmeni,jmeno,reg,hidden FROM ".TBL_USER.$sub_query;
-//$query = "SELECT id,prijmeni,jmeno,reg,hidden FROM ".TBL_USER." ORDER BY sort_name ASC"
 @$vysledek=MySQL_Query($query);
 
 if (IsSet($result) && is_numeric($result) && $result != 0)
@@ -42,6 +41,7 @@ $data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Reg.è.',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Úèet',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'Práva',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 
 echo $data_tbl->get_css()."\n";
@@ -62,25 +62,38 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 	$row[] = $zaznam['jmeno'];
 	$row[] = RegNumToStr($zaznam['reg']);
 	$acc = '';
+	$acc_r = '<code>';
 	if ($zaznam["hidden"] != 0) 
 		$acc = '<span class="WarningText">H </span>';
 	$val=GetUserAccountId_Users($zaznam['id']);
 	if ($val)
 	{
-		$vysl2=MySQL_Query("SELECT locked FROM ".TBL_ACCOUNT." WHERE id = '$val'");
+		$vysl2=MySQL_Query("SELECT locked, policy_news, policy_regs, policy_mng, policy_adm FROM ".TBL_ACCOUNT." WHERE id = '$val'");
 		$zaznam2=MySQL_Fetch_Array($vysl2);
 		if ($zaznam2 != FALSE)
 		{
 			if ($zaznam2['locked'] != 0) 
 				$acc .= '<span class="WarningText">L </span>';
 			$acc .= "Ano";
+			$acc_r .= ($zaznam2['policy_news'] == 1) ? 'N ' : '. ';
+			$acc_r .= ($zaznam2['policy_regs'] == 1) ? 'P ' : '. ';
+			$acc_r .= ($zaznam2['policy_mng'] == _MNG_BIG_INT_VALUE_) ? 'T ' : '. ';
+			$acc_r .= ($zaznam2['policy_mng'] == _MNG_SMALL_INT_VALUE_) ? 't ' : '. ';
+			$acc_r .= ($zaznam2['policy_adm'] == 1) ? 'S' : '.';
 		}
 		else
+		{
 			$acc .= '-';
+			$acc_r .= '. . . . .';
+		}
 	}
 	else
+	{
 		$acc .= '-';
+		$acc_r .= '. . . . .';
+	}
 	$row[] = $acc;
+	$row[] = $acc_r.'</code>';
 	$row[] = '<A HREF="./user_edit.php?id='.$zaznam['id'].'">Edit</A>&nbsp;/&nbsp;<A HREF="./user_login_edit.php?id='.$zaznam["id"].'">Úèet</A>&nbsp;/&nbsp;<A HREF="./user_del_exc.php?id='.$zaznam["id"]."\" onclick=\"return confirm_delete('".$zaznam["jmeno"].' '.$zaznam["prijmeni"]."')\" class=\"Erase\">Smazat</A>";
 	echo $data_tbl->get_new_row_arr($row)."\n";
 }
