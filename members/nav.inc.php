@@ -108,16 +108,8 @@ function DrawMenuGroupHeader($name)
 	if(IsLoggedSmallAdmin())
 	{
 		DrawMenuGroupHeader('Menu správce');
-		DrawMenuItem('Zamykání úètù',_SMALL_ADMIN_GROUP_ID_,1,1);
-		DrawMenuItem('Skrytí èlenù',_SMALL_ADMIN_GROUP_ID_,4,1);
-/*
-		if(!$g_is_release)
-		{
-			echo('<TR><TD valign="top" align="center">- ve vývoji -</TD></TR>');
-			DrawMenuItem('Èlenská základna',_SMALL_ADMIN_GROUP_ID_,2);
-//			DrawMenuItem('Náhled na úèty',_SMALL_ADMIN_GROUP_ID_,3);
-		}
-*/
+		DrawMenuItem('Zamykání úètù',_SMALL_ADMIN_GROUP_ID_,1);
+		DrawMenuItem('Skrytí èlenù',_SMALL_ADMIN_GROUP_ID_,2);
 	}
 	if(IsLoggedAdmin())
 	{

@@ -154,15 +154,9 @@ if($g_is_system_running || IsLoggedAdmin())
 					case 1:
 						include "./ads_lock.inc.php";
 						break;
-					case 4:
+					case 2:
 						include "./ads_hidden.inc.php";
 						break;
-					case 2:
-//						include "./ads_directory.inc.php";
-//						break;
-					case 3:
-//						include "./ads_accounts.inc.php";
-//						break;
 					default:
 						include "./news.inc.php";
 				}
