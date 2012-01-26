@@ -111,30 +111,6 @@ TD.MemberText {
 	text-align : center;
 }
 
-TD.DayText {
-	color : <? echo $g_colors['disable_text']; ?>;
-	vertical-align : middle;
-	font-weight : normal;
-	text-align : center;
-	font-size : 7pt;
-}
-
-TD.NewsEditCaption {
-	width : 80px;
-	vertical-align : top;
-	text-align : right;
-	color : <? echo $g_colors['body_text']; ?>;
-	font-weight : bold;
-}
-
-TD.NewsEditTitle {
-	vertical-align : top;
-	text-align : left;
-	font-size : 14pt;
-	color : <? echo $g_colors['body_text']; ?>;
-	font-weight : bold;
-}
-
 TD.DataValue {
 	text-align : left;
 	color : <? echo $g_colors['form_data_value']; ?>;

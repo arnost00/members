@@ -40,7 +40,6 @@ db_Connect();
 @$zaznam=MySQL_Fetch_Array($vysledek);
 
 $data_tbl = new html_table_nfo;
-$data_tbl->enable_row_select = false;
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_new_row('Jméno',$zaznam['jmeno'].' '.$zaznam['prijmeni']);

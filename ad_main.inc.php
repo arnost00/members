@@ -27,10 +27,6 @@ DrawPageTitle('Administrace stránek oddílu',false);
 <?
 
 $data_tbl = new html_table_nfo;
-//$data_tbl->font_size = 12;
-$data_tbl->enable_row_select = false;
-$data_tbl->table_width = 50;
-
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 
@@ -39,7 +35,6 @@ echo $data_tbl->get_new_row('Verze systému', GetCodeVersion());
 echo $data_tbl->get_new_row('Http Server',$_SERVER['SERVER_SOFTWARE']);
 echo $data_tbl->get_new_row('Verze php', phpversion());
 echo $data_tbl->get_new_row('Verze MySQL',mysql_get_client_info().' / '.mysql_get_server_info());
-//echo $data_tbl->get_new_row('?', $register_globals);
 
 echo $data_tbl->get_footer()."\n";
 ?>

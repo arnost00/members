@@ -6,7 +6,7 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 // HTML TABLE class
 //==================================================================
 
-	require("./cfg/_colors.php");
+	require("cfg/_colors.php");
 
 	DEFINE('ALIGN_RIGHT','right');
 	DEFINE('ALIGN_CENTER','center');
@@ -15,20 +15,20 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 //==================================================================
 	class html_table_base
 	{	// common table class
-		var $class_name ='ctbl';
-		var $bgc_header;
-		var $bgc_row_select, $bgc_row1, $bgc_row2,$bgc_row_hglt;
-		var $cellpadding, $cellspacing;
-		var $table_width;
-		var $enable_row_select;
-		var $tc_normal, $tc_header, $tc_highlight;
-		var $font_size;
-		var $font_family;
-		var $font_family_header;
-		var $highlighted_next_row;
+		protected $class_name ='ctbl';
+		protected $bgc_header;
+		protected $bgc_row_select, $bgc_row1, $bgc_row2,$bgc_row_hglt;
+		protected $cellpadding, $cellspacing;
+		public $table_width;
+		protected $enable_row_select;
+		protected $tc_normal, $tc_header, $tc_highlight;
+		protected $font_size;
+		protected $highlighted_next_row;
+		protected $paddingLR;
+		protected $paddingTB;
 
 		//__________________________________________________________________
-		function html_table_base()
+		function html_table_base($table_class_name)
 		{
 			global $g_colors;
 			$this->bgc_header = $g_colors["table_header"];
@@ -43,27 +43,28 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 			$this->cellspacing = 2;
 			$this->table_width = 0;	// 0 - nedef, 100 - 100%
 			$this->enable_row_select = true;
-			$this->font_size = 9;//10;
-//			$this->font_family = 'Times New Roman,Serif';
-//			$this->font_family_header = 'Arial,Sans-Serif';
+			$this->font_size = 9;
 			$this->highlighted_next_row = false;
+			$this->paddingLR = 4;	// left, right
+			$this->paddingTB = 1;	// top, bottom
+			if ($table_class_name != '')
+				$this->class_name = $table_class_name;
 		}
 
 		//__________________________________________________________________
-		function _get_row_css($align,$pLR,$pTB)
+		protected function _get_row_css($align,$pLR,$pTB)
 		{	// inner class function
 			return 'td.'.$this->class_name.$align.' { padding-left: '.$pLR.'; padding-right: '.$pLR.'; padding-top: '.$pTB.'; padding-bottom: '.$pTB.(($align != '')?'; text-align: '.$align:'').'; } ';
 		}
 
 		//__________________________________________________________________
-		function _get_header_css($align,$pLR,$pTB)
+		protected function _get_header_css($align,$pLR,$pTB)
 		{	// inner class function
-//			return 'td.'.$this->class_name.'_header_'.$align.' { font-family: '.$this->font_family_header.'; vertical-align: middle; padding-left: '.$pLR.'; padding-right: '.$pLR.'; padding-top: '.$pTB.'; padding-bottom: '.$pTB.'; text-align: '.$align.'; color : '.$this->tc_header.'; font-weight : bold; } ';
 			return 'td.'.$this->class_name.'_header_'.$align.' { vertical-align: middle; padding-left: '.$pLR.'; padding-right: '.$pLR.'; padding-top: '.$pTB.'; padding-bottom: '.$pTB.'; text-align: '.$align.'; color : '.$this->tc_header.'; font-weight : bold; } ';
 		}
 
 		//__________________________________________________________________
-		function _get_misc_css($name,$pLR,$pTB,$align,$additional)
+		protected function _get_misc_css($name,$pLR,$pTB,$align,$additional)
 		{	// inner class function
 			return 'td.'.$this->class_name.$name.' { padding-left: '.$pLR.'; padding-right: '.$pLR.'; padding-top: '.$pTB.'; padding-bottom: '.$pTB.'; text-align: '.$align.'; '.$additional.' } ';
 		}
@@ -71,22 +72,18 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 		//__________________________________________________________________
 		function get_css()
 		{
-			$paddingLR = 4;	// left, right
-			$paddingTB = 1;	// top, bottom
 			$css = '<style type="text/css"> '.
-//			'table.'.$this->class_name.' { font-size: 10pt; font-family: Verdana; color: '.$this->tc_normal.'; } '.
-//2			'table.'.$this->class_name.' { font-size: '.$this->font_size.'pt; font-family: '.$this->font_family.'; color: '.$this->tc_normal.'; } '.
 			'table.'.$this->class_name.' { font-size: '.$this->font_size.'pt; color: '.$this->tc_normal.'; } '.
 
-			$this->_get_row_css(ALIGN_LEFT,$paddingLR,$paddingTB).
-			$this->_get_row_css(ALIGN_CENTER,$paddingLR,$paddingTB).
-			$this->_get_row_css(ALIGN_RIGHT,$paddingLR,$paddingTB).
-			$this->_get_row_css('',$paddingLR,$paddingTB).
-			$this->_get_header_css(ALIGN_LEFT,$paddingLR,$paddingTB).
-			$this->_get_header_css(ALIGN_CENTER,$paddingLR,$paddingTB).
-			$this->_get_header_css(ALIGN_RIGHT,$paddingLR,$paddingTB).
-			$this->_get_misc_css('sort',$paddingLR,0,ALIGN_RIGHT,'').
-			$this->_get_misc_css('form',$paddingLR,$paddingTB,ALIGN_LEFT,'color: '.$this->tc_highlight.'; font-weight : bold;').
+			$this->_get_row_css(ALIGN_LEFT,$this->paddingLR,$this->paddingTB).
+			$this->_get_row_css(ALIGN_CENTER,$this->paddingLR,$this->paddingTB).
+			$this->_get_row_css(ALIGN_RIGHT,$this->paddingLR,$this->paddingTB).
+			$this->_get_row_css('',$this->paddingLR,$this->paddingTB).
+			$this->_get_header_css(ALIGN_LEFT,$this->paddingLR,$this->paddingTB).
+			$this->_get_header_css(ALIGN_CENTER,$this->paddingLR,$this->paddingTB).
+			$this->_get_header_css(ALIGN_RIGHT,$this->paddingLR,$this->paddingTB).
+			$this->_get_misc_css('sort',$this->paddingLR,0,ALIGN_RIGHT,'').
+			$this->_get_misc_css('form',$this->paddingLR,$this->paddingTB,ALIGN_LEFT,'color: '.$this->tc_highlight.'; font-weight : bold;').
 			'table.'.$this->class_name.' tr.head { background: '.$this->bgc_header.'; } '.
 			'table.'.$this->class_name.' tr:hover.head { background: '.$this->bgc_header.'; } '.
 			'table.'.$this->class_name.' tr.r1 { background: '.$this->bgc_row1.'; } '.
@@ -104,7 +101,7 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 		}
 
 		//__________________________________________________________________
-		function _get_pre_footer() {}	// inner class function
+		protected function _get_pre_footer() {}	// inner class function
 
 		//__________________________________________________________________
 		function get_footer()
@@ -123,17 +120,17 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 //==================================================================
 	class html_table_mc extends html_table_base
 	{	// multicolumn table with header
-		var $header_row;
-		var $header_row2;
-		var $sort_row;
-		var $cols_align;
-		var $row_idx;
-		var $cols;
+		protected $header_row;
+		protected $header_row2;
+		protected $sort_row;
+		protected $cols_align;
+		protected $row_idx;
+		protected $cols;
 
 		//__________________________________________________________________
-		function html_table_mc()
+		function html_table_mc($table_class_name = '')
 		{
-			html_table_base::html_table_base();
+			html_table_base::html_table_base($table_class_name);
 			global $g_colors;
 			$this->header_row = array();
 			$this->header_row2 = array();
@@ -290,23 +287,24 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 		}
 
 		//__________________________________________________________________
-		function _get_pre_footer() {}	// inner class function
+		protected function _get_pre_footer() {}	// inner class function
 	}
 
 //==================================================================
 	class html_table_nfo extends html_table_base
 	{	// information table
-		var $c1_width, $c2_width;
+		protected $c1_width, $c2_width;
 
 		//__________________________________________________________________
-		function html_table_nfo()
+		function html_table_nfo($table_class_name = '')
 		{
-			html_table_base::html_table_base();
+			html_table_base::html_table_base($table_class_name);
 			$this->cellpadding = 0;
 			$this->cellspacing = 0;
 			$this->c1_width = 150;
 			$this->c2_width = 20;
 			$this->table_width = 80;
+			$this->enable_row_select = false;
 		}
 
 		//__________________________________________________________________
@@ -324,7 +322,7 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 		}
 
 		//__________________________________________________________________
-		function _get_pre_footer()
+		protected function _get_pre_footer()
 		{	// inner class function
 			$row = '<TR class="r2" height="3"><TD colspan="3"></TD></TR>';
 			return $row;
@@ -334,25 +332,30 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 //==================================================================
 	class html_table_form extends html_table_base
 	{	// form table
-		var $c1_width, $c2_width;
+		protected $c1_width, $c2_width;
 		var $enable_row_bgcolor;
 
 		//__________________________________________________________________
-		function html_table_form()
+		function html_table_form($table_class_name = '')
 		{
-			html_table_base::html_table_base();
+			html_table_base::html_table_base($table_class_name);
 			$this->cellpadding = 0;
 			$this->cellspacing = 0;
-			$this->c1_width = 125;
-			$this->c2_width = 25;
-			$this->table_width = 80;
+			$this->c1_width = 150;//'30%';
+			$this->c2_width = 20;
+			$this->table_width = 90;
 			$this->enable_row_select = false;
 			$this->enable_row_bgcolor = false;
+			$this->paddingLR = 4;	// left, right
+			$this->paddingTB = 3;	// top, bottom
+			
+//			$this->enable_row_bgcolor = true;	// debug
+			$this->bgc_row1 = '#aa3';	// debug
 		}
 
 		//__________________________________________________________________
 		function get_new_row ($title,$value)
-		{
+		{	// form information color of text in value 
 			$row = '<TR';
 			if ($this->enable_row_bgcolor)
 				$row .= ' class="r1"';
@@ -366,7 +369,7 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 
 		//__________________________________________________________________
 		function get_new_row_text ($title,$value)
-		{
+		{	// normal color of text in value
 			$row = '<TR';
 			if ($this->enable_row_bgcolor)
 				$row .= ' class="r1"';
@@ -403,7 +406,7 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 		}
 
 		//__________________________________________________________________
-		function _get_pre_footer() {}	// inner class function
+		protected function _get_pre_footer() {}	// inner class function
 	}
 
 //==================================================================

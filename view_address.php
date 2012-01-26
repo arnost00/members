@@ -35,10 +35,7 @@ DrawPageTitle('Informace o èlenovi', false);
 
 <?
 $data_tbl = new html_table_nfo;
-$data_tbl->font_size = 12;
-$data_tbl->enable_row_select = false;
 $data_tbl->table_width = 100;
-
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 

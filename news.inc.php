@@ -108,9 +108,19 @@ function change_font(object)
 <FORM METHOD=POST ACTION="./news_new_exc.php" name="form_news" id="form_news">
 <A name="addnews">&nbsp;</A>
 <TABLE width="100%">
-<TR><TD></TD><TD width="5" rowspan="11"></TD><TD align=left valign=bottom height=30 class="NewsEditTitle">
-Formuláø pro vložení novinky
+<TR><TD></TD><TD width="5" rowspan="11"></TD><TD align=left valign=bottom>
+<H3>Formuláø pro vložení novinky</H3>
 </TD></TR>
+<!-- temporary !!! - remove and convert to html_table_form -->
+<style type="text/css">
+TD.NewsEditCaption {
+	width : 80px;
+	vertical-align : top;
+	text-align : right;
+	color : <? echo $g_colors['body_text']; ?>;
+	font-weight : bold;
+}
+</style>
 <TR><TD class="NewsEditCaption">Datum</TD><TD class="DataValue">
 <INPUT TYPE="text" NAME="datum" SIZE=10 VALUE="<?echo GetCurrentDateString(true);?>">&nbsp;&nbsp;(DD.MM.RRRR)
 </TD></TR>
