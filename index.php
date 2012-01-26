@@ -109,6 +109,9 @@ if($g_is_system_running || IsLoggedAdmin())
 						else
 							include "./news.inc.php";
 						break;
+					case 10: //finance
+						include "./us_finance.inc.php";
+						break;
 					default:
 						include "./news.inc.php";
 				}
@@ -199,6 +202,9 @@ if($g_is_system_running || IsLoggedAdmin())
 					case 4:
 						include "./mn_smn_list.inc.php";
 						break;
+					case 10: //finance
+						include "./mn_finance.inc.php";
+						break;
 					default:
 						include "./news.inc.php";
 				}
@@ -216,6 +222,9 @@ if($g_is_system_running || IsLoggedAdmin())
 						break;
 					case 2:
 						include "./mns_races.inc.php";
+						break;
+					case 10: // finance
+						include "./mn_finance.inc.php";
 						break;
 					default:
 						include "./news.inc.php";
