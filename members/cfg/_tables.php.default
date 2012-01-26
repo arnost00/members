@@ -21,5 +21,6 @@ define ('TBL_USXUS','usxus');
 define ('TBL_ZAVXUS','zavxus');
 define ('TBL_MODLOG','modify_log');
 define ('TBL_MAILINFO','mailinfo');
+define ('TBL_FINANCE','finance');
 
 ?>

@@ -27,7 +27,7 @@ $sql[1] = 'CREATE TABLE IF NOT EXISTS `'.TBL_FINANCE."` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=cp1250 COLLATE=cp1250_czech_cs AUTO_INCREMENT=1";
 
 # *** pridani sloupce pro pravo na finance do tabulky accounts
-$sql[2] = 'ALTER TABLE `'.TBL_ACCOUNTS."` ADD `policy_fin` TINYINT( 1 ) UNSIGNED DEFAULT '0' NOT NULL";
+$sql[2] = 'ALTER TABLE `'.TBL_ACCOUNT."` ADD `policy_fin` TINYINT( 1 ) UNSIGNED DEFAULT '0' NOT NULL";
 
 //#############################################################################
 
