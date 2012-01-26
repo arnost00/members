@@ -29,21 +29,27 @@ echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
-@$vysl=MySQL_Query('SELECT u.id, u.prijmeni, u.jmeno, u.reg, u.hidden FROM '.TBL_ACCOUNT.', '.TBL_USER.' as u, '.TBL_USXUS.' WHERE '.TBL_ACCOUNT.'.id = '.TBL_USXUS.'.id_accounts AND '.TBL_USXUS.'.id_users = u.id AND '.TBL_ACCOUNT.'.policy_mng = '._MNG_SMALL_INT_VALUE_);
+//vytazeni malych treneru a poctu jejich sverencu
+//ifnull je tam kvuli malym trenerum, kteri nemaji zadne sverence
+//posledni subselect vytahne id_accounts pouze malych treneru
+$select = "select u.id, u.jmeno, u.prijmeni, u.reg, ifnull(ucn.cnt,0) `mbr_cnt`, u.hidden from ".TBL_USER." u left join
+(select count(1) cnt, chief_id cid from ".TBL_USER." group by chief_id) as ucn on u.id = ucn.cid
+where u.id in
+(select u.id from ".TBL_ACCOUNT." a inner join ".TBL_USXUS." uu on a.id = uu.id_accounts inner join ".TBL_USER." u on uu.id_users = u.id
+where a.policy_mng = "._MNG_SMALL_INT_VALUE_.") order by u.sort_name";
 
+@$vysl=MySQL_Query($select);
 $i=1;
 while ($zazn=MySQL_Fetch_Array($vysl))
 {
-	if(!$zazn['hidden'])
+	if ($zazn != FALSE && !$zazn['hidden'])
 	{
 		$row = array();
 		$row[] = $i++;
 		$row[] = $zazn['prijmeni'];
 		$row[] = $zazn['jmeno'];
 		$row[] = RegNumToStr($zazn['reg']);
-		$vysl3 = MySQL_Query('SELECT COUNT(*) AS `mbr_cnt` FROM '.TBL_USER.' WHERE chief_id = '.$zazn['id']);
-		$zazn3 = MySQL_Fetch_Array($vysl3);
-		$num = ($zazn3 != FALSE) ? $zazn3['mbr_cnt'] : 0;
+		$num = $zazn['mbr_cnt'];
 		$row[] = $num;
 		$row[] = ($num > 0) ? "<A HREF=\"javascript:open_win('./mng_smng_view.php?id=".$zazn['id']."','')\">Zobraz</A>" : '';
 		echo $data_tbl->get_new_row_arr($row)."\n";
