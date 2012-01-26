@@ -24,7 +24,6 @@ $data_tbl->set_header_col($col++,'Poø.è.',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Reg.è.',ALIGN_CENTER);
-//$data_tbl->set_header_col($col++,'Lic.',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Trenér',ALIGN_CENTER);
 
 echo $data_tbl->get_css()."\n";
@@ -47,7 +46,6 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 		$row[] = $zaznam['prijmeni'];
 		$row[] = $zaznam['jmeno'];
 		$row[] = RegNumToStr($zaznam['reg']);
-//		$row[] = ($zaznam['lic'] != 'C') ? '<B>'.$zaznam['lic'].'</B>' : $zaznam['lic'];
 		if ($zaznam['ch_hidden'] || $zaznam['ch_jmeno'] == NULL || $zaznam['ch_prijmeni'] == NULL)
 			$row[] = "<A HREF=\"javascript:open_win('./mng_edit.php?id=".$zaznam['id']."','')\">Edit</A>";
 		else

@@ -157,14 +157,6 @@ if (IsLoggedAdmin())
 <?
 }
 ?>
-<? /*
-<TR> //finance uzivatelu
-
-	<TD width="45%" align="right">Finance</TD>
-	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="fin" size="5" VALUE="<?echo $zaznam["fin"]?>"></TD>
-</TR> //finance uzivatelu 
-*/ ?>
 <TR>
 	<TD colspan="3"></TD>
 </TR>

@@ -26,7 +26,6 @@ db_Connect();
 @$zaznam0=MySQL_Fetch_Array($vysledek0);
 
 $data_tbl = new html_table_nfo;
-$data_tbl->enable_row_select = false;
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_new_row('Jméno',$zaznam0['jmeno'].' '.$zaznam0['prijmeni']);
@@ -69,25 +68,6 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 }
 echo $data_tbl->get_footer()."\n";
 
-//--------------------------------
-/*
-@$vysledek=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE id = $id LIMIT 1");
-@$zaznam=MySQL_Fetch_Array($vysledek);
-
-$data_tbl = new html_table_nfo;
-$data_tbl->enable_row_select = false;
-echo $data_tbl->get_css()."\n";
-echo $data_tbl->get_header()."\n";
-echo $data_tbl->get_new_row('Jméno',$zaznam['jmeno'].' '.$zaznam['prijmeni']);
-echo $data_tbl->get_new_row('Registraèní èíslo',$g_shortcut.RegNumToStr($zaznam['reg']));
-echo $data_tbl->get_new_row('Èíslo SI èipu',SINumToStr($zaznam['si_chip']));
-echo $data_tbl->get_new_row('Datum narození', SQLDate2String($zaznam['datum']));
-echo $data_tbl->get_new_row('Licence', $zaznam['lic']);
-echo $data_tbl->get_footer()."\n";
-
-echo '<H3 class="LinksTitle">Trenér pro èlena</H2>'."\n";
-
-*/
 ?>
 <BR>
 <BUTTON onclick="javascript:close_popup();">Zpìt</BUTTON>

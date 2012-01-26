@@ -199,7 +199,6 @@ function RaceInfoTable(&$zaznam,$add_row = '',$show_curr_term = false,$full_widt
 	global $g_enable_race_boss;
 
 	$data_tbl = new html_table_nfo;
-	$data_tbl->enable_row_select = false;
 	if($full_width)
 		$data_tbl->table_width = 100;
 	echo $data_tbl->get_css()."\n";
