@@ -104,44 +104,27 @@ function change_font(object)
 //-->
 </SCRIPT>
 
-<CENTER><BR><hr><BR></CENTER>
-<FORM METHOD=POST ACTION="./news_new_exc.php" name="form_news" id="form_news">
+<br><hr><br>
+<?
+DrawPageSubTitle('Formuláø pro vložení novinky');
+?>
+<FORM METHOD=POST ACTION="news_new_exc.php" name="form_news" id="form_news">
 <A name="addnews">&nbsp;</A>
-<TABLE width="100%">
-<TR><TD></TD><TD width="5" rowspan="11"></TD><TD align=left valign=bottom>
-<H3>Formuláø pro vložení novinky</H3>
-</TD></TR>
-<!-- temporary !!! - remove and convert to html_table_form -->
-<style type="text/css">
-TD.NewsEditCaption {
-	width : 80px;
-	vertical-align : top;
-	text-align : right;
-	color : <? echo $g_colors['body_text']; ?>;
-	font-weight : bold;
-}
-</style>
-<TR><TD class="NewsEditCaption">Datum</TD><TD class="DataValue">
-<INPUT TYPE="text" NAME="datum" SIZE=10 VALUE="<?echo GetCurrentDateString(true);?>">&nbsp;&nbsp;(DD.MM.RRRR)
-</TD></TR>
-<TR><TD colspan="3" height="5"></TD></TR>
-<TR><TD class="NewsEditCaption">Nadpis</TD><TD>
-<INPUT TYPE="text" NAME="nadpis" size="50">
-</TD></TR>
-<TR><TD colspan="3" height="5"></TD></TR>
-<TR><TD class="NewsEditCaption">Text</TD><TD>
-<TEXTAREA name="text" cols="50" rows="10" wrap=virtual></TEXTAREA>
-</TD></TR>
-<TR><TD colspan="2"></TD><TD>
-<INPUT TYPE="checkbox" NAME="t_bold" onClick="javascript:change_font(this);" value="t_bold">Tuèné písmo (<B>pøíklad</B>)<BR>
+<?
+$data_tbl = new html_table_form('news');
+echo $data_tbl->get_css()."\n";
+echo $data_tbl->get_header()."\n";
+
+echo $data_tbl->get_new_row('Datum', '<INPUT TYPE="text" NAME="datum" SIZE=10 MAXLENGTH=10 VALUE="'.GetCurrentDateString(true).'">&nbsp;&nbsp;(DD.MM.RRRR)');
+echo $data_tbl->get_new_row('Nadpis', '<INPUT TYPE="text" NAME="nadpis" size="50" MAXLENGTH=50>');
+echo $data_tbl->get_new_row('Text', '<TEXTAREA name="text" cols="50" rows="10" wrap=virtual></TEXTAREA>');
+echo $data_tbl->get_new_row_text('', '<INPUT TYPE="checkbox" NAME="t_bold" onClick="javascript:change_font(this);" value="t_bold">Tuèné písmo (<B>pøíklad</B>)<BR>
 <INPUT TYPE="checkbox" NAME="t_unli" onClick="javascript:change_font(this);" value="t_unli">Podtržené písmo (<U>pøíklad</U>)<BR>
-Upozornìní - Vždy ukonèujte zmìny písma, jinak mùže dojít k porušení formátování novinek.<BR>
-</TD></TR>
-<TR><TD colspan="3" height="5"></TD></TR>
-<TR><TD></TD><TD align=left valign=top>
-<INPUT TYPE="submit" VALUE="Odeslat">
-</TD></TR>
-</TABLE>
+Upozornìní - Vždy ukonèujte zmìny písma, jinak mùže dojít k porušení formátování novinek.');
+echo $data_tbl->get_empty_row();
+echo $data_tbl->get_new_row('','<INPUT TYPE="submit" VALUE="Odeslat">');
+echo $data_tbl->get_footer()."\n";
+?>
 </FORM>
 <?
 	}

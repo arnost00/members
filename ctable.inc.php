@@ -130,7 +130,7 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 		//__________________________________________________________________
 		function html_table_mc($table_class_name = '')
 		{
-			html_table_base::html_table_base($table_class_name);
+			html_table_base::html_table_base(($table_class_name != '') ? $table_class_name : 'ctmc');
 			global $g_colors;
 			$this->header_row = array();
 			$this->header_row2 = array();
@@ -298,7 +298,7 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 		//__________________________________________________________________
 		function html_table_nfo($table_class_name = '')
 		{
-			html_table_base::html_table_base($table_class_name);
+			html_table_base::html_table_base(($table_class_name != '') ? $table_class_name : 'ctnf');
 			$this->cellpadding = 0;
 			$this->cellspacing = 0;
 			$this->c1_width = 150;
@@ -338,7 +338,7 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 		//__________________________________________________________________
 		function html_table_form($table_class_name = '')
 		{
-			html_table_base::html_table_base($table_class_name);
+			html_table_base::html_table_base(($table_class_name != '') ? $table_class_name : 'ctfo');
 			$this->cellpadding = 0;
 			$this->cellspacing = 0;
 			$this->c1_width = 150;//'30%';

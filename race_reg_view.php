@@ -29,19 +29,18 @@ $query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.termin, z.si_chip as t_si_chip
 @$vysledek_z=MySQL_Query('SELECT * FROM '.TBL_RACE." WHERE `id`='$id' LIMIT 1");
 $zaznam_z = MySQL_Fetch_Array($vysledek_z);
 
-?>
-<H3>Vybraný závod</H3>
 
-<?
+DrawPageSubTitle('Vybraný závod');
+
 RaceInfoTable($zaznam_z,'',$gr_id != _REGISTRATOR_GROUP_ID_);
 ?>
 <TABLE class= "Zav" cellpadding="0" cellspacing="2" border="0">
 <BR>
 <BUTTON onclick="javascript:close_popup();">Zavøi</BUTTON>
 <BR><BR><hr><BR>
-<H3>Pøihlášení závodníci</H3>
-
 <?
+DrawPageSubTitle('Pøihlášení závodníci');
+
 $data_tbl = new html_table_mc();
 $col = 0;
 $data_tbl->set_header_col($col++,'Poø.',ALIGN_CENTER);

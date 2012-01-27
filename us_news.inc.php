@@ -6,9 +6,9 @@ DrawPageTitle('Aktuální informace (Aktualitky)');
 <CENTER>
 
 <A name="races"></A>
-<H3>Nejbližší závody (do <? echo GC_SHOW_RACE_DAYS; ?> dní)</H3>
-
 <?
+DrawPageSubTitle('Nejbližší závody (do'.GC_SHOW_RACE_DAYS.' dní)');
+
 include ('./common_race.inc.php');
 include ('./url.inc.php');
 
@@ -96,9 +96,9 @@ else
 <BR>
 
 <A name="regs"></A>
-<H3>Nejbližší pøihlášky (do <? echo GC_SHOW_REG_DAYS; ?> dní)</H3>
-
 <?
+DrawPageSubTitle('Nejbližší pøihlášky (do'.GC_SHOW_REG_DAYS.' dní)');
+
 $d1 = $curr_date;
 $d2 = IncDate($curr_date,GC_SHOW_REG_DAYS);
 $query = 'SELECT id, datum, datum2, nazev, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, vedouci FROM '.TBL_RACE.' WHERE ((prihlasky1 >= '.$d1.' && prihlasky1 <= '.$d2.') || (prihlasky2 >= '.$d1.' && prihlasky2 <= '.$d2.') || (prihlasky3 >= '.$d1.' && prihlasky3 <= '.$d2.') || (prihlasky4 >= '.$d1.' && prihlasky4 <= '.$d2.') || (prihlasky5 >= '.$d1.' && prihlasky5 <= '.$d2.')) ORDER BY datum';

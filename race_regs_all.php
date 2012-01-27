@@ -37,15 +37,12 @@ $sub_query = $sc->get_sql_string();
 @$vysledek_z=MySQL_Query("SELECT * FROM ".TBL_RACE." WHERE id=$id");
 $zaznam_z = MySQL_Fetch_Array($vysledek_z);
 
-?>
+DrawPageSubTitle('Vybraný závod');
 
-<H3>Vybraný závod</H3>
-
-<?
 RaceInfoTable($zaznam_z,'',$gr_id != _REGISTRATOR_GROUP_ID_);
 ?>
 <BR>
-<H3>Pøihlášky</H3>
+<? DrawPageSubTitle('Pøihlášky'); ?>
 
 <p>
 Pøihlášení èlena - se provede zapsáním kategorie pro pøíslušného èlena.<BR>

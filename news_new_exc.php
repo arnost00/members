@@ -2,9 +2,9 @@
 <?php /* novinky - editace (pridavani) novinek */
 @extract($_REQUEST);
 
-require ('./connect.inc.php');
-require ('./sess.inc.php');
-require ('./common.inc.php');
+require ('connect.inc.php');
+require ('sess.inc.php');
+require ('common.inc.php');
 
 if (IsLoggedEditor())
 {
@@ -19,6 +19,11 @@ if (IsLoggedEditor())
 	{
 
 		$datum2=String2DateDMY($datum);
+		
+		$datum2=mysql_escape_string($datum2);
+		$nadpis=mysql_escape_string($nadpis);
+		$text=mysql_escape_string($text);
+		
 		MySQL_Query("INSERT INTO ".TBL_NEWS." (id_user,datum,nadpis,text) VALUES ('$usr->account_id','$datum2','$nadpis','$text')");
 	}
 	header('location: '.$g_baseadr);

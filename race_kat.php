@@ -25,9 +25,9 @@ db_Connect();
 @$vysledek=MySQL_Query("SELECT * FROM ".TBL_RACE." where id=$id LIMIT 1");
 $zaznam=MySQL_Fetch_Array($vysledek);
 $kat_nf ='';
-?>
-<H3>Vybraný závod</H3>
-<?
+
+DrawPageSubTitle('Vybraný závod');
+
 RaceInfoTable($zaznam);
 ?>
 
@@ -50,7 +50,7 @@ function zmen_kat_null()
 <FORM METHOD=POST ACTION="./race_kat_exc.php?id=<?echo $id?>" name="form2">
 
 <br><br><INPUT TYPE="submit" VALUE="Odeslat zmìny kategorií">
-<H3>Kategorie v závodì</H3>
+<? DrawPageSubTitle('Kategorie v závodì'); ?>
 
 <?include "./race_kateg.inc.php"?>
 

@@ -63,9 +63,9 @@ function submit_off()
 //-->
 </SCRIPT>
 
-<H3>Vybraný závod</H3>
-
 <?
+DrawPageSubTitle('Vybraný závod');
+
 if (!$new)
 {
 	$add_r[0] ='Kategorie';
@@ -82,7 +82,7 @@ else
 
 <FORM METHOD=POST ACTION="us_race_regon_exc.php" name="form1" onsubmit="return check_reg(this);">
 
-<H3>Výbìr kategorie</H3>
+<? DrawPageSubTitle('Výbìr kategorie'); ?>
 
 Do které kategorie chcete pøihlásit:&nbsp;
 <?
@@ -158,9 +158,9 @@ if(strlen($zaznam_z['poznamka']) > 0)
 ?>
 
 <BR><hr><BR>
-<H3>Již pøihlášení závodníci</H3>
-
 <?
+DrawPageSubTitle('Již pøihlášení závodníci');
+
 $data_tbl = new html_table_mc();
 $col = 0;
 $data_tbl->set_header_col($col++,'Poø.',ALIGN_CENTER);

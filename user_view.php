@@ -36,8 +36,8 @@ DrawPageTitle('Pøehled pøihlášek na závody');
 @$vysledekU=MySQL_Query("SELECT id,prijmeni,jmeno FROM ".TBL_USER." WHERE id=".$id." LIMIT 1");
 $zaznamU=MySQL_Fetch_Array($vysledekU)
 
+DrawPageSubTitle('Vybraný èlen : '.$zaznamU["jmeno"].' '.$zaznamU["prijmeni"]);
 ?>
-<H3>Vybraný èlen : <? echo $zaznamU["jmeno"]." ".$zaznamU["prijmeni"]; ?></H3>
 <CENTER>
 
 <?

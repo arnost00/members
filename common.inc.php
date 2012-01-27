@@ -413,6 +413,12 @@ function DrawPageTitle($title, $show_date = true)
 	echo('<H2>'.$title.'</H2>');
 }
 
+function DrawPageSubTitle($title)
+{
+	echo('<H3>'.$title.'</H3>');
+}
+
+
 
 function HTML_Header($title)
 {
