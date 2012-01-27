@@ -42,17 +42,15 @@ db_Connect();
 @$vysledek_z=MySQL_Query("SELECT * FROM ".TBL_RACE." WHERE id=$id");
 $zaznam_z = MySQL_Fetch_Array($vysledek_z);
 
-?>
+DrawPageSubTitle('Vybraný závod');
 
-<H3>Vybraný závod</H3>
-
-<?
 RaceInfoTable($zaznam_z,'',$gr_id != _REGISTRATOR_GROUP_ID_);
 ?>
 <BR>
 <BUTTON onclick="javascript:close_popup();">Zpìt</BUTTON>
-<H3>Pøihlášky</H3>
 <?
+DrawPageSubTitle('Pøihlášky');
+
 $termin = raceterms::GetCurr4RegTerm($zaznam_z);
 
 if($termin == 0 && !IsLoggedAdmin() && !IsLoggedRegistrator())

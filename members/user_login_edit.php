@@ -13,8 +13,7 @@ include ("./common_user.inc.php");
 include ("./common.inc.php");
 
 db_Connect();
-
-DrawPageTitle('Èlenská základna - Administrace uživatelských úètù', false);
+$id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
 
 @$vysledek=MySQL_Query("SELECT jmeno,prijmeni,datum,hidden FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
 @$zaznam=MySQL_Fetch_Array($vysledek);
@@ -24,6 +23,8 @@ if (!$zaznam)
 	exit;
 }
 include "./header.inc.php"; // header obsahuje uvod html a konci <BODY>
+DrawPageTitle('Èlenská základna - Administrace uživatelských úètù', false);
+
 ?>
 <TABLE width="100%" cellpadding="0" cellspacing="0" border="0">
 <TR>
@@ -36,7 +37,7 @@ include "./header.inc.php"; // header obsahuje uvod html a konci <BODY>
 	$zaznam2=MySQL_Fetch_Array($vysledek2);
 ?>
 <BR><hr><BR>
-<H3>Základní údaje o vybraném èlenovi</H3>
+<? DrawPageSubTitle('Základní údaje o vybraném èlenovi'); ?>
 <TABLE width="90%">
 <TR>
 	<TD width="45%" align="right">Pøíjmení</TD>
@@ -64,9 +65,9 @@ include "./header.inc.php"; // header obsahuje uvod html a konci <BODY>
 <BR><hr><BR>
 <?
 	if($zaznam2 != FALSE)
-		echo "<H3>Editace úètu vybraného èlena oddílu</H3>";
+		DrawPageSubTitle('Editace úètu vybraného èlena oddílu');
 	else
-		echo "<H3>Založení nového úètu vybranému èlenu oddílu</H3>";
+		DrawPageSubTitle('Založení nového úètu vybranému èlenu oddílu');
 ?>
 <FORM METHOD=POST ACTION="./user_login_edit_exc.php?type=<? echo ($zaznam2 != FALSE) ? "1" : "2"; echo "&id=".$id;?>">
 <TABLE width="90%">
@@ -156,7 +157,7 @@ if($zaznam2 != FALSE)
 </FORM>
 
 <BR><hr><BR>
-<H3>Zmìna hesla</H3>
+<? DrawPageSubTitle('Zmìna hesla'); ?>
 
 <FORM METHOD=POST ACTION="./user_login_edit_exc.php?type=3&id=<?echo $id;?>">
 <TABLE width="90%">
@@ -192,7 +193,7 @@ if($zaznam2 != FALSE && IsLoggedAdmin())
 { // zamek uctu
 ?>
 <BR><hr><BR>
-<H3>Zamèení/odemèení úètu uživatele pro tyto stránky</H3>
+<? DrawPageSubTitle('Zamèení/odemèení úètu uživatele pro tyto stránky'); ?>
 <FORM METHOD=POST ACTION="./user_login_edit_exc.php?type=4&id=<?echo $id."&lock=".$zaznam2["locked"];?>">
 <TABLE width="90%">
 <TR>

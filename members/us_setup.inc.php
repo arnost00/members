@@ -19,7 +19,7 @@ if (IsSet($result) && is_numeric($result) && $result != 0)
 }
 ?>
 <BR><hr><BR>
-<H3>Základní údaje</H3>
+<? DrawPageSubTitle('Základní údaje'); ?>
 
 <TABLE width="90%">
 <TR>
@@ -35,7 +35,7 @@ if (IsSet($result) && is_numeric($result) && $result != 0)
 </TABLE>
 
 <BR><hr><BR>
-<H3>Volitelné údaje</H3>
+<? DrawPageSubTitle('Volitelné údaje'); ?>
 
 <FORM METHOD=POST ACTION="./us_setup_exc.php?type=1&id=<?echo $usr->account_id;?>">
 <TABLE width="90%">
@@ -71,7 +71,7 @@ if (IsSet($result) && is_numeric($result) && $result != 0)
 </FORM>
 
 <BR><hr><BR>
-<H3>Zmìna hesla</H3>
+<? DrawPageSubTitle('Zmìna hesla'); ?>
 
 <FORM METHOD=POST ACTION="./us_setup_exc.php?type=2&id=<?echo $usr->account_id;?>">
 <TABLE width="90%">

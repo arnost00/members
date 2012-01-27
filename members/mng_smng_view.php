@@ -18,7 +18,7 @@ include ("./common_user.inc.php");
 
 DrawPageTitle('Zobrazení èlenù pøidìlených malému trenéru', false);
 
-echo '<H3>Trenér'."</H3>\n";
+DrawPageSubTitle('Trenér');
 
 db_Connect();
 
@@ -32,7 +32,7 @@ echo $data_tbl->get_new_row('Jméno',$zaznam0['jmeno'].' '.$zaznam0['prijmeni']);
 echo $data_tbl->get_new_row('Registraèní èíslo',$g_shortcut.RegNumToStr($zaznam0['reg']));
 echo $data_tbl->get_footer()."\n";
 
-echo '<H3>Pøiøazení èlenové'."</H3>\n";
+DrawPageSubTitle('Pøiøazení èlenové');
 
 $i=1;
 $data_tbl = new html_table_mc();

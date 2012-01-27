@@ -32,16 +32,15 @@ $query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.si_chip as t_si_chip FROM '.TB
 @$vysledek_z=MySQL_Query("SELECT * FROM ".TBL_RACE." WHERE id=$id_zav LIMIT 1");
 $zaznam_z = MySQL_Fetch_Array($vysledek_z);
 
-?>
-<H3>Vybraný závod</H3>
+DrawPageSubTitle('Vybraný závod');
 
-<?
 RaceInfoTable($zaznam_z);
 ?>
 
 <BR><BR><hr><BR>
-<H3>Pøihlášení závodníci bez trvalých SI èipù</H3>
 <?
+DrawPageSubTitle('Pøihlášení závodníci bez trvalých SI èipù');
+
 if (mysql_num_rows($vysledek) > 0)
 {
 ?>

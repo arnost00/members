@@ -36,7 +36,7 @@ DrawPageTitle('Èlenská základna - Editace uživatelských úètù', false);
 	$zaznam2=MySQL_Fetch_Array($vysledek2);
 ?>
 <BR><hr><BR>
-<H3>Základní údaje o vybraném èlenovi</H3>
+<? DrawPageSubTitle('Základní údaje o vybraném èlenovi'); ?>
 <TABLE width="90%">
 <TR>
 	<TD width="45%" align="right">Pøíjmení</TD>
@@ -67,7 +67,7 @@ DrawPageTitle('Èlenská základna - Editace uživatelských úètù', false);
 <? } ?>
 </TABLE>
 <BR><hr>
-<H3>Zmìna hesla</H3>
+<? DrawPageSubTitle('Zmìna hesla'); ?>
 
 <FORM METHOD=POST ACTION="./user_login_edit_exc.php?type=3&id=<?echo $id;?>">
 <TABLE width="90%">

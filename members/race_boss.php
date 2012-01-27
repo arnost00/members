@@ -28,14 +28,12 @@ $zaznam=MySQL_Fetch_Array($vysledek);
 
 @$vysledekU=MySQL_Query("SELECT id,prijmeni,jmeno,hidden FROM ".TBL_USER." ORDER BY sort_name ASC");
 
-?>
-<H3>Vybraný závod</H3>
+DrawPageSubTitle('Vybraný závod');
 
-<?
 RaceInfoTable($zaznam);
-?>
 
-<H3>Úprava</H3>
+DrawPageSubTitle('Úprava');
+?>
 
 <FORM METHOD="POST" ACTION="./race_boss_exc.php?id=<?echo $id?>">
 

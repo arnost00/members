@@ -13,8 +13,8 @@ DrawPageTitle('Administrace stránek oddílu',false);
 
 <BR><hr>
 
-<H2>Speciální pomocné "funkce"</H2>
-<H3>! Používejte jen pokud víte co èiníte !</H3>
+<? DrawPageSubTitle('Speciální pomocné "funkce"'); ?>
+<B>! Používejte jen pokud víte co èiníte !</B><BR>
 
 <A HREF="srv_repair_czech_names_db.php" class="NaviColSm">Oprava tøídících jmen u uživatelù</A><BR>
 <A HREF="srv_repair_regs_db.php" class="NaviColSm">Oprava tabulky registrací na závody.</A><BR>
@@ -22,9 +22,8 @@ DrawPageTitle('Administrace stránek oddílu',false);
 
 <BR><hr>
 
-<H2>Informace o systému</H2>
-
-<?
+<? 
+DrawPageSubTitle('Informace o systému');
 
 $data_tbl = new html_table_nfo;
 echo $data_tbl->get_css()."\n";

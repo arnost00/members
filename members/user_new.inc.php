@@ -4,10 +4,10 @@ if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 if (IsLogged())
 {
 	if(IsSet($update))
-		echo '<H3>Editace údajù vybraného èlena oddílu</H3>';
+		DrawPageSubTitle('Editace údajù vybraného èlena oddílu');
 	else
 	{
-		echo '<H3>Vložení nového èlena</H3>';
+		DrawPageSubTitle('Vložení nového èlena');
 		$zaznam['prijmeni'] = '';
 		$zaznam['jmeno'] = '';
 		$zaznam['reg'] = '';
@@ -26,150 +26,74 @@ if (IsLogged())
 		$zaznam['lic_lob'] = '-';
 		$zaznam['hidden'] = 0;
 		$zaznam['fin'] = '';
+		$zaznam['rc'] = '';
 	}
 ?>
 <FORM METHOD=POST ACTION="./user_new_exc.php<?if (IsSet($update)) echo "?update=".$update?>">
-<TABLE width="90%">
-<TR>
-	<TD width="45%" align="right">Pøíjmení</TD>
-	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="prijmeni" SIZE=20 VALUE="<?echo $zaznam["prijmeni"]?>"></TD>
-</TR>
-<TR>
-	<TD width="45%" align="right">Jméno</TD>
-	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="jmeno" SIZE=15 VALUE="<?echo $zaznam["jmeno"]?>"></TD>
-</TR>
-<TR>
-	<TD width="45%" align="right">Registraèní èíslo</TD>
-	<TD width="5"></TD>
-	<TD class="DataValue"><? echo $g_shortcut; ?>&nbsp;&nbsp;<INPUT TYPE="text" NAME="reg" SIZE=4 VALUE="<?echo RegNumToStr($zaznam['reg'])?>"></TD>
-</TR>
-<TR>
-	<TD width="45%" align="right">Èíslo SI èipu</TD>
-	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="si" SIZE=9 MAXLENGTH=9 VALUE="<?echo $zaznam["si_chip"]?>"></TD>
-</TR>
-<TR>
-	<TD width="45%" align="right">Datum narození</TD>
-	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="datum" SIZE=10 VALUE="<?echo SQLDate2String($zaznam["datum"])?>">&nbsp;&nbsp;(DD.MM.RRRR)</TD>
-</TR>
-<TR>
-	<TD width="45%" align="right">Adresa</TD>
-	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="adresa" SIZE=40 VALUE="<?echo $zaznam["adresa"]?>"></TD>
-</TR>
-<TR>
-	<TD width="45%" align="right">Mìsto</TD>
-	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="mesto" SIZE=20 VALUE="<?echo $zaznam["mesto"]?>"></TD>
-</TR>
-<TR>
-	<TD width="45%" align="right">PSÈ</TD>
-	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="psc" SIZE=6 VALUE="<?echo $zaznam["psc"]?>"></TD>
-</TR>
-<TR>
-	<TD width="45%" align="right">Email</TD>
-	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="email" SIZE=40 VALUE="<?echo $zaznam["email"]?>"></TD>
-</TR>
-<TR>
-	<TD width="45%" align="right">Tel. domù</TD>
-	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="domu" SIZE=15 VALUE="<?echo $zaznam["tel_domu"]?>"></TD>
-</TR>
-<TR>
-	<TD width="45%" align="right">Tel. zamìstnání</TD>
-	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="zam" SIZE=15 VALUE="<?echo $zaznam["tel_zam"]?>"></TD>
-</TR>
-<TR>
-	<TD width="45%" align="right">Mobil</TD>
-	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="mobil" SIZE=15 VALUE="<?echo $zaznam["tel_mobil"]?>"></TD>
-</TR>
-<TR>
-	<TD width="45%" align="right">Pohlavi</TD>
-	<TD width="5"></TD>
-	<TD class="DataValue">
-	<select name='poh'>
-			<option value='H' <?if ($zaznam["poh"]=='H') {echo "SELECTED";}?>>H</option>
-			<option value='D' <?if ($zaznam["poh"]=='D') {echo "SELECTED";}?>>D</option>
-	</select>
-	</TD>
-</TR>
-<TR>
-	<TD width="45%" align="right">Licence OB</TD>
-	<TD width="5"></TD>
-	<TD class="DataValue">
-	<select name='lic'>
-			<option value='E' <?if ($zaznam["lic"]=='E') {echo "SELECTED";}?>>E</option>
-			<option value='A' <?if ($zaznam["lic"]=='A') {echo "SELECTED";}?>>A</option>
-			<option value='B' <?if ($zaznam["lic"]=='B') {echo "SELECTED";}?>>B</option>
-			<option value='C' <?if ($zaznam["lic"]=='C') {echo "SELECTED";}?>>C</option>
-			<option value='D' <?if ($zaznam["lic"]=='D') {echo "SELECTED";}?>>D</option>
-			<option value='R' <?if ($zaznam["lic"]=='R') {echo "SELECTED";}?>>R</option>
-			<option value='-' <?if ($zaznam["lic"]=='-') {echo "SELECTED";}?>>-</option>
-	</select>
-	</TD>
-</TR>
-<TR>
-	<TD width="45%" align="right">Licence MTBO</TD>
-	<TD width="5"></TD>
-	<TD class="DataValue">
-	<select name='lic_mtbo'>
-			<option value='E' <?if ($zaznam["lic_mtbo"]=='E') {echo "SELECTED";}?>>E</option>
-			<option value='A' <?if ($zaznam["lic_mtbo"]=='A') {echo "SELECTED";}?>>A</option>
-			<option value='B' <?if ($zaznam["lic_mtbo"]=='B') {echo "SELECTED";}?>>B</option>
-			<option value='C' <?if ($zaznam["lic_mtbo"]=='C') {echo "SELECTED";}?>>C</option>
-			<option value='D' <?if ($zaznam["lic_mtbo"]=='D') {echo "SELECTED";}?>>D</option>
-			<option value='R' <?if ($zaznam["lic_mtbo"]=='R') {echo "SELECTED";}?>>R</option>
-			<option value='-' <?if ($zaznam["lic_mtbo"]=='-') {echo "SELECTED";}?>>-</option>
-	</select>
-	</TD>
-</TR>
-<TR>
-	<TD width="45%" align="right">Licence LOB</TD>
-	<TD width="5"></TD>
-	<TD class="DataValue">
-	<select name='lic_lob'>
-			<option value='E' <?if ($zaznam["lic_lob"]=='E') {echo "SELECTED";}?>>E</option>
-			<option value='A' <?if ($zaznam["lic_lob"]=='A') {echo "SELECTED";}?>>A</option>
-			<option value='B' <?if ($zaznam["lic_lob"]=='B') {echo "SELECTED";}?>>B</option>
-			<option value='C' <?if ($zaznam["lic_lob"]=='C') {echo "SELECTED";}?>>C</option>
-			<option value='D' <?if ($zaznam["lic_lob"]=='D') {echo "SELECTED";}?>>D</option>
-			<option value='R' <?if ($zaznam["lic_lob"]=='R') {echo "SELECTED";}?>>R</option>
-			<option value='-' <?if ($zaznam["lic_lob"]=='-') {echo "SELECTED";}?>>-</option>
-	</select>
-	</TD>
-</TR>
-<? 
+<?
+function GetLicenceComboBox($lic_name, $lic_value)
+{
+	$value = '<select name=\''.$lic_name.'\'>';
+	$value .= '<option value=\'E\''.(($lic_value=='E') ? ' SELECTED' : '').'>E</option>';
+	$value .= '<option value=\'A\''.(($lic_value=='A') ? ' SELECTED' : '').'>A</option>';
+	$value .= '<option value=\'B\''.(($lic_value=='B') ? ' SELECTED' : '').'>B</option>';
+	$value .= '<option value=\'C\''.(($lic_value=='C') ? ' SELECTED' : '').'>C</option>';
+	$value .= '<option value=\'D\''.(($lic_value=='D') ? ' SELECTED' : '').'>D</option>';
+	$value .= '<option value=\'R\''.(($lic_value=='R') ? ' SELECTED' : '').'>R</option>';
+	$value .= '<option value=\'-\''.(($lic_value=='-') ? ' SELECTED' : '').'>-</option>';
+	$value .= '</select>';
+	return $value;
+}
+
+$data_tbl = new html_table_form();
+echo $data_tbl->get_css()."\n";
+echo $data_tbl->get_header()."\n";
+
+echo $data_tbl->get_new_row('Pøíjmení', '<INPUT TYPE="text" NAME="prijmeni" SIZE=30 MAXLENGTH=30 VALUE="'.$zaznam["prijmeni"].'">');
+echo $data_tbl->get_new_row('Jméno', '<INPUT TYPE="text" NAME="jmeno" SIZE=30 MAXLENGTH=20 VALUE="'.$zaznam["jmeno"].'">');
+echo $data_tbl->get_new_row('Registraèní èíslo', $g_shortcut.'&nbsp;&nbsp;<INPUT TYPE="text" NAME="reg" SIZE=4 MAXLENGTH=4 VALUE="'.RegNumToStr($zaznam['reg']).'"> <a href="javascript:open_win_ex(\'./find_reg.php\',\'\',600,400)">Hledání volných reg.è.</a>');
+echo $data_tbl->get_new_row('Èíslo SI èipu', '<INPUT TYPE="text" NAME="si" SIZE=10 MAXLENGTH=9 VALUE="'.$zaznam["si_chip"].'">');
+echo $data_tbl->get_new_row('Datum narození', '<INPUT TYPE="text" NAME="datum" SIZE=10 VALUE="'.SQLDate2String($zaznam["datum"]).'">&nbsp;&nbsp;(DD.MM.RRRR)');
+echo $data_tbl->get_new_row('Adresa', '<INPUT TYPE="text" NAME="adresa" SIZE=60 MAXLENGTH=50 VALUE="'.$zaznam["adresa"].'">');
+echo $data_tbl->get_new_row('Mìsto', '<INPUT TYPE="text" NAME="mesto" SIZE=30 MAXLENGTH=25 VALUE="'.$zaznam["mesto"].'">');
+echo $data_tbl->get_new_row('PSÈ', '<INPUT TYPE="text" NAME="psc" SIZE=10 MAXLENGTH=6 VALUE="'.$zaznam["psc"].'">');
+echo $data_tbl->get_new_row('Email', '<INPUT TYPE="text" NAME="email" SIZE=60 MAXLENGTH=50 VALUE="'.$zaznam["email"].'">');
+echo $data_tbl->get_new_row('Tel. domù', '<INPUT TYPE="text" NAME="domu" SIZE=20 MAXLENGTH=25 VALUE="'.$zaznam["tel_domu"].'">');
+echo $data_tbl->get_new_row('Tel. zamìstnání', '<INPUT TYPE="text" NAME="zam" SIZE=20 MAXLENGTH=25 VALUE="'.$zaznam["tel_zam"].'">');
+echo $data_tbl->get_new_row('Mobil', '<INPUT TYPE="text" NAME="mobil" SIZE=20 MAXLENGTH=25 VALUE="'.$zaznam["tel_mobil"].'">');
+$value = '<select name=\'poh\'>';
+$value .= '<option value=\'H\''.(($zaznam["poh"]=='H') ? ' SELECTED' : '').'>H</option>';
+$value .= '<option value=\'D\''.(($zaznam["poh"]=='D') ? ' SELECTED' : '').'>D</option>';
+$value .= '</select>';
+echo $data_tbl->get_new_row('Pohlavi', $value);
+echo $data_tbl->get_new_row('Licence OB', GetLicenceComboBox('lic',$zaznam["lic"]));
+echo $data_tbl->get_new_row('Licence MTBO', GetLicenceComboBox('lic_mtbo',$zaznam["lic_mtbo"]));
+echo $data_tbl->get_new_row('Licence LOB', GetLicenceComboBox('lic_lob',$zaznam["lic_lob"]));
+
 if (IsLoggedAdmin())
 {
-?>
-<TR>
-	<TD width="45%" align="right"></TD>
-	<TD width="5"></TD>
-	<TD><INPUT TYPE="checkbox" NAME="hidden" SIZE=15 VALUE="1" <? if ($zaznam["hidden"]) echo "checked" ?> > Skrytý èlen (vidí ho jen admin)</TD>
-</TR>
-<?
+	echo $data_tbl->get_new_row_text('', '<INPUT TYPE="checkbox" NAME="hidden" SIZE=15 VALUE="1"'.(($zaznam["hidden"] == 1) ? ' checked' : '').'> Skrytý èlen (vidí ho jen admin)');
+	echo $data_tbl->get_new_row('Rodné èíslo', '<INPUT TYPE="text" NAME="rc" SIZE=30 MAXLENGTH=10 VALUE="'.$zaznam["rc"].'"> (9999999999)');
 }
+/*
+	prijmeni 	varchar(30) 
+	jmeno 	varchar(20)
+	adresa 	varchar(50)
+	mesto 	varchar(25)
+	psc 	varchar(6)
+	tel_domu 	varchar(25) 
+	tel_zam 	varchar(25) 
+	tel_mobil 	varchar(25) 
+	email 	varchar(50)
+	rc 	varchar(10)
+*/
+
+echo $data_tbl->get_empty_row();
+echo $data_tbl->get_new_row('','<INPUT TYPE="submit" VALUE="'.((IsSet($update)) ? 'Zmìnit údaje èlena' : 'Vytvoøit nového èlena').'">');
+echo $data_tbl->get_empty_row();
+echo $data_tbl->get_new_row_simple('<b>Upozornìní:</b> Zadané jméno a další údaje se používají i pro potøeby registrace závodníka do centrální registrace a pøi prihlašování na závody.');
+echo $data_tbl->get_footer()."\n";
 ?>
-<TR>
-	<TD colspan="3"></TD>
-</TR>
-<TR>
-	<TD colspan="3" align="center"><INPUT TYPE="submit" VALUE="<?echo (IsSet($update)) ? "Zmìnit údaje èlena" : "Vytvoøit nového èlena"; ?>"></TD>
-</TR>
-<TR>
-	<TD colspan="3"></TD>
-</TR>
-<TR>
-	<TD colspan="3"><b>Upozornìní:</b> Zadané jméno a další údaje se používají i pro potøeby registrace závodníka do centrální registrace a pøi prihlašování na závody.</TD>
-</TR>
-</TABLE>
 </FORM>
 <?
 }

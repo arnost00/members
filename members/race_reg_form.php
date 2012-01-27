@@ -85,9 +85,9 @@ function submit_form_reg()
 
 //-->
 </SCRIPT>
-<H3>Vybraný závod</H3>
-
 <?
+DrawPageSubTitle('Vybraný závod');
+
 RaceInfoTable($zaznam_z);
 ?>
 
@@ -145,9 +145,10 @@ Stav odeslání pøihlášky&nbsp;&nbsp;<select name="regsend" size="1">
 </FORM>
 <?//------------------------------?>
 <BR><BR><hr><BR>
-<H3>Pøihlášení závodníci</H3>
 
 <?
+DrawPageSubTitle('Pøihlášení závodníci');
+
 $data_tbl = new html_table_mc();
 $col = 0;
 $data_tbl->set_header_col($col++,'Poø.',ALIGN_CENTER);

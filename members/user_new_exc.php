@@ -6,31 +6,55 @@ require ('./connect.inc.php');
 require ('./sess.inc.php');
 require ('./modify_log.inc.php');
 
+if (!IsSet($fin)) $fin = 0;
+if (!IsSet($rc)) $rc = '';
+
+if (!IsSet($hidden)) $hidden = 0;
+$datum = String2SQLDateDMY($datum);
+
+// --> filling of czech sort helping column
+include "./common.inc.php";
+$name2 = $prijmeni." ".$jmeno;
+switch ($g_czech_sort)
+{
+	case 1 :	// cp1250 -> iso?
+		$name2 = cp2iso($name2);
+		break;
+	case 2 :	//	 without changes
+		break;
+}
+// <-- end
+
+$prijmeni=mysql_escape_string($prijmeni);
+$jmeno=mysql_escape_string($jmeno);
+$datum=mysql_escape_string($datum);
+$adresa=mysql_escape_string($adresa);
+$mesto=mysql_escape_string($mesto);
+$psc=mysql_escape_string($psc);
+$domu=mysql_escape_string($domu);
+$zam=mysql_escape_string($zam);
+$mobil=mysql_escape_string($mobil);
+$email=mysql_escape_string($email);
+$reg=mysql_escape_string($reg);
+$si=mysql_escape_string($si);
+$name2=mysql_escape_string($name2);
+$hidden=mysql_escape_string($hidden);
+$poh=mysql_escape_string($poh);
+$lic=mysql_escape_string($lic);
+$lic_mtbo=mysql_escape_string($lic_mtbo);
+$lic_lob=mysql_escape_string($lic_lob);
+$fin=mysql_escape_string($fin);
+$rc=mysql_escape_string($rc);
+
 if (IsLoggedAdmin())
 {
 	db_Connect();
 
-	if (!IsSet($fin)) $fin = 0;
-
-	// --> filling of czech sort helping column
-	include "./common.inc.php";
-	$name2 = $prijmeni." ".$jmeno;
-	switch ($g_czech_sort)
-	{
-		case 1 :	// cp1250 -> iso?
-			$name2 = cp2iso($name2);
-			break;
-		case 2 :	//	 without changes
-			break;
-	}
-	// <-- end
-	if (!IsSet($hidden)) $hidden = 0;
-	$datum = String2SQLDateDMY($datum);
-
 	if (IsSet($update))
 	{
-		//if ($si_chip="") {$si_chip='NULL'}
-		$result=MySQL_Query("UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic='$lic', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin' WHERE id='$update'")
+		$update = (isset($update) && is_numeric($update)) ? (int)$update : 0;
+
+		$result=MySQL_Query("UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic='$lic', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin', rc='$rc' WHERE id='$update'")
 			or die("Chyba pøi provádìní dotazu do databáze.");
 		if ($result == FALSE)
 			die ("Nepodaøilo se zmìnit údaje èlena.");
@@ -38,7 +62,7 @@ if (IsLoggedAdmin())
 	}
 	else
 	{
-		$result=MySQL_Query("INSERT INTO ".TBL_USER." (prijmeni,jmeno,datum,adresa,mesto,psc,tel_domu,tel_zam,tel_mobil,email,reg,si_chip,hidden,sort_name,poh,lic,lic_mtbo,lic_lob,fin) VALUES ('$prijmeni','$jmeno','$datum','$adresa','$mesto','$psc','$domu','$zam','$mobil','$email','$reg','$si','$hidden','$name2','$poh','$lic','$lic_mtbo','$lic_lob','$fin')")
+		$result=MySQL_Query("INSERT INTO ".TBL_USER." (prijmeni,jmeno,datum,adresa,mesto,psc,tel_domu,tel_zam,tel_mobil,email,reg,si_chip,hidden,sort_name,poh,lic,lic_mtbo,lic_lob,fin,rc) VALUES ('$prijmeni','$jmeno','$datum','$adresa','$mesto','$psc','$domu','$zam','$mobil','$email','$reg','$si','$hidden','$name2','$poh','$lic','$lic_mtbo','$lic_lob','$fin','$rc')")
 			or die("Chyba pøi provádìní dotazu do databáze.");
 		if ($result == FALSE)
 			die ("Nepodaøilo se vložit èlena.");
@@ -50,25 +74,12 @@ else if (IsLoggedManager() || IsLoggedSmallManager())
 {
 	db_Connect();
 
-	if (!IsSet($fin)) $fin = 0;
-
-	// --> filling of czech sort helping column
-	include "./common.inc.php";
-	$name2 = $prijmeni." ".$jmeno;
-	switch ($g_czech_sort)
-	{
-		case 1 :	// cp1250 -> iso?
-			$name2 = cp2iso($name2);
-			break;
-		case 2 :	//	 without changes
-			break;
-	}
-	// <-- end
 	$hidden = 0;	// unhidden users only
-	$datum = String2SQLDateDMY($datum);
 
 	if (IsSet($update))
 	{
+		$update = (isset($update) && is_numeric($update)) ? (int)$update : 0;
+		
 		$result=MySQL_Query("UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic='$lic', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin' WHERE id='$update'")
 			or die("Chyba pøi provádìní dotazu do databáze.");
 		if ($result == FALSE)
@@ -94,24 +105,12 @@ else if (IsLoggedUser())
 {
 	if (IsSet($update) && $update == $usr->user_id)
 	{
+		$update = (isset($update) && is_numeric($update)) ? (int)$update : 0;
+		
 		db_Connect();
 
-		if (!IsSet($fin)) $fin = 0;
-
-		// --> filling of czech sort helping column
-		include "./common.inc.php";
-		$name2 = $prijmeni." ".$jmeno;
-		switch ($g_czech_sort)
-		{
-			case 1 :	// cp1250 -> iso?
-				$name2 = cp2iso($name2);
-				break;
-			case 2 :	//	 without changes
-				break;
-		}
-		// <-- end
 		$hidden = 0;	// unhidden users only
-		$datum = String2SQLDateDMY($datum);
+
 		$result=MySQL_Query("UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin' WHERE id='$update'")
 			or die("Chyba pøi provádìní dotazu do databáze.");
 		if ($result == FALSE)

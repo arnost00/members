@@ -12,7 +12,7 @@ if (IsLoggedSmallAdmin())
 	db_Connect();
 	include './common_user.inc.php';
 
-	if (!IsSet ($id)) $id = 0;
+	$id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
 
 	if ($id)
 	{
@@ -44,10 +44,8 @@ if (IsLoggedSmallAdmin())
 				SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id2.' - lock ('.(int)$lock.')');
 			}
 		}
-		header('location: '.$g_baseadr.'index.php?id=700&subid=1');
 	}
-
-	header('location: '.$g_baseadr.'index.php?id=700&subid=4');
+	header('location: '.$g_baseadr.'index.php?id='._SMALL_ADMIN_GROUP_ID_.'&subid=2');
 }
 else
 {

@@ -3,14 +3,17 @@ define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
 @extract($_REQUEST);
 
-require ("./connect.inc.php");
-require ("./sess.inc.php");
+require ("connect.inc.php");
+require ("sess.inc.php");
+require ("ctable.inc.php");
 if (!IsLoggedAdmin() && !IsLoggedManager())
 {
 	header("location: ".$g_baseadr."error.php?code=21");
 	exit;
 }
 db_Connect();
+$id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
+
 // id je z tabulky "users"
 @$vysledek=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
 @$zaznam=MySQL_Fetch_Array($vysledek);
@@ -27,7 +30,7 @@ DrawPageTitle('Èlenská základna - Editace uživatele', false);
 <TD width="90%" ALIGN=left>
 <CENTER>
 <BR><hr><BR>
-<? include "./user_new.inc.php"; ?>
+<? include ("user_new.inc.php"); ?>
 <BR><hr><BR>
 <? if (IsLoggedManager()) { ?>
 <A HREF="index.php?id=500&subid=1">Zpìt na seznam èlenù</A><BR>
@@ -41,7 +44,7 @@ DrawPageTitle('Èlenská základna - Editace uživatele', false);
 </TR>
 <TR><TD COLSPAN=4 ALIGN=CENTER>
 <!-- Footer Begin -->
-<?include "./footer.inc.php"?>
+<?include ("footer.inc.php");?>
 <!-- Footer End -->
 </TD></TR>
 </TABLE>
