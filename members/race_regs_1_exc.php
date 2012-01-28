@@ -55,6 +55,11 @@ if($termin != 0)
 		else
 		{	// update
 //			echo "UPD";
+			$kateg=mysql_escape_string($kateg);
+			$pozn=mysql_escape_string($pozn);
+			$pozn2=mysql_escape_string($pozn2);
+			$termin=mysql_escape_string($termin);
+			
 			$result=MySQL_Query("UPDATE ".TBL_ZAVXUS." SET kat='$kateg', pozn='$pozn', pozn_in='$pozn2', termin='$termin' WHERE id_zavod = '$id' AND id_user = '$user_id'")
 				or die("Chyba pøi provádìní dotazu do databáze.");
 			if ($result == FALSE)
@@ -66,6 +71,11 @@ if($termin != 0)
 		if ($kateg != '')
 		{	// new
 //			echo "NEW";
+			$kateg=mysql_escape_string($kateg);
+			$pozn=mysql_escape_string($pozn);
+			$pozn2=mysql_escape_string($pozn2);
+			$termin=mysql_escape_string($termin);
+
 			$result=MySQL_Query("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in,termin) VALUES ('$user_id','$id','$kateg', '$pozn', '$pozn2','$termin')")
 				or die("Chyba pøi provádìní dotazu do databáze.");
 			if ($result == FALSE)

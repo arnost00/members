@@ -13,6 +13,7 @@ if (!IsLoggedRegistrator())
 	header("location: ".$g_baseadr."error.php?code=21");
 	exit;
 }
+$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
 db_Connect();
 
@@ -42,6 +43,7 @@ foreach ($kategorie_vypis as $kat_key => $kat_value)
 }
 
 $kategorie = $kat.$kat_n;
+$kategorie=mysql_escape_string($kategorie);
 
 $result=MySQL_Query('UPDATE '.TBL_RACE." SET `kategorie`='$kategorie' WHERE `id`='$id'")
 	or die('Chyba pøi provádìní dotazu do databáze.');

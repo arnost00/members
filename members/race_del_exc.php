@@ -8,6 +8,7 @@ require ("./sess.inc.php");
 if (IsLoggedRegistrator())
 {
 	db_Connect();
+	$id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
 
 	@$vysledek=MySQL_Query("SELECT id FROM ".TBL_ZAVXUS." WHERE id_zavod='$id'");
 	while ($zaznam=MySQL_Fetch_Array($vysledek))
