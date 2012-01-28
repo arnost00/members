@@ -15,6 +15,8 @@ if (!IsLogged())
 
 require ("./ctable.inc.php");
 
+$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+
 db_Connect();
 // id je z tabulky "users"
 @$vysledek=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
@@ -47,7 +49,7 @@ if (IsLoggedRegistrator())
 echo $data_tbl->get_new_row('Adresa', $zaznam['adresa']);
 echo $data_tbl->get_new_row('Mìsto', $zaznam['mesto']);
 echo $data_tbl->get_new_row('PSÈ', $zaznam['psc']);
-echo $data_tbl->get_new_row('Email', GetEmailHTML($zaznam["email"]));
+echo $data_tbl->get_new_row('Email', GetEmailHTML(ParseEmails($zaznam["email"])));
 echo $data_tbl->get_new_row('Tel. domù', $zaznam["tel_domu"]);
 echo $data_tbl->get_new_row('Tel. zamìstnání', $zaznam["tel_zam"]);
 echo $data_tbl->get_new_row('Mobil', $zaznam["tel_mobil"]);

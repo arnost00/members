@@ -18,6 +18,8 @@ if (!IsLogged())
 db_Connect();
 include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 
+$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+
 DrawPageTitle('Pøehled pøihlášek na závody');
 ?>
 <script language="javascript">
@@ -34,7 +36,7 @@ DrawPageTitle('Pøehled pøihlášek na závody');
 
 // id je z tabulky "users"
 @$vysledekU=MySQL_Query("SELECT id,prijmeni,jmeno FROM ".TBL_USER." WHERE id=".$id." LIMIT 1");
-$zaznamU=MySQL_Fetch_Array($vysledekU)
+$zaznamU=MySQL_Fetch_Array($vysledekU);
 
 DrawPageSubTitle('Vybraný èlen : '.$zaznamU["jmeno"].' '.$zaznamU["prijmeni"]);
 ?>

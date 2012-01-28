@@ -9,11 +9,12 @@ require ('./modify_log.inc.php');
 if (!IsSet($fin)) $fin = 0;
 if (!IsSet($rc)) $rc = '';
 
+include "./common.inc.php";
+
 if (!IsSet($hidden)) $hidden = 0;
 $datum = String2SQLDateDMY($datum);
 
 // --> filling of czech sort helping column
-include "./common.inc.php";
 $name2 = $prijmeni." ".$jmeno;
 switch ($g_czech_sort)
 {

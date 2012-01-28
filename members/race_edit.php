@@ -18,6 +18,8 @@ if (!IsLoggedRegistrator())
 include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 DrawPageTitle('Editace parametrù závodu', false);
 
+$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+
 db_Connect();
 
 @$vysledek=MySQL_Query("SELECT * FROM ".TBL_RACE." where id=$id LIMIT 1");

@@ -20,6 +20,8 @@ DrawPageTitle('Zobrazení èlenù pøidìlených malému trenéru', false);
 
 DrawPageSubTitle('Trenér');
 
+$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+
 db_Connect();
 
 @$vysledek0=MySQL_Query("SELECT jmeno,prijmeni,reg FROM ".TBL_USER." WHERE id = $id LIMIT 1");

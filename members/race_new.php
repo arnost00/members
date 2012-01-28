@@ -21,7 +21,7 @@ DrawPageTitle('Vytvoøení nového závodu', false);
 
 db_Connect();
 
-$type = (IsSet($type)) ? $type : 0;
+$type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
 if($type == 1)
 {	// vicedenni
 ?>
