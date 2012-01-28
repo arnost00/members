@@ -25,7 +25,7 @@ $sc->set_url('index.php?id=500&subid=1',true);
 $sub_query = $sc->get_sql_string();
 
 $query = "SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob FROM ".TBL_USER.$sub_query;
-//$query = "SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob FROM ".TBL_USER." ORDER BY sort_name ASC"
+
 @$vysledek=MySQL_Query($query);
 
 if (IsSet($result) && is_numeric($result) && $result != 0)

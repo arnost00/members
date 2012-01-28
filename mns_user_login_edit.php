@@ -12,6 +12,8 @@ if (!IsLoggedSmallManager())
 include ("./common_user.inc.php");
 include ("./common.inc.php");
 
+$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+
 db_Connect();
 @$vysledek=MySQL_Query("SELECT jmeno,prijmeni,datum,hidden FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
 @$zaznam=MySQL_Fetch_Array($vysledek);

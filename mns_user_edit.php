@@ -10,6 +10,9 @@ if (!IsLoggedSmallManager())
 	header("location: ".$g_baseadr."error.php?code=21");
 	exit;
 }
+
+$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+
 db_Connect();
 // id je z tabulky "users"
 @$vysledek=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");

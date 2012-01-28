@@ -19,6 +19,10 @@ include('./url.inc.php');
 
 db_Connect();
 
+
+$id_zav = (IsSet($id_zav) && is_numeric($id_zav)) ? (int)$id_zav : 0;
+$id_us = (IsSet($id_us) && is_numeric($id_us)) ? (int)$id_us : 0;
+
 DrawPageTitle('Pøihláška na závod', false);
 
 @$vysledek=MySQL_Query("SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod=$id_zav ORDER BY id");

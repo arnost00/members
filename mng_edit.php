@@ -16,6 +16,8 @@ include ('./header.inc.php'); // header obsahuje uvod html a konci <BODY>
 include ('./common.inc.php');
 include ('./common_user.inc.php');
 
+$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+
 DrawPageTitle('Editace pøiøazení trenéra èlenu',false);
 ?>
 <SCRIPT LANGUAGE="JavaScript">
