@@ -15,7 +15,7 @@ if (!IsLoggedRegistrator())
 }
 
 db_Connect();
-$rtype = (IsSet($rtype)) ? $rtype : 0;
+$rtype= (IsSet($rtype && is_numeric($rtype)) ? (int)$rtype: 0;
 
 $datum = String2DateDMY($datum);
 
@@ -56,6 +56,23 @@ if ($datum=='' || ($datum2=='' && $rtype == 1) || $nazev=='')
 }
 else
 {
+	$datum=mysql_escape_string($datum);
+	$datum2=mysql_escape_string($datum2);
+	$nazev=mysql_escape_string($nazev);
+	$misto=mysql_escape_string($misto);
+	$typ=mysql_escape_string($typ);
+	$zebricek2=mysql_escape_string($zebricek2);
+	$ranking=mysql_escape_string($ranking);
+	$prihlasky=mysql_escape_string($prihlasky);
+	$prihlasky1=mysql_escape_string($prihlasky1);
+	$prihlasky2=mysql_escape_string($prihlasky2);
+	$prihlasky3=mysql_escape_string($prihlasky3);
+	$prihlasky4=mysql_escape_string($prihlasky4);
+	$prihlasky5=mysql_escape_string($prihlasky5);
+	$etap=mysql_escape_string($etap);
+	$oddil=mysql_escape_string($oddil);
+	$modify_flag=mysql_escape_string($modify_flag);
+
 	$result=MySQL_Query("INSERT INTO ".TBL_RACE." (datum, datum2, nazev, misto, typ, zebricek, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, etap, poznamka, vicedenni, oddil,modify_flag) VALUES ('$datum', '$datum2', '$nazev', '$misto', '$typ', '$zebricek2', '$ranking', '$odkaz', '$prihlasky', '$prihlasky1', '$prihlasky2', '$prihlasky3', '$prihlasky4', '$prihlasky5', '$etap', '$poznamka', '$vicedenni', '$oddil', '$modify_flag')")
 		or die("Chyba pøi provádìní dotazu do databáze.");
 	if ($result == FALSE)

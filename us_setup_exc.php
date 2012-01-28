@@ -9,6 +9,9 @@ require('./modify_log.inc.php');
 
 if (IsLogged())
 {
+	$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+	$type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
+	
 	db_Connect();
 	include "./common_user.inc.php";
 
@@ -16,6 +19,9 @@ if (IsLogged())
 	switch ($type)
 	{
 	case 1: // podpis & login
+		$login=mysql_escape_string($login);
+		$podpis=mysql_escape_string($podpis);
+
 		if ($podpis=="" || $login=="")
 			$result=CS_EMPTY_ITEM;
 		else if (strlen($login) < 4)

@@ -8,6 +8,8 @@ require ('./modify_log.inc.php');
 
 if (IsLoggedAdmin())
 {
+	$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+
 	db_Connect();
 	include "./common_user.inc.php";
 
@@ -24,6 +26,8 @@ if (IsLoggedAdmin())
 }
 else if (IsLoggedManager())
 {
+	$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+	
 	if ($id == $usr->user_id)
 	{
 		header("location: ".$g_baseadr."error.php?code=202");

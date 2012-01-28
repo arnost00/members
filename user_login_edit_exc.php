@@ -9,6 +9,9 @@ require('./modify_log.inc.php');
 
 if (IsLoggedAdmin())
 {
+	$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+	$type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
+
 	db_Connect();
 	include "./common_user.inc.php";
 
@@ -29,6 +32,13 @@ if (IsLoggedAdmin())
 	switch ($type)
 	{
 	case 1: // update
+		$login=mysql_escape_string($login);
+		$podpis=mysql_escape_string($podpis);
+		$news=mysql_escape_string($news);
+		$regs=mysql_escape_string($regs);
+		$mng=mysql_escape_string($mng);
+		$adm=mysql_escape_string($adm);
+ 
 		$id2 = GetUserAccountId_Users($id);
 		if ($login=="" || $podpis=="")
 			$result=CS_EMPTY_ITEM;
@@ -46,6 +56,13 @@ if (IsLoggedAdmin())
 		}
 		break;
 	case 2: // new
+		$login=mysql_escape_string($login);
+		$podpis=mysql_escape_string($podpis);
+		$news=mysql_escape_string($news);
+		$regs=mysql_escape_string($regs);
+		$mng=mysql_escape_string($mng);
+		$adm=mysql_escape_string($adm);
+		
 		if ($login=="" || $podpis=="" || $nheslo=="" || $nheslo2=="")
 			$result=CS_EMPTY_ITEM;
 		else if (!CheckIfLoginIsValid($login,0))
@@ -105,6 +122,8 @@ if (IsLoggedAdmin())
 	case 4: // lock
 		$id2 = GetUserAccountId_Users($id);
 		$lock = !$lock;
+		$lock=mysql_escape_string($lock);
+
 		$result=MySQL_Query("UPDATE ".TBL_ACCOUNT." SET locked='$lock' WHERE id='$id2'")
 			or die("Chyba pøi provádìní dotazu do databáze.");
 		if ($result == FALSE)
@@ -120,6 +139,9 @@ if (IsLoggedAdmin())
 }
 else if (IsLoggedManager())
 {
+	$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+	$type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
+	
 	db_Connect();
 	include "./common_user.inc.php";
 
@@ -133,7 +155,12 @@ else if (IsLoggedManager())
 	switch ($type)
 	{
 	case 1: // update
-		$id2 = GetUserAccountId_Users($id);
+		$login=mysql_escape_string($login);
+		$podpis=mysql_escape_string($podpis);
+		$news=mysql_escape_string($news);
+		$mng2=mysql_escape_string($mng2);
+
+ 		$id2 = GetUserAccountId_Users($id);
 		if ($login=="" || $podpis=="")
 			$result=CS_EMPTY_ITEM;
 		else if (!CheckIfLoginIsValid($login,$id2))
@@ -150,6 +177,11 @@ else if (IsLoggedManager())
 		}
 		break;
 	case 2: // new
+		$login=mysql_escape_string($login);
+		$podpis=mysql_escape_string($podpis);
+		$news=mysql_escape_string($news);
+		$mng2=mysql_escape_string($mng2);
+
 		if ($login=="" || $podpis=="" || $nheslo=="" || $nheslo2=="")
 			$result=CS_EMPTY_ITEM;
 		else if (!CheckIfLoginIsValid($login,0))
@@ -213,6 +245,9 @@ else if (IsLoggedManager())
 }
 else if (IsLoggedSmallManager())
 {
+	$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+	$type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
+	
 	db_Connect();
 	include "./common_user.inc.php";
 

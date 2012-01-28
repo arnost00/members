@@ -8,11 +8,11 @@ if (!defined('COLUMN_SORT_CLASS_INCLUDED'))
 
 	class column_sort_db
 	{
-		var $url;		// default url
-		var $cols_n;	// name
-		var $cols_t;	// title
-		var $def_col;	// default column
-		var $def_dir;	// default direction
+		protected $url;		// default url
+		protected $cols_n;	// name
+		protected $cols_t;	// title
+		protected $def_col;	// default column
+		protected $def_dir;	// default direction
 
 		function column_sort_db()
 		{
@@ -23,13 +23,13 @@ if (!defined('COLUMN_SORT_CLASS_INCLUDED'))
 			$this->def_dir = 1;
 		}
 
-		function add_column($name,$title)
+		public function add_column($name,$title)
 		{
 			$this->cols_n[] = $name;
 			$this->cols_t[] = $title;
 		}
 
-		function set_url($url,$params = false)
+		public function set_url($url,$params = false)
 		{
 			if($params)
 				$this->url = $url.'&csd=';
@@ -37,13 +37,13 @@ if (!defined('COLUMN_SORT_CLASS_INCLUDED'))
 				$this->url = $url.'?csd=';
 		}
 
-		function set_default_sort($column,$direction)
+		public function set_default_sort($column,$direction)
 		{
 			$this->def_col = $column;
 			$this->def_dir = ($direction > 0 && $direction < 3) ? $direction : 1;
 		}
 
-		function get_all_content()
+		public function get_all_content()
 		{
 			$text = 'sort :';
 			for($ii=0; $ii< count ($this->cols_n); $ii++)
@@ -55,7 +55,7 @@ if (!defined('COLUMN_SORT_CLASS_INCLUDED'))
 			return $text;
 		}
 
-		function get_col_content($col,$show_title = false)
+		public function get_col_content($col,$show_title = false)
 		{
 			$text = '';
 			if($col >= 0 && $col < count ($this->cols_n))
@@ -73,7 +73,7 @@ if (!defined('COLUMN_SORT_CLASS_INCLUDED'))
 			return $text;
 		}
 
-		function get_sql_string()
+		public function get_sql_string()
 		{
 			global $csd;
 
