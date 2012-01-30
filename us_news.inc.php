@@ -7,7 +7,7 @@ DrawPageTitle('Aktuální informace (Aktualitky)');
 
 <A name="races"></A>
 <?
-DrawPageSubTitle('Nejbližší závody (do'.GC_SHOW_RACE_DAYS.' dní)');
+DrawPageSubTitle('Nejbližší závody (do '.GC_SHOW_RACE_DAYS.' dní)');
 
 include ('./common_race.inc.php');
 include ('./url.inc.php');
@@ -97,7 +97,7 @@ else
 
 <A name="regs"></A>
 <?
-DrawPageSubTitle('Nejbližší pøihlášky (do'.GC_SHOW_REG_DAYS.' dní)');
+DrawPageSubTitle('Nejbližší pøihlášky (do '.GC_SHOW_REG_DAYS.' dní)');
 
 $d1 = $curr_date;
 $d2 = IncDate($curr_date,GC_SHOW_REG_DAYS);
