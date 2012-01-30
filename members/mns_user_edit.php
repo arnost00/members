@@ -5,6 +5,7 @@ define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
 require ("./connect.inc.php");
 require ("./sess.inc.php");
+require ("ctable.inc.php");
 if (!IsLoggedSmallManager())
 {
 	header("location: ".$g_baseadr."error.php?code=21");
