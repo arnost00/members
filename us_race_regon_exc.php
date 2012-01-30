@@ -12,9 +12,9 @@ if (!IsLogged())
 	header("location: ".$g_baseadr."error.php?code=21");
 	exit;
 }
-$id_zav= (IsSet($id_zav) && is_numeric($id_zav)) ? (int)$id_zav: 0;
-$id_us= (IsSet($id_us) && is_numeric($id_us)) ? (int)$id_us: 0;
-$kat = (IsSet($kat) ? $kat : '';
+$id_zav = (IsSet($id_zav) && is_numeric($id_zav)) ? (int)$id_zav: 0;
+$id_us = (IsSet($id_us) && is_numeric($id_us)) ? (int)$id_us: 0;
+$kat = (IsSet($kat)) ? $kat : '';
 
 if ($kat != '')
 {
