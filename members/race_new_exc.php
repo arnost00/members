@@ -15,7 +15,7 @@ if (!IsLoggedRegistrator())
 }
 
 db_Connect();
-$rtype= (IsSet($rtype && is_numeric($rtype)) ? (int)$rtype: 0;
+$rtype= (IsSet($rtype) && is_numeric($rtype)) ? (int)$rtype: 0;
 
 $datum = String2DateDMY($datum);
 
