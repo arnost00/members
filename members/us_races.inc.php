@@ -98,10 +98,9 @@ if ($num_rows > 0)
 			$prihl_finish2 = $prihl_finish || ( $prihlasky_curr[0] != 0 && $prihlasky_curr[1] != $zaznam['termin']);
 			if($prihl_finish2 != $prihl_finish)
 			{
-				$row[] = "ERROR";
-				exit;
+				$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._USER_GROUP_ID_.'&id='.$zaznam['id']."&us=1','')\"><span class=\"Highlight\">".$zaznam['kat'].'</span></A> / '.$zaznam['termin'];
 			}
-			if (!$prihl_finish)
+			else if (!$prihl_finish)
 			{
 				$row[] = "<A HREF=\"javascript:open_win('./us_race_regon.php?id_zav=".$zaznam['id']."&id_us=".$usr->user_id."','')\" class=\"Highlight\">".$zaznam['kat']."</A> / <A HREF=\"javascript:open_win('./us_race_regoff_exc.php?id_zav=".$zaznam['id']."&id_us=".$usr->user_id."','')\" onclick=\"return confirm_delete();\" class=\"Erase\">Od.</A>";
 			}
