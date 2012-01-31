@@ -1,11 +1,6 @@
 <?
-
-/*
-
-	Configuration data
-	Copy this file as '_colors.php' and set your real data for running members
-
-*/
+// background: black
+// foreground: blue
 
 //==================================================================
 // colors cfg file
