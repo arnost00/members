@@ -4,27 +4,9 @@ if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
 @$vysledek=MySQL_Query("select us.sort_name name from ".TBL_USER." us inner join ".TBL_USXUS." usx on us.id = usx.id_users where usx.id_accounts = ".$account_id);
 $zaznam=MySQL_Fetch_Array($vysledek);
-?>
-<H2 class="PageName">Hisotrie úètu pro <? echo $zaznam['name'] ?></H2>
 
-<CENTER>
-<style type="text/css">
-.TextAlert21 {
-	color: #00FF00;
-}
-.TextAlert7 {
-	color: #FFFF00;
-}
-.TextAlert2 {
-	color: #FF0000;
-	text-decoration : blink;
-}
-.TextAlertExp {
-	color: #666666;
-}
-</style>
+DrawPageSubTitle('Historie úètu pro '.$zaznam['name']);
 
-<?php
 include_once ("./common_race.inc.php");
 include_once ('./url.inc.php');
 
@@ -44,7 +26,7 @@ echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
 $sum_amount = 0;
-//$brk_tbl = false;
+$i = 0;
 while ($zaznam=MySQL_Fetch_Array($vysledek))
 {
 	$row = array();
@@ -58,7 +40,8 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 	echo $data_tbl->get_new_row_arr($row)."\n";
 	$i++;
 }
-echo $data_tbl->get_break_row()."\n";
+if ($i > 0)
+	echo $data_tbl->get_break_row()."\n";
 
 $row = array();
 $row[] = null;
@@ -71,5 +54,3 @@ echo $data_tbl->get_footer()."\n";
 //TODO doplnit formular pro pridani platby
 
 ?>
-
-</CENTER>

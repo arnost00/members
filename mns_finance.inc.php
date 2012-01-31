@@ -1,9 +1,14 @@
-<? /* maly trener stranka - seznam sverencu pro finance */
+<?php /* maly trener stranka - seznam sverencu pro finance */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
-<H1 class="ClubName"><?echo $g_www_name;?></H1>
-<H2 class="PageName">Finance</H2>
+<?
+DrawPageTitle('Finance èlenù',false);
+?>
 <CENTER>
-
+<script language="javascript">
+<!-- 
+	javascript:set_default_size(600,600);
+//-->
+</script>
 <?
 include "./common_user.inc.php";
 include('./csort.inc.php');
@@ -20,18 +25,6 @@ $query = 'SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob FROM '.TBL_US
 //$query = 'SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob FROM '.TBL_USER.' WHERE chief_id = '.$usr->user_id.' OR id = '.$usr->user_id.' ORDER BY sort_name ASC '
 @$vysledek=MySQL_Query($query);
 
-if (IsSet($result) && is_numeric($result) && $result != 0)
-{
-	require('./const_strings.inc.php');
-	$res_text = GetResultString($result);
-	if($res_text != '')
-	{
-		echo "<BR><img src=\"imgs/line_navW.gif\" width=\"95%\" height=3 border=\"0\"><BR><BR>";
-		echo "<font color=\"#FFCCFF\" size=\"+2\"><b>Výsledek poslední provedené úpravy :<BR>".$res_text."<BR></font><b>";
-		echo "<BR><img src=\"imgs/line_navW.gif\" width=\"95%\" height=3 border=\"0\"><BR><BR>";
-	}
-}
-
 $i=1;
 if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 {
@@ -45,12 +38,13 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 
 	echo $data_tbl->get_css()."\n";
 	echo $data_tbl->get_header()."\n";
-	echo $data_tbl->get_header_row()."\n";
+//	echo $data_tbl->get_header_row()."\n";
 
 	$data_tbl->set_sort_col(1,$sc->get_col_content(0));
 	$data_tbl->set_sort_col(3,$sc->get_col_content(1));
-	echo $data_tbl->get_sort_row()."\n";
-
+//	echo $data_tbl->get_sort_row()."\n";
+	echo $data_tbl->get_header_row_with_sort()."\n";
+	
 	while ($zaznam=MySQL_Fetch_Array($vysledek))
 	{
 		if (!$zaznam['hidden'])
@@ -64,15 +58,13 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 // 			if ($zaznam['id'] == $usr->user_id) 
 // 			{
 // 				$row_text = '<A HREF="./index.php?id=200&subid=10">Zobraz</A>';
-// 				//$row_text .= '&nbsp;/&nbsp;<A HREF="./index.php?id=200&subid=1">Úèet</A>';
 // 				$data_tbl->set_next_row_highlighted();
 // 			}
 // 			else
 // 			{
 				$val=GetUserAccountId_Users($zaznam['id']);
-				$row_text = '<A HREF="./mns_user_finance_view.php?id='.$val.'">Zobraz</A>';
-// 				if ($val)
-// 					$row_text .= '&nbsp;/&nbsp;<A HREF="./mns_user_login_edit.php?id='.$zaznam['id'].'">Úèet</A>';
+//				$row_text = '<A HREF="./mns_user_finance_view.php?id='.$val.'">Zobraz</A>';
+				$row_text = '<A HREF="javascript:open_win(\'./mns_user_finance_view.php?id='.$val.'\',\'\')">Zobraz</A>';
 // 			}
 			$row[] = $row_text;
 			echo $data_tbl->get_new_row_arr($row)."\n";
@@ -83,7 +75,7 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 else
 {
 	echo '<BR><BR>';
-	echo '<font color="red">Nemáte pøiøazeného žádného èlena oddílu. Požádejte nìkoho z "velkých" trenérù o nápravu.</font><BR>';
+	echo '<span class="WarningText">Nemáte pøiøazeného žádného èlena oddílu. Požádejte nìkoho z "velkých" trenérù o nápravu.</span><BR>';
 }
 
 ?>
