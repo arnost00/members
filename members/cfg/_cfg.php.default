@@ -12,6 +12,9 @@
 //==================================================================
 // Copyright (c) 2002-2003 by Arnost & Kenia
 //==================================================================
+if (!defined('PHP_GLOBAL_CFG_INCLUDED'))
+{
+	define('PHP_GLOBAL_CFG_INCLUDED', 1);
 
 //==================================================================
 // db server
@@ -74,4 +77,8 @@ $g_enable_mailinfo = true;
 $g_mailinfo_minimal_daysbefore = 1;
 $g_mailinfo_maximal_daysbefore = 14;
 
+// nastaveni barevneho profilu
+$g_color_profile = '_colors_black_blue.php';
+
+}	// define (PHP_GLOBAL_CFG_INCLUDED)
 ?>
