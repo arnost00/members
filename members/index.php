@@ -224,7 +224,7 @@ if($g_is_system_running || IsLoggedAdmin())
 						include "./mns_races.inc.php";
 						break;
 					case 10: // finance
-						include "./mn_finance.inc.php";
+						include "./mns_finance.inc.php";
 						break;
 					default:
 						include "./news.inc.php";
