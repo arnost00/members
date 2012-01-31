@@ -23,9 +23,9 @@ if (!$zaznam)
 	exit;
 }
 include "./header.inc.php"; // header obsahuje uvod html a konci <BODY>
-<?
+
 DrawPageTitle('Èlenská základna - Editace uživatelských úètù', false);
-?>
+
 ?>
 <TABLE width="100%" cellpadding="0" cellspacing="0" border="0">
 <TR>
