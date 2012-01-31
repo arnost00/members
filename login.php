@@ -60,12 +60,14 @@ if (!IsLogged())
 	$usr->policy_mng=$zaznam["policy_mng"];
 	$usr->policy_sadmin=$zaznam["policy_adm"];
 	$usr->policy_admin=($usr->account_id == $g_www_admin_id);
+	$usr->policy_fin=$zaznam["policy_fin"];
 	if ($usr->policy_admin)
 	{	// admin has all rights
 		$usr->policy_news = 1;
 		$usr->policy_reg = 1;
 		$usr->policy_mng = _MNG_BIG_INT_VALUE_;
 		$usr->policy_sadmin = 1;
+		$usr->policy_fin = 1;
 	}
 	$usr->cross_id = 0;	// preset value
 	$usr->user_id = 0; // preset value

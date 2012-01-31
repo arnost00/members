@@ -26,6 +26,7 @@ class sess
 	var $policy_mng;
 	var $policy_sadmin;
 	var $policy_admin;
+	var $policy_fin;
 	var $user_id;		// id v "users"
 	var $account_id;	// id v "accounts"
 	var $cross_id;		// id v "usxus"
@@ -49,6 +50,7 @@ if (!IsSet($_SESSION['usr']))
 	$usr->policy_mng=0;
 	$usr->policy_sadmin=0;
 	$usr->policy_admin=0;
+	$usr->policy_fin=0;
 	$usr->user_id=0;
 	$usr->account_id=0;
 	$_SESSION['usr'] = $usr;
@@ -62,6 +64,12 @@ function IsLoggedAdmin ()	// je prihlasen admin
 {
 	global $usr;
 	return ($usr->logged && $usr->policy_admin) ? 1 : 0;
+}
+
+function IsLoggedFinance ()	// je prihlasen financnik
+{
+	global $usr;
+	return ($usr->logged && $usr->policy_fin) ? 1 : 0;
 }
 
 function IsLoggedSmallAdmin ()	// je prihlasen maly admin

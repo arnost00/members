@@ -53,4 +53,7 @@ echo $data_tbl->get_footer()."\n";
 
 //TODO doplnit formular pro pridani platby
 
+if (IsLoggedFinance()) 
+	include "./payment_create_form.inc.php";
+
 ?>
