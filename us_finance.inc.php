@@ -5,7 +5,14 @@ DrawPageTitle('Finance èlena');
 ?>
 <CENTER>
 
-TODO: dodelat vypis financi
+<?
+
+$account_id = $usr->account_id;
+
+include ('./user_finance.inc.php');
+
+echo $data_tbl->get_footer()."\n";
+?>
 
 <BR>
 </CENTER>
