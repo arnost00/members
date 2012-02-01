@@ -64,7 +64,7 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 // 			{
 				$val=GetUserAccountId_Users($zaznam['id']);
 //				$row_text = '<A HREF="./mns_user_finance_view.php?id='.$val.'">Zobraz</A>';
-				$row_text = '<A HREF="javascript:open_win(\'./mns_user_finance_view.php?id='.$val.'\',\'\')">Zobraz</A>';
+				$row_text = '<A HREF="javascript:open_win(\'./mns_user_finance_view.php?id='.$zaznam['id'].'\',\'\')">Zobraz</A>';
 // 			}
 			$row[] = $row_text;
 			echo $data_tbl->get_new_row_arr($row)."\n";

@@ -2,17 +2,20 @@
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 
 <?
-@$vysledek=MySQL_Query("select us.sort_name name from ".TBL_USER." us inner join ".TBL_USXUS." usx on us.id = usx.id_users where usx.id_accounts = ".$account_id);
-$zaznam=MySQL_Fetch_Array($vysledek);
+@$vysledek=MySQL_Query("select fin.amount amount, fin.note note, us.sort_name name, fin.date `date` from ".TBL_FINANCE." fin inner join ".TBL_USER." us on fin.id_users_editor = us.id
+		where fin.id_users_user = ".$user_id." order by fin.id desc");
 
+//vytazeni jmena uzivatele a posunuti ukazatele zpatky 
+if (mysql_num_rows($vysledek) > 0)
+{
+	$zaznam=MySQL_Fetch_Array($vysledek);
+	mysql_data_seek($vysledek, 0);
+}
 DrawPageSubTitle('Historie úètu pro '.$zaznam['name']);
 
 include_once ("./common_race.inc.php");
 include_once ('./url.inc.php');
 
-@$vysledek=MySQL_Query("select fin.amount amount, fin.note note, us.sort_name name, fin.date `date` from ".TBL_FINANCE." fin inner join ".TBL_USXUS." usx on fin.id_accounts_editor = usx.id_accounts
-		inner join ".TBL_USER." us on usx.id_users = us.id
-		where fin.id_accounts_user = ".$account_id." order by fin.id desc");
 
 $data_tbl = new html_table_mc();
 $col = 0;
@@ -52,7 +55,6 @@ echo $data_tbl->get_new_row_arr($row)."\n";
 echo $data_tbl->get_footer()."\n";
 
 //TODO doplnit formular pro pridani platby
-
 if (IsLoggedFinance()) 
 	include "./payment_create_form.inc.php";
 
