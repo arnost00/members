@@ -51,7 +51,8 @@ echo $data_tbl->get_header()."\n";
 
 echo $data_tbl->get_new_row('Pøíjmení', '<INPUT TYPE="text" NAME="prijmeni" SIZE=30 MAXLENGTH=30 VALUE="'.$zaznam["prijmeni"].'">');
 echo $data_tbl->get_new_row('Jméno', '<INPUT TYPE="text" NAME="jmeno" SIZE=30 MAXLENGTH=20 VALUE="'.$zaznam["jmeno"].'">');
-echo $data_tbl->get_new_row('Registraèní èíslo', $g_shortcut.'&nbsp;&nbsp;<INPUT TYPE="text" NAME="reg" SIZE=4 MAXLENGTH=4 VALUE="'.RegNumToStr($zaznam['reg']).'"> <a href="javascript:open_win_ex(\'./find_reg.php\',\'\',600,400)">Hledání volných reg.è.</a>');
+$find_reg_text = (!IsSet($update)) ? ' <a href="javascript:open_win_ex(\'./find_reg.php\',\'\',600,400)">Hledání volných reg.è.</a>': '';
+echo $data_tbl->get_new_row('Registraèní èíslo', $g_shortcut.'&nbsp;&nbsp;<INPUT TYPE="text" NAME="reg" SIZE=4 MAXLENGTH=4 VALUE="'.RegNumToStr($zaznam['reg']).'">'.$find_reg_text);
 echo $data_tbl->get_new_row('Èíslo SI èipu', '<INPUT TYPE="text" NAME="si" SIZE=10 MAXLENGTH=9 VALUE="'.$zaznam["si_chip"].'">');
 echo $data_tbl->get_new_row('Datum narození', '<INPUT TYPE="text" NAME="datum" SIZE=10 VALUE="'.SQLDate2String($zaznam["datum"]).'">&nbsp;&nbsp;(DD.MM.RRRR)');
 echo $data_tbl->get_new_row('Adresa', '<INPUT TYPE="text" NAME="adresa" SIZE=60 MAXLENGTH=50 VALUE="'.$zaznam["adresa"].'">');

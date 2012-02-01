@@ -22,6 +22,7 @@ if (IsLoggedAdmin())
 	if (!IsSet ($mng)) $mng = 0;
 	if (!IsSet ($mng2)) $mng2 = 0;
 	if (!IsSet ($adm)) $adm = 0;
+	if (!IsSet ($fin)) $fin = 0;
 	if (!IsSet ($lock)) $lock = 0;
 
 	if ($mng2 == 1) 
@@ -37,6 +38,7 @@ if (IsLoggedAdmin())
 		$news=mysql_escape_string($news);
 		$regs=mysql_escape_string($regs);
 		$mng=mysql_escape_string($mng);
+		$fin=mysql_escape_string($fin);
 		$adm=mysql_escape_string($adm);
  
 		$id2 = GetUserAccountId_Users($id);
@@ -46,7 +48,7 @@ if (IsLoggedAdmin())
 			$result=CS_LOGIN_EXIST;
 		else
 		{
-			$vysledek=MySQL_Query("UPDATE ".TBL_ACCOUNT." SET login='$login', podpis='$podpis', policy_news='$news', policy_regs='$regs', policy_mng='$mng', policy_adm='$adm' WHERE id='$id2'")
+			$vysledek=MySQL_Query("UPDATE ".TBL_ACCOUNT." SET login='$login', podpis='$podpis', policy_news='$news', policy_regs='$regs', policy_mng='$mng', policy_adm='$adm', policy_fin='$fin' WHERE id='$id2'")
 				or die("Chyba pøi provádìní dotazu do databáze.");
 			if ($vysledek == FALSE)
 				die ("Nepodaøilo se upravit úèet èlenu.");
@@ -61,6 +63,7 @@ if (IsLoggedAdmin())
 		$news=mysql_escape_string($news);
 		$regs=mysql_escape_string($regs);
 		$mng=mysql_escape_string($mng);
+		$fin=mysql_escape_string($fin);
 		$adm=mysql_escape_string($adm);
 		
 		if ($login=="" || $podpis=="" || $nheslo=="" || $nheslo2=="")
@@ -86,7 +89,7 @@ if (IsLoggedAdmin())
 				$id2++;	// = maximum + 1
 			}
 			// <--
-			$vysledek=MySQL_Query("INSERT INTO ".TBL_ACCOUNT." (id,login,heslo,policy_news,policy_regs,policy_mng,policy_adm,podpis) VALUES ('$id2','$login','$hheslo','$news','$regs','$mng','$adm','$podpis')")
+			$vysledek=MySQL_Query("INSERT INTO ".TBL_ACCOUNT." (id,login,heslo,policy_news,policy_regs,policy_mng,policy_adm,policy_fin,podpis) VALUES ('$id2','$login','$hheslo','$news','$regs','$mng','$adm','$fin','$podpis')")
 				or die("Chyba pøi provádìní dotazu do databáze.");
 			if ($vysledek == FALSE)
 				die ("Nepodaøilo se založit úèet èlenu.");
