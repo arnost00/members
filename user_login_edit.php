@@ -33,7 +33,7 @@ DrawPageTitle('Èlenská základna - Administrace uživatelských úètù', false);
 <CENTER>
 <?
 	$id_acc = GetUserAccountId_Users($id);
-	$vysledek2=MySQL_Query("SELECT login,podpis,policy_news,policy_regs,policy_mng,policy_adm,locked FROM ".TBL_ACCOUNT." WHERE id = '$id_acc' LIMIT 1");
+	$vysledek2=MySQL_Query("SELECT login,podpis,policy_news,policy_regs,policy_mng,policy_adm,policy_fin,locked FROM ".TBL_ACCOUNT." WHERE id = '$id_acc' LIMIT 1");
 	$zaznam2=MySQL_Fetch_Array($vysledek2);
 ?>
 <BR><hr><BR>
@@ -102,6 +102,11 @@ DrawPageTitle('Èlenská základna - Administrace uživatelských úètù', false);
 	<TD width="30%" align="right"></TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="checkbox" NAME="regs" SIZE=15 VALUE="1" <? if ($zaznam2["policy_regs"]) echo "checked" ?> >Uživatel je pøihlašovatelem (mùže editovat pøihlášky èlenù - provádí export)</TD>
+</TR>
+<TR>
+	<TD width="30%" align="right"></TD>
+	<TD width="5"></TD>
+	<TD><INPUT TYPE="checkbox" NAME="fin" SIZE=15 VALUE="1" <? if ($zaznam2["policy_fin"]) echo "checked" ?> >Uživatel je finanèníkem</TD>
 </TR>
 <TR>
 	<TD width="30%" align="right"></TD>
