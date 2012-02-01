@@ -23,6 +23,13 @@ function LogToFile($file,$msg)
 	fclose($fp);
 }
 
+function formatDate($date)
+{
+	$date_arr = explode("-", $date);
+	$text = $date_arr[2].".".$date_arr[1].".".$date_arr[0];
+	return $text;
+}
+
 function Date2String($date, $long = false)
 {
 	$text = ($date == 0) ? "-" : @date((($long) ? "d.m.Y":"j.n.Y"),$date);

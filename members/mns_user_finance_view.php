@@ -14,8 +14,7 @@ if (!IsLoggedSmallManager())
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
 db_Connect();
-// id je z tabulky "acounts"
-$account_id=$id;
+
 include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 include ("./common.inc.php");
 include ("./common_user.inc.php");
@@ -24,6 +23,8 @@ DrawPageTitle('Finance èlena', false);
 ?>
 <CENTER>
 <?
+//inicializace id uzivatele pro vypis financi
+$user_id = $id;
 include ("./user_finance.inc.php");
 ?>
 <br>
