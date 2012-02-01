@@ -6,6 +6,9 @@ if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 		where fin.id_users_user = ".$user_id." order by fin.id desc");
 
 //vytazeni jmena uzivatele a posunuti ukazatele zpatky 
+//TODO nutno pridat vytazeni i financi z users
+//TODO pri zalozeni uzivatele vlozit finance do users = 0
+//tim se vyresi problem s jmenem
 if (mysql_num_rows($vysledek) > 0)
 {
 	$zaznam=MySQL_Fetch_Array($vysledek);
