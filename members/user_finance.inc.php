@@ -11,6 +11,11 @@ if (mysql_num_rows($vysledek) > 0)
 	$zaznam=MySQL_Fetch_Array($vysledek);
 	mysql_data_seek($vysledek, 0);
 }
+else
+{	// reseni pokud nema zatim zadny zaznam ve financich !
+	@$vysledek=MySQL_Query("select us.sort_name name from ".TBL_USER." us where us.id = ".$user_id);
+	$zaznam=MySQL_Fetch_Array($vysledek);
+}
 DrawPageSubTitle('Historie úètu pro '.$zaznam['name']);
 
 include_once ("./common_race.inc.php");
