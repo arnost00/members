@@ -114,6 +114,12 @@ function DrawMenuGroupHeader($name)
 		DrawMenuItem('Zamykání úètù',_SMALL_ADMIN_GROUP_ID_,1);
 		DrawMenuItem('Skrytí èlenù',_SMALL_ADMIN_GROUP_ID_,2);
 	}
+	if(IsLoggedFinance())
+	{
+		DrawMenuGroupHeader('Menu finanèníka');
+		DrawMenuItem('Èlenská základna',_FINANCE_GROUP_ID_,1);
+		DrawMenuItem('Pøehled závodù',_FINANCE_GROUP_ID_,2);
+	}
 	if(IsLoggedAdmin())
 	{
 		DrawMenuGroupHeader('Administrace');

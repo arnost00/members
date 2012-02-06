@@ -233,6 +233,24 @@ if($g_is_system_running || IsLoggedAdmin())
 			else
 				include "./news.inc.php";
 			break;
+		case _FINANCE_GROUP_ID_: // financnik - podmenu
+			if ( IsLoggedFinance() )
+			{
+				switch($subid)
+				{
+					case 1:
+						include "fin_directory.inc.php";
+						break;
+					case 2:
+						include "fin_races.inc.php";
+						break;
+					default:
+						include "./news.inc.php";
+				}
+			}
+			else
+				include "./news.inc.php";
+			break;
 		case 99: // ve vyvoji
 			include "./develop.inc.php";
 			break;

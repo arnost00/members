@@ -62,8 +62,9 @@ $row[] = $sum_amount;
 echo $data_tbl->get_new_row_arr($row)."\n";
 echo $data_tbl->get_footer()."\n";
 
+// formular patri opravdu sem ??
 //TODO doplnit formular pro pridani platby
-if (IsLoggedFinance()) 
-	include "./payment_create_form.inc.php";
+// if (IsLoggedFinance()) 
+//	include "./payment_create_form.inc.php";
 
 ?>
