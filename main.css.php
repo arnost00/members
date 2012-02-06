@@ -94,7 +94,7 @@ TD.NewsItemTitle {
 TD.NewsItem {
 	color : <? echo $g_colors['news_item_text']; ?>;
 	vertical-align : top;
-	text-align : justify;
+	text-align : left;
 }
 
 TD.LastDate {

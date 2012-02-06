@@ -14,6 +14,7 @@ define('_SMALL_MANAGER_GROUP_ID_',600);
 define('_REGISTRATOR_GROUP_ID_',400);
 define('_SMALL_ADMIN_GROUP_ID_',700);
 define('_ADMIN_GROUP_ID_',300);
+define('_FINANCE_GROUP_ID_',800);
 
 define('_VAR_USER_LOGIN','mbr_l_'.$g_shortcut.(($g_is_release) ? '' : '_dbg'));
 define('_VAR_USER_PASS','mbr_p_'.$g_shortcut.(($g_is_release) ? '' : '_dbg'));
