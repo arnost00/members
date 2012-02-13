@@ -34,12 +34,14 @@ header("Pragma: no-cache");
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 
 <?
-require(dirname(__FILE__) .'/cfg/_globals.php');
+require (dirname(__FILE__) .'/cfg/_globals.php');
 require (dirname(__FILE__) .'/connect.inc.php');
 require (dirname(__FILE__) .'/common.inc.php');
-include (dirname(__FILE__) .'/common_race.inc.php');
+require (dirname(__FILE__) .'/common_race.inc.php');
+require (dirname(__FILE__) .'/common_fin.inc.php');
 require (dirname(__FILE__) .'/common_rg_race.inc.php');
 require (dirname(__FILE__) .'/version.inc.php');
+require (dirname(__FILE__) .'/payment.inc.php');
 
 define ('EMAIL_ENDL',"\n");
 define ('DIV_LINE','-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-');
@@ -206,16 +208,20 @@ $vysledek_m=MySQL_Query($query_m);
 $vysledek_r=MySQL_Query($query_r);
 
 $cnt_send = $cnt_tested = 0;
-if (mysql_num_rows($vysledek_m) > 0 && mysql_num_rows($vysledek_r) > 0)
+if (mysql_num_rows($vysledek_m) > 0)
 {
 	$races = array();
-	while ($zaznam_r=MySQL_Fetch_Array($vysledek_r))
+	if (mysql_num_rows($vysledek_r) > 0)
 	{
-//		echo(Date2String($zaznam_r['datum']).' - '.$zaznam_r['nazev'].'<br>');
-		$races[] = $zaznam_r;
+		while ($zaznam_r=MySQL_Fetch_Array($vysledek_r))
+		{
+			$races[] = $zaznam_r;
+		}
 	}
 
-	// test
+	$finance = getAllUsersCurrentBalance();
+	
+	// prochazeni pozadavku a generovani emailu
 	while ($zaznam_m=MySQL_Fetch_Array($vysledek_m))
 	{
 		$cnt_tested++;
@@ -378,6 +384,53 @@ if (mysql_num_rows($vysledek_m) > 0 && mysql_num_rows($vysledek_r) > 0)
 				$full_msg .= EMAIL_ENDL;
 			}
 		}
+		
+		// email ohledne financi se posila pri kazdem spusteni CRONu ... nechat/zmenit ?
+		
+		if ($zaznam_m['active_fin'])
+		{	// prehled financi pro clena
+			$fin = (isset($finance[$zaznam_m['id_user']])) ? $finance[$zaznam_m['id_user']] : FALSE;
+			if ($fin != FALSE && is_array($fin))
+			{
+				if ((($zaznam_m['fin_type'] & $g_fin_mail_flag [1]['id']) != 0) && $fin['fin'] < 0)
+				{	// stav je v minusu
+					$send_email = true;
+					$full_msg .= 'Tvùj zùstatek na oddílovém úètu poklesl do záporu, a èiní '.$fin['fin'].',-'.EMAIL_ENDL;
+					$full_msg .= EMAIL_ENDL;
+				}
+				else if ((($zaznam_m['fin_type'] & $g_fin_mail_flag [0]['id']) != 0) && $fin['fin'] < $zaznam_m['fin_limit'])
+				{	// stav je pod hranici
+					$send_email = true;
+					$full_msg .= 'Tvùj zùstatek na oddílovém úètu poklesl pod definovanou hranici, a èiní '.$fin['fin'].',-'.EMAIL_ENDL;
+					$full_msg .= EMAIL_ENDL;
+				}
+			}
+		}
+		
+		if ($zaznam_m['active_finf'])
+		{	// prehled financi pro financnika
+			$uz_dta = array();
+			$uz = 0;
+			foreach($finance as $fin)
+			{
+				if ($fin['fin'] < 0)
+				{	// pridej clena jez je v zapornem zustatku
+					$uz_dta[] = $fin['prijmeni'].' '.$fin['jmeno'].' ('.$fin['fin'].')';
+					$uz++;
+				}
+			}
+			
+			if ($uz > 0)
+			{	// aspon jeden clen je v minusu, posilame email
+				$send_email = true;
+				$full_msg .= 'Èlenové se záporným zùstatkem na úètu: '.EMAIL_ENDL;
+				for ($jj = 0; $jj < sizeof($uz_dta); $jj++)
+					$full_msg .= ' * '.$uz_dta[$jj].EMAIL_ENDL;
+				$full_msg .= EMAIL_ENDL;
+			}
+		}
+		
+		// generuje zasilani emailu kdyz je potreba
 		if ($send_email)
 		{
 			echo('<b>Send email to user.</b><br>');
