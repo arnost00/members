@@ -8,7 +8,8 @@ if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 if (IsLogged() && $g_enable_mailinfo)
 {
 
-include ("./common_race.inc.php");
+require ('common_race.inc.php');
+require ('common_fin.inc.php');
 
 $vysledek=MySQL_Query("SELECT * FROM ".TBL_MAILINFO." WHERE id_user = '$usr->user_id' LIMIT 1");
 $zaznam=MySQL_Fetch_Array($vysledek);
@@ -27,6 +28,10 @@ if ($zaznam == FALSE)
 	$zaznam['active_ch'] = 0;
 	$zaznam['ch_data'] = 0;
 	$zaznam['active_rg'] = 0;	// used only for registrator
+	$zaznam['active_fin'] = 0;
+	$zaznam['active_finf'] = 0;
+	$zaznam['fin_type'] = 0;
+	$zaznam['fin_limit'] = 0;
 }
 //print_r($zaznam);
 ?>
@@ -39,7 +44,7 @@ if ($zaznam == FALSE)
 	<TD><INPUT TYPE="text" NAME="email" SIZE=20 VALUE="<? echo $zaznam["email"]; ?>"></TD>
 </TR>
 <TR>
-	<TD colspan="3"><br><img src="imgs/line_navW.gif" width="95%" height=3 border="0"></TD>
+	<TD colspan="3"><br><hr></TD>
 </TR>
 <TR>
 	<TD colspan="3"><input type="checkbox" name="active_tf" value="1" id="atf" <? echo(($zaznam['active_tf'])?' checked':'')?>><label for="atf">Blížící se konec termínu pøihlášek</label></TD>
@@ -84,13 +89,13 @@ if ($zaznam == FALSE)
 	</TD>
 </TR>
 <TR>
-	<TD colspan="3"><br><img src="imgs/line_navW.gif" width="95%" height=3 border="0"></TD>
+	<TD colspan="3"><br><hr></TD>
 </TR>
 <TR>
 	<TD colspan="3"><input type="checkbox" name="active_ch" value="1" id="ach" <? echo(($zaznam['active_ch'])?' checked':'')?>><label for="ach">Zmìny termínù nebo v kalendáøi závodù</label></TD>
 </TR>
 <TR>
-	<TD width="40%" align="right">Posílat zmìny</TD>
+	<TD width="40%" align="right" valign="top">Posílat zmìny</TD>
 	<TD width="5"></TD>
 	<TD>
 <?	
@@ -110,18 +115,55 @@ if ($zaznam == FALSE)
 	</TD>
 </TR>
 <?
-	if (IsLoggedRegistrator())
+	if (IsLoggedRegistrator() || IsLoggedFinance())
 	{
 ?>
 <TR>
-	<TD colspan="3"><br><img src="imgs/line_navW.gif" width="95%" height=3 border="0"></TD>
+	<TD colspan="3"><br><hr></TD>
 </TR>
+<?
+		if ( IsLoggedRegistrator())
+		{
+?>
 <TR>
 	<TD colspan="3"><input type="checkbox" name="active_rg" value="1" id="arg" <? echo(($zaznam['active_rg'])?' checked':'')?>><label for="arg">Upozornit, že uplynul interní termín</label></TD>
 </TR>
 <?
+		}
+		if ( IsLoggedFinance())
+		{
+?>
+<TR>
+	<TD colspan="3"><input type="checkbox" name="active_finf" value="1" id="afnf" <? echo(($zaznam['active_finf'])?' checked':'')?>><label for="afnf">Upozornit, na èlena jež se dostal do mínusu ve financích.</label></TD>
+</TR>
+<?
+		}
 	}
 ?>
+<TR>
+	<TD colspan="3"><br><hr></TD>
+</TR>
+<TR>
+	<TD colspan="3"><input type="checkbox" name="active_fin" value="1" id="afin" <? echo(($zaznam['active_fin'])?' checked':'')?>><label for="afin">Upozornit o finanèním stavu</label></TD>
+</TR>
+<TR>
+	<TD width="40%" align="right" valign="top">Posílat stav úètu</TD>
+	<TD width="5"></TD>
+	<TD>
+<?	
+		echo('<input type="checkbox" name="fin_type[0]" value="1" id="fint_0"');
+		if(($zaznam['fin_type'] & $g_fin_mail_flag [0]['id']) != 0)
+			echo(' checked');
+		echo('><label for="fint_0">pøi snížení pod limit</label> ');
+		echo('<INPUT TYPE="text" NAME="fin_limit" SIZE=5 MAXLENGTH=5 VALUE="'.$zaznam["fin_limit"].'"> Kè');
+		echo('<br>');
+		echo('<input type="checkbox" name="fin_type[1]" value="1" id="fint_1"');
+		if(($zaznam['fin_type'] & $g_fin_mail_flag [1]['id']) != 0)
+			echo(' checked');
+		echo('><label for="fint_1">pøi pøechodu do mínusu</label><br>');
+?>	
+	</TD>
+</TR>
 <TR>
 	<TD colspan="3"></TD>
 </TR>

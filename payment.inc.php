@@ -95,4 +95,25 @@ function stornoPayment($id)
 	}
 }
 
+/*
+ * vrati pole zustatku pro vsechny uzivatele
+ * sloupce ve vracenem poli : id, fin, prijmeni, jmeno
+*/
+function getAllUsersCurrentBalance()
+{	// priprava ... vraci sloupec fin z user ... prepsat na opravdovy zustatek !!!
+	$vysl=MySQL_Query("SELECT id, fin, prijmeni, jmeno FROM ".TBL_USER);
+	$data = array();
+	if ($vysl != FALSE)
+	{
+		while ($zazn=MySQL_Fetch_Array($vysl))
+		{
+			$data[$zazn['id']] = $zazn;
+		}
+	}
+	else
+		return array();
+
+	return $data;
+}
+
 ?>
