@@ -110,7 +110,10 @@ if($g_is_system_running || IsLoggedAdmin())
 							include "./news.inc.php";
 						break;
 					case 10: //finance
-						include "./us_finance.inc.php";
+						if ($g_enable_finances)
+							include "./us_finance.inc.php";
+						else
+							include "./news.inc.php";
 						break;
 					default:
 						include "./news.inc.php";
@@ -203,7 +206,10 @@ if($g_is_system_running || IsLoggedAdmin())
 						include "./mn_smn_list.inc.php";
 						break;
 					case 10: //finance
-						include "./mn_finance.inc.php";
+						if ($g_enable_finances)
+							include "./mn_finance.inc.php";
+						else
+							include "./news.inc.php";
 						break;
 					default:
 						include "./news.inc.php";
@@ -224,7 +230,10 @@ if($g_is_system_running || IsLoggedAdmin())
 						include "./mns_races.inc.php";
 						break;
 					case 10: // finance
-						include "./mns_finance.inc.php";
+						if ($g_enable_finances)
+							include "./mns_finance.inc.php";
+						else
+							include "./news.inc.php";
 						break;
 					default:
 						include "./news.inc.php";
@@ -234,7 +243,7 @@ if($g_is_system_running || IsLoggedAdmin())
 				include "./news.inc.php";
 			break;
 		case _FINANCE_GROUP_ID_: // financnik - podmenu
-			if ( IsLoggedFinance() )
+			if ( IsLoggedFinance() && $g_enable_finances)
 			{
 				switch($subid)
 				{

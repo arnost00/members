@@ -80,7 +80,8 @@ function DrawMenuGroupHeader($name)
 		}
 		DrawMenuGroupHeader('Èlenské menu');
 		DrawMenuItem('Pøihlášky na závody',_USER_GROUP_ID_,2);
-		DrawMenuItem('Finance', _USER_GROUP_ID_, 10);
+		if ($g_enable_finances)
+			DrawMenuItem('Finance', _USER_GROUP_ID_, 10);
 		DrawMenuItem('Nastavení pøístupu',_USER_GROUP_ID_,1);
 		DrawMenuItem('Nastavení zákl.údajù',_USER_GROUP_ID_,3);
 		if ($g_enable_mailinfo)
@@ -99,14 +100,16 @@ function DrawMenuGroupHeader($name)
 		DrawMenuItem('Èlenská základna',_MANAGER_GROUP_ID_,1);
 		DrawMenuItem('Pøiøazení skupin èlenù',_MANAGER_GROUP_ID_,3);
 		DrawMenuItem('Pøehled m.trenérù',_MANAGER_GROUP_ID_,4);
-		DrawMenuItem('Finance', _MANAGER_GROUP_ID_, 10);
+		if ($g_enable_finances)
+			DrawMenuItem('Finance', _MANAGER_GROUP_ID_, 10);
 	}
 	else if (IsLoggedSmallManager())
 	{
 		DrawMenuGroupHeader('Menu malého trenéra');
 		DrawMenuItem('Pøihlášky na závody',_SMALL_MANAGER_GROUP_ID_,2);
 		DrawMenuItem('Èlenská základna',_SMALL_MANAGER_GROUP_ID_,1);
-		DrawMenuItem('Finance', _SMALL_MANAGER_GROUP_ID_, 10);
+		if ($g_enable_finances)
+			DrawMenuItem('Finance', _SMALL_MANAGER_GROUP_ID_, 10);
 	}
 	if(IsLoggedSmallAdmin())
 	{
@@ -114,7 +117,7 @@ function DrawMenuGroupHeader($name)
 		DrawMenuItem('Zamykání úètù',_SMALL_ADMIN_GROUP_ID_,1);
 		DrawMenuItem('Skrytí èlenù',_SMALL_ADMIN_GROUP_ID_,2);
 	}
-	if(IsLoggedFinance())
+	if(IsLoggedFinance() && $g_enable_finances)
 	{
 		DrawMenuGroupHeader('Menu finanèníka');
 		DrawMenuItem('Èlenská základna',_FINANCE_GROUP_ID_,1);

@@ -387,7 +387,7 @@ if (mysql_num_rows($vysledek_m) > 0)
 		
 		// email ohledne financi se posila pri kazdem spusteni CRONu ... nechat/zmenit ?
 		
-		if ($zaznam_m['active_fin'])
+		if ($zaznam_m['active_fin'] && $g_enable_finances)
 		{	// prehled financi pro clena
 			$fin = (isset($finance[$zaznam_m['id_user']])) ? $finance[$zaznam_m['id_user']] : FALSE;
 			if ($fin != FALSE && is_array($fin))
@@ -407,7 +407,7 @@ if (mysql_num_rows($vysledek_m) > 0)
 			}
 		}
 		
-		if ($zaznam_m['active_finf'])
+		if ($zaznam_m['active_finf'] && $g_enable_finances)
 		{	// prehled financi pro financnika
 			$uz_dta = array();
 			$uz = 0;
