@@ -80,5 +80,8 @@ $g_mailinfo_maximal_daysbefore = 14;
 // nastaveni barevneho profilu
 $g_color_profile = '_colors_black_blue.php';
 
+// finance
+$g_enable_finances = true;
+
 }	// define (PHP_GLOBAL_CFG_INCLUDED)
 ?>

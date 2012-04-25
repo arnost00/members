@@ -130,7 +130,7 @@ if ($zaznam == FALSE)
 </TR>
 <?
 		}
-		if ( IsLoggedFinance())
+		if ( IsLoggedFinance() && $g_enable_finances)
 		{
 ?>
 <TR>
@@ -139,6 +139,9 @@ if ($zaznam == FALSE)
 <?
 		}
 	}
+if ($g_enable_finances)
+{	//fin
+
 ?>
 <TR>
 	<TD colspan="3"><br><hr></TD>
@@ -164,6 +167,9 @@ if ($zaznam == FALSE)
 ?>	
 	</TD>
 </TR>
+<?
+} // fin
+?>
 <TR>
 	<TD colspan="3"></TD>
 </TR>
