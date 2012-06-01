@@ -27,11 +27,11 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 
 if (!$g_is_release)
 {	// pri debug zobrazit
-	@$vysledek=MySQL_Query("SELECT id,datum,typ,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto,modify_flag FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum');
+	@$vysledek=MySQL_Query("SELECT id,datum,typ,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto,modify_flag FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum , datum2, id');
 }
 else
 {
-	@$vysledek=MySQL_Query("SELECT id,datum,typ,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum');
+	@$vysledek=MySQL_Query("SELECT id,datum,typ,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
 }
 
 ShowRefreshInfo(true);

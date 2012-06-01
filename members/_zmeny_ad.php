@@ -116,7 +116,7 @@ include ('url.inc.php');
 
 $curr_date = GetCurrentDate();
 
-$query="SELECT id,datum,typ,datum2,nazev,vicedenni,odkaz,oddil,misto,modify_flag FROM ".TBL_RACE.' ORDER BY datum';
+$query="SELECT id,datum,typ,datum2,nazev,vicedenni,odkaz,oddil,misto,modify_flag FROM ".TBL_RACE.' ORDER BY datum, datum2, id';
 
 @$vysledek=MySQL_Query($query);
 

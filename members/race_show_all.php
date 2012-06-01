@@ -41,7 +41,7 @@ if($old == 0)
 	$curr_date = GetCurrentDate();
 	$sql_query .= " WHERE datum >= ".$curr_date;
 }
-$sql_query .= " ORDER BY datum ASC";
+$sql_query .= " ORDER BY datum, datum2, id";
 
 @$races=MySQL_Query($sql_query)
 	or die("Chyba pøi provádìní dotazu do databáze.");

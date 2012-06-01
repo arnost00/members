@@ -19,7 +19,7 @@ $fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
 $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB);
 
-@$vysledek=MySQL_Query("SELECT id, datum, typ, datum2, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, nazev, vicedenni, odkaz, vedouci, oddil, send, misto FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum');
+@$vysledek=MySQL_Query("SELECT id, datum, typ, datum2, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, nazev, vicedenni, odkaz, vedouci, oddil, send, misto FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
 
 $num_rows = mysql_num_rows($vysledek);
 if ($num_rows > 0)
