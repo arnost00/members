@@ -20,7 +20,7 @@ $fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
 $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB);
 
-@$vysledek=MySQL_Query('SELECT * FROM '.TBL_RACE.$sql_sub_query.' ORDER BY datum');
+@$vysledek=MySQL_Query('SELECT * FROM '.TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
 
 $num_rows = ($vysledek != FALSE) ? mysql_num_rows($vysledek) : 0;
 $old_year = 0;

@@ -11,10 +11,11 @@ include ('./url.inc.php');
 
 $fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
 $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
+$fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 0;  // old races
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB);
 
-$query = 'SELECT '.TBL_RACE.'.id, datum, datum2, nazev, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, kat, termin FROM '.TBL_RACE.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_RACE.'.id = '.TBL_ZAVXUS.'.id_zavod AND '.TBL_ZAVXUS.'.id_user='.$usr->user_id.$sql_sub_query.' ORDER BY datum';
-
+$query = 'SELECT '.TBL_RACE.'.id, datum, datum2, nazev, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, kat, termin FROM '.TBL_RACE.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_RACE.'.id = '.TBL_ZAVXUS.'.id_zavod AND '.TBL_ZAVXUS.'.id_user='.$usr->user_id.$sql_sub_query.' ORDER BY datum, datum2, '.TBL_RACE.'.id';
+//echo($query);  //dev
 @$vysledek=MySQL_Query($query);
 
 ?>

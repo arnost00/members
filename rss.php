@@ -28,7 +28,7 @@ if(db_Connect(true))
 
 	$curr_date = GetCurrentDate();
 
-	@$vysledek=MySQL_Query("SELECT id,datum,datum2,nazev,typ,ranking,odkaz,prihlasky, prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, vicedenni,misto,oddil, vedouci FROM ".TBL_RACE." WHERE datum >= ".$curr_date." AND datum <= ".IncDate($curr_date,GC_SHOW_RACE_DAYS)." ORDER BY datum");
+	@$vysledek=MySQL_Query("SELECT id,datum,datum2,nazev,typ,ranking,odkaz,prihlasky, prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, vicedenni,misto,oddil, vedouci FROM ".TBL_RACE." WHERE datum >= ".$curr_date." AND datum <= ".IncDate($curr_date,GC_SHOW_RACE_DAYS)." ORDER BY datum, datum2, id");
 	if (mysql_num_rows($vysledek) > 0)
 	{
 		$item->link = $g_baseadr.'?id=4#races';

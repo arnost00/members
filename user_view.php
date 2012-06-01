@@ -45,7 +45,7 @@ DrawPageSubTitle('Vybraný èlen : '.$zaznamU["jmeno"].' '.$zaznamU["prijmeni"]);
 <?
 include ("./common_race.inc.php");
 
-$query = 'SELECT r.id, datum, datum2, nazev, oddil, typ, vicedenni, misto, kat FROM '.TBL_RACE.' as r LEFT JOIN '.TBL_ZAVXUS.' as z ON r.id = z.id_zavod AND z.id_user='.$id.' ORDER BY datum';
+$query = 'SELECT r.id, datum, datum2, nazev, oddil, typ, vicedenni, misto, kat FROM '.TBL_RACE.' as r LEFT JOIN '.TBL_ZAVXUS.' as z ON r.id = z.id_zavod AND z.id_user='.$id.' ORDER BY r.datum, r.datum2, r.id';
 
 @$vysledek=MySQL_Query($query);
 

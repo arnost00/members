@@ -8,7 +8,7 @@ DrawPageTitle('Hromadné pøihlášky na závody');
 include ("./common_race.inc.php");
 include ('./url.inc.php');
 
-@$vysledek=MySQL_Query("SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, nazev,misto,ranking,typ,vicedenni,odkaz,oddil FROM ".TBL_RACE." ORDER BY datum");
+@$vysledek=MySQL_Query("SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, nazev,misto,ranking,typ,vicedenni,odkaz,oddil FROM ".TBL_RACE." ORDER BY datum, datum2, id");
 
 ?>
 
