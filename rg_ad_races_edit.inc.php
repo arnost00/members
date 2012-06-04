@@ -23,7 +23,8 @@ include ('./url.inc.php');
 
 $fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
 $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
-$sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB);
+$fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 1;  // old races - default is ON 
+$sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC);
 
 if (!$g_is_release)
 {	// pri debug zobrazit

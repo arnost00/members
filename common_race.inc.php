@@ -267,13 +267,14 @@ function RaceInfoTable(&$zaznam,$add_row = '',$show_curr_term = false,$full_widt
 	echo $data_tbl->get_footer()."\n";
 }
 
-function form_filter_racelist($page,&$filterA,&$filterB)
+function form_filter_racelist($page,&$filterA,&$filterB,&$filterC)
 {
 	global $g_zebricek_cnt;
 	global $g_zebricek;
 
-	$urlA = "'./".$page.'&fB='.$filterB.'&fA=\'';
-	$urlB = "'./".$page.'&fA='.$filterA.'&fB=\'';
+	$urlA = "'./".$page.'&fB='.$filterB.'&fC='.$filterC.'&fA=\'';
+	$urlB = "'./".$page.'&fA='.$filterA.'&fC='.$filterC.'&fB=\'';
+	$urlC = "'./".$page.'&fA='.$filterA.'&fB='.$filterB.'&fC=\'';
 	$filter_arr_niceA = array(0=>'všechny',1=>'jen OB',2=>'jen MTBO',3=>'jen LOB',4=>'jen nezaøazené');
 	$filter_arr_sqlA = array(1=>'ob',2=>'mtbo',3=>'lob',4=>'jine');
 	if($filterA > 0 && $filterA < 5)
@@ -288,6 +289,14 @@ function form_filter_racelist($page,&$filterA,&$filterB)
 			$result .= ' AND (';
 		$code = $g_zebricek[$filterB-1]['id'];
 		$result .= '`zebricek` & \''.$code."')";
+	}
+	if($filterC == 0)
+	{
+		if($result == '')
+			$result = ' WHERE (';
+		else
+			$result .= ' AND (';
+		$result .= '`datum` > \''.GetCurrentDate()."')";
 	}
 ?>
 <table><tr><td>
@@ -315,6 +324,9 @@ Zaøazení zobrazených závodù&nbsp;
 ?>
 </select>
 </form>
+</td><td>&nbsp;&nbsp;</td><td valign="top">
+<INPUT TYPE="checkbox" NAME="fC" onClick="javascript:window.open(<? echo($urlC);?>+Number(this.checked),'_top')" id="fC" value="1"<? if ($filterC != 0) echo(' checked');?>><label for="fC">Zobrazit staré závody</label>
+
 </td></tr>
 </table>
 <?
