@@ -122,7 +122,7 @@ Formát pøihlášky:<input type="radio" name="ver" value="0" id="radio_ver0"<? echo
 <br>
 Typ závodu:<input type="radio" name="rt" value="0" id="radio_rt0"<? echo(($rt == 0) ? ' checked="checked"':''); ?>><label for="radio_rt0">OB</label>&nbsp;&nbsp;
 <input type="radio" name="rt" value="1" id="radio_rt1"<? echo(($rt == 1) ? ' checked="checked"':''); ?>><label for="radio_rt1">LOB</label>&nbsp;&nbsp;
-<input type="radio" name="rt" value="2" id="radio_rt2"<? echo(($rt == 2) ? ' checked="checked"':''); ?>><label for="radio_rt2">MTBO</label>
+<input type="radio" name="rt" value="2" id="radio_rt2"<? echo(($rt == 2) ? ' checked="checked"':''); ?>><label for="radio_rt2">MTBO</label><i> ... pro správné licence</i>
 
 <br><br>
 <INPUT TYPE="submit" VALUE="Proveï akci">

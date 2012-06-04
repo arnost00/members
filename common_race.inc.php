@@ -296,7 +296,7 @@ function form_filter_racelist($page,&$filterA,&$filterB,&$filterC)
 			$result = ' WHERE (';
 		else
 			$result .= ' AND (';
-		$result .= '`datum` > \''.GetCurrentDate()."')";
+		$result .= '`datum` >= \''.GetCurrentDate()."')";
 	}
 ?>
 <table><tr><td>
