@@ -32,12 +32,12 @@ AddZmenyFile('2.1.0.90');
 
 require ('connect.inc.php');
 require ('../sess.inc.php');
-require ('common.inc.php');
 if (!IsLoggedAdmin())
 {
 	header("location: ".$g_baseadr."error.php?code=21");
 	exit;
 }
+require ('common.inc.php');
 
 if (!IsSet($action)) $action = 0;
 if ($action == 0)
