@@ -79,7 +79,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 			$acc_r .= ($zaznam2['policy_regs'] == 1) ? 'P ' : '. ';
 			$acc_r .= ($zaznam2['policy_mng'] == _MNG_BIG_INT_VALUE_) ? 'T ' : '. ';
 			$acc_r .= ($zaznam2['policy_mng'] == _MNG_SMALL_INT_VALUE_) ? 't ' : '. ';
-			$acc_r .= ($zaznam2['policy_adm'] == 1) ? 'S' : '. ';
+			$acc_r .= ($zaznam2['policy_adm'] == 1) ? 'S ' : '. ';
 			$acc_r .= ($zaznam2['policy_fin'] == 1) ? 'F' : '.';
 		}
 		else
