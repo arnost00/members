@@ -103,11 +103,14 @@ DrawPageTitle('Èlenská základna - Administrace uživatelských úètù', false);
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="checkbox" NAME="regs" SIZE=15 VALUE="1" <? if ($zaznam2["policy_regs"]) echo "checked" ?> >Uživatel je pøihlašovatelem (mùže editovat pøihlášky èlenù - provádí export)</TD>
 </TR>
+<? if ($g_enable_finances)
+{ ?>
 <TR>
 	<TD width="30%" align="right"></TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="checkbox" NAME="fin" SIZE=15 VALUE="1" <? if ($zaznam2["policy_fin"]) echo "checked" ?> >Uživatel je finanèníkem</TD>
 </TR>
+<? } ?>
 <TR>
 	<TD width="30%" align="right"></TD>
 	<TD width="5"></TD>
