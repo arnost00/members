@@ -22,16 +22,25 @@ DrawPageTitle('Køížový pøehled pøihlášek', false);
 
 db_Connect();
 
-$old = (isset($old) && is_numeric($old)) ? $old : 0;
+$old = (isset($old) && is_numeric($old)) ? (int) $old : 0;
 ?>
 Po nájezdu na datum závodu se zobrazí podrobnìjší informace.<BR>
 <?
 if($old == 0)
 {
 ?>
-Zobrazení pøehledu pro starší závody (již probìhlé) je možno <A HREF="./race_show_all.php?old=1">zde</A>.<br>
+<A HREF="./race_show_all.php?old=1">Zobrazit i se staršími závody</A><br>
 <?
 }
+else
+{
+?>
+<A HREF="./race_show_all.php?old=0">Zobrazit jen s aktuálními závody</A><br>
+<?
+}
+?>
+<br>
+<?
 @$vysledek=MySQL_Query("SELECT id,hidden,prijmeni,jmeno FROM ".TBL_USER." ORDER BY sort_name ASC")
 	or die("Chyba pøi provádìní dotazu do databáze.");
 
