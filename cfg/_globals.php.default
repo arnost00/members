@@ -22,6 +22,9 @@ define ('GC_SHOW_REG_DAYS',60);
 // pocet zobrazenych novinek
 define ('GC_NEWS_LIMIT',20);
 
+// maximalni delka textu novinky
+define ('GC_NEWS_MAX_TEXT_LENGTH',2500);
+
 // minimalni nezobrazeny vek
 define ('GC_SHOW_AGE_LIMIT',21);
 

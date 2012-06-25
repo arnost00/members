@@ -5,6 +5,7 @@
 require ('connect.inc.php');
 require ('sess.inc.php');
 require ('common.inc.php');
+require("./cfg/_globals.php");
 
 if (IsLoggedEditor())
 {
@@ -19,6 +20,8 @@ if (IsLoggedEditor())
 	{
 
 		$datum2=String2DateDMY($datum);
+		if (strlen($text) > GC_NEWS_MAX_TEXT_LENGTH)
+		  $text = substr($text,0,GC_NEWS_MAX_TEXT_LENGTH);
 		
 		$datum2=mysql_escape_string($datum2);
 		$nadpis=mysql_escape_string($nadpis);
