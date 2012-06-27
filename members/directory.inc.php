@@ -34,7 +34,7 @@ if (($vysledek != FALSE) && mysql_num_rows($vysledek) > 0)
 $data_tbl = new html_table_mc();
 $col = 0;
 
-$data_tbl->set_header_col($col++,'Pøíjmení'.((IsLogged())? AddPointerImg():''),ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Reg.è.',ALIGN_LEFT);
 if (IsLogged())

@@ -32,7 +32,7 @@ if ($num_rows > 0)
 	$data_tbl = new html_table_mc();
 	$col = 0;
 	$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Název'.AddPointerImg(),ALIGN_LEFT);
+	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Poø.',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'T',ALIGN_CENTER);

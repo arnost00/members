@@ -406,11 +406,6 @@ function Print_Action_Result(&$text)
 	}
 }
 
-function AddPointerImg()
-{
-	return '&nbsp;<img src="imgs/arrow.gif" width="8" height="14" align="top">';
-}
-
 function DrawPageTitle($title, $show_date = true)
 {
 	if($show_date)
