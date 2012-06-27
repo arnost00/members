@@ -67,4 +67,27 @@ function checkAll( field, flag )
 	}
 }
 
+function isValidDate(subject)
+{
+  if (subject.match(/^(?:(0[1-9]|[12][0-9]|3[01])[\- \/.](0[1-9]|1[012])[\- \/.](19|20)[0-9]{2})$/)) // DD-MM-YYYY
+  { 
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+function isValidLogin(subject)
+{
+  if (subject.match(/^[[a-zA-Z/._-][a-zA-Z0-9/._-]*$/)) // prvni znak neni cislo
+  { 
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
 //-->

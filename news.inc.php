@@ -101,48 +101,37 @@ function change_font(object)
 	}
 }
 
-function isValidDate(subject)
-{
-  if (subject.match(/^(?:(0[1-9]|[12][0-9]|3[01])[\- \/.](0[1-9]|1[012])[\- \/.](19|20)[0-9]{2})$/)) // DD-MM-YYYY
-  { 
-    return true;
-  }
-  else
-  {
-    return false;
-  }
-}
-
-function check_form(object)
+function check_form()
 { // checks ... date, text length
  var text=document.forms["form_news"]["text"].value;
  var datum=document.forms["form_news"]["datum"].value;
-
+ var errors = "";
+ 
  if(text.length > <?echo(GC_NEWS_MAX_TEXT_LENGTH);?>)
  {
-   alert('Pøíliš mnoho znakù v textu. Prosím odstraòte '+ (text.length - <?echo(GC_NEWS_MAX_TEXT_LENGTH);?>)+ ' znakù.');
-   return false;
- }
- else if (datum.length == 0)
- {
-   alert('Chybí datum novinky.');
-   return false;
- }
- else if (!isValidDate(datum))
- {
-   alert('Chybné datum novinky.');
-   return false;	
+   errors += '\nPøíliš mnoho znakù v textu. Prosím odstraòte '+ (text.length - <?echo(GC_NEWS_MAX_TEXT_LENGTH);?>)+ ' znakù.';
  }
  else if (text.length == 0)
  {
-   alert('Chybí text novinky.');
-   return false;
+   errors +='\nChybí text novinky.';
  }
- else
+ if (datum.length == 0)
  {
-   return true;
+   errors += '\nChybí datum novinky.';
+ }
+ else if (!isValidDate(datum))
+ {
+   errors += '\nNeplatné datum novinky.';
  }
 
+
+ if (errors.length > 0)
+ {
+	alert ("Formuláø nelze odeslat z následujících dùvodù:\n" + errors);
+	return false;
+ }
+ else
+	return true;
 }
 
 //-->
@@ -152,7 +141,7 @@ function check_form(object)
 <?
 DrawPageSubTitle('Formuláø pro vložení novinky');
 ?>
-<FORM METHOD=POST ACTION="news_new_exc.php" name="form_news" id="form_news" onsubmit="return check_form(this);">
+<FORM METHOD=POST ACTION="news_new_exc.php" name="form_news" id="form_news" onsubmit="return check_form();">
 <A name="addnews">&nbsp;</A>
 <?
 $data_tbl = new html_table_form('news');
