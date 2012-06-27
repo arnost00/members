@@ -21,8 +21,13 @@ if (IsLogged())
 	case 1: // podpis & login
 		$login=mysql_escape_string($login);
 		$podpis=mysql_escape_string($podpis);
+		$heslo= md5($hesloo);
+		$vysledek=MySQL_Query("SELECT heslo FROM ".TBL_ACCOUNT." WHERE id = '$id' LIMIT 1");
+		$curr_usr=MySQL_Fetch_Array($vysledek);
 
-		if ($podpis=="" || $login=="")
+		if ($heslo != $curr_usr["heslo"])
+			$result=CS_BAD_CUR_PASS;
+		else if ($podpis=="" || $login=="")
 			$result=CS_EMPTY_ITEM;
 		else if (strlen($login) < 4)
 			$result=CS_MIN_LEN_LOGIN;
