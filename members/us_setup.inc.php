@@ -21,6 +21,80 @@ if (IsSet($result) && is_numeric($result) && $result != 0)
 <BR><hr><BR>
 <? DrawPageSubTitle('Základní údaje'); ?>
 
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+
+function check_form_1()
+{ // checks ... podpis & login
+ var max_l_podpis = 20;
+ var max_l_login = 20;
+ var podpis=document.forms["us_s1"]["podpis"].value;
+ var login=document.forms["us_s1"]["login"].value;
+ var errors = "";
+ 
+ if(podpis.length > max_l_podpis)
+ {
+   errors += '\nPøíliš mnoho znakù v podpisu. Prosím odstraòte '+ (text.length - max_l_podpis)+ ' znakù.';
+ }
+ else if (podpis.length == 0)
+ {
+   errors +='\nPodpis nemùže být prázdný.';
+ }
+ if (login.length < 4)
+ {
+   errors += '\nPøihlašovací jméno musí mít minimálnì 4 znaky.';
+ }
+ else if (login.length > max_l_login)
+ {
+   errors += '\nPøíliš mnoho znakù v pøihlašovacím jménu. Prosím odstraòte '+ (text.length - max_l_login)+ ' znakù.';
+ }
+ else if (!isValidLogin(login))
+ {
+   errors += '\nPøihlašovací jméno obsahuje nepovolené znaky, nebo kombinace znakù.';
+ }
+
+ if (errors.length > 0)
+ {
+	alert ("Formuláø nelze odeslat z následujících dùvodù:\n" + errors);
+	return false;
+ }
+ else
+	return true;
+}
+
+function check_form_2()
+{ // checks ... password
+ var oldheslo=document.forms["us_s2"]["oldheslo"].value;
+ var heslo=document.forms["us_s2"]["heslo"].value;
+ var heslo2=document.forms["us_s2"]["heslo2"].value;
+ var errors = "";
+ 
+ if (oldheslo.length == 0)
+ {
+   errors +='\nChybí staré heslo.';
+ }
+ if (heslo !=  heslo2)
+ {
+   errors += '\nNové heslo se liší v zadáních.';
+ }
+ else if (heslo.length < 4 || heslo2.length < 4)
+ {
+   errors += '\nNové heslo musí mít minimálnì 4 znaky.';
+ }
+
+ if (errors.length > 0)
+ {
+	alert ("Formuláø nelze odeslat z následujících dùvodù:\n" + errors);
+	return false;
+ }
+ else
+	return true;
+}
+
+//-->
+</SCRIPT>
+
+
 <TABLE width="90%">
 <TR>
 	<TD width="45%" align="right">Pøihlašovací jméno</TD>
@@ -37,7 +111,7 @@ if (IsSet($result) && is_numeric($result) && $result != 0)
 <BR><hr><BR>
 <? DrawPageSubTitle('Volitelné údaje'); ?>
 
-<FORM METHOD=POST ACTION="./us_setup_exc.php?type=1&id=<?echo $usr->account_id;?>">
+<FORM METHOD=POST ACTION="./us_setup_exc.php?type=1&id=<?echo $usr->account_id;?>" name="us_s1" onsubmit="return check_form_1();">
 <TABLE width="90%">
 <TR>
 	<TD width="40%" align="right">Podpis</TD>
@@ -65,7 +139,7 @@ if (IsSet($result) && is_numeric($result) && $result != 0)
 	<TD colspan="3"></TD>
 </TR>
 <TR>
-	<TD colspan="3"><b>Pøihlašovací jméno : </b>Doporuèujeme použití slova bez diakritiky a rozlišování velkým a malých písmen (jedno kterou variantu vyberete). V pøihlašovacím jménì mohou být i èíslice, kromì prvního písmene. Nedoporuèujem též používání mezer v jménu. Volte jméno tak, aby se zabránilo kolizím mezi jmény uživatelù. Minimální délka jsou 4 znaky.<BR></TD>
+	<TD colspan="3"><b>Pøihlašovací jméno : </b>Je požadováno použití písmen bez diakritiky a mohou být velká a malá písmena. V pøihlašovacím jménì mohou být i èíslice, kromì prvního písmene. Též není dovoleno používání mezer v jménu. Volte jméno tak, aby se zabránilo kolizím mezi jmény uživatelù. Minimální délka jsou 4 znaky.<BR></TD>
 </TR>
 </TABLE>
 </FORM>
@@ -73,7 +147,7 @@ if (IsSet($result) && is_numeric($result) && $result != 0)
 <BR><hr><BR>
 <? DrawPageSubTitle('Zmìna hesla'); ?>
 
-<FORM METHOD=POST ACTION="./us_setup_exc.php?type=2&id=<?echo $usr->account_id;?>">
+<FORM METHOD=POST ACTION="./us_setup_exc.php?type=2&id=<?echo $usr->account_id;?>" name="us_s2" onsubmit="return check_form_2();">
 <TABLE width="90%">
 <TR>
 	<TD width="45%" align="right">Staré heslo:</TD>
