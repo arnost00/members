@@ -51,7 +51,6 @@ function zmen_kat_null()
 
 <FORM METHOD=POST ACTION="./race_kat_exc.php?id=<?echo $id?>" name="form2">
 
-<br><br><INPUT TYPE="submit" VALUE="Odeslat zmìny kategorií">
 <? DrawPageSubTitle('Kategorie v závodì'); ?>
 
 <?include "./race_kateg.inc.php"?>
@@ -92,6 +91,7 @@ MTBO = (<? echo $g_kategorie ['MTBO']; ?>)
 
 </FORM>
 
+<br><INPUT TYPE="submit" VALUE="Odeslat zmìny kategorií">&nbsp;&nbsp;
 <BUTTON onclick="javascript:close_popup();">Zpìt</BUTTON>
 
 <br><br>Aktuální kategorie:<br>
