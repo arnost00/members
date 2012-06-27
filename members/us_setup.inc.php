@@ -30,6 +30,7 @@ function check_form_1()
  var max_l_login = 20;
  var podpis=document.forms["us_s1"]["podpis"].value;
  var login=document.forms["us_s1"]["login"].value;
+ var heslo=document.forms["us_s1"]["hesloo"].value;
  var errors = "";
  
  if(podpis.length > max_l_podpis)
@@ -51,6 +52,11 @@ function check_form_1()
  else if (!isValidLogin(login))
  {
    errors += '\nPøihlašovací jméno obsahuje nepovolené znaky, nebo kombinace znakù.';
+ }
+
+ if (heslo.length == 0)
+ {
+   errors +='\nOvìøovací heslo nemùže být prázdné.';
  }
 
  if (errors.length > 0)
@@ -97,11 +103,6 @@ function check_form_2()
 
 <TABLE width="90%">
 <TR>
-	<TD width="45%" align="right">Pøihlašovací jméno</TD>
-	<TD width="5"></TD>
-	<TD class="DataValue"><? echo $curr_usr["login"]; ?></TD>
-</TR>
-<TR>
 	<TD width="45%" align="right">Povoleno psaní novinek</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><? echo ($usr->policy_news) ? "ano": "ne"; ?></TD>
@@ -122,6 +123,11 @@ function check_form_2()
 	<TD width="40%" align="right">Pøihlašovací jméno</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="login" SIZE=20 VALUE="<? echo $curr_usr["login"]; ?>"></TD>
+</TR>
+<TR>
+	<TD width="40%" align="right">Heslo pro ovìøení zmìny údajù</TD>
+	<TD width="5"></TD>
+	<TD><INPUT TYPE="password" NAME="hesloo" SIZE=20 VALUE=""></TD>
 </TR>
 <TR>
 	<TD colspan="3"></TD>
