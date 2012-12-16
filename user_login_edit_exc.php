@@ -23,7 +23,6 @@ if (IsLoggedAdmin())
 	if (!IsSet ($mng2)) $mng2 = 0;
 	if (!IsSet ($adm)) $adm = 0;
 	if (!IsSet ($fin)) $fin = 0;
-	if (!IsSet ($lock)) $lock = 0;
 
 	if ($mng2 == 1) 
 		$mng = _MNG_BIG_INT_VALUE_;
@@ -121,19 +120,6 @@ if (IsLoggedAdmin())
 				$result = CS_USER_PASS_UPDATED;
 			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id2.' - pass');
 		}
-		break;
-	case 4: // lock
-		$id2 = GetUserAccountId_Users($id);
-		$lock = !$lock;
-		$lock=mysql_escape_string($lock);
-
-		$result=MySQL_Query("UPDATE ".TBL_ACCOUNT." SET locked='$lock' WHERE id='$id2'")
-			or die("Chyba pøi provádìní dotazu do databáze.");
-		if ($result == FALSE)
-			die ("Nepodaøilo se zamèít/odemèít úèet èlena.");
-		else
-			$result = CS_USER_LOCK_ACC;
-		SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id2.' - lock');
 		break;
 	default:
 		$result=CS_UNKNOWN_ERROR;

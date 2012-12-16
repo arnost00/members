@@ -163,7 +163,7 @@ if(strlen($zaznam_z['poznamka']) > 0)
 
 <BR><hr><BR>
 <?
-DrawPageSubTitle('Již pøihlášení závodníci');
+DrawPageSubTitle('Pøihlášení závodníci');
 
 $data_tbl = new html_table_mc();
 $col = 0;

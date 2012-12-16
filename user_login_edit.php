@@ -116,6 +116,14 @@ DrawPageTitle('Èlenská základna - Administrace uživatelských úètù', false);
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="checkbox" NAME="adm" SIZE=15 VALUE="1" <? if ($zaznam2["policy_adm"]) echo "checked" ?> >Uživatel je správcem</TD>
 </TR>
+<? if ($zaznam2["locked"] != 0) { ?>
+<TR>
+	<TD width="45%" align="right">Tento uživatel má</TD>
+	<TD width="5"></TD>
+	<TD class="DataValue"><span class="WarningText">uzamèený úèet</span></TD>
+</TR>
+<? } ?>
+
 <?
 }
 ?>
@@ -196,30 +204,6 @@ if($zaznam2 != FALSE)
 </TR>
 </TABLE>
 </FORM>
-<?
-if($zaznam2 != FALSE && IsLoggedAdmin())
-{ // zamek uctu
-?>
-<BR><hr><BR>
-<? DrawPageSubTitle('Zamèení/odemèení úètu uživatele pro tyto stránky'); ?>
-<FORM METHOD=POST ACTION="./user_login_edit_exc.php?type=4&id=<?echo $id."&lock=".$zaznam2["locked"];?>">
-<TABLE width="90%">
-<TR>
-	<TD width="45%" align="right">Stav úètu:</TD>
-	<TD width="5"></TD>
-	<TD class="DataValue"><?echo ($zaznam2["locked"]) ? '<span class="WarningText">Úèet je zablokován. Nelze se na nìj pøihlásit.</span>' : "Úèet je otevøen a lze jej používat."; ?></TD>
-</TR>
-<TR>
-	<TD colspan="3"></TD>
-</TR>
-<TR>
-	<TD colspan="3" align="center"><INPUT TYPE="submit" VALUE="<? echo ($zaznam2["locked"]) ? "Odemknout úèet" : "Zamknout úèet"; ?>"></TD>
-</TR>
-</TABLE>
-</FORM>
-<?
-}
-?>
 <BR><hr><BR>
 <? if (IsLoggedManager()) { ?>
 <A HREF="index.php?id=500&subid=1">Zpìt na seznam èlenù</A><BR>

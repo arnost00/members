@@ -37,6 +37,7 @@ if ($num_rows > 0)
 	$data_tbl->set_header_col($col++,'Poø.',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'T',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'W',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'Pø',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Pøihlášky',ALIGN_CENTER);
 	if($g_enable_race_boss)
 		$data_tbl->set_header_col($col++,'Vedoucí',ALIGN_CENTER);
@@ -63,8 +64,9 @@ if ($num_rows > 0)
 
 		$nazev = '<A href="javascript:open_race_info('.$zaznam['id'].')" class="adr_name">'.$zaznam['nazev'].'</A>';
 		$oddil = $zaznam['oddil'];
-		$typ = "<A HREF=\"javascript:open_win('./race_reg_view.php?id=".$zaznam['id']."','')\">".GetRaceTypeImg($zaznam['typ']).'</A>';
+		$typ = GetRaceTypeImg($zaznam['typ']);
 		$odkaz = GetRaceLinkHTML($zaznam['odkaz']);
+		$prihl2 = "<A HREF=\"javascript:open_win('./race_reg_view.php?id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
 
 		if (!$brk_tbl && $zaznam['datum'] >= $curr_date)
 		{
@@ -87,10 +89,10 @@ if ($num_rows > 0)
 				if($zaznamU != FALSE)
 					$boss = $zaznamU['jmeno'].' '.$zaznamU['prijmeni'];
 			}
-			echo $data_tbl->get_new_row($datum,$nazev,$zaznam['misto'],$oddil,$typ,$odkaz,$termin,$boss);
+			echo $data_tbl->get_new_row($datum,$nazev,$zaznam['misto'],$oddil,$typ,$odkaz,$prihl2,$termin,$boss);
 		}
 		else
-			echo $data_tbl->get_new_row($datum,$nazev,$zaznam['misto'],$oddil,$typ,$odkaz,$termin);
+			echo $data_tbl->get_new_row($datum,$nazev,$zaznam['misto'],$oddil,$typ,$odkaz,$prihl2,$termin);
 		$i++;
 		$old_year = Date2Year($zaznam['datum']);
 	}

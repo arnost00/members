@@ -76,15 +76,15 @@ if ($num_rows > 0)
 		$row[] = "<A href=\"javascript:open_race_info(".$zaznam['id'].")\" class=\"adr_name\">".$prefix.$zaznam['nazev'].$suffix."</A>";
 		$row[] = $prefix.$zaznam['misto'].$suffix;
 		$row[] = $prefix.$zaznam['oddil'].$suffix;
-		$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?id=".$zaznam['id']."','')\">".GetRaceTypeImg($zaznam['typ']).'</A>';
+		$row[] = GetRaceTypeImg($zaznam['typ']);
 		$row[] = GetRaceLinkHTML($zaznam['odkaz']);
 		if (!$prihl_finish)
 		{
-			$row[] = "<A HREF=\"javascript:open_win('./race_regs_1.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\">Pø-1</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_all.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\">Pø-V</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."&select=1','')\"><span class=\"TextAlertExp\">Zè</span></A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\"><span class=\"TextAlertExp\">Zbr</span></A>";
+			$row[] = "<A HREF=\"javascript:open_win('./race_regs_1.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\">Pø-1</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_all.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\">Pø-V</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."&select=1','')\"><span class=\"TextAlertExpLight\">Zè</span></A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
 		}
 		else
 		{
-			$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."&select=1','')\"><span class=\"TextAlertExp\">Zbr.èl.</span></A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\"><span class=\"TextAlertExp\">Zobrazit</span></A>";
+			$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."&select=1','')\"><span class=\"TextAlertExpLight\">Zbr.èl.</span></A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>";
 		}
 		$row[] = $prihlasky_out;
 

@@ -16,6 +16,7 @@ if (IsLoggedSmallAdmin())
 
 	if ($id)
 	{
+		$hidden_result = false;
 		$vysl=MySQL_Query('SELECT * FROM '.TBL_USER.' WHERE `id`=\''.$id."'");
 		$zaznam=MySQL_Fetch_Array($vysl);
 		if ($zaznam != FALSE)
@@ -26,11 +27,12 @@ if (IsLoggedSmallAdmin())
 				or die('Chyba pøi provádìní dotazu do databáze.');
 			if ($result == FALSE)
 				die ('Nepodaøilo se skrýt/zpøístupnit èlena.');
+			$hidden_result = true;
 			SaveItemToModifyLog_Edit(TBL_USER,'user.id = '.$id.' - hide ('.(int)$hidden.')');
 		}
 
 		$id2 = GetUserAccountId_Users($id);
-		if ($id2)
+		if ($id2 && $hidden_result)
 		{
 			$vysl2=MySQL_Query('SELECT * FROM '.TBL_ACCOUNT.' WHERE `id`=\''.$id2."'");
 			$zaznam2=MySQL_Fetch_Array($vysl2);

@@ -36,9 +36,9 @@ if ($num_rows > 0)
 	$data_tbl->set_header_col($col++,'T',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'W',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'Pøihlášky',ALIGN_CENTER);
 	if($g_enable_race_boss)
 		$data_tbl->set_header_col($col++,'Vedoucí',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Pøihlášky',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'OP',ALIGN_CENTER);
 
 	echo $data_tbl->get_css()."\n";
@@ -87,7 +87,7 @@ if ($num_rows > 0)
 		$row[] = "<A href=\"javascript:open_race_info(".$zaznam['id'].")\" class=\"adr_name\">".$prefix.$zaznam['nazev'].$suffix."</A>";
 		$row[] = $prefix.$zaznam['misto'].$suffix;
 		$row[] = $prefix.$zaznam['oddil'].$suffix;
-		$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?id=".$zaznam['id']."','')\">".GetRaceTypeImg($zaznam['typ']).'</A>';
+		$row[] = GetRaceTypeImg($zaznam['typ']).'</A>';
 		$row[] = GetRaceLinkHTML($zaznam['odkaz']);
 		if(!$race_is_old || IsLoggedAdmin())
 		{
@@ -99,12 +99,13 @@ if ($num_rows > 0)
 		{
 			$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$zaznam['id']."','',600,600)\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>";
 		}
+
+		$row[] = $prihlasky_out;
+		
 		if($g_enable_race_boss)
 		{
 			$row[] = (($zaznam['vedouci'] != 0) ? 'A&nbsp;/&nbsp;': '')."<A HREF=\"javascript:open_win('./race_boss.php?id=".$zaznam['id']."','')\">Edit</A>";
 		}
-
-		$row[] = $prihlasky_out;
 
 		if($zaznam['send'] > 0)
 			$row[] = ($zaznam['prihlasky'] > 1) ? $zaznam['send'].'.t.' : 'Ano';
