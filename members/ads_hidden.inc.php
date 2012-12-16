@@ -39,7 +39,6 @@ echo $data_tbl->get_header_row()."\n";
 $i=1;
 while ($zaznam=MySQL_Fetch_Array($vysledek))
 {
-//	if ($zaznam['hidden'] == 0) 
 	$row = array();
 	$row[] = $i++;
 	$row[] = $zaznam['prijmeni'];
@@ -63,6 +62,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 echo $data_tbl->get_footer()."\n";
 
 ?>
-Upozornìní: Èlen skrytím neztratí možnost pøihlásit se do systému.<br>
+<br>
+Upozornìní: Èlenu je skrytím zárovìn i odebrána možnost pøihlásit se do systému (zamèen úèet).<br>
 <BR>
 </CENTER>

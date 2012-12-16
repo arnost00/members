@@ -90,7 +90,7 @@ if ($num_rows > 0)
 			$row[] = $prefix.$zaznam['nazev'].$suffix;
 			$row[] = $prefix.$zaznam['misto'].$suffix;
 			$row[] = $prefix.$zaznam['oddil'].$suffix;
-			$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?id=".$zaznam['id']."','')\">".GetRaceTypeImg($zaznam['typ']).'</A>';
+			$row[] = GetRaceTypeImg($zaznam['typ']);
 			if($zaznam['kat'] != NULL)
 				$row[] = '<span class="Highlight">'.$zaznam['kat'].'</span>';
 			else

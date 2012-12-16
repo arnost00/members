@@ -80,7 +80,7 @@ if($vysledek && ($num_rows = mysql_num_rows($vysledek)) > 0)
 		$row[] = "<A href=\"javascript:open_race_info(".$zaznam['id'].")\" class=\"adr_name\">".$prefix.$zaznam['nazev'].$suffix."</A>";
 		$row[] = $prefix.$zaznam['misto'].$suffix;
 		$row[] = $prefix.$zaznam['oddil'].$suffix;
-		$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?id=".$zaznam['id']."','')\">".GetRaceTypeImg($zaznam['typ']).'</A>';
+		$row[] = GetRaceTypeImg($zaznam['typ']);
 		$row[] = GetRaceLinkHTML($zaznam['odkaz']);
 		$row[] = (strlen($zaznam['kategorie']) > 0) ? 'A' :'<span class="TextAlertBold">N</span>';
 		$row [] = "<A HREF=\"javascript:open_win('./race_edit.php?id=".$zaznam['id']."','')\">Edit</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_kat.php?id=".$zaznam['id']."','')\">Kategorie</A>&nbsp;/&nbsp;<A HREF=\"./race_del_exc.php?id=".$zaznam["id"]."\" onclick=\"return confirm_delete();\" class=\"Erase\">Smazat</A>";

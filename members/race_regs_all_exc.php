@@ -28,7 +28,7 @@ $query = 'SELECT '.TBL_USER.'.id, kat, termin FROM '.TBL_USER.' LEFT JOIN '.TBL_
 $zaznam_z = MySQL_Fetch_Array($vysledek_z);
 
 $is_registrator_on = IsCalledByRegistrator($gr_id);
-$is_termin_show_on = $is_registrator_on && ($zaznam_z['prihlasky'] > 1);
+$is_termin_edit_on = $is_registrator_on && ($zaznam_z['prihlasky'] > 1);
 
 $termin = raceterms::GetCurr4RegTerm($zaznam_z);
 
@@ -43,7 +43,7 @@ while ($zaznamZ=MySQL_Fetch_Array($vysledek))
 		$cterm = $termin;
 		if($is_registrator_on)
 		{
-			if($is_termin_show_on && $term[$user] != 0)
+			if($is_termin_edit_on && $term[$user] != 0)
 				$cterm = (int)$term[$user];
 		}
 		if ($cterm == 0)

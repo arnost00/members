@@ -14,7 +14,7 @@ $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
 $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 0;  // old races
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC);
 
-$query = 'SELECT '.TBL_RACE.'.id, datum, datum2, nazev, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, kat, termin FROM '.TBL_RACE.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_RACE.'.id = '.TBL_ZAVXUS.'.id_zavod AND '.TBL_ZAVXUS.'.id_user='.$usr->user_id.$sql_sub_query.' ORDER BY datum, datum2, '.TBL_RACE.'.id';
+$query = 'SELECT '.TBL_RACE.'.id, datum, datum2, nazev, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, kat, termin, vedouci FROM '.TBL_RACE.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_RACE.'.id = '.TBL_ZAVXUS.'.id_zavod AND '.TBL_ZAVXUS.'.id_user='.$usr->user_id.$sql_sub_query.' ORDER BY datum, datum2, '.TBL_RACE.'.id';
 @$vysledek=MySQL_Query($query);
 
 ?>
@@ -51,6 +51,8 @@ if ($num_rows > 0)
 	$data_tbl->set_header_col($col++,'W',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Pøihlášky',ALIGN_CENTER);
+	if($g_enable_race_boss)
+		$data_tbl->set_header_col($col++,'Vedoucí',ALIGN_CENTER);
 
 	echo $data_tbl->get_css()."\n";
 	echo $data_tbl->get_header()."\n";
@@ -70,7 +72,7 @@ if ($num_rows > 0)
 		$row[] = '<A href="javascript:open_race_info('.$zaznam['id'].')" class="adr_name">'.$zaznam['nazev'].'</A>';
 		$row[] = $zaznam['misto'];
 		$row[] = $zaznam['oddil'];
-		$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?id=".$zaznam['id']."','')\">".GetRaceTypeImg($zaznam['typ']).'</A>';
+		$row[] = GetRaceTypeImg($zaznam['typ']);
 		$row[] = GetRaceLinkHTML($zaznam['odkaz']);
 		
 		$prihlasky_curr = raceterms::GetActiveRegDateArr($zaznam);
@@ -81,16 +83,17 @@ if ($num_rows > 0)
 		$termin = raceterms::ColorizeTermUser($time_to_reg,$prihlasky_curr,$prihlasky_out_term);
 
 		$prihl_finish = ($time_to_reg == -1 && $prihlasky_curr[0] != 0) || ($prihlasky_curr[0] == 0 && $zaznam['datum'] <= $curr_date);
+		$zbr = "<A HREF=\"javascript:open_win('./race_reg_view.php?id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
 
 		if($zaznam['kat'] == NULL)
 		{	// neni prihlasen
 			if (!$prihl_finish)
 			{
-				$row[] = "<A HREF=\"javascript:open_win('./us_race_regon.php?id_zav=".$zaznam["id"]."&id_us=".$usr->user_id."','')\">Pøihl.</A>";
+				$row[] = "<A HREF=\"javascript:open_win('./us_race_regon.php?id_zav=".$zaznam["id"]."&id_us=".$usr->user_id."','')\">Pøihl.</A> / ".$zbr;
 			}
 			else
 			{
-				$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._USER_GROUP_ID_."&id=".$zaznam["id"]."&us=1','')\"><span class=\"TextAlertExp\">Zobrazit</span></A>";
+				$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._USER_GROUP_ID_."&id=".$zaznam["id"]."&us=1','')\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>";
 			}
 		}
 		else
@@ -112,6 +115,19 @@ if ($num_rows > 0)
 
 		$row[] = raceterms::ColorizeTermUser($time_to_reg,$prihlasky_curr,$prihlasky_out_term);
 
+		if($g_enable_race_boss)
+		{
+			$boss = '-';
+			if($zaznam['vedouci'] != 0)
+			{
+				@$vysledekU=MySQL_Query("SELECT jmeno,prijmeni FROM ".TBL_USER." WHERE id = '".$zaznam['vedouci']."' LIMIT 1");
+				@$zaznamU=MySQL_Fetch_Array($vysledekU);
+				if($zaznamU != FALSE)
+					$boss = $zaznamU['jmeno'].' '.$zaznamU['prijmeni'];
+			}
+			$row[] = $boss;
+		}
+		
 		if (!$brk_tbl && $zaznam['datum'] >= $curr_date)
 		{
 			if($i != 1)

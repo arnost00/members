@@ -97,6 +97,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 	}
 	else
 	{
+		$prihl_cl++;
 		if($zaznam['termin'] == $termin || $is_termin_show_on)
 		{
 			$us_rows[$i][0] = $zaznam['kat'];
@@ -104,7 +105,6 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 			$us_rows[$i][2] = $zaznam['pozn_in'];
 			if($is_termin_show_on)
 				$us_rows[$i][3] = $zaznam['termin'];
-			$prihl_cl++;
 		}
 		else
 		{
