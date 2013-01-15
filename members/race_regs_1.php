@@ -74,7 +74,7 @@ $query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, kat, pozn, pozn_in, term
 
 @$vysledek=MySQL_Query($query);
 
-echo '<TABLE>';
+echo '<TABLE width="90%">';
 echo '<TR>';
 echo '<TD align="right">Vyber èlena</TD>';
 echo '<TD width="5"></TD>';
@@ -84,7 +84,7 @@ $is_registrator_on = IsCalledByRegistrator($gr_id);
 $is_termin_show_on = $is_registrator_on && ($zaznam_z['prihlasky'] > 1);
 
 $i=0;
-$prihl_cl=0;
+//$prihl_cl=0;
 while ($zaznam=MySQL_Fetch_Array($vysledek))
 {
 	if($zaznam['kat'] == NULL)
@@ -97,7 +97,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 	}
 	else
 	{
-		$prihl_cl++;
+		//$prihl_cl++;
 		if($zaznam['termin'] == $termin || $is_termin_show_on)
 		{
 			$us_rows[$i][0] = $zaznam['kat'];
@@ -147,15 +147,18 @@ if($is_termin_show_on)
 	echo '<TD><INPUT TYPE="text" NAME="new_termin" size="5"></TD>';
 	echo '</TR>';
 }
+	if ($zaznam_z['kategorie'] != '')
+	{
+		$kategorie=explode(';',$zaznam_z['kategorie']);
 ?>
 <TR><TD align="right" width="100">Možnosti<BR>(kategorie)</TD><TD width="5"></TD><TD width="400">
 <?
-	$kategorie=explode(';',$zaznam_z['kategorie']);
-	for ($i=0; $i<count($kategorie)-1; $i++)
-	{
-		echo "<button onclick=\"javascript:zmen_kat('".$kategorie[$i]."');return false;\">".$kategorie[$i]."</button>";
+		for ($i=0; $i<count($kategorie)-1; $i++)
+		{
+			echo "<button onclick=\"javascript:zmen_kat('".$kategorie[$i]."');return false;\">".$kategorie[$i]."</button>";
+		}
+		echo "\n".'</TD></TR>';
 	}
-echo "\n".'</TD></TR>';
 ?>
 <TR>
 	<TD colspan="3"></TD>
@@ -168,7 +171,7 @@ echo "\n".'</TD></TR>';
 </TR>
 </TABLE>
 <?
-echo "Poèet již pøihlášených èlenù je ".$prihl_cl.".<BR><BR>";
+//echo "Poèet již pøihlášených èlenù je ".$prihl_cl.".<BR><BR>";
 ?>
 <SCRIPT LANGUAGE="JavaScript">
 //<!--
@@ -204,5 +207,48 @@ if(strlen($zaznam_z['poznamka']) > 0)
 <?
 }
 ?>
+<BR><hr><BR>
+<?
+DrawPageSubTitle('Pøihlášení závodníci');
+
+$data_tbl = new html_table_mc();
+$col = 0;
+$data_tbl->set_header_col($col++,'Poø.',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
+if($zaznam_z['prihlasky'] > 1)
+	$data_tbl->set_header_col($col++,'Termín',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'Pozn.',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'Pozn.(i)',ALIGN_LEFT);
+
+echo $data_tbl->get_css()."\n";
+echo $data_tbl->get_header()."\n";
+echo $data_tbl->get_header_row()."\n";
+
+@$vysledek=MySQL_Query("SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod=$id ORDER BY id");
+
+$i=0;
+while ($zaznam=MySQL_Fetch_Array($vysledek))
+{
+	@$vysledek1=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE id=$zaznam[id_user] LIMIT 1");
+	$zaznam1=MySQL_Fetch_Array($vysledek1);
+	$i++;
+
+	$row = array();
+	$row[] = $i.'<!-- '.$zaznam['id'].' -->';
+	$row[] = $zaznam1['jmeno'];
+	$row[] = $zaznam1['prijmeni'];
+	$row[] = '<B>'.$zaznam['kat'].'</B>';
+	if($zaznam_z['prihlasky'] > 1)
+		$row[] = $zaznam['termin'];
+	$row[] = $zaznam['pozn'];
+	$row[] = $zaznam['pozn_in'];
+	echo $data_tbl->get_new_row_arr($row)."\n";
+}
+echo $data_tbl->get_footer()."\n";
+?>
+
+<BR>
 </BODY>
 </HTML>
