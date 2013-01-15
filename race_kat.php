@@ -89,9 +89,9 @@ MTBO = (<? echo $g_kategorie ['MTBO']; ?>)
 </span>
 <BR>
 
+<br><INPUT TYPE="submit" VALUE="Odeslat zmìny kategorií">&nbsp;&nbsp;
 </FORM>
 
-<br><INPUT TYPE="submit" VALUE="Odeslat zmìny kategorií">&nbsp;&nbsp;
 <BUTTON onclick="javascript:close_popup();">Zpìt</BUTTON>
 
 <br><br>Aktuální kategorie:<br>
