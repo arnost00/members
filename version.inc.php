@@ -14,7 +14,7 @@ if (!defined('SYSTEM_VERSION_INCLUDED'))
 
 	function GetDevelopYears()
 	{
-		return "2002-2012";
+		return "2002-2013";
 	}
 
 }	// define (SYSTEM_VERSION_INCLUDED)

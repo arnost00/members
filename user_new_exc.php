@@ -26,26 +26,26 @@ switch ($g_czech_sort)
 }
 // <-- end
 
-$prijmeni=mysql_escape_string($prijmeni);
-$jmeno=mysql_escape_string($jmeno);
-$datum=mysql_escape_string($datum);
-$adresa=mysql_escape_string($adresa);
-$mesto=mysql_escape_string($mesto);
-$psc=mysql_escape_string($psc);
-$domu=mysql_escape_string($domu);
-$zam=mysql_escape_string($zam);
-$mobil=mysql_escape_string($mobil);
-$email=mysql_escape_string($email);
-$reg=mysql_escape_string($reg);
-$si=mysql_escape_string($si);
-$name2=mysql_escape_string($name2);
-$hidden=mysql_escape_string($hidden);
-$poh=mysql_escape_string($poh);
-$lic=mysql_escape_string($lic);
-$lic_mtbo=mysql_escape_string($lic_mtbo);
-$lic_lob=mysql_escape_string($lic_lob);
-$fin=mysql_escape_string($fin);
-$rc=mysql_escape_string($rc);
+$prijmeni=mysql_real_escape_string($prijmeni);
+$jmeno=mysql_real_escape_string($jmeno);
+$datum=mysql_real_escape_string($datum);
+$adresa=mysql_real_escape_string($adresa);
+$mesto=mysql_real_escape_string($mesto);
+$psc=mysql_real_escape_string($psc);
+$domu=mysql_real_escape_string($domu);
+$zam=mysql_real_escape_string($zam);
+$mobil=mysql_real_escape_string($mobil);
+$email=mysql_real_escape_string($email);
+$reg=mysql_real_escape_string($reg);
+$si=mysql_real_escape_string($si);
+$name2=mysql_real_escape_string($name2);
+$hidden=mysql_real_escape_string($hidden);
+$poh=mysql_real_escape_string($poh);
+$lic=mysql_real_escape_string($lic);
+$lic_mtbo=mysql_real_escape_string($lic_mtbo);
+$lic_lob=mysql_real_escape_string($lic_lob);
+$fin=mysql_real_escape_string($fin);
+$rc=mysql_real_escape_string($rc);
 
 if (IsLoggedAdmin())
 {

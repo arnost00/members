@@ -170,6 +170,16 @@ A.NaviColSm:HOVER {
 	text-decoration : none;
 }
 
+A.NewsEdit:LINK, A.NewsEdit:VISITED {
+	font-weight : normal;
+	text-decoration : none;
+}
+
+A.NewsEdit:HOVER {
+	font-weight : normal;
+	text-decoration : underline;
+}
+
 A.NewsErase:LINK, A.NewsErase:VISITED {
 	color :  <? echo $g_colors['erase_link']; ?>;
 	font-weight : normal;

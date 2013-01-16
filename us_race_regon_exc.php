@@ -18,9 +18,9 @@ $kat = (IsSet($kat)) ? $kat : '';
 
 if ($kat != '')
 {
-	$kat=mysql_escape_string($kat);
-	$pozn=mysql_escape_string($pozn);
-	$pozn2=mysql_escape_string($pozn2);
+	$kat=mysql_real_escape_string($kat);
+	$pozn=mysql_real_escape_string($pozn);
+	$pozn2=mysql_real_escape_string($pozn2);
 
 	db_Connect();
 	@$vysledek_z=MySQL_Query("SELECT datum, vicedenni, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5 FROM ".TBL_RACE." WHERE id=$id_zav");
