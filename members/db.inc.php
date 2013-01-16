@@ -1,5 +1,9 @@
 <?
 
+// new version for connect.inc.php
+// but is still in development :(
+// and not finished :(
+
 if (!defined('_DB_INCLUDED')) {
 	define('_DB_INCLUDED', 1);
 

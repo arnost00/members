@@ -1,4 +1,6 @@
 <?
+// new version will be db.inc.php
+// but is still in development :(
 
 if (!defined('_CONNECT_INCLUDED')) {
 	define('_CONNECT_INCLUDED', 1);
@@ -26,6 +28,12 @@ if (!defined('_CONNECT_INCLUDED')) {
 		MySQL_Select_DB($g_dbname);
 		MySQL_Query("SET CHARACTER SET cp1250");
 		return true;
+	}
+
+	// from db.inc.php
+	function correct_sql_string($str)
+	{
+		return mysql_real_escape_string($str);
 	}
 
 }	// endif

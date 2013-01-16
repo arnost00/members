@@ -22,9 +22,9 @@ if (IsLoggedEditor())
 		if (strlen($text) > GC_NEWS_MAX_TEXT_LENGTH)
 		  $text = substr($text,0,GC_NEWS_MAX_TEXT_LENGTH);
 		
-		$datum2=mysql_real_escape_string($datum2);
-		$nadpis=mysql_real_escape_string($nadpis);
-		$text=mysql_real_escape_string($text);
+		$datum2=correct_sql_string($datum2);
+		$nadpis=correct_sql_string($nadpis);
+		$text=correct_sql_string($text);
 		
 		if (IsSet($update))
 		{

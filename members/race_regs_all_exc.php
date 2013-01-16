@@ -37,9 +37,9 @@ while ($zaznamZ=MySQL_Fetch_Array($vysledek))
 	$user=$zaznamZ["id"];
 	if (IsSet($kateg[$user]))
 	{
-		$kat = mysql_real_escape_string($kateg[$user]);
-		$poz = mysql_real_escape_string($pozn[$user]);
-		$poz2 = mysql_real_escape_string($pozn2[$user]);
+		$kat = correct_sql_string($kateg[$user]);
+		$poz = correct_sql_string($pozn[$user]);
+		$poz2 = correct_sql_string($pozn2[$user]);
 		$cterm = $termin;
 		if($is_registrator_on)
 		{
@@ -62,10 +62,10 @@ while ($zaznamZ=MySQL_Fetch_Array($vysledek))
 			else
 			{	// update
 //				echo "UPD";
-				$kat=mysql_real_escape_string($kat);
-				$poz=mysql_real_escape_string($poz);
-				$poz2=mysql_real_escape_string($poz2);
-				$cterm=mysql_real_escape_string($cterm);
+				$kat=correct_sql_string($kat);
+				$poz=correct_sql_string($poz);
+				$poz2=correct_sql_string($poz2);
+				$cterm=correct_sql_string($cterm);
 			
 				$result=MySQL_Query("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$poz', pozn_in='$poz2', termin='$cterm' WHERE id_zavod = '$id' AND id_user = '$user'")
 					or die("Chyba pøi provádìní dotazu do databáze.");
@@ -78,10 +78,10 @@ while ($zaznamZ=MySQL_Fetch_Array($vysledek))
 			if ($kat != "")
 			{	// new
 //				echo "NEW";
-				$kat=mysql_real_escape_string($kat);
-				$poz=mysql_real_escape_string($poz);
-				$poz2=mysql_real_escape_string($poz2);
-				$cterm=mysql_real_escape_string($cterm);
+				$kat=correct_sql_string($kat);
+				$poz=correct_sql_string($poz);
+				$poz2=correct_sql_string($poz2);
+				$cterm=correct_sql_string($cterm);
 			
 				$result=MySQL_Query("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in,termin) VALUES ('$user','$id','$kat', '$poz','$poz2','$cterm')")
 					or die("Chyba pøi provádìní dotazu do databáze.");

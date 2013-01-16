@@ -26,31 +26,31 @@ switch ($g_czech_sort)
 }
 // <-- end
 
-$prijmeni=mysql_real_escape_string($prijmeni);
-$jmeno=mysql_real_escape_string($jmeno);
-$datum=mysql_real_escape_string($datum);
-$adresa=mysql_real_escape_string($adresa);
-$mesto=mysql_real_escape_string($mesto);
-$psc=mysql_real_escape_string($psc);
-$domu=mysql_real_escape_string($domu);
-$zam=mysql_real_escape_string($zam);
-$mobil=mysql_real_escape_string($mobil);
-$email=mysql_real_escape_string($email);
-$reg=mysql_real_escape_string($reg);
-$si=mysql_real_escape_string($si);
-$name2=mysql_real_escape_string($name2);
-$hidden=mysql_real_escape_string($hidden);
-$poh=mysql_real_escape_string($poh);
-$lic=mysql_real_escape_string($lic);
-$lic_mtbo=mysql_real_escape_string($lic_mtbo);
-$lic_lob=mysql_real_escape_string($lic_lob);
-$fin=mysql_real_escape_string($fin);
-$rc=mysql_real_escape_string($rc);
+db_Connect();
+
+$prijmeni=correct_sql_string($prijmeni);
+$jmeno=correct_sql_string($jmeno);
+$datum=correct_sql_string($datum);
+$adresa=correct_sql_string($adresa);
+$mesto=correct_sql_string($mesto);
+$psc=correct_sql_string($psc);
+$domu=correct_sql_string($domu);
+$zam=correct_sql_string($zam);
+$mobil=correct_sql_string($mobil);
+$email=correct_sql_string($email);
+$reg=correct_sql_string($reg);
+$si=correct_sql_string($si);
+$name2=correct_sql_string($name2);
+$hidden=correct_sql_string($hidden);
+$poh=correct_sql_string($poh);
+$lic=correct_sql_string($lic);
+$lic_mtbo=correct_sql_string($lic_mtbo);
+$lic_lob=correct_sql_string($lic_lob);
+$fin=correct_sql_string($fin);
+$rc=correct_sql_string($rc);
 
 if (IsLoggedAdmin())
 {
-	db_Connect();
-
 	if (IsSet($update))
 	{
 		$update = (isset($update) && is_numeric($update)) ? (int)$update : 0;
@@ -73,8 +73,6 @@ if (IsLoggedAdmin())
 }
 else if (IsLoggedManager() || IsLoggedSmallManager())
 {
-	db_Connect();
-
 	$hidden = 0;	// unhidden users only
 
 	if (IsSet($update))
@@ -107,8 +105,6 @@ else if (IsLoggedUser())
 	if (IsSet($update) && $update == $usr->user_id)
 	{
 		$update = (isset($update) && is_numeric($update)) ? (int)$update : 0;
-		
-		db_Connect();
 
 		$hidden = 0;	// unhidden users only
 

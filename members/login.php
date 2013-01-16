@@ -5,7 +5,7 @@ require ("./sess.inc.php");
 require ("./common.inc.php");
 if (!IsLogged())
 {
-	$login = (isset($_POST[_VAR_USER_LOGIN])) ? mysql_real_escape_string($_POST[_VAR_USER_LOGIN]) : '';
+	$login = (isset($_POST[_VAR_USER_LOGIN])) ? $_POST[_VAR_USER_LOGIN] : '';
 	$password = (isset($_POST[_VAR_USER_PASS])) ? $_POST[_VAR_USER_PASS] : '';
 	if($login == '')
 	{
@@ -13,6 +13,7 @@ if (!IsLogged())
 		exit;
 	}
 	db_Connect();
+	$login = correct_sql_string($login);
 	@$vysledek=MySQL_Query('SELECT * FROM '.TBL_ACCOUNT.' WHERE `login` = \''.$login.'\' LIMIT 1');
 	if (!$vysledek)
 	{
