@@ -40,7 +40,7 @@ if ($email=='')
 }
 else
 {
-	$email=mysql_escape_string($email);
+	$email=mysql_real_escape_string($email);
 
 	$result=MySQL_Query("SELECT id FROM ".TBL_MAILINFO." WHERE id_user = '$id' LIMIT 1");
 	$zaznam=MySQL_Fetch_Array($result);

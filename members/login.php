@@ -5,7 +5,7 @@ require ("./sess.inc.php");
 require ("./common.inc.php");
 if (!IsLogged())
 {
-	$login = (isset($_POST[_VAR_USER_LOGIN])) ? mysql_escape_string($_POST[_VAR_USER_LOGIN]) : '';
+	$login = (isset($_POST[_VAR_USER_LOGIN])) ? mysql_real_escape_string($_POST[_VAR_USER_LOGIN]) : '';
 	$password = (isset($_POST[_VAR_USER_PASS])) ? $_POST[_VAR_USER_PASS] : '';
 	if($login == '')
 	{
