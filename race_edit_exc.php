@@ -97,21 +97,21 @@ if ($datum=='' || ($datum2=='' && $rtype == 1) || $nazev=='' || $id == 0)
 }
 else
 {
-	$datum=mysql_real_escape_string($datum);
-	$datum2=mysql_real_escape_string($datum2);
-	$nazev=mysql_real_escape_string($nazev);
-	$misto=mysql_real_escape_string($misto);
-	$typ=mysql_real_escape_string($typ);
-	$zebricek2=mysql_real_escape_string($zebricek2);
-	$ranking=mysql_real_escape_string($ranking);
-	$prihlasky=mysql_real_escape_string($prihlasky);
-	$prihlasky1=mysql_real_escape_string($prihlasky1);
-	$prihlasky2=mysql_real_escape_string($prihlasky2);
-	$prihlasky3=mysql_real_escape_string($prihlasky3);
-	$prihlasky4=mysql_real_escape_string($prihlasky4);
-	$prihlasky5=mysql_real_escape_string($prihlasky5);
-	$etap=mysql_real_escape_string($etap);
-	$oddil=mysql_real_escape_string($oddil);
+	$datum=correct_sql_string($datum);
+	$datum2=correct_sql_string($datum2);
+	$nazev=correct_sql_string($nazev);
+	$misto=correct_sql_string($misto);
+	$typ=correct_sql_string($typ);
+	$zebricek2=correct_sql_string($zebricek2);
+	$ranking=correct_sql_string($ranking);
+	$prihlasky=correct_sql_string($prihlasky);
+	$prihlasky1=correct_sql_string($prihlasky1);
+	$prihlasky2=correct_sql_string($prihlasky2);
+	$prihlasky3=correct_sql_string($prihlasky3);
+	$prihlasky4=correct_sql_string($prihlasky4);
+	$prihlasky5=correct_sql_string($prihlasky5);
+	$etap=correct_sql_string($etap);
+	$oddil=correct_sql_string($oddil);
 
 	$result=MySQL_Query("UPDATE ".TBL_RACE." SET datum='$datum', datum2='$datum2', nazev='$nazev', misto='$misto', typ='$typ', zebricek='$zebricek2', ranking='$ranking', prihlasky='$prihlasky', odkaz='$odkaz', prihlasky1='$prihlasky1', prihlasky2='$prihlasky2', prihlasky3='$prihlasky3', prihlasky4='$prihlasky4', prihlasky5='$prihlasky5', etap='$etap', poznamka='$poznamka', oddil='$oddil', modify_flag='$modify_flag' WHERE id='$id'")
 		or die("Chyba pøi provádìní dotazu do databáze.");

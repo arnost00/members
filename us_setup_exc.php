@@ -19,8 +19,8 @@ if (IsLogged())
 	switch ($type)
 	{
 	case 1: // podpis & login
-		$login=mysql_real_escape_string($login);
-		$podpis=mysql_real_escape_string($podpis);
+		$login=correct_sql_string($login);
+		$podpis=correct_sql_string($podpis);
 		$heslo= md5($hesloo);
 		$vysledek=MySQL_Query("SELECT heslo FROM ".TBL_ACCOUNT." WHERE id = '$id' LIMIT 1");
 		$curr_usr=MySQL_Fetch_Array($vysledek);

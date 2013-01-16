@@ -32,13 +32,13 @@ if (IsLoggedAdmin())
 	switch ($type)
 	{
 	case 1: // update
-		$login=mysql_real_escape_string($login);
-		$podpis=mysql_real_escape_string($podpis);
-		$news=mysql_real_escape_string($news);
-		$regs=mysql_real_escape_string($regs);
-		$mng=mysql_real_escape_string($mng);
-		$fin=mysql_real_escape_string($fin);
-		$adm=mysql_real_escape_string($adm);
+		$login=correct_sql_string($login);
+		$podpis=correct_sql_string($podpis);
+		$news=correct_sql_string($news);
+		$regs=correct_sql_string($regs);
+		$mng=correct_sql_string($mng);
+		$fin=correct_sql_string($fin);
+		$adm=correct_sql_string($adm);
  
 		$id2 = GetUserAccountId_Users($id);
 		if ($login=="" || $podpis=="")
@@ -57,13 +57,13 @@ if (IsLoggedAdmin())
 		}
 		break;
 	case 2: // new
-		$login=mysql_real_escape_string($login);
-		$podpis=mysql_real_escape_string($podpis);
-		$news=mysql_real_escape_string($news);
-		$regs=mysql_real_escape_string($regs);
-		$mng=mysql_real_escape_string($mng);
-		$fin=mysql_real_escape_string($fin);
-		$adm=mysql_real_escape_string($adm);
+		$login=correct_sql_string($login);
+		$podpis=correct_sql_string($podpis);
+		$news=correct_sql_string($news);
+		$regs=correct_sql_string($regs);
+		$mng=correct_sql_string($mng);
+		$fin=correct_sql_string($fin);
+		$adm=correct_sql_string($adm);
 		
 		if ($login=="" || $podpis=="" || $nheslo=="" || $nheslo2=="")
 			$result=CS_EMPTY_ITEM;
@@ -144,10 +144,10 @@ else if (IsLoggedManager())
 	switch ($type)
 	{
 	case 1: // update
-		$login=mysql_real_escape_string($login);
-		$podpis=mysql_real_escape_string($podpis);
-		$news=mysql_real_escape_string($news);
-		$mng2=mysql_real_escape_string($mng2);
+		$login=correct_sql_string($login);
+		$podpis=correct_sql_string($podpis);
+		$news=correct_sql_string($news);
+		$mng2=correct_sql_string($mng2);
 
  		$id2 = GetUserAccountId_Users($id);
 		if ($login=="" || $podpis=="")
@@ -166,10 +166,10 @@ else if (IsLoggedManager())
 		}
 		break;
 	case 2: // new
-		$login=mysql_real_escape_string($login);
-		$podpis=mysql_real_escape_string($podpis);
-		$news=mysql_real_escape_string($news);
-		$mng2=mysql_real_escape_string($mng2);
+		$login=correct_sql_string($login);
+		$podpis=correct_sql_string($podpis);
+		$news=correct_sql_string($news);
+		$mng2=correct_sql_string($mng2);
 
 		if ($login=="" || $podpis=="" || $nheslo=="" || $nheslo2=="")
 			$result=CS_EMPTY_ITEM;
