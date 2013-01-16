@@ -11,6 +11,8 @@ if (!IsLoggedAdmin() && !IsLoggedManager())
 	header("location: ".$g_baseadr."error.php?code=21");
 	exit;
 }
+require("cfg/_globals.php");
+
 db_Connect();
 $id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
 

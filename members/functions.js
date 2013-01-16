@@ -69,7 +69,30 @@ function checkAll( field, flag )
 
 function isValidDate(subject)
 {
-  if (subject.match(/^(?:(0[1-9]|[12][0-9]|3[01])[\- \/.](0[1-9]|1[012])[\- \/.](19|20)[0-9]{2})$/)) // DD-MM-YYYY
+	// Idea for new code taken from :
+	// Original JavaScript code by Chirp Internet: www.chirp.com.au
+	// Please acknowledge use of this code by including this header.
+ 
+	var minYear = 1902;
+
+	// regular expression to match required date format
+	re = /^(\d{1,2})[\- \/.](\d{1,2})[\- \/.](\d{4})$/;
+
+	if(regs = subject.match(re))
+	{
+		if(regs[1] < 1 || regs[1] > 31)
+			return false;
+		else if(regs[2] < 1 || regs[2] > 12)
+			return false;
+		else if(regs[3] < minYear)
+			return false;
+		else
+			return true;
+	} 
+	return false;
+
+/*  old code ... not function for X.X.XXXX .. only for XX.XX.XXXX
+  if (x =subject.match(/^(?:(0[1-9]|[12][0-9]|3[01]|?[1-9]])[\- \/.](0[1-9]|1[012]|[1-9])[\- \/.](19|20)[0-9]{2})$/)) // DD-MM-YYYY
   { 
     return true;
   }
@@ -77,6 +100,7 @@ function isValidDate(subject)
   {
     return false;
   }
+*/  
 }
 
 function isValidLogin(subject)
