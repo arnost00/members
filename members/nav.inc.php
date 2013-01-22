@@ -37,7 +37,7 @@ function DrawMenuGroupHeader($name)
 {
 	global $g_colors;
 
-	echo '<TR><TD height="5"></TD></TR>'."\n";
+	echo '<TR><TD height="10"></TD></TR>'."\n";
 	echo '<TR><TD valign="top" align="left" bgcolor="'.$g_colors['nav_bgcolor_group_header'].'">&nbsp;<span class="NaviGroup">'.$name.' :</span></TD></TR>';
 	echo "\n";
 }
