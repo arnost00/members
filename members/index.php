@@ -157,11 +157,8 @@ if($g_is_system_running || IsLoggedAdmin())
 			{
 				switch($subid)
 				{
-					case 1:
-						include "./ads_lock.inc.php";
-						break;
-					case 2:
-						include "./ads_hidden.inc.php";
+					case 3:
+						include "./ads_mod_users.inc.php";
 						break;
 					default:
 						include "./news.inc.php";

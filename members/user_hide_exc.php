@@ -47,7 +47,7 @@ if (IsLoggedSmallAdmin())
 			}
 		}
 	}
-	header('location: '.$g_baseadr.'index.php?id='._SMALL_ADMIN_GROUP_ID_.'&subid=2');
+	header('location: '.$g_baseadr.'index.php?id='._SMALL_ADMIN_GROUP_ID_.'&subid=3');
 }
 else
 {
