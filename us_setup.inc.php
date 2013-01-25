@@ -18,9 +18,6 @@ if (IsSet($result) && is_numeric($result) && $result != 0)
 	Print_Action_Result($res_text);
 }
 ?>
-<BR><hr><BR>
-<? DrawPageSubTitle('Základní údaje'); ?>
-
 <SCRIPT LANGUAGE="JavaScript">
 <!--
 
@@ -99,15 +96,6 @@ function check_form_2()
 
 //-->
 </SCRIPT>
-
-
-<TABLE width="90%">
-<TR>
-	<TD width="45%" align="right">Povoleno psaní novinek</TD>
-	<TD width="5"></TD>
-	<TD class="DataValue"><? echo ($usr->policy_news) ? "ano": "ne"; ?></TD>
-</TR>
-</TABLE>
 
 <BR><hr><BR>
 <? DrawPageSubTitle('Volitelné údaje'); ?>
