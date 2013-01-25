@@ -55,13 +55,13 @@ if (mysql_num_rows($vysledek) > 0)
 	$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Poø.',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'T',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'W',ALIGN_CENTER);
+	$data_tbl->set_header_col_with_help($col++,'Poø.',ALIGN_CENTER,"Poøadatel");
+	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
+	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web závodu");
 	if(SHOW_USER)
 		$data_tbl->set_header_col($col++,'Pøihlášen',ALIGN_CENTER);
 	else
-		$data_tbl->set_header_col($col++,'Pø',ALIGN_CENTER);
+		$data_tbl->set_header_col_with_help($col++,'Pø',ALIGN_CENTER,"Zobrazit pøihlášené");
 	if($g_enable_race_boss)
 		$data_tbl->set_header_col($col++,'Vedoucí',ALIGN_CENTER);
 	echo $data_tbl->get_css()."\n";
@@ -129,13 +129,13 @@ if (mysql_num_rows($vysledek) > 0)
 	$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Poø.',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'T',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'W',ALIGN_CENTER);
+	$data_tbl->set_header_col_with_help($col++,'Poø.',ALIGN_CENTER,"Poøadatel");
+	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
+	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web závodu");
 	if(SHOW_USER)
 		$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 	else
-		$data_tbl->set_header_col($col++,'Pø',ALIGN_CENTER);
+		$data_tbl->set_header_col_with_help($col++,'Pø',ALIGN_CENTER,"Zobrazit pøihlášené");
 	$data_tbl->set_header_col($col++,'Pøihlášky',ALIGN_CENTER);
 	if($g_enable_race_boss)
 		$data_tbl->set_header_col($col++,'Vedoucí',ALIGN_CENTER);

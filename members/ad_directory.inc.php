@@ -39,9 +39,9 @@ $col = 0;
 $data_tbl->set_header_col($col++,'Poø.è.',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Reg.è.',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Úèet',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Práva',ALIGN_CENTER);
+$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_CENTER,"Registraèní èíslo");
+$data_tbl->set_header_col_with_help($col++,'Úèet',ALIGN_CENTER,"Stav a existence úètu");
+$data_tbl->set_header_col_with_help($col++,'Práva',ALIGN_CENTER,"Pøiøazená práva (zleva) : novinky, pøihlašovatel, trenér, malı trenér, správce, finanèník");
 $data_tbl->set_header_col($col++,'Monosti',ALIGN_CENTER);
 
 echo $data_tbl->get_css()."\n";

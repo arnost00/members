@@ -42,10 +42,10 @@ $col = 0;
 $data_tbl->set_header_col($col++,'Poø.è.',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Reg.è.',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Lic.OB',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Lic.MTBO',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Lic.LOB',ALIGN_CENTER);
+$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_CENTER,"Registraèní èíslo");
+$data_tbl->set_header_col_with_help($col++,'L.OB',ALIGN_CENTER,"Licence pro OB");
+$data_tbl->set_header_col_with_help($col++,'L.MTBO',ALIGN_CENTER,"Licence pro MTBO");
+$data_tbl->set_header_col_with_help($col++,'L.LOB',ALIGN_CENTER,"Licence pro LOB");
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";

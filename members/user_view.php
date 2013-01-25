@@ -59,8 +59,8 @@ if ($num_rows > 0)
 	$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Poø.',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'T',ALIGN_CENTER);
+	$data_tbl->set_header_col_with_help($col++,'Poø.',ALIGN_CENTER,"Poøadatel");
+	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
 	$data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
 
 	echo $data_tbl->get_css()."\n";

@@ -28,7 +28,7 @@ $col = 0;
 $data_tbl->set_header_col($col++,'Poø.è.',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Reg.è.',ALIGN_CENTER);
+$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_CENTER,"Registraèní èíslo");
 $data_tbl->set_header_col($col++,'Úèet',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Zamèen',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
