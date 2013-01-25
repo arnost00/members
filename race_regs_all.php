@@ -115,7 +115,7 @@ $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Vìk',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
 if($is_termin_show_on)
-	$data_tbl->set_header_col($col++,'T.',ALIGN_CENTER);
+	$data_tbl->set_header_col_with_help($col++,'T.',ALIGN_CENTER,"Èíslo termínu pøihlášky");
 $data_tbl->set_header_col($col++,'Poznámka',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Poznámka(interní)',ALIGN_CENTER);
 

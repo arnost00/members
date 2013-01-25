@@ -148,6 +148,21 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 				$this->header_row[$col]['class'] = $align;
 				$this->header_row[$col]['width'] = $width;
 				$this->header_row[$col]['ex_td'] = $ex_td;
+				$this->header_row[$col]['help'] = '';
+				$this->cols_align[$col] = $align;
+				$this->sort_row[$col] = '';
+			}
+		}
+
+		function set_header_col_with_help ($col,$text,$align,$help,$width = 0,$ex_td='')
+		{
+			if (is_array($this->header_row))
+			{
+				$this->header_row[$col]['text'] = $text;
+				$this->header_row[$col]['class'] = $align;
+				$this->header_row[$col]['width'] = $width;
+				$this->header_row[$col]['ex_td'] = $ex_td;
+				$this->header_row[$col]['help'] = $help;
 				$this->cols_align[$col] = $align;
 				$this->sort_row[$col] = '';
 			}
@@ -188,7 +203,14 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 					$row .= ' width="'.$col['width'].'"';
 				if ($col['ex_td'] != '')
 					$row .= ' '.$col['ex_td'];
-				$row .= '>'.$col['text'].'</TD>';
+				
+				$row .= '>';
+				if ($col['help'] != '')
+					$row .='<span style="cursor:help" title="'.$col['help'].'">';
+				$row .= $col['text'];
+				if ($col['help'] != '')
+					$row .='</span>';
+				$row .= '</TD>';
 				$this->cols++;
 			}
 			$row .= '</TR>';
@@ -221,7 +243,12 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 					$row .= ' width="'.$col['width'].'"';
 				if ($col['ex_td'] != '')
 					$row .= ' '.$col['ex_td'];
-				$row .= '>'.$col['text'];
+				$row .= '>';
+				if ($col['help'] != '')
+					$row .='<span style="cursor:help" title="'.$col['help'].'">';
+				$row .= $col['text'];
+				if ($col['help'] != '')
+					$row .='</span>';
 				if ($this->sort_row[$idx] != '')
 					$row .= ' '.$this->sort_row[$idx];
 				$row .= '</TD>';

@@ -57,7 +57,7 @@ if($reg != 0 || $year != 0)
 		{
 			$data_tbl = new html_table_mc();
 			$col = 0;
-			$data_tbl->set_header_col($col++,'Reg.è.',ALIGN_LEFT);
+			$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_LEFT,"Registraèní èíslo");
 			$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 			$data_tbl->set_header_col($col++,'Aktivní',ALIGN_CENTER);
 
@@ -94,7 +94,7 @@ if($reg != 0 || $year != 0)
 		{
 			$data_tbl = new html_table_mc();
 			$col = 0;
-			$data_tbl->set_header_col($col++,'Reg.è.',ALIGN_LEFT);
+			$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_LEFT,"Registraèní èíslo");
 			$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 			$data_tbl->set_header_col($col++,'Aktivní',ALIGN_CENTER);
 

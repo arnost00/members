@@ -52,7 +52,7 @@ if (mysql_num_rows($vysledek) > 0)
 	$data_tbl->set_header_col($col++,'Poø.',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Reg.',ALIGN_CENTER);
+	$data_tbl->set_header_col_with_help($col++,'Reg.',ALIGN_CENTER,"Registraèní èíslo");
 	$data_tbl->set_header_col($col++,'SI èip',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Poznámka',ALIGN_CENTER);
