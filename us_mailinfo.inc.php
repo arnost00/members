@@ -171,6 +171,9 @@ if ($g_enable_finances)
 } // fin
 ?>
 <TR>
+	<TD colspan="3"><br><hr></TD>
+</TR>
+<TR>
 	<TD colspan="3"></TD>
 </TR>
 <TR>
