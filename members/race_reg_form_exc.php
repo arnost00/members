@@ -17,7 +17,6 @@ if (!IsLoggedRegistrator())
 $id_zav = (IsSet($id_zav)&& is_numeric($id_zav)) ? (int)$id_zav : 0;
 $termin = (IsSet($termin)&& is_numeric($termin)) ? (($termin >= 0 && $termin <= 5) ? (int)$termin : 0) : 0;
 $ff = (IsSet($ff)&& is_numeric($ff)) ? (($ff >= 0 && $ff <= 1) ? (int)$ff : 0) : 0;	// output format
-$ver = (IsSet($ver)&& is_numeric($ver)) ? (($ver >= 0 && $ver <= 1) ? (int)$ver : 0) : 0;	// CSOB format ( 0=2004, 1=2005 )
 $creg = (IsSet($creg)&& is_numeric($creg)) ? (($creg >= 1) ? 1 : 0) : 0;	// output for central registration
 
 if($ff == 1)
@@ -56,7 +55,6 @@ else
 {
 	$query= 'SELECT prijmeni, jmeno, reg, si_chip, lic, lic_mtbo, lic_lob, datum FROM '.TBL_USER.' WHERE `hidden` = 0 ORDER by reg';
 	$race_type = 0; // OB
-	$ver = 1; // version 2005
 	$creg = 1; // central reg.
 }
 
@@ -79,10 +77,8 @@ else
 			if ($si_chip == 0 || $zaznam['t_si_chip'] != 0)
 				$si_chip = $zaznam['t_si_chip'];
 		}
-		if($ver == 1)
-			$str .= str_pad($si_chip,SI_LEN2005,'0',STR_PAD_LEFT).SPACE_CHAR;
-		else
-			$str .= str_pad($si_chip,SI_LEN,SPACE_CHAR).SPACE_CHAR;
+		$str .= str_pad($si_chip,SI_LEN2005,'0',STR_PAD_LEFT).SPACE_CHAR;
+
 		$str .= str_pad($zaznam['prijmeni'].' '.$zaznam['jmeno'],NAME_LEN,SPACE_CHAR).SPACE_CHAR;
 		$str .= $lic;
 		if($creg == 1)

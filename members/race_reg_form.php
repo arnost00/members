@@ -99,9 +99,6 @@ Zpùsob výpisu:<input type="radio" name="ff" value="0" id="radio_ff0" checked="ch
 <input type="hidden" name="termin" value="0">
 <input type="hidden" name="creg" value="0">
 <br><br>
-Formát pøihlášky:<input type="radio" name="ver" value="0" id="radio_ver0"><label for="radio_ver0">do r.2004</label>&nbsp;&nbsp;
-<input type="radio" name="ver" value="1" id="radio_ver1" checked="checked"><label for="radio_ver1">od r.2005</label>
-<br><br>
 <? if($zaznam_z['prihlasky'] > 1)
 { ?>
 <BUTTON onclick="submit_form(0);  return false;">Proveï - všechny termíny</BUTTON>

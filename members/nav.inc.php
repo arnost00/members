@@ -114,7 +114,7 @@ function DrawMenuGroupHeader($name)
 	if(IsLoggedSmallAdmin())
 	{
 		DrawMenuGroupHeader('Menu správce');
-		DrawMenuItem('Èlenové a úèty ',_SMALL_ADMIN_GROUP_ID_,3);
+		DrawMenuItem('Správa úètù',_SMALL_ADMIN_GROUP_ID_,3);
 	}
 	if(IsLoggedFinance() && $g_enable_finances)
 	{
