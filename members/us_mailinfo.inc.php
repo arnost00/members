@@ -1,5 +1,32 @@
 <?php /* clenova stranka - editace informaci a nastaveni */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
+
+<script>
+function changeVisibility(className, atr_id)
+{
+	var atr = document.getElementById(atr_id);
+	var list = document.getElementsByClassName(className);
+	if (atr.checked)
+	{
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "table-row";
+		}
+	} else {
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "none";
+		} 
+	}
+}
+
+//funkce pro zobrazeni/schovani vybranych casti
+function checkAll()
+{
+	changeVisibility('daysbefore', 'atf');
+	changeVisibility('activechange', 'ach');
+}
+
+</script>
+
 <H1 class="ClubName"><?echo $g_www_name;?></H1>
 <H2 class="PageName">Upozoròování o termínech na email</H2>
 
@@ -47,14 +74,15 @@ if ($zaznam == FALSE)
 	<TD colspan="3"><br><hr></TD>
 </TR>
 <TR>
-	<TD colspan="3"><input type="checkbox" name="active_tf" value="1" id="atf" <? echo(($zaznam['active_tf'])?' checked':'')?>><label for="atf">Blížící se konec termínu pøihlášek</label></TD>
+	<TD colspan="3"><input onchange="changeVisibility('daysbefore', this.id);" type="checkbox" name="active_tf" value="1" id="atf" <? echo(($zaznam['active_tf'])?' checked':'')?>><label for="atf">Blížící se konec termínu pøihlášek</label></TD>
 </TR>
-<TR>
+
+<TR class="daysbefore">
 	<TD width="40%" align="right">Kolik dní pøed termínem upozoròovat</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="daysbefore" SIZE=3 VALUE="<? echo $zaznam["daysbefore"]; ?>"> [<? echo($g_mailinfo_minimal_daysbefore.' až '.$g_mailinfo_maximal_daysbefore);?> dní]</TD>
 </TR>
-<TR>
+<TR class="daysbefore">
 	<TD width="40%" align="right">Typy závodù</TD>
 	<TD width="5"></TD>
 	<TD><span id="race_type">
@@ -71,7 +99,7 @@ if ($zaznam == FALSE)
 	</span><a href="" onclick="checkAll('race_type',true); return false;">Vše</a> / <a href="" onclick="checkAll('race_type',false); return false;">Nic</a>
 	</TD>
 </TR>
-<TR>
+<TR class="daysbefore">
 	<TD width="40%" align="right">Žebøíèek</TD>
 	<TD width="5"></TD>
 	<TD><span id="zebricek">
@@ -92,9 +120,9 @@ if ($zaznam == FALSE)
 	<TD colspan="3"><br><hr></TD>
 </TR>
 <TR>
-	<TD colspan="3"><input type="checkbox" name="active_ch" value="1" id="ach" <? echo(($zaznam['active_ch'])?' checked':'')?>><label for="ach">Zmìny termínù nebo v kalendáøi závodù</label></TD>
+	<TD colspan="3"><input onchange="changeVisibility('activechange', this.id);" type="checkbox" name="active_ch" value="1" id="ach" <? echo(($zaznam['active_ch'])?' checked':'')?>><label for="ach">Zmìny termínù nebo v kalendáøi závodù</label></TD>
 </TR>
-<TR>
+<TR class="activechange">
 	<TD width="40%" align="right" valign="top">Posílat zmìny</TD>
 	<TD width="5"></TD>
 	<TD>
@@ -188,3 +216,7 @@ if ($g_enable_finances)
 }
 ?>
 </CENTER>
+
+
+<!-- pro aktualizaci zobrazeni/schovani casti, ktere nema uzivatel pouzity -->
+<style onload="checkAll()"/>
