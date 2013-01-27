@@ -1,4 +1,4 @@
-<?php if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
+<?php  /* zamezeni samostatneho vykonani */ ?>
 <?
 /**
  * library for payments
@@ -10,20 +10,13 @@
  * params: amount, user_id (target of money) ...
  *
 */
-function createPayment($user_id, $amount, $note, $race = null, $csos = True)
+function createPayment($editor_id, $user_id, $amount, $note=null, $datum=null, $id_zavod=null)
 {
-	$origin_amount = null;
-	$percent = null;
-	if ($csos)
-	{
-		$flatper = getUserPaymentMethod($user_id); //pokud vrati -1, tak user pouziva flatrate
-		if ($flatper >= 0)
-		{
-			$origin_amount = $amount;
-			$amount = $origin_amount * $flatper;
-		}
-	}
-	//insert into finance id_account_user = $user_id, amount = $amount, origin_amount = $origin_amount ...
+	if ($date==null) $date=date("Y-m-d");
+	$query = "insert into ".TBL_FINANCE." (id_users_editor, id_users_user, amount, note, date, id_zavod) values 
+			(".$editor_id.", ".$user_id.", ".$amount.", '".$note."', ".$date.", ".$id_zavod.")";
+	mysql_query($query);
+	header('?id=<?=$user_id;?>');
 }
 
 /*

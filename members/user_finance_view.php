@@ -15,6 +15,28 @@ $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
 db_Connect();
 
+// vytvorit platbu - out nebo in
+if (IsSet($payment))
+{
+	
+	if ($payment == "out" or $payment == "in")	
+	{
+
+		include_once './payment.inc.php';
+		
+		$payment == "out"?$amount = -$amount:$amount;
+		$editor_id = $usr->user_id;
+		$datum = date('Y-n-j');
+		$user_id = $id;
+		
+		createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod);
+	}
+	//platba neni ani in ani out
+// 	header("location: ".$g_baseadr."error.php?code=21");
+// 	exit;
+}
+
+
 include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 include ("./common.inc.php");
 include ("./common_user.inc.php");
@@ -26,6 +48,14 @@ DrawPageTitle('Finance èlena', false);
 //inicializace id uzivatele pro vypis financi
 $user_id = $id;
 include ("./user_finance.inc.php");
+?>
+<hr>
+<?
+include ("./user_finance_out.inc.php");
+?>
+<hr>
+<?
+include ("./user_finance_in.inc.php");
 ?>
 <br>
 <BUTTON onclick="javascript:close_popup();">Zpìt</BUTTON><BR>
