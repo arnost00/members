@@ -2,10 +2,11 @@
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 
 <script>
-function changeVisibility(className, atr_id)
+function changeVisibility(name, atr_id)
 {
 	var atr = document.getElementById(atr_id);
-	var list = document.getElementsByClassName(className);
+	var list = document.getElementsByName(name);
+//	alert(list.length);
 	if (atr.checked)
 	{
 		for (var i = 0; i < list.length; i++) {
@@ -19,15 +20,15 @@ function changeVisibility(className, atr_id)
 }
 
 //funkce pro zobrazeni/schovani vybranych casti
-function checkAll()
+function checkAllVisibilities()
 {
-	changeVisibility('daysbefore', 'atf');
-	changeVisibility('activechange', 'ach');
+	changeVisibility('daysbefore_hide', 'atf');
+	changeVisibility('activechange_hide', 'ach');
 <?
 	if ($g_enable_finances)
 	{
 ?>
-	changeVisibility('finance', 'afin');
+	changeVisibility('finance_hide', 'afin');
 <?
 	}
 ?>
@@ -81,15 +82,15 @@ if ($zaznam == FALSE)
 	<TD colspan="3"><br><hr></TD>
 </TR>
 <TR>
-	<TD colspan="3" style="padding-left:2%;"><input onchange="changeVisibility('daysbefore', this.id);" type="checkbox" name="active_tf" value="1" id="atf" <? echo(($zaznam['active_tf'])?' checked':'')?>><label for="atf">Blížící se konec termínu pøihlášek ...</label></TD>
+	<TD colspan="3" style="padding-left:20px;"><input onclick="changeVisibility('daysbefore_hide', this.id);" type="checkbox" name="active_tf" value="1" id="atf" <? echo(($zaznam['active_tf'])?' checked':'')?>><label for="active_tf">Blížící se konec termínu pøihlášek ...</label></TD>
 </TR>
-
-<TR class="daysbefore">
+<!-- id a name jsou zde kvuli chybe IE pro spravnou funkcnost getElementsByName -->
+<TR name="daysbefore_hide" id="daysbefore_hide">
 	<TD width="40%" align="right">Kolik dní pøed termínem upozoròovat</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="daysbefore" SIZE=3 VALUE="<? echo $zaznam["daysbefore"]; ?>"> [<? echo($g_mailinfo_minimal_daysbefore.' až '.$g_mailinfo_maximal_daysbefore);?> dní]</TD>
 </TR>
-<TR class="daysbefore">
+<TR name="daysbefore_hide" id="daysbefore_hide">
 	<TD width="40%" align="right">Typy závodù</TD>
 	<TD width="5"></TD>
 	<TD><span id="race_type">
@@ -106,7 +107,7 @@ if ($zaznam == FALSE)
 	</span><a href="" onclick="checkAll('race_type',true); return false;">Vše</a> / <a href="" onclick="checkAll('race_type',false); return false;">Nic</a>
 	</TD>
 </TR>
-<TR class="daysbefore">
+<TR name="daysbefore_hide" id="daysbefore_hide">
 	<TD width="40%" align="right">Žebøíèek</TD>
 	<TD width="5"></TD>
 	<TD><span id="zebricek">
@@ -127,9 +128,10 @@ if ($zaznam == FALSE)
 	<TD colspan="3"><br><hr></TD>
 </TR>
 <TR>
-	<TD colspan="3" style="padding-left:2%;"><input onchange="changeVisibility('activechange', this.id);" type="checkbox" name="active_ch" value="1" id="ach" <? echo(($zaznam['active_ch'])?' checked':'')?>><label for="ach">Zmìny termínù nebo v kalendáøi závodù ...</label></TD>
+	<TD colspan="3" style="padding-left:20px;"><input onclick="changeVisibility('activechange_hide', this.id);" type="checkbox" name="active_ch" value="1" id="ach" <? echo(($zaznam['active_ch'])?' checked':'')?>><label for="active_ch">Zmìny termínù nebo v kalendáøi závodù ...</label></TD>
 </TR>
-<TR class="activechange">
+<!-- id a name jsou zde kvuli chybe IE pro spravnou funkcnost getElementsByName -->
+<TR name="activechange_hide" id="activechange_hide">
 	<TD width="40%" align="right" valign="top">Posílat zmìny</TD>
 	<TD width="5"></TD>
 	<TD>
@@ -161,7 +163,7 @@ if ($zaznam == FALSE)
 		{
 ?>
 <TR>
-	<TD colspan="3" style="padding-left:2%;"><input type="checkbox" name="active_rg" value="1" id="arg" <? echo(($zaznam['active_rg'])?' checked':'')?>><label for="arg">Upozornit, že uplynul interní termín</label></TD>
+	<TD colspan="3" style="padding-left:20px;"><input type="checkbox" name="active_rg" value="1" id="arg" <? echo(($zaznam['active_rg'])?' checked':'')?>><label for="arg">Upozornit, že uplynul interní termín</label></TD>
 </TR>
 <?
 		}
@@ -169,7 +171,7 @@ if ($zaznam == FALSE)
 		{
 ?>
 <TR>
-	<TD colspan="3" style="padding-left:2%;"><input type="checkbox" name="active_finf" value="1" id="afnf" <? echo(($zaznam['active_finf'])?' checked':'')?>><label for="afnf">Upozornit, na èlena jež se dostal do mínusu ve financích.</label></TD>
+	<TD colspan="3" style="padding-left:20px;"><input type="checkbox" name="active_finf" value="1" id="afnf" <? echo(($zaznam['active_finf'])?' checked':'')?>><label for="afnf">Upozornit, na èlena jež se dostal do mínusu ve financích.</label></TD>
 </TR>
 <?
 		}
@@ -182,9 +184,10 @@ if ($g_enable_finances)
 	<TD colspan="3"><br><hr></TD>
 </TR>
 <TR>
-	<TD colspan="3" style="padding-left:2%;"><input onchange="changeVisibility('finance', this.id);" type="checkbox" name="active_fin" value="1" id="afin" <? echo(($zaznam['active_fin'])?' checked':'')?>><label for="afin">Upozornit o finanèním stavu ...</label></TD>
+	<TD colspan="3" style="padding-left:20px;"><input onclick="changeVisibility('finance_hide', this.id);" type="checkbox" name="active_fin" value="1" id="afin" <? echo(($zaznam['active_fin'])?' checked':'')?>><label for="active_fin">Upozornit o finanèním stavu ...</label></TD>
 </TR>
-<TR class="finance">
+<!-- id a name jsou zde kvuli chybe IE pro spravnou funkcnost getElementsByName -->
+<TR name="finance_hide" id="finance_hide">
 	<TD width="40%" align="right" valign="top">Posílat stav úètu</TD>
 	<TD width="5"></TD>
 	<TD>
@@ -226,4 +229,4 @@ if ($g_enable_finances)
 
 
 <!-- pro aktualizaci zobrazeni/schovani casti, ktere nema uzivatel pouzity -->
-<style onload="checkAll()"/>
+<style onload="checkAllVisibilities()"/>
