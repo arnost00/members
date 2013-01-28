@@ -23,6 +23,14 @@ function checkAll()
 {
 	changeVisibility('daysbefore', 'atf');
 	changeVisibility('activechange', 'ach');
+<?
+	if ($g_enable_finances)
+	{
+?>
+	changeVisibility('finance', 'afin');
+<?
+	}
+?>
 }
 
 </script>
@@ -60,7 +68,6 @@ if ($zaznam == FALSE)
 	$zaznam['fin_type'] = 0;
 	$zaznam['fin_limit'] = 0;
 }
-//print_r($zaznam);
 ?>
 
 <FORM METHOD=POST ACTION="./us_mailinfo_exc.php?id=<?echo $usr->user_id;?>">
@@ -74,7 +81,7 @@ if ($zaznam == FALSE)
 	<TD colspan="3"><br><hr></TD>
 </TR>
 <TR>
-	<TD colspan="3"><input onchange="changeVisibility('daysbefore', this.id);" type="checkbox" name="active_tf" value="1" id="atf" <? echo(($zaznam['active_tf'])?' checked':'')?>><label for="atf">Blížící se konec termínu pøihlášek</label></TD>
+	<TD colspan="3" style="padding-left:2%;"><input onchange="changeVisibility('daysbefore', this.id);" type="checkbox" name="active_tf" value="1" id="atf" <? echo(($zaznam['active_tf'])?' checked':'')?>><label for="atf">Blížící se konec termínu pøihlášek ...</label></TD>
 </TR>
 
 <TR class="daysbefore">
@@ -120,7 +127,7 @@ if ($zaznam == FALSE)
 	<TD colspan="3"><br><hr></TD>
 </TR>
 <TR>
-	<TD colspan="3"><input onchange="changeVisibility('activechange', this.id);" type="checkbox" name="active_ch" value="1" id="ach" <? echo(($zaznam['active_ch'])?' checked':'')?>><label for="ach">Zmìny termínù nebo v kalendáøi závodù</label></TD>
+	<TD colspan="3" style="padding-left:2%;"><input onchange="changeVisibility('activechange', this.id);" type="checkbox" name="active_ch" value="1" id="ach" <? echo(($zaznam['active_ch'])?' checked':'')?>><label for="ach">Zmìny termínù nebo v kalendáøi závodù ...</label></TD>
 </TR>
 <TR class="activechange">
 	<TD width="40%" align="right" valign="top">Posílat zmìny</TD>
@@ -154,7 +161,7 @@ if ($zaznam == FALSE)
 		{
 ?>
 <TR>
-	<TD colspan="3"><input type="checkbox" name="active_rg" value="1" id="arg" <? echo(($zaznam['active_rg'])?' checked':'')?>><label for="arg">Upozornit, že uplynul interní termín</label></TD>
+	<TD colspan="3" style="padding-left:2%;"><input type="checkbox" name="active_rg" value="1" id="arg" <? echo(($zaznam['active_rg'])?' checked':'')?>><label for="arg">Upozornit, že uplynul interní termín</label></TD>
 </TR>
 <?
 		}
@@ -162,7 +169,7 @@ if ($zaznam == FALSE)
 		{
 ?>
 <TR>
-	<TD colspan="3"><input type="checkbox" name="active_finf" value="1" id="afnf" <? echo(($zaznam['active_finf'])?' checked':'')?>><label for="afnf">Upozornit, na èlena jež se dostal do mínusu ve financích.</label></TD>
+	<TD colspan="3" style="padding-left:2%;"><input type="checkbox" name="active_finf" value="1" id="afnf" <? echo(($zaznam['active_finf'])?' checked':'')?>><label for="afnf">Upozornit, na èlena jež se dostal do mínusu ve financích.</label></TD>
 </TR>
 <?
 		}
@@ -175,9 +182,9 @@ if ($g_enable_finances)
 	<TD colspan="3"><br><hr></TD>
 </TR>
 <TR>
-	<TD colspan="3"><input type="checkbox" name="active_fin" value="1" id="afin" <? echo(($zaznam['active_fin'])?' checked':'')?>><label for="afin">Upozornit o finanèním stavu</label></TD>
+	<TD colspan="3" style="padding-left:2%;"><input onchange="changeVisibility('finance', this.id);" type="checkbox" name="active_fin" value="1" id="afin" <? echo(($zaznam['active_fin'])?' checked':'')?>><label for="afin">Upozornit o finanèním stavu ...</label></TD>
 </TR>
-<TR>
+<TR class="finance">
 	<TD width="40%" align="right" valign="top">Posílat stav úètu</TD>
 	<TD width="5"></TD>
 	<TD>
