@@ -78,7 +78,7 @@ if (!defined('PHP_GLOBAL_COLORS_INCLUDED'))
 	$g_colors['table_row1'] = '#001144';
 	$g_colors['table_row2'] = '#003366';
 	$g_colors['table_row_highlight'] = '#441100';
-	$g_colors['table_row_select'] = '#006699';
+	$g_colors['table_row_select'] = '#000099';
 	$g_colors['table_text'] = '#FFFFFF';
 	$g_colors['table_text_header'] = '#333300';
 	$g_colors['table_text_highlight'] = '#FF66FF';
