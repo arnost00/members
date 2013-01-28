@@ -1,5 +1,5 @@
 <?php /* finance -  show exact user finance */
-if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
+ /* zamezeni samostatneho vykonani */ ?>
 
 <?
 @$vysledek_historie=MySQL_Query("select rc.nazev zavod_nazev, from_unixtime(rc.datum,'%Y-%c-%d') zavod_datum, fin.amount amount, fin.note note, us.sort_name name, fin.date `date` from ".TBL_FINANCE." fin 
@@ -23,7 +23,7 @@ include_once ('./url.inc.php');
 
 $data_tbl = new html_table_mc();
 $col = 0;
-$data_tbl->set_header_col($col++,'Datum trn',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'Datum transakce',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Z·vod',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Datum z·vodu',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'»·stka',ALIGN_LEFT);
