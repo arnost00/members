@@ -133,7 +133,7 @@ function DrawMenuGroupHeader($name)
 		DrawMenuItem('Výpis zmìn',_ADMIN_GROUP_ID_,6);
 	}
 ?>
-<!-- 	<TR><TD height="15"></TD></TR> -->
+ 	<TR><TD height="15"></TD></TR>
 	<TR><td valign="top" align="center"><hr class="nav"></TD></TR>
 	<TR><TD height="5"></TD></TR>
 	<TR><TD valign="top" align="center">
