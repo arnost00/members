@@ -14,9 +14,8 @@ function createPayment($editor_id, $user_id, $amount, $note=null, $datum=null, $
 {
 	if ($date==null) $date=date("Y-m-d");
 	$query = "insert into ".TBL_FINANCE." (id_users_editor, id_users_user, amount, note, date, id_zavod) values 
-			(".$editor_id.", ".$user_id.", ".$amount.", '".$note."', ".$date.", ".$id_zavod.")";
+			(".$editor_id.", ".$user_id.", ".$amount.", '".$note."', '".$date."', ".$id_zavod.")";
 	mysql_query($query);
-	header('?id=<?=$user_id;?>');
 }
 
 /*
