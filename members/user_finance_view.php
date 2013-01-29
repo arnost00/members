@@ -15,25 +15,27 @@ $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
 db_Connect();
 
+include_once './payment.inc.php'; // pomocne funkce a javascript pro finance
+
 // vytvorit platbu - out nebo in
 if (IsSet($payment))
 {
+
+	$editor_id = $usr->user_id;
 	
 	if ($payment == "out" or $payment == "in")	
-	{
-
-		include_once './payment.inc.php';
-		
+	{		
 		$payment == "out"?$amount = -$amount:$amount;
-		$editor_id = $usr->user_id;
-		$datum = date('Y-n-j');
-		$user_id = $id;
-		
 		createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod);
 	}
-	//platba neni ani in ani out
-// 	header("location: ".$g_baseadr."error.php?code=21");
-// 	exit;
+	if ($payment == "storno")
+	{
+		stornoPayment($editor_id, $trn_id, $datum, $storno_note);
+	}
+	if ($payment == "update")
+	{
+		updatePayment($editor_id, $trn_id, $amount, $note);
+	}
 }
 
 
@@ -45,18 +47,27 @@ DrawPageTitle('Finance èlena', false);
 ?>
 <CENTER>
 <?
-//inicializace id uzivatele pro vypis financi
-$user_id = $id;
-include ("./user_finance.inc.php");
+
+if (IsSet($change) and $change == "change")
+{
+	include ("./user_finance_update.inc.php");	
+} else if (IsSet($storno) and $storno == "storno")
+{
+	include ("./user_finance_storno.inc.php");
+} else
+{
+	include ("./user_finance.inc.php");
+	?>
+	<hr>
+	<?
+	include ("./user_finance_out.inc.php");
+	?>
+	<hr>
+	<?
+	include ("./user_finance_in.inc.php");
+}
 ?>
 <hr>
-<?
-include ("./user_finance_out.inc.php");
-?>
-<hr>
-<?
-include ("./user_finance_in.inc.php");
-?>
 <br>
 <BUTTON onclick="javascript:close_popup();">Zpìt</BUTTON><BR>
 </CENTER>

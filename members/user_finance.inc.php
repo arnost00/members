@@ -2,10 +2,10 @@
  /* zamezeni samostatneho vykonani */ ?>
 
 <?
-@$vysledek_historie=MySQL_Query("select rc.nazev zavod_nazev, from_unixtime(rc.datum,'%Y-%c-%d') zavod_datum, fin.amount amount, fin.note note, us.sort_name name, fin.date `date` from ".TBL_FINANCE." fin 
+@$vysledek_historie=MySQL_Query("select fin.id fin_id, rc.nazev zavod_nazev, from_unixtime(rc.datum,'%Y-%c-%d') zavod_datum, fin.amount amount, fin.note note, us.sort_name name, fin.date `date` from ".TBL_FINANCE." fin 
 		inner join ".TBL_USER." us on fin.id_users_editor = us.id
 		left join ".TBL_RACE." rc on fin.id_zavod = rc.id
-		where fin.id_users_user = ".$user_id." order by fin.id desc");
+		where fin.id_users_user = ".$user_id." and fin.storno is null  order by fin.id desc");
 
 //vytazeni jmena uzivatele a posunuti ukazatele zpatky 
 //TODO nutno pridat vytazeni i financi z users
@@ -29,7 +29,7 @@ $data_tbl->set_header_col($col++,'Datum závodu',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Èástka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Poznámka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Zapsal',ALIGN_LEFT);
-
+IsLoggedFinance()?$data_tbl->set_header_col($col++,'Možnosti',ALIGN_LEFT):"";
 
 
 echo $data_tbl->get_css()."\n";
@@ -48,6 +48,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek_historie))
 	$row[] = $zaznam['amount'];
 	$row[] = $zaznam['note'];
 	$row[] = $zaznam['name'];
+	IsLoggedFinance()?$row[]=" <a href=\"?change=change&trn_id=".$zaznam['fin_id']."\">Zmìnit</a> / <a href=\"?storno=storno&trn_id=".$zaznam['fin_id']."\">Storno</a>":"";
 	
 	$sum_amount += $zaznam['amount'];
 	

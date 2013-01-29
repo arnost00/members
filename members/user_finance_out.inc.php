@@ -1,12 +1,10 @@
 <?php /* finance -  show form for outgoing payment*/ 
 if (!defined("__HIDE_TEST__")) exit;
-
-/*&user_id=<?=$user_id;?>
-*/
 ?>
-
-<form class="form" action="?payment=out&id=<?=$user_id;?>" method="post">
+<h3>Platba Ëlena [-]</h3>
+<form class="form" action="?payment=out&user_id=<?=$user_id;?>" method="post">
 <select name="id_zavod">
+<option value=null>---</option>
 <? 
 @$vysledek_zavody=mysql_query("select id, nazev, from_unixtime(datum,'%Y-%c-%d') datum from ".TBL_RACE);
 while ($zaznam=MySQL_Fetch_Array($vysledek_zavody))
@@ -17,7 +15,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek_zavody))
 </select>
 <br>
 <label for="amount">»·stka</label>
-<input name="amount" type="text"/>
+<input name="amount" type="text" onkeyup="checkAmount(this);" maxlength="5"/>
 <br>
 <label for="note">Pozn·mka</label> 
 <input name="note" type="text"/>
