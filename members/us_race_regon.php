@@ -90,38 +90,14 @@ else
 
 Do které kategorie chcete pøihlásit:&nbsp;
 <?
-if ($g_user_race_reg_type == GURRT_COMBOBOX)
+echo'<br>';
+$kategorie=explode(';',$zaznam_z['kategorie']);
+for ($i=0; $i<count($kategorie)-1; $i++)
 {
-
-	echo '<SELECT name="kat" size=1>';
-
-	echo '<option value=""';
-	if ($zaznam_rg['kat'] == '')
-		echo ' selected ';
-	echo '>- - -</option>';
-
-	$kategorie=explode(';',$zaznam_z['kategorie']);
-	for ($i=0; $i<count($kategorie)-1; $i++)
-	{
-		echo '<option value="'.$kategorie[$i].'"';
-		if (!$new && $kategorie[$i] == $zaznam_rg['kat'])
-			echo ' selected ';
-		echo '>'.$kategorie[$i].'</option>';
-	}
-	echo '</SELECT>';
-
+	echo "<button onclick=\"javascript:zmen_kat('".$kategorie[$i]."');return false;\">".$kategorie[$i]."</button>";
 }
-else
-{
-	echo'<br>';
-	$kategorie=explode(';',$zaznam_z['kategorie']);
-	for ($i=0; $i<count($kategorie)-1; $i++)
-	{
-		echo "<button onclick=\"javascript:zmen_kat('".$kategorie[$i]."');return false;\">".$kategorie[$i]."</button>";
-	}
 
-	echo'<BR><BR>Vybraná kategorie:&nbsp;<INPUT TYPE="text" NAME="kat" size=4 value="'.$zaznam_rg['kat'].'"><BR>';
-}
+echo'<BR><BR>Vybraná kategorie:&nbsp;<INPUT TYPE="text" NAME="kat" size=4 value="'.$zaznam_rg['kat'].'"><BR>';
 ?>
 
 <BR><BR>

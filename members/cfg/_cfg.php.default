@@ -65,10 +65,6 @@ $g_mail_in_public_directory = true;
 // vedouci na zavody
 $g_enable_race_boss = true;
 
-define ('GURRT_COMBOBOX',1);	// combo box
-define ('GURRT_EDITBOX',2);		// edit box with buttons
-$g_user_race_reg_type = GURRT_EDITBOX;
-
 $g_club_logo['FileN'] = 'logo.png';
 $g_club_logo['SizeH'] = 60;
 $g_club_logo['SizeW'] = 156;
