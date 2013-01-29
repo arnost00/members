@@ -51,7 +51,7 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 			$row[] = $zaznam['prijmeni'];
 			$row[] = $zaznam['jmeno'];
 			$row[] = RegNumToStr($zaznam['reg']);
-			$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?id='.$zaznam['id'].'\',\'\')">Pøehled</A>&nbsp;/&nbsp;<A HREF="javascript:open_win(\'./user_finance_in.php?id='.$zaznam['id'].'\',\'\')">Pøíjem</A>?&nbsp;/&nbsp;<A HREF="javascript:open_win(\'./user_finance_out.php?id='.$zaznam['id'].'\',\'\')">Výdej</A>?';
+			$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['id'].'\',\'\')">Pøehled</A>&nbsp;/&nbsp;<A HREF="javascript:open_win(\'./user_finance_in.php?id='.$zaznam['id'].'\',\'\')">Pøíjem</A>?&nbsp;/&nbsp;<A HREF="javascript:open_win(\'./user_finance_out.php?id='.$zaznam['id'].'\',\'\')">Výdej</A>?';
 			$row[] = $row_text;
 			echo $data_tbl->get_new_row_arr($row)."\n";
 		}

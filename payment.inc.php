@@ -1,4 +1,18 @@
 <?php  /* zamezeni samostatneho vykonani */ ?>
+
+<!-- library for payments -->
+<script>
+
+//upravit funkci pro zaporna cisla, aby zachovali minus pred cislem
+function checkAmount(field)
+{
+	field.value=field.value.replace(/-[^0-9]/,'');
+}
+
+</script>
+
+
+
 <?
 /**
  * library for payments
@@ -12,9 +26,23 @@
 */
 function createPayment($editor_id, $user_id, $amount, $note=null, $datum=null, $id_zavod=null)
 {
-	if ($date==null) $date=date("Y-m-d");
+	if ($datum==null) $date=date("Y-m-d");
 	$query = "insert into ".TBL_FINANCE." (id_users_editor, id_users_user, amount, note, date, id_zavod) values 
 			(".$editor_id.", ".$user_id.", ".$amount.", '".$note."', '".$date."', ".$id_zavod.")";
+	mysql_query($query);
+}
+
+
+function stornoPayment($editor_id, $trn_id, $datum=null, $storno_note=null)
+{
+	if ($datum==null) $datum=date("Y-m-d");
+	$query = "update ".TBL_FINANCE." set storno='1', storno_by=".$editor_id.", storno_note='".$storno_note."', storno_date = '".$datum."' where id = $trn_id";
+	mysql_query($query);
+}
+
+function updatePayment($editor_id, $trn_id, $amount, $note)
+{
+	$query = "update ".TBL_FINANCE." set amount=".$amount.", note='".$note."' where id = $trn_id";
 	mysql_query($query);
 }
 
@@ -73,19 +101,19 @@ function recalculateHistory($user_id)
 	//update user set fin = (select sum(amount) from finance where user_id = $user_id and history = 1 and storno = 0) where id = $user_id;
 }
 
-/*
- * storno platby
- * pokud je platba historizovana, pak prepocti historii
-*/
-function stornoPayment($id)
-{
-	//update finance set storno = 1 where id = $id;
-	//select user_id, history from payment where id = $id;
-	if ($history)
-	{
-		recalculateHistory($user_id);
-	}
-}
+// /*
+//  * storno platby
+//  * pokud je platba historizovana, pak prepocti historii
+// */
+// function stornoPayment($id)
+// {
+// 	//update finance set storno = 1 where id = $id;
+// 	//select user_id, history from payment where id = $id;
+// 	if ($history)
+// 	{
+// 		recalculateHistory($user_id);
+// 	}
+// }
 
 /*
  * vrati pole zustatku pro vsechny uzivatele
