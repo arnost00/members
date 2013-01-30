@@ -17,5 +17,5 @@ if (!defined('SYSTEM_VERSION_INCLUDED'))
 		return "2002-2013";
 	}
 
-}	// define (SYSTEM_VERSION_INCLUDED)
+}
 ?>
