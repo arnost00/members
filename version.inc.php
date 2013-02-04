@@ -9,7 +9,7 @@ if (!defined('SYSTEM_VERSION_INCLUDED'))
 
 	function GetCodeVersion()
 	{
-		return "v2.1.0.291 dbg";
+		return "v2.2.0.309 dbg";
 	}
 
 	function GetDevelopYears()
