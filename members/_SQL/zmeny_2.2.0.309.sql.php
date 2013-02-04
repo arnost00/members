@@ -4,7 +4,7 @@
 //	vychozi verze
 //#############################################################################
 
-$version_upd = '2.1.0.91';
+$version_upd = '2.2.0.309';
 
 //#############################################################################
 
@@ -15,14 +15,16 @@ require ('prepare.inc.php');
 //#############################################################################
 
 # *** zmena nazvu sloupce z zavxus na id_zavod u tabulky finance
-$sql[1] = 'ALTER TABLE `'.TBL_FINANCE.'` CHANGE `id_zavxus` `id_zavod` INT( 10 ) unsigned DEFAULT NULL,
-`id_users_editor` smallint(5) unsigned NOT NULL,
-`id_users_user` smallint(5) unsigned NOT NULL,';
+$sql[1] = 'ALTER TABLE `'.TBL_FINANCE.'` CHANGE `id_zavxus` `id_zavod` INT( 10 ) UNSIGNED DEFAULT NULL;';
 
-$sql[2] = 'ALTER TABLE `'.TBL_FINANCE.'` ADD `storno` tinyint(1) DEFAULT NULL,
-`storno_by` int(10) unsigned DEFAULT NULL,
-`storno_date` date DEFAULT NULL,
-`storno_note` varchar(255) COLLATE cp1250_czech_cs DEFAULT NULL,';
+$sql[2] = 'ALTER TABLE `'.TBL_FINANCE.'` CHANGE `id_users_editor` `id_users_editor` SMALLINT(5) UNSIGNED NOT NULL';
+
+$sql[3] = 'ALTER TABLE `'.TBL_FINANCE.'` CHANGE `id_users_user` `id_users_user` SMALLINT(5) UNSIGNED NOT NULL;';
+
+$sql[4] = 'ALTER TABLE `'.TBL_FINANCE.'` ADD `storno` TINYINT(1) DEFAULT NULL,
+ADD `storno_by` INT(10) UNSIGNED DEFAULT NULL,
+ADD `storno_date` DATE DEFAULT NULL,
+ADD `storno_note` VARCHAR(255) COLLATE cp1250_czech_cs DEFAULT NULL;';
 
 //#############################################################################
 
