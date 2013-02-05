@@ -30,7 +30,7 @@ if (IsSet($payment))
 	}
 	if ($payment == "storno")
 	{
-		stornoPayment($editor_id, $trn_id, $datum, $storno_note);
+		stornoPayment($editor_id, $trn_id, $storno_note);
 	}
 	if ($payment == "update")
 	{
