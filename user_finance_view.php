@@ -22,14 +22,16 @@ if (IsSet($payment))
 {
 
 	$editor_id = $usr->user_id;
-	
-	if ($payment == "out" or $payment == "in")	
-	{		
+
+	if ($payment == "out" or $payment == "in")
+	{
+		$datum = null;
 		$payment == "out"?$amount = -$amount:$amount;
 		createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod);
 	}
 	if ($payment == "storno")
 	{
+		$datum = null;
 		stornoPayment($editor_id, $trn_id, $datum, $storno_note);
 	}
 	if ($payment == "update")
@@ -52,7 +54,7 @@ Payments_JS_Functions();
 
 if (IsSet($change) and $change == "change")
 {
-	include ("./user_finance_update.inc.php");	
+	include ("./user_finance_update.inc.php");
 } else if (IsSet($storno) and $storno == "storno")
 {
 	include ("./user_finance_storno.inc.php");
