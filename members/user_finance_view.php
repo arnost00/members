@@ -21,17 +21,15 @@ include_once './payment.inc.php'; // pomocne funkce a javascript pro finance
 if (IsSet($payment))
 {
 
-	$editor_id = $usr->user_id;
-
-	if ($payment == "out" or $payment == "in")
-	{
-		$datum = null;
+ 	$editor_id = $usr->user_id;
+ 	
+	if ($payment == "out" or $payment == "in")	
+	{		
 		$payment == "out"?$amount = -$amount:$amount;
 		createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod);
 	}
 	if ($payment == "storno")
 	{
-		$datum = null;
 		stornoPayment($editor_id, $trn_id, $datum, $storno_note);
 	}
 	if ($payment == "update")
@@ -46,9 +44,8 @@ include ("./common.inc.php");
 include ("./common_user.inc.php");
 include ("./ctable.inc.php");
 DrawPageTitle('Finance èlena', false);
-
-Payments_JS_Functions();
 ?>
+<script src="./payment.inc.js"></script>
 <CENTER>
 <?
 
