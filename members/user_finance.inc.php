@@ -5,7 +5,7 @@
 @$vysledek_historie=MySQL_Query("select fin.id fin_id, rc.nazev zavod_nazev, from_unixtime(rc.datum,'%Y-%c-%d') zavod_datum, fin.amount amount, fin.note note, us.sort_name name, fin.date `date` from ".TBL_FINANCE." fin 
 		inner join ".TBL_USER." us on fin.id_users_editor = us.id
 		left join ".TBL_RACE." rc on fin.id_zavod = rc.id
-		where fin.id_users_user = ".$user_id." and fin.storno is null  order by fin.date desc");
+		where fin.id_users_user = ".$user_id." and fin.storno is null  order by fin.date, fin.id desc");
 
 //vytazeni jmena uzivatele
 @$vysledek_user_name=MySQL_Query("select us.sort_name name from ".TBL_USER." us where us.id = ".$user_id);
