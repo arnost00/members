@@ -43,8 +43,8 @@ while ($zaznam=MySQL_Fetch_Array($vysledek_historie))
 	$row = array();
 	$datum = formatDate($zaznam['date']);
 	$row[] = $datum;
-	$row[] = $zaznam['zavod_nazev'];
-	$row[] = formatDate($zaznam['zavod_datum']);
+	$row[] = ($zaznam['zavod_nazev'] == null) ? '-':$zaznam['zavod_nazev'];
+	$row[] = ($zaznam['zavod_nazev'] == null) ? '-':formatDate($zaznam['zavod_datum']);
 	$row[] = $zaznam['amount'];
 	$row[] = $zaznam['note'];
 	$row[] = $zaznam['name'];
