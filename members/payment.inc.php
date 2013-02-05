@@ -1,24 +1,6 @@
 <?php if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
 
-// don't use here any direct JS and HTML tags !!
-
-function Payments_JS_Functions()
-{	// define all JS functions for payments
-?>
-<!-- library for payments -->
-<script>
-
-//upravit funkci pro zaporna cisla, aby zachovali minus pred cislem
-function checkAmount(field)
-{
-	field.value=field.value.replace(/-[^0-9]/,'');
-}
-
-</script>
-<?
-}
-
 /**
  * library for payments
 */
@@ -29,18 +11,18 @@ function checkAmount(field)
  * params: amount, user_id (target of money) ...
  *
 */
-function createPayment($editor_id, $user_id, $amount, $note=null, $datum=null, $id_zavod=null)
+function createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod)
 {
-	if ($datum==null) $date=date("Y-m-d");
+	if ($datum==null) $datum=date("Y-m-d");
 	$query = "insert into ".TBL_FINANCE." (id_users_editor, id_users_user, amount, note, date, id_zavod) values 
-			(".$editor_id.", ".$user_id.", ".$amount.", '".$note."', '".$date."', ".$id_zavod.")";
+			(".$editor_id.", ".$user_id.", ".$amount.", '".$note."', '".$datum."', ".$id_zavod.")";
 	mysql_query($query);
 }
 
 
-function stornoPayment($editor_id, $trn_id, $datum=null, $storno_note=null)
+function stornoPayment($editor_id, $trn_id, $storno_note)
 {
-	if ($datum==null) $datum=date("Y-m-d");
+	$datum=date("Y-m-d");
 	$query = "update ".TBL_FINANCE." set storno='1', storno_by=".$editor_id.", storno_note='".$storno_note."', storno_date = '".$datum."' where id = $trn_id";
 	mysql_query($query);
 }
