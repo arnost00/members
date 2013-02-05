@@ -1,5 +1,11 @@
-<?php  /* zamezeni samostatneho vykonani */ ?>
+<?php if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
+<?
 
+// don't use here any direct JS and HTML tags !!
+
+function Payments_JS_Functions()
+{	// define all JS functions for payments
+?>
 <!-- library for payments -->
 <script>
 
@@ -10,10 +16,9 @@ function checkAmount(field)
 }
 
 </script>
-
-
-
 <?
+}
+
 /**
  * library for payments
 */

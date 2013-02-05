@@ -44,6 +44,8 @@ include ("./common.inc.php");
 include ("./common_user.inc.php");
 include ("./ctable.inc.php");
 DrawPageTitle('Finance èlena', false);
+
+Payments_JS_Functions();
 ?>
 <CENTER>
 <?
