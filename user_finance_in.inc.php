@@ -20,5 +20,8 @@ while ($zaznam=MySQL_Fetch_Array($vysledek_zavody))
 <label for="note">Poznámka</label> 
 <input name="note" type="text"/>
 <br>
+<label for="datum">Datum vkladu</label> 
+<input name="datum" type="text" value=<?=date("Y-m-d");?> />
+<br>
 <input type="submit" value="Odeslat"/>
 </form>
