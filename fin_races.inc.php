@@ -84,7 +84,7 @@ if ($num_rows > 0)
 			$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>";
 		}
 */		
-		$row[] = '?';
+		$row[] = '<A HREF="javascript:open_win(\'./race_finance_view.php?race_id='.$zaznam['id'].'\',\'\')">Pøehled</A>';
 		$row[] = $prihlasky_out;
 
 		if (!$brk_tbl && $zaznam['datum'] >= GetCurrentDate())
