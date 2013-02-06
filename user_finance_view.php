@@ -45,6 +45,14 @@ include ("./common_user.inc.php");
 include ("./ctable.inc.php");
 DrawPageTitle('Finance èlena', false);
 ?>
+
+<script>
+//automaticky refresh stranky, ze ktere bylo toto okno volano 
+window.onunload = refreshParent();
+function refreshParent() {
+	window.opener.location.reload();
+}
+</script>
 <script src="./payment.inc.js"></script>
 <CENTER>
 <?
