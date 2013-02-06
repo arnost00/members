@@ -16,8 +16,8 @@ echo $query;
 $zaznam_user_name=MySQL_Fetch_Array($vysledek_user_name);
 
 DrawPageSubTitle('Historie úètu pro '.$zaznam_user_name['name']);
-
-$LastChangedRevision$
+$version = '$LastChangedRevision$';
+echo $version;
 
 include_once ("./common_race.inc.php");
 include_once ('./url.inc.php');
