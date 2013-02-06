@@ -9,6 +9,13 @@ DrawPageTitle('Finance èlenù',false);
 	javascript:set_default_size(600,600);
 //-->
 </script>
+<style>
+
+span.amountred {
+	color: red;
+}
+
+</style>
 <?
 include "./common_user.inc.php";
 include('./csort.inc.php');
@@ -54,7 +61,8 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 			$row[] = $zaznam['prijmeni'];
 			$row[] = $zaznam['jmeno'];
 			$row[] = RegNumToStr($zaznam['reg']);
-			$row[] = $zaznam['sum_amount'];
+			$zaznam['sum_amount']<0?$class="red":$class="";
+			$row[] = "<span class='amount$class'>".$zaznam['sum_amount']."</span>";
 			$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['id'].'\',\'\')">Pøehled</A>';
 			$row[] = $row_text;
 			echo $data_tbl->get_new_row_arr($row)."\n";
@@ -63,7 +71,6 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 	echo $data_tbl->get_footer()."\n";
 }
 ?>
-
 
 <BR>
 </CENTER>
