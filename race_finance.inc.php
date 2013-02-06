@@ -11,15 +11,16 @@ WHERE z.id = ".$race_id." and f.storno is null order by f.id desc";
 echo $query;
 @$vysledek_historie=MySQL_Query($query);
 
-//vytazeni jmena uzivatele a posunuti ukazatele zpatky 
-//TODO nutno pridat vytazeni i financi z users
-//TODO pri zalozeni uzivatele vlozit finance do users = 0
-//tim se vyresi problem s jmenem
 //vytazeni jmena uzivatele
 @$vysledek_user_name=MySQL_Query("select us.sort_name name from ".TBL_RACE." us where us.id = ".$user_id);
 $zaznam_user_name=MySQL_Fetch_Array($vysledek_user_name);
 
 DrawPageSubTitle('Historie úètu pro '.$zaznam_user_name['name']);
+echo "qwewqe";
+echo $Revision;
+echo $LastChangedRevision;
+echo $Rev;
+echo "tretrte";
 
 include_once ("./common_race.inc.php");
 include_once ('./url.inc.php');
