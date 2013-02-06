@@ -21,6 +21,7 @@ echo $Revision;
 echo $LastChangedRevision;
 echo $Rev;
 echo "tretrte";
+test;
 
 include_once ("./common_race.inc.php");
 include_once ('./url.inc.php');
