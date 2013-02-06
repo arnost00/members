@@ -16,16 +16,10 @@ echo $query;
 $zaznam_user_name=MySQL_Fetch_Array($vysledek_user_name);
 
 DrawPageSubTitle('Historie úètu pro '.$zaznam_user_name['name']);
-echo "qwewqe";
-echo $Revision;
-echo $LastChangedRevision;
-echo $Rev;
-echo "tretrte";
-test;
+$Rev$;
 
 include_once ("./common_race.inc.php");
 include_once ('./url.inc.php');
-
 
 $data_tbl = new html_table_mc();
 $col = 0;
