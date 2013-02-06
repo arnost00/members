@@ -20,7 +20,7 @@ $sc->set_url('index.php?id=800&subid=10',true);
 $sub_query = $sc->get_sql_string();
 
 $query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob, ifnull(sum(f.amount),0) sum_amount FROM '.TBL_USER.' u 
-		left join '.TBL_FINANCE.' f on u.id=f.id_users_user group by u.id '.$sub_query;
+		left join '.TBL_FINANCE.' f on u.id=f.id_users_user where f.storno is null group by u.id '.$sub_query;
 
 @$vysledek=MySQL_Query($query);
 
