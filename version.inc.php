@@ -9,13 +9,15 @@ if (!defined('SYSTEM_VERSION_INCLUDED'))
 
 	function GetCodeVersion()
 	{
-		return "v2.2.0.309 dbg";
+		//pro zmenu podverze staci tento soubor komitnout ;)
+		$actualVersion = '$LastChangedRevision: 334 $';
+		$actualVersion = explode(' ', $actualVersion);
+		return "v2.2.0.$actualVersion dbg";
 	}
 
 	function GetDevelopYears()
 	{
 		return "2002-2013";
 	}
-
 }
 ?>
