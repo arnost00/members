@@ -1,23 +1,44 @@
-<?php /* finance -  show exact user finance */
+<?php /* finance -  show exact race finance */
 ?>
 
 <?
-$query = "SELECT zu.id, zu.id_user, zu.id_zavod, zu.kat, z.nazev, u.sort_name, f.amount amount, f.note note
+$query = "SELECT zu.id, zu.id_user, zu.id_zavod, zu.kat, z.nazev, u.sort_name, f.amount amount, f.note note, f.datum datum
 FROM ".TBL_ZAVXUS." zu 
 inner join ".TBL_RACE." z on z.id = zu.id_zavod 
 inner join ".TBL_USER." u on u.id = zu.id_user
 left join ".TBL_FINANCE." f on (f.id_users_user = u.id and f.id_zavod = z.id)
 WHERE z.id = ".$race_id." and f.storno is null order by f.id desc";
 echo $query;
+
+//platby pro: prihlaseni union platici neprihlaseni 
+// (
+// select u.id u_id, u.sort_name, f.id, f.amount from tst_users u inner join
+// tst_zavxus zu on u.id = zu.id_user left join
+// tst_finance f on f.id_users_user = zu.id_user
+// where zu.id_zavod = 35 and f.storno is null
+// ) union (
+// select u.id u_id, u.sort_name, f.id, f.amount from tst_users u inner join
+// tst_finance f on f.id_users_user = u.id
+// where f.id_zavod = 35 and f.storno is null
+// )
+
+//neprihlaseni uzivatele bez platby
+// select id from tst_users where id not in
+// (SELECT distinct(f.id_users_user) id
+// FROM tst_finance f where f.id_zavod = 35
+// union
+// SELECT distinct(zu.id_user) id
+// FROM tst_zavxus zu where zu.id_zavod = 35)
+
+
 @$vysledek_historie=MySQL_Query($query);
 
-//vytazeni jmena uzivatele
-@$vysledek_user_name=MySQL_Query("select us.sort_name name from ".TBL_RACE." us where us.id = ".$user_id);
-$zaznam_user_name=MySQL_Fetch_Array($vysledek_user_name);
+//vytazeni informaci o zavode
+@$vysledek_race=MySQL_Query("select z.nazev, from_unixtime(z.datum, '%Y-%c-%d') datum from ".TBL_RACE." z where z.id = ".$race_id);
+$zaznam_race=MySQL_Fetch_Array($vysledek_race);
 
-DrawPageSubTitle('Historie úètu pro '.$zaznam_user_name['name']);
-$version = '$LastChangedRevision$';
-echo $version;
+
+DrawPageSubTitle('Historie úèetnictví pro '.$zaznam_race['nazev'].' '.formatDate($zaznam_race['datum']));
 
 include_once ("./common_race.inc.php");
 include_once ('./url.inc.php');
@@ -25,8 +46,6 @@ include_once ('./url.inc.php');
 $data_tbl = new html_table_mc();
 $col = 0;
 $data_tbl->set_header_col($col++,'Datum transakce',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Závod',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Datum závodu',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Èástka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Poznámka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Zapsal',ALIGN_LEFT);
