@@ -7,6 +7,8 @@ DrawPageTitle('Finance èlena',false);
 <?
 //inicializace id uzivatele pro vypis financi
 $user_id = $usr->user_id;
+//zamezi zobrazeni moznosti pro zmenu z Clenskeho menu
+$finance_readonly = "readonly";
 
 include ('./user_finance.inc.php');
 ?>

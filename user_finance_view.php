@@ -78,7 +78,7 @@ if (IsSet($change) and $change == "change")
 ?>
 <hr>
 <br>
-<BUTTON onclick="javascript:close_popup();">Zpìt</BUTTON><BR>
+<BUTTON onclick="javascript:close_popup();">Zavøi okno</BUTTON><BR>
 </CENTER>
 </BODY>
 </HTML>
