@@ -6,7 +6,7 @@ if (!defined("__HIDE_TEST__")) exit;
 <select name="id_zavod">
 <option value=null>---</option>
 <? 
-@$vysledek_zavody=mysql_query("select id, nazev, from_unixtime(datum,'%Y-%c-%d') datum from ".TBL_RACE);
+@$vysledek_zavody=mysql_query("select id, nazev, from_unixtime(datum,'%Y-%c-%d') datum from ".TBL_RACE." order by datum desc");
 while ($zaznam=MySQL_Fetch_Array($vysledek_zavody))
 {
 	echo "<option value=".$zaznam["id"].">".$zaznam["nazev"]."&nbsp;-&nbsp;".formatDate($zaznam["datum"])."</option>";
@@ -23,5 +23,5 @@ while ($zaznam=MySQL_Fetch_Array($vysledek_zavody))
 <label for="datum">Datum platby</label> 
 <input name="datum" type="text" value=<?=date("Y-m-d");?> />
 <br>
-<input type="submit" value="Odeslat"/>
+<input type="submit" value="Odeslat platbu"/>
 </form>

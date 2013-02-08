@@ -34,11 +34,7 @@ if ($num_rows > 0)
 	$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
-	$data_tbl->set_header_col_with_help($col++,'Poø.',ALIGN_CENTER,"Poøadatel");
-	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
-	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web závodu");
 	$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Pøihlášky',ALIGN_CENTER);
 
 	echo $data_tbl->get_css()."\n";
 	echo $data_tbl->get_header()."\n";
@@ -71,21 +67,7 @@ if ($num_rows > 0)
 		$row[] = $prefix.$datum.$suffix;
 		$row[] = "<A href=\"javascript:open_race_info(".$zaznam['id'].")\" class=\"adr_name\">".$prefix.$zaznam['nazev'].$suffix."</A>";
 		$row[] = $prefix.$zaznam['misto'].$suffix;
-		$row[] = $prefix.$zaznam['oddil'].$suffix;
-		$row[] = GetRaceTypeImg($zaznam['typ']);
-		$row[] = GetRaceLinkHTML($zaznam['odkaz']);
-/*		
-		if (!$prihl_finish)
-		{
-			$row[] = "<A HREF=\"javascript:open_win('./race_regs_1.php?gr_id="._MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\">Pø-1</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_all.php?gr_id="._MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\">Pø-V</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
-		}
-		else
-		{
-			$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>";
-		}
-*/		
 		$row[] = '<A HREF="javascript:open_win(\'./race_finance_view.php?race_id='.$zaznam['id'].'\',\'\')">Pøehled</A>';
-		$row[] = $prihlasky_out;
 
 		if (!$brk_tbl && $zaznam['datum'] >= GetCurrentDate())
 		{
@@ -105,7 +87,5 @@ if ($num_rows > 0)
 	echo $data_tbl->get_footer()."\n";
 }
 ?>
-<p>
-??<BR>
-</p>
+
 </CENTER>
