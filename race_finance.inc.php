@@ -11,8 +11,8 @@
 $query_prihlaseni = "
 select u.id u_id, u.sort_name, f.id, f.amount, f.note, zu.kat from tst_users u inner join
 tst_zavxus zu on u.id = zu.id_user left join
-(select * from tst_finance where id_zavod = 35 and storno is null) f on f.id_users_user = zu.id_user
-where zu.id_zavod = 35 order by u_id, id
+(select * from tst_finance where id_zavod = $race_id and storno is null) f on f.id_users_user = zu.id_user
+where zu.id_zavod = $race_id order by u_id, id
 ";
 $vysledek_prihlaseni = mysql_query($query_prihlaseni);
 
@@ -23,9 +23,9 @@ $vysledek_prihlaseni = mysql_query($query_prihlaseni);
 
 $query_platici = "
 select u.id u_id, u.sort_name, f.id, f.amount, f.note, null kat from tst_users u inner join
-(select * from tst_finance where id_zavod = 35 and storno is null) f on f.id_users_user = u.id
-where f.id_zavod = 35
-and u.id not in (select id_user from tst_zavxus where id_zavod = 35)
+(select * from tst_finance where id_zavod = $race_id and storno is null) f on f.id_users_user = u.id
+where f.id_zavod = $race_id
+and u.id not in (select id_user from tst_zavxus where id_zavod = $race_id)
 order by u_id, id
 ";
 $vysledek_platici = mysql_query($query_platici);
@@ -41,10 +41,10 @@ $vysledek_platici = mysql_query($query_platici);
 $query_neprihlaseni = "
 select u.id u_id, u.sort_name, null id, null amount, null note, null kat from tst_users u where id not in
 (SELECT distinct(f.id_users_user) id
-FROM tst_finance f where f.id_zavod = 35 and f.storno is null
+FROM tst_finance f where f.id_zavod = $race_id and f.storno is null
 union
 SELECT distinct(zu.id_user) id
-FROM tst_zavxus zu where zu.id_zavod = 35) order by u_id, id
+FROM tst_zavxus zu where zu.id_zavod = $race_id) order by u_id, id
 ";
 $vysledek_neprihlaseni = mysql_query($query_neprihlaseni);
 
@@ -92,8 +92,9 @@ while ($zaznam=mysql_fetch_assoc($vysledek_prihlaseni))
 	echo $data_tbl->get_new_row_arr($row)."\n";
 	$i++;
 }
-echo $data_tbl->get_break_row()."\n";
+// echo $data_tbl->get_break_row()."\n";
 //---------------------------------------------------
+echo $data_tbl->get_new_row("&nbsp;","","","")."\n";
 $row = array();
 $row[] = "Nepøihlášení s platbama";
 $row[] = null;
@@ -111,8 +112,9 @@ while ($zaznam=mysql_fetch_assoc($vysledek_platici))
 	echo $data_tbl->get_new_row_arr($row)."\n";
 	$i++;
 }
-echo $data_tbl->get_break_row()."\n";
+// echo $data_tbl->get_break_row()."\n";
 //---------------------------------------------------
+echo $data_tbl->get_new_row("&nbsp;","","","")."\n";
 $row = array();
 $row[] = "Nepøihlášení";
 $row[] = null;
