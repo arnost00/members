@@ -1,7 +1,7 @@
 <?php /* finance -  show form for storno payment*/ 
 if (!defined("__HIDE_TEST__")) exit;
 
-@$vysledek_platba=mysql_query("select id, id_users_user user_id, amount, note, from_unixtime(date,'%Y-%c-%d') datum from ".TBL_FINANCE." where id = $trn_id");
+@$vysledek_platba=mysql_query("select id, id_users_user user_id, amount, note, from_unixtime(date,'%Y-%c-%e') datum from ".TBL_FINANCE." where id = $trn_id");
 $zaznam_platba=MySQL_Fetch_Array($vysledek_platba);
 
 ?>

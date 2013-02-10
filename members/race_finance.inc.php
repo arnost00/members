@@ -50,7 +50,7 @@ $vysledek_neprihlaseni = mysql_query($query_neprihlaseni);
 
 
 //vytazeni informaci o zavode
-@$vysledek_race=MySQL_Query("select z.nazev, from_unixtime(z.datum, '%Y-%c-%d') datum from ".TBL_RACE." z where z.id = ".$race_id);
+@$vysledek_race=MySQL_Query("select z.nazev, from_unixtime(z.datum, '%Y-%c-%e') datum from ".TBL_RACE." z where z.id = ".$race_id);
 $zaznam_race=MySQL_Fetch_Array($vysledek_race);
 
 
