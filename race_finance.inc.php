@@ -9,9 +9,9 @@
 // where zu.id_zavod = 35 and f.storno is null
 
 $query_prihlaseni = "
-select u.id u_id, u.sort_name, f.id, f.amount, f.note, zu.kat from tst_users u inner join
-tst_zavxus zu on u.id = zu.id_user left join
-(select * from tst_finance where id_zavod = $race_id and storno is null) f on f.id_users_user = zu.id_user
+select u.id u_id, u.sort_name, f.id, f.amount, f.note, zu.kat from ".TBL_USER." u inner join
+".TBL_ZAVXUS." zu on u.id = zu.id_user left join
+(select * from ".TBL_FINANCE." where id_zavod = $race_id and storno is null) f on f.id_users_user = zu.id_user
 where zu.id_zavod = $race_id order by u_id, id
 ";
 $vysledek_prihlaseni = mysql_query($query_prihlaseni);
@@ -22,10 +22,10 @@ $vysledek_prihlaseni = mysql_query($query_prihlaseni);
 // where f.id_zavod = 35 and f.storno is null
 
 $query_platici = "
-select u.id u_id, u.sort_name, f.id, f.amount, f.note, null kat from tst_users u inner join
-(select * from tst_finance where id_zavod = $race_id and storno is null) f on f.id_users_user = u.id
+select u.id u_id, u.sort_name, f.id, f.amount, f.note, null kat from ".TBL_USER." u inner join
+(select * from ".TBL_FINANCE." where id_zavod = $race_id and storno is null) f on f.id_users_user = u.id
 where f.id_zavod = $race_id
-and u.id not in (select id_user from tst_zavxus where id_zavod = $race_id)
+and u.id not in (select id_user from ".TBL_ZAVXUS." where id_zavod = $race_id)
 order by u_id, id
 ";
 $vysledek_platici = mysql_query($query_platici);
@@ -39,12 +39,12 @@ $vysledek_platici = mysql_query($query_platici);
 // FROM tst_zavxus zu where zu.id_zavod = 35)
 
 $query_neprihlaseni = "
-select u.id u_id, u.sort_name, null id, null amount, null note, null kat from tst_users u where id not in
+select u.id u_id, u.sort_name, null id, null amount, null note, null kat from ".TBL_USER." u where id not in
 (SELECT distinct(f.id_users_user) id
-FROM tst_finance f where f.id_zavod = $race_id and f.storno is null
+FROM ".TBL_FINANCE." f where f.id_zavod = $race_id and f.storno is null
 union
 SELECT distinct(zu.id_user) id
-FROM tst_zavxus zu where zu.id_zavod = $race_id) order by u_id, id
+FROM ".TBL_ZAVXUS." zu where zu.id_zavod = $race_id) order by u_id, id
 ";
 $vysledek_neprihlaseni = mysql_query($query_neprihlaseni);
 
