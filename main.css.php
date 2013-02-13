@@ -428,6 +428,10 @@ TABLE.calendar TD.today
 	color: <? echo $g_colors['table_cal_today_text']; ?>;
 }
 
+.amountred {
+	color: red;
+}
+
 <?
 if (!$g_is_release)
 {
