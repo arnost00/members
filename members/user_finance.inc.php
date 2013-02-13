@@ -37,7 +37,7 @@ $i = 0;
 while ($zaznam=MySQL_Fetch_Array($vysledek_historie))
 {
 	$row = array();
-	$datum = formatDate($zaznam['date']);
+	$datum = SQLDate2String($zaznam['date']);
 	$row[] = $datum;
 	$row[] = ($zaznam['zavod_nazev'] == null) ? '-':$zaznam['zavod_nazev'];
 	$row[] = ($zaznam['zavod_nazev'] == null) ? '-':formatDate($zaznam['zavod_datum']);
@@ -55,9 +55,9 @@ if ($i > 0)
 	echo $data_tbl->get_break_row()."\n";
 
 $row = array();
-$row[] = null;
+$row[] = '';
 $row[] = "Koneèný zùstatek";
-$row[] = null;
+$row[] = '';
 $row[] = $sum_amount;
 echo $data_tbl->get_new_row_arr($row)."\n";
 echo $data_tbl->get_footer()."\n";

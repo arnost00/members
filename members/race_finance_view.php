@@ -57,6 +57,7 @@ if (IsSet($change) and $change == "change")
 } else
 {
 	include ("./race_finance.inc.php");
+	/*
 	?>
 	<hr>
 	<?
@@ -64,6 +65,7 @@ if (IsSet($change) and $change == "change")
 	?>
 	<hr>
 	<?
+	*/
 	//include ("./user_finance_in.inc.php");
 }
 ?>

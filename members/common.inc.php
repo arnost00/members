@@ -146,7 +146,7 @@ function SQLDate2String($date)
 {
 	$dat=explode("-",$date);
 	if ($date != "0000-00-00" && sizeof($dat) == 3) // YYYY-MM-DD
-		return $dat[2].".".$dat[1].".".$dat[0];
+		return ltrim($dat[2],'0').".".ltrim($dat[1],'0').".".ltrim($dat[0],'0');
 	else
 		return "";
 }
