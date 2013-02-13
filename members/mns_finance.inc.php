@@ -19,10 +19,9 @@ $sc->add_column('reg','');
 $sc->set_url('index.php?id=600&subid=10',true);
 $sub_query = $sc->get_sql_string();
 
-//odstraneni sebe sama z vypisu
-$query = 'SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob FROM '.TBL_USER.' WHERE chief_id = '.$usr->user_id.$sub_query;
-//$query = 'SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob FROM '.TBL_USER.' WHERE chief_id = '.$usr->user_id.' OR id = '.$usr->user_id.$sub_query;
-//$query = 'SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob FROM '.TBL_USER.' WHERE chief_id = '.$usr->user_id.' OR id = '.$usr->user_id.' ORDER BY sort_name ASC '
+$query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob, ifnull(sum(f.amount),0) sum_amount FROM '.TBL_USER.' u 
+		left join '.TBL_FINANCE.' f on u.id=f.id_users_user where f.storno is null AND u.chief_id = '.$usr->user_id.' group by u.id '.$sub_query;
+
 @$vysledek=MySQL_Query($query);
 
 $i=1;
@@ -34,15 +33,14 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 	$data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 	$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_CENTER,"Registraèní èíslo");
+	$data_tbl->set_header_col_with_help($col++,'Fin.st.',ALIGN_CENTER,"Aktuální finanèní stav");
 	$data_tbl->set_header_col($col++,'Finance',ALIGN_CENTER);
 
 	echo $data_tbl->get_css()."\n";
 	echo $data_tbl->get_header()."\n";
-//	echo $data_tbl->get_header_row()."\n";
 
 	$data_tbl->set_sort_col(1,$sc->get_col_content(0));
 	$data_tbl->set_sort_col(3,$sc->get_col_content(1));
-//	echo $data_tbl->get_sort_row()."\n";
 	echo $data_tbl->get_header_row_with_sort()."\n";
 	
 	while ($zaznam=MySQL_Fetch_Array($vysledek))
@@ -54,18 +52,9 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 			$row[] = $zaznam['prijmeni'];
 			$row[] = $zaznam['jmeno'];
 			$row[] = RegNumToStr($zaznam['reg']);
-//odstraneno zobrazovani sebe sama ve vypisu sverencu
-// 			if ($zaznam['id'] == $usr->user_id) 
-// 			{
-// 				$row_text = '<A HREF="./index.php?id=200&subid=10">Zobraz</A>';
-// 				$data_tbl->set_next_row_highlighted();
-// 			}
-// 			else
-// 			{
-				$val=GetUserAccountId_Users($zaznam['id']);
-//				$row_text = '<A HREF="./mns_user_finance_view.php?id='.$val.'">Zobraz</A>';
-				$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?id='.$zaznam['id'].'\',\'\')">Zobraz</A>';
-// 			}
+			$zaznam['sum_amount']<0?$class="red":$class="";
+			$row[] = "<span class='amount$class'>".$zaznam['sum_amount']."</span>";
+			$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['id'].'\',\'\')">Pøehled</A>';
 			$row[] = $row_text;
 			echo $data_tbl->get_new_row_arr($row)."\n";
 		}

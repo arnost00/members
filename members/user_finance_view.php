@@ -19,7 +19,7 @@ include ("./common.inc.php");
 include_once './payment.inc.php'; // pomocne funkce a javascript pro finance
 
 // vytvorit platbu - out nebo in
-if (IsSet($payment))
+if (IsSet($payment) && IsLoggedFinance())
 {
 
  	$editor_id = $usr->user_id;
@@ -57,23 +57,27 @@ function refreshParent() {
 <CENTER>
 <?
 
-if (IsSet($change) and $change == "change")
+if (IsSet($change) && $change == "change" && IsLoggedFinance())
 {
 	include ("./user_finance_update.inc.php");
-} else if (IsSet($storno) and $storno == "storno")
+} else if (IsSet($storno) && $storno == "storno" && IsLoggedFinance())
 {
 	include ("./user_finance_storno.inc.php");
 } else
 {
 	include ("./user_finance.inc.php");
+	
+	if (IsLoggedFinance())
+	{
 	?>
-	<hr>
+<hr>
 	<?
-	include ("./user_finance_out.inc.php");
+		include ("./user_finance_out.inc.php");
 	?>
-	<hr>
+<hr>
 	<?
-	include ("./user_finance_in.inc.php");
+		include ("./user_finance_in.inc.php");
+	}
 }
 ?>
 <hr>
