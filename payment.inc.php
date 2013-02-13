@@ -13,7 +13,10 @@
 */
 function createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod)
 {
-	if ($datum==null) $datum=date("Y-m-d");
+	if ($datum==null)
+		$datum=date("Y-m-d");
+	else
+		$datum = String2SQLDateDMY($datum);
 	$query = "insert into ".TBL_FINANCE." (id_users_editor, id_users_user, amount, note, date, id_zavod) values 
 			(".$editor_id.", ".$user_id.", ".$amount.", '".$note."', '".$datum."', ".$id_zavod.")";
 	mysql_query($query);

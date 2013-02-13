@@ -6,7 +6,7 @@ DrawPageTitle('Finance èlenù',false);
 <CENTER>
 <script language="javascript">
 <!-- 
-	javascript:set_default_size(600,600);
+	javascript:set_default_size(800,800);
 //-->
 </script>
 <?

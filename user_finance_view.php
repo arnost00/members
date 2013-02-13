@@ -15,6 +15,7 @@ $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
 db_Connect();
 
+include ("./common.inc.php");
 include_once './payment.inc.php'; // pomocne funkce a javascript pro finance
 
 // vytvorit platbu - out nebo in
@@ -22,9 +23,9 @@ if (IsSet($payment))
 {
 
  	$editor_id = $usr->user_id;
- 	
-	if ($payment == "out" or $payment == "in")	
-	{		
+
+	if ($payment == "out" or $payment == "in")
+	{
 		$payment == "out"?$amount = -$amount:$amount;
 		createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod);
 	}
@@ -40,14 +41,13 @@ if (IsSet($payment))
 
 
 include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
-include ("./common.inc.php");
 include ("./common_user.inc.php");
 include ("./ctable.inc.php");
 DrawPageTitle('Finance èlena', false);
 ?>
 
 <script>
-//automaticky refresh stranky, ze ktere bylo toto okno volano 
+//automaticky refresh stranky, ze ktere bylo toto okno volano
 window.onunload = refreshParent();
 function refreshParent() {
 	window.opener.location.reload();
