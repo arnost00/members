@@ -17,24 +17,38 @@ db_Connect();
 
 include_once './payment.inc.php'; // pomocne funkce a javascript pro finance
 
-// vytvorit platbu - out nebo in
-if (IsSet($payment))
+if (IsSet($payment))	
 {
 
 	$editor_id = $usr->user_id;
-	
-	if ($payment == "out" or $payment == "in")	
-	{		
-		$payment == "out"?$amount = -$amount:$amount;
-		createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod);
-	}
-	if ($payment == "storno")
+	$id_zavod = $race_id;
+	$datum = null;
+	if ($payment == "pay")	
 	{
-		stornoPayment($editor_id, $trn_id, $datum, $storno_note);
-	}
-	if ($payment == "update")
-	{
-		updatePayment($editor_id, $trn_id, $amount, $note);
+		$i = 1;
+		$var = "userid".$i;
+		while (isset($$var))
+		{
+			$user_id = $$var;
+			$var = "paymentid".$i;
+			$payment_id = $$var;
+			$var = "am".$i;
+			$amount = $$var;
+			$var = "nt".$i;
+			$note = $$var;
+				
+			if ($amount != "")
+			{
+				if ($payment_id)
+				{
+					updatePayment($editor_id, $payment_id, $amount, $note);
+				} else {
+					createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod);
+				}
+			}
+			$i++;
+			$var = "userid".$i;
+		}				
 	}
 }
 
@@ -48,30 +62,12 @@ DrawPageTitle('Finance závodu', false);
 <CENTER>
 <?
 
-if (IsSet($change) and $change == "change")
-{
-	include ("./user_finance_update.inc.php");	
-} else if (IsSet($storno) and $storno == "storno")
-{
-	include ("./user_finance_storno.inc.php");
-} else
-{
-	include ("./race_finance.inc.php");
-	/*
-	?>
-	<hr>
-	<?
-	//include ("./user_finance_out.inc.php");
-	?>
-	<hr>
-	<?
-	*/
-	//include ("./user_finance_in.inc.php");
-}
+include ("./race_finance.inc.php");
+
 ?>
 <hr>
 <br>
-<BUTTON onclick="javascript:close_popup();">Zpìt</BUTTON><BR>
+<BUTTON onclick="javascript:close_popup();">Zavøi okno</BUTTON><BR>
 </CENTER>
 </BODY>
 </HTML>

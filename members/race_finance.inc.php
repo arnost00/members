@@ -2,11 +2,6 @@
 ?>
 
 <?
-// prihlaseni 
-// select u.id u_id, u.sort_name, f.id, f.amount from tst_users u inner join
-// tst_zavxus zu on u.id = zu.id_user inner join
-// tst_finance f on f.id_users_user = zu.id_user
-// where zu.id_zavod = 35 and f.storno is null
 
 $query_prihlaseni = "
 select u.id u_id, u.sort_name, f.id, f.amount, f.note, zu.kat from ".TBL_USER." u inner join
@@ -16,11 +11,6 @@ where zu.id_zavod = $race_id order by u_id, id
 ";
 $vysledek_prihlaseni = mysql_query($query_prihlaseni);
 
-// platici 
-// select u.id u_id, u.sort_name, f.id, f.amount from tst_users u inner join
-// tst_finance f on f.id_users_user = u.id
-// where f.id_zavod = 35 and f.storno is null
-
 $query_platici = "
 select u.id u_id, u.sort_name, f.id, f.amount, f.note, null kat from ".TBL_USER." u inner join
 (select * from ".TBL_FINANCE." where id_zavod = $race_id and storno is null) f on f.id_users_user = u.id
@@ -29,14 +19,6 @@ and u.id not in (select id_user from ".TBL_ZAVXUS." where id_zavod = $race_id)
 order by u_id, id
 ";
 $vysledek_platici = mysql_query($query_platici);
-
-// neprihlaseni bez platby
-// select u.id, u.sort_name, f.id, f.amount from tst_users u where id not in
-// (SELECT distinct(f.id_users_user) id
-// FROM tst_finance f where f.id_zavod = 35
-// union
-// SELECT distinct(zu.id_user) id
-// FROM tst_zavxus zu where zu.id_zavod = 35)
 
 $query_neprihlaseni = "
 select u.id u_id, u.sort_name, null id, null amount, null note, null kat from ".TBL_USER." u where id not in
@@ -48,7 +30,6 @@ FROM ".TBL_ZAVXUS." zu where zu.id_zavod = $race_id) order by u_id, id
 ";
 $vysledek_neprihlaseni = mysql_query($query_neprihlaseni);
 
-
 //vytazeni informaci o zavode
 @$vysledek_race=MySQL_Query("select z.nazev, from_unixtime(z.datum, '%Y-%c-%e') datum from ".TBL_RACE." z where z.id = ".$race_id);
 $zaznam_race=MySQL_Fetch_Array($vysledek_race);
@@ -58,6 +39,8 @@ DrawPageSubTitle('Historie úèetnictví pro '.$zaznam_race['nazev'].' '.formatDate
 
 include_once ("./common_race.inc.php");
 include_once ('./url.inc.php');
+
+echo "<form method=\"post\" action=\"?payment=pay&race_id=$race_id\">";
 
 $data_tbl = new html_table_mc();
 $col = 0;
@@ -73,10 +56,10 @@ echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
 $sum_amount = 0;
-$i = 0;
+$i = 1;
 
 $row = array();
-$row[] = "Pøihlášení s platbama i bez";
+$row[] = "Pøihlášení";
 $row[] = null;
 $row[] = null;
 $row[] = null;
@@ -84,17 +67,25 @@ echo $data_tbl->get_new_row_arr($row)."\n";
 echo $data_tbl->get_break_row()."\n";
 while ($zaznam=mysql_fetch_assoc($vysledek_prihlaseni))
 {
+	$id = $zaznam['id'];
+	
 	$row = array();
 	$row[] = $zaznam['sort_name'];
-	$row[] = $zaznam['amount'];
-	$row[] = $zaznam['note'];
+	
+	$amount = $zaznam['amount'];
+	$input_amount = '<input type="number" id="am'.$i.'" name="am'.$i.'" value="'.$amount.'" />';
+	$row[] = $input_amount;
+	
+	$note = $zaznam['note'];
+	$input_note = '<input type="text" id="nt'.$i.'" name="nt'.$i.'" value="'.$note.'" />';
+	$row[] = $input_note;
+	
 	$row[] = $zaznam['kat'];
+	$row[] = '<input type="hidden" id="userid'.$i.'" name="userid'.$i.'" value="'.$zaznam["u_id"].'"/><input type="hidden" id="paymentid'.$i.'" name="paymentid'.$i.'" value="'.$zaznam["id"].'"/>';
 	echo $data_tbl->get_new_row_arr($row)."\n";
 	$i++;
 }
-// echo $data_tbl->get_break_row()."\n";
 //---------------------------------------------------
-echo $data_tbl->get_new_row("&nbsp;","","","")."\n";
 $row = array();
 $row[] = "Nepøihlášení s platbama";
 $row[] = null;
@@ -104,51 +95,69 @@ echo $data_tbl->get_new_row_arr($row)."\n";
 echo $data_tbl->get_break_row()."\n";
 while ($zaznam=mysql_fetch_assoc($vysledek_platici))
 {
+	$id = $zaznam['id'];
+	
 	$row = array();
 	$row[] = $zaznam['sort_name'];
-	$row[] = $zaznam['amount'];
-	$row[] = $zaznam['note'];
+
+	$amount = $zaznam['amount'];
+	$input_amount = '<input type="number" id="am'.$i.'" name="am'.$i.'" value="'.$amount.'" />';
+	$row[] = $input_amount;
+	
+	$note = $zaznam['note'];
+	$input_note = '<input type="text" id="nt'.$i.'" name="nt'.$i.'" value="'.$note.'" />';
+	$row[] = $input_note;
+
 	$row[] = $zaznam['kat'];
-	echo $data_tbl->get_new_row_arr($row)."\n";
-	$i++;
-}
-// echo $data_tbl->get_break_row()."\n";
-//---------------------------------------------------
-echo $data_tbl->get_new_row("&nbsp;","","","")."\n";
-$row = array();
-$row[] = "Nepøihlášení";
-$row[] = null;
-$row[] = null;
-$row[] = null;
-echo $data_tbl->get_new_row_arr($row)."\n";
-echo $data_tbl->get_break_row()."\n";
-while ($zaznam=mysql_fetch_assoc($vysledek_neprihlaseni))
-{
-	$row = array();
-	$row[] = $zaznam['sort_name'];
-	$row[] = $zaznam['amount'];
-	$row[] = $zaznam['note'];
-	$row[] = $zaznam['kat'];
-	// 	IsLoggedFinance()?$row[]=" <a href=\"?change=change&trn_id=".$zaznam['fin_id']."\">Zmìnit</a> / <a href=\"?storno=storno&trn_id=".$zaznam['fin_id']."\">Storno</a>":"";
+	$row[] = '<input type="hidden" id="userid'.$i.'" name="userid'.$i.'" value="'.$zaznam["u_id"].'"/><input type="hidden" id="paymentid'.$i.'" name="paymentid'.$i.'" value="'.$zaznam["id"].'"/>';
 	echo $data_tbl->get_new_row_arr($row)."\n";
 	$i++;
 }
 
-
-
-//if ($i > 0) echo $data_tbl->get_break_row()."\n";
-
-// $row = array();
-// $row[] = null;
-// $row[] = "Koneèný zùstatek";
-// $row[] = null;
-// $row[] = $sum_amount;
-// echo $data_tbl->get_new_row_arr($row)."\n";
 echo $data_tbl->get_footer()."\n";
 
-// formular patri opravdu sem ??
-//TODO doplnit formular pro pridani platby
-// if (IsLoggedFinance()) 
-//	include "./payment_create_form.inc.php";
+
+echo '<input type="submit"/>';
+echo '</form>';
+echo "<form method=\"post\" action=\"?payment=pay&race_id=$race_id\">";
+
+$data_tbl = new html_table_mc();
+$col = 0;
+$data_tbl->set_header_col($col++,'Jméno',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'Èástka',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'Poznámka',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'Kategorie',ALIGN_LEFT);
+IsLoggedFinance()?$data_tbl->set_header_col($col++,'Možnosti',ALIGN_LEFT):"";
+
+echo $data_tbl->get_css()."\n";
+echo $data_tbl->get_header()."\n";
+echo $data_tbl->get_header_row()."\n";
+
+$i = 1;
+while ($zaznam=mysql_fetch_assoc($vysledek_neprihlaseni))
+{
+	
+	$id = $zaznam['id'];
+	
+	$row = array();
+	$row[] = $zaznam['sort_name'];
+	
+	$amount = $zaznam['amount'];
+	$input_amount = '<input type="number" id="am'.$i.'" name="am'.$i.'" value="'.$amount.'" />';
+	$row[] = $input_amount;
+	
+	$note = $zaznam['note'];
+	$input_note = '<input type="text" id="nt'.$i.'" name="nt'.$i.'" value="'.$note.'" />';
+	$row[] = $input_note;
+	
+	$row[] = $zaznam['kat'];
+	// 	IsLoggedFinance()?$row[]=" <a href=\"?change=change&trn_id=".$zaznam['fin_id']."\">Zmìnit</a> / <a href=\"?storno=storno&trn_id=".$zaznam['fin_id']."\">Storno</a>":"";
+	$row[] = '<input type="hidden" id="userid'.$i.'" name="userid'.$i.'" value="'.$zaznam["u_id"].'"/><input type="hidden" id="paymentid'.$i.'" name="paymentid'.$i.'" value="'.$zaznam["id"].'"/>';
+	echo $data_tbl->get_new_row_arr($row)."\n";
+	$i++;
+}
+echo $data_tbl->get_footer()."\n";
 
 ?>
+<input type="submit">
+</form>
