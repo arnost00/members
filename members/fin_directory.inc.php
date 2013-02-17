@@ -9,6 +9,13 @@ DrawPageTitle('Finance èlenù',false);
 	javascript:set_default_size(800,800);
 //-->
 </script>
+<style>
+
+span.amountred {
+	color: red;
+}
+
+</style>
 <?
 include "./common_user.inc.php";
 include('./csort.inc.php');
