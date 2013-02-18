@@ -432,6 +432,9 @@ TABLE.calendar TD.today
 	color: red;
 }
 
+.amount {
+}
+
 <?
 if (!$g_is_release)
 {
