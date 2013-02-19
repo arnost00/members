@@ -16,7 +16,7 @@ include('./csort.inc.php');
 $sc = new column_sort_db();
 $sc->add_column('sort_name','');
 $sc->add_column('reg','');
-$sc->set_url('index.php?id=600&subid=10',true);
+$sc->set_url('index.php?id=500&subid=10',true);
 $sub_query = $sc->get_sql_string();
 
 $query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob, ifnull(sum(f.amount),0) sum_amount FROM '.TBL_USER.' u 
@@ -35,7 +35,7 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 	$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 	$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_CENTER,"Registraèní èíslo");
 	$data_tbl->set_header_col_with_help($col++,'Fin.st.',ALIGN_CENTER,"Aktuální finanèní stav");
-	$data_tbl->set_header_col($col++,'Finance',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'Monosti',ALIGN_CENTER);
 
 	echo $data_tbl->get_css()."\n";
 	echo $data_tbl->get_header()."\n";

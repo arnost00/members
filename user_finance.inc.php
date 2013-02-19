@@ -58,7 +58,8 @@ $row = array();
 $row[] = '';
 $row[] = "Koneèný zùstatek";
 $row[] = '';
-$row[] = $sum_amount;
+$sum_amount<0?$class="red":$class="";
+$row[] = "<span class='amount$class'>".$sum_amount."</span>";
 echo $data_tbl->get_new_row_arr($row)."\n";
 echo $data_tbl->get_footer()."\n";
 
