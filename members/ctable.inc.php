@@ -314,6 +314,47 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 		}
 
 		//__________________________________________________________________
+		function get_info_row($text)// vytvori vystredeny text do tabulky pres vsechny sloupce
+		{
+
+			$rc= ((++$this->row_idx % 2) == 0) ? 'r1' : 'r2';
+			$row = '<TR class="'.$rc.'" valign="top">';
+			$row.= '<TD colspan="'.$this->cols.'" class="'.$this->class_name.'center">';
+			$row.= $text;
+			$row.= '</TD>';
+			$row.= '</TR>';
+			return $row;
+		}
+
+		//__________________________________________________________________
+		function get_subheader_row($title)// vytvori pod nadpis do tabulky
+		{
+			if ($this->cols == 0) return '';
+			if ($this->row_idx > 0)
+			{
+				$row = '<TR class="head" valign="top">';
+				$row.= '<TD colspan="'.$this->cols.'" height="2">';
+				$row.= '</TD>';
+				$row.= '</TR>';
+			}
+			else
+			{
+				$row = '';
+			}
+			
+			$row.= '<TR height="20">';
+			$row.= '<TD colspan="'.$this->cols.'" class="'.$this->class_name.'left">';
+			$row.= '<b>'.$title.'</b>';
+			$row.= '</TD>';
+			$row.= '</TR>';
+			$row.= '<TR class="head" valign="top">';
+			$row.= '<TD colspan="'.$this->cols.'" height="2">';
+			$row.= '</TD>';
+			$row.= '</TR>';
+			return $row;
+		}
+
+		//__________________________________________________________________
 		protected function _get_pre_footer() {}	// inner class function
 	}
 
