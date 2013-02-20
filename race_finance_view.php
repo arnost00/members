@@ -60,6 +60,11 @@ include ("./ctable.inc.php");
 DrawPageTitle('Finance závodu', false);
 ?>
 <CENTER>
+<script language="javascript">
+<!-- 
+	javascript:set_default_size(800,800);
+//-->
+</script>
 <?
 
 include ("./race_finance.inc.php");
