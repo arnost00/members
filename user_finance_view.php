@@ -5,7 +5,7 @@ define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
 require ("./connect.inc.php");
 require ("./sess.inc.php");
-if (!IsLoggedSmallManager() && !IsLoggedFinance())
+if (!IsLoggedSmallManager() && !IsLoggedManager() && !IsLoggedFinance())
 {
 	header("location: ".$g_baseadr."error.php?code=21");
 	exit;
