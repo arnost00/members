@@ -51,11 +51,11 @@ echo "<form method=\"post\" action=\"?payment=pay&race_id=$race_id\">";
 DrawPageSubTitle('Závodníci v závodì');
 $data_tbl = new html_table_mc();
 $col = 0;
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Èástka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Poznámka',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Kategorie',ALIGN_LEFT);
-IsLoggedFinance()?$data_tbl->set_header_col($col++,'Možnosti',ALIGN_LEFT):"";
+$data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
+IsLoggedFinance()?$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER):"";
 
 
 echo $data_tbl->get_css()."\n";
@@ -128,18 +128,18 @@ if (($i - $i0) == 0)
 echo $data_tbl->get_footer()."\n";
 
 
-echo '<br><input type="submit"/>';
+echo '<br><input type="submit" value="Zmìnit platby"/>';
 echo '</form>';
 echo "<form method=\"post\" action=\"?payment=pay&race_id=$race_id\">";
 
 DrawPageSubTitle('Ostatní závodníci');
 $data_tbl = new html_table_mc();
 $col = 0;
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Èástka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Poznámka',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Kategorie',ALIGN_LEFT);
-IsLoggedFinance()?$data_tbl->set_header_col($col++,'Možnosti',ALIGN_LEFT):"";
+$data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
+IsLoggedFinance()?$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER):"";
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
@@ -180,5 +180,5 @@ echo $data_tbl->get_footer()."\n";
 
 ?>
 <br>
-<input type="submit">
+<input type="submit" value="Vytvoøit nové platby">
 </form>

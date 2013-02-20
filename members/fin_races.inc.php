@@ -10,7 +10,7 @@ include ('./url.inc.php');
 
 $fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
 $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
-$fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 0;  // old races
+$fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 1;  // old races
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC);
 
 @$vysledek=MySQL_Query("SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, nazev,oddil,ranking,typ,vicedenni,odkaz,misto FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
@@ -19,7 +19,7 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 
 <script language="javascript">
 <!-- 
-	javascript:set_default_size(800,600);
+	javascript:set_default_size(800,800);
 //-->
 </script>
 
@@ -34,6 +34,8 @@ if ($num_rows > 0)
 	$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
+	$data_tbl->set_header_col_with_help($col++,'Poø.',ALIGN_CENTER,"Poøadatel");
+	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
 	$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 
 	echo $data_tbl->get_css()."\n";
@@ -45,8 +47,6 @@ if ($num_rows > 0)
 	$old_year = 0;
 	while ($zaznam=MySQL_Fetch_Array($vysledek))
 	{
-		$race_is_old = (GetTimeToRace($zaznam['datum']) == -1);
-
 		$prefix = ($zaznam['datum'] < GetCurrentDate()) ? '<span class="TextAlertExp">' : '';
 		$suffix = ($zaznam['datum'] < GetCurrentDate()) ? '</span>' : '';
 		$row = array();
@@ -55,18 +55,12 @@ if ($num_rows > 0)
 			$datum=Date2StringFT($zaznam['datum'],$zaznam['datum2']);
 		else
 			$datum=Date2String($zaznam['datum']);
-
-		$prihlasky_curr = raceterms::GetActiveRegDateArr($zaznam);
-		$prihlasky=Date2String($prihlasky_curr[0]);
-		if($zaznam['prihlasky'] > 1)
-			$prihlasky .= '&nbsp;/&nbsp;'.$prihlasky_curr[1];
-		$time_to_reg = GetTimeToReg($prihlasky_curr[0]);
-		$prihlasky_out = raceterms::ColorizeTermUser($time_to_reg,$prihlasky_curr,$prihlasky);
-		$prihl_finish = (($time_to_reg == -1 && $prihlasky_curr[0] != 0) || $race_is_old);
 		//----------------------------
 		$row[] = $prefix.$datum.$suffix;
 		$row[] = "<A href=\"javascript:open_race_info(".$zaznam['id'].")\" class=\"adr_name\">".$prefix.$zaznam['nazev'].$suffix."</A>";
 		$row[] = $prefix.$zaznam['misto'].$suffix;
+		$row[] = $prefix.$zaznam['oddil'].$suffix;
+		$row[] = GetRaceTypeImg($zaznam['typ']).'</A>';
 		$row[] = '<A HREF="javascript:open_win(\'./race_finance_view.php?race_id='.$zaznam['id'].'\',\'\')">Pøehled</A>';
 
 		if (!$brk_tbl && $zaznam['datum'] >= GetCurrentDate())
