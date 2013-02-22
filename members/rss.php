@@ -112,7 +112,9 @@ if(db_Connect(true))
 				$item->description .= $datum.' - <b>'.$zaznam['nadpis'].'</b><br />';
 			else
 				$item->description .= $datum.'<br />';
-			$item->description .= $zaznam['text'];
+			
+			$news_text = repair_html_text($zaznam['text']);
+			$item->description .= $news_text;
 		}
 		$item->pubDate = date('r',$NewsLastDate);
 	}
