@@ -454,4 +454,15 @@ function TXT_Header()
 
 $g_current_date = 0;
 $g_php_version = 0;
+
+function repair_html_text($html)
+{
+	$doc = new DOMDocument();
+	$html = '<div>'. $html . '</div>';
+	$doc->loadHTML(mb_convert_encoding($html,'HTML-ENTITIES','ISO-8859-2'));
+	$html = substr($doc->saveXML($doc->getElementsByTagName('div')->item(0)), 5, -6);
+	return mb_convert_encoding($html,'ISO-8859-2','UTF-8');
+
+}
+
 ?>
