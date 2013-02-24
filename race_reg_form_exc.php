@@ -34,7 +34,6 @@ else
 define('SPACE_CHAR',' ');
 
 define('KAT_LEN',10);
-define('SI_LEN',6);
 define('SI_LEN2005',10);
 define('NAME_LEN',25);
 
