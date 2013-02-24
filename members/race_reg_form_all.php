@@ -45,7 +45,7 @@ include ('centry_export.inc.php');
 $query = 'SELECT * FROM '.TBL_USER.' WHERE '.TBL_USER.'.hidden = 0 ORDER BY reg';
 @$vysledek=MySQL_Query($query);
 
-$entry = new csob_entry_export($ver,0,$g_shortcut);
+$entry = new csob_entry_export(0,$g_shortcut);
 
 while ($zaznam=MySQL_Fetch_Array($vysledek))
 {
@@ -117,9 +117,6 @@ echo $data_tbl->get_footer()."\n";
 ?>
 <BR>
 <input type="hidden" name="gen" value="1">
-Formát pøihlášky:<input type="radio" name="ver" value="0" id="radio_ver0"<? echo(($ver == 0) ? ' checked="checked"':''); ?>><label for="radio_ver0">do r.2004</label>&nbsp;&nbsp;
-<input type="radio" name="ver" value="1" id="radio_ver1"<? echo(($ver == 1) ? ' checked="checked"':''); ?>><label for="radio_ver1">od r.2005</label>
-<br>
 Typ závodu:<input type="radio" name="rt" value="0" id="radio_rt0"<? echo(($rt == 0) ? ' checked="checked"':''); ?>><label for="radio_rt0">OB</label>&nbsp;&nbsp;
 <input type="radio" name="rt" value="1" id="radio_rt1"<? echo(($rt == 1) ? ' checked="checked"':''); ?>><label for="radio_rt1">LOB</label>&nbsp;&nbsp;
 <input type="radio" name="rt" value="2" id="radio_rt2"<? echo(($rt == 2) ? ' checked="checked"':''); ?>><label for="radio_rt2">MTBO</label><i> ... pro správné licence</i>

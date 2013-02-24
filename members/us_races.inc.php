@@ -145,7 +145,7 @@ if ($num_rows > 0)
 	}
 	echo $data_tbl->get_footer()."\n";
 }
-echo('<a href="race_reg_form_all.php" target="_blank">Zjednodušené vytvoøení a export pøihlášky</a><br>');
+echo('<a href="race_reg_form_all.php" target="_blank">Vytvoøení a export pøihlášky pro prázdný závod</a><br>');
 ?>
 <br>
 Informace o závodu lze zobrazit kliknutím na název daného závodu.<br>
