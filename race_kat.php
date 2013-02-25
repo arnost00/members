@@ -30,7 +30,7 @@ $kat_nf ='';
 
 DrawPageSubTitle('Vybraný závod');
 
-RaceInfoTable($zaznam);
+RaceInfoTable($zaznam,'',false,false,true);
 ?>
 
 <SCRIPT LANGUAGE="JavaScript">

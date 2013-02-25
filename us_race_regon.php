@@ -80,10 +80,10 @@ if (!$new)
 {
 	$add_r[0] ='Kategorie';
 	$add_r[1] ='<B>'.$zaznam_rg['kat'].'</B>';
-	RaceInfoTable($zaznam_z,$add_r,true);
+	RaceInfoTable($zaznam_z,$add_r,true,false,true);
 }
 else
-	RaceInfoTable($zaznam_z,'',true);
+	RaceInfoTable($zaznam_z,'',true,false,true);
 ?>
 <BR>
 <BUTTON onclick="javascript:close_popup();">Zpìt</BUTTON>

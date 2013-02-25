@@ -193,11 +193,47 @@ $g_kategorie ['MTBO'] = 'H21E;D21E;H21A;H21B;H21C;D21;H14;H17;H20;D14;D17;D20;H4
 
 require('./common_race2.inc.php');
 
-function RaceInfoTable(&$zaznam,$add_row = '',$show_curr_term = false,$full_width=false)
+function RaceInfoTable(&$zaznam,$add_row = '',$show_curr_term = false, $full_width=false, $expandable=false)
 //	$show_curr_term = 0 - nic, 1 - us,mng,smn, 2 - rg,ad
 {
 	global $g_enable_race_boss;
 
+	if ($expandable)
+	{
+?>
+<script language="JavaScript">
+function RIT_SH(divId1, divId2)
+{
+	if(document.getElementById(divId1).style.display == 'none')
+		document.getElementById(divId1).style.display='block';
+	else
+		document.getElementById(divId1).style.display = 'none';
+
+	if(document.getElementById(divId2).style.display == 'none')
+		document.getElementById(divId2).style.display='block';
+	else
+		document.getElementById(divId2).style.display = 'none';
+}
+</script>
+<div id="RIT_min" style="display: block" >
+<?
+		$data_tbl = new html_table_nfo;
+		if($full_width)
+			$data_tbl->table_width = 100;
+		echo $data_tbl->get_css()."\n";
+		echo $data_tbl->get_header()."\n";
+		$odkaz = '<a onclick ="javascript:RIT_SH(\'RIT_min\',\'RIT_normal\')" href="javascript:;" >Zobrazit více</a>';
+		if($zaznam['vicedenni'])
+			echo $data_tbl->get_new_row('Datum',Date2StringFT($zaznam['datum'],$zaznam['datum2']));
+		else
+			echo $data_tbl->get_new_row('Datum',Date2String($zaznam['datum']));
+		echo $data_tbl->get_new_row_extend('Jméno',$zaznam['nazev'],$odkaz);
+		echo $data_tbl->get_footer()."\n";
+		echo ('</div><div id="RIT_normal" style="display: none">');
+		$odkaz2 = '<a onclick ="javascript:RIT_SH(\'RIT_normal\',\'RIT_min\')" href="javascript:;" >Skrýt podrobnosti</a>';
+	}
+	else
+		$odkaz2 = '';
 	$data_tbl = new html_table_nfo;
 	if($full_width)
 		$data_tbl->table_width = 100;
@@ -216,13 +252,13 @@ function RaceInfoTable(&$zaznam,$add_row = '',$show_curr_term = false,$full_widt
 	}
 
 	if($zaznam['vicedenni'])
-	{
-		echo $data_tbl->get_new_row('Datum od',Date2String($zaznam['datum']));
-		echo $data_tbl->get_new_row('Datum do',Date2String($zaznam['datum2']));
-	}
+		echo $data_tbl->get_new_row('Datum',Date2StringFT($zaznam['datum'],$zaznam['datum2']));
 	else
 		echo $data_tbl->get_new_row('Datum',Date2String($zaznam['datum']));
-	echo $data_tbl->get_new_row('Jméno',$zaznam['nazev']);
+	if ($odkaz2)
+		echo $data_tbl->get_new_row_extend('Jméno',$zaznam['nazev'],$odkaz2);
+	else
+		echo $data_tbl->get_new_row('Jméno',$zaznam['nazev']);
 	echo $data_tbl->get_new_row('Místo',$zaznam['misto']);
 	echo $data_tbl->get_new_row('Poøádající oddíl',$zaznam['oddil']);
 	echo $data_tbl->get_new_row('Typ',GetRaceTypeName($zaznam['typ']));
@@ -265,6 +301,10 @@ function RaceInfoTable(&$zaznam,$add_row = '',$show_curr_term = false,$full_widt
 	if(is_array($add_row))
 		echo $data_tbl->get_new_row($add_row[0],$add_row[1]);
 	echo $data_tbl->get_footer()."\n";
+	if ($expandable)
+	{
+		echo ('</div>');
+	}
 }
 
 function form_filter_racelist($page,&$filterA,&$filterB,&$filterC)
