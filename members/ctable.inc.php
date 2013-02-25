@@ -379,11 +379,25 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 		function get_new_row ($title,$value)
 		{
 			$rc =($this->highlighted_next_row) ? 'highlight' : 'r1';
-			$row = '<TR class="r2" height="3"><TD colspan="3"></TD></TR>'.
+			$row = '<TR class="r2" height="3"><TD colspan="4"></TD></TR>'.
+			'<TR class="'.$rc.'" valign="top">'.
+			'<TD class="'.$this->class_name.ALIGN_RIGHT.'" width="'.$this->c1_width.'"><B>'.$title.'</B></TD>'.
+			'<TD width="'.$this->c2_width.'"></TD>'.
+			'<TD class="'.$this->class_name.ALIGN_LEFT.'" colspan="2">'.$value.'</TD>'.
+			'</TR>';
+			$this->highlighted_next_row = false;
+			return $row;
+		}
+
+		function get_new_row_extend ($title,$value,$value2)
+		{
+			$rc =($this->highlighted_next_row) ? 'highlight' : 'r1';
+			$row = '<TR class="r2" height="3"><TD colspan="4"></TD></TR>'.
 			'<TR class="'.$rc.'" valign="top">'.
 			'<TD class="'.$this->class_name.ALIGN_RIGHT.'" width="'.$this->c1_width.'"><B>'.$title.'</B></TD>'.
 			'<TD width="'.$this->c2_width.'"></TD>'.
 			'<TD class="'.$this->class_name.ALIGN_LEFT.'">'.$value.'</TD>'.
+			'<TD class="'.$this->class_name.ALIGN_RIGHT.'">'.$value2.'</TD>'.
 			'</TR>';
 			$this->highlighted_next_row = false;
 			return $row;
@@ -392,7 +406,7 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 		//__________________________________________________________________
 		protected function _get_pre_footer()
 		{	// inner class function
-			$row = '<TR class="r2" height="3"><TD colspan="3"></TD></TR>';
+			$row = '<TR class="r2" height="3"><TD colspan="4"></TD></TR>';
 			return $row;
 		}
 	}

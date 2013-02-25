@@ -27,7 +27,7 @@ db_Connect();
 @$vysledek_z=MySQL_Query("SELECT * FROM ".TBL_RACE." WHERE id=$id_zav LIMIT 1");
 $zaznam_z = MySQL_Fetch_Array($vysledek_z);
 
-RaceInfoTable($zaznam_z,'',false,true);
+RaceInfoTable($zaznam_z,'',false,true,false);
 ?>
 <BR>
 <BUTTON onclick="javascript:close_popup();">Zpìt</BUTTON>

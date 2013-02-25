@@ -34,7 +34,7 @@ $zaznam_z = MySQL_Fetch_Array($vysledek_z);
 
 DrawPageSubTitle('Vybraný závod');
 
-RaceInfoTable($zaznam_z);
+RaceInfoTable($zaznam_z,'',false,false,true);
 ?>
 
 <BR><BR><hr><BR>

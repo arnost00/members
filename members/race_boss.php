@@ -32,7 +32,7 @@ $zaznam=MySQL_Fetch_Array($vysledek);
 
 DrawPageSubTitle('Vybraný závod');
 
-RaceInfoTable($zaznam);
+RaceInfoTable($zaznam,'',false,false,true);
 
 DrawPageSubTitle('Úprava');
 ?>

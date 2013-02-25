@@ -88,7 +88,7 @@ function submit_form_reg()
 <?
 DrawPageSubTitle('Vybraný závod');
 
-RaceInfoTable($zaznam_z);
+RaceInfoTable($zaznam_z,'',false,false,true);
 ?>
 
 <BR>

@@ -32,7 +32,7 @@ $zaznam_z = MySQL_Fetch_Array($vysledek_z);
 
 DrawPageSubTitle('Vybraný závod');
 
-RaceInfoTable($zaznam_z,'',$gr_id != _REGISTRATOR_GROUP_ID_);
+RaceInfoTable($zaznam_z,'',$gr_id != _REGISTRATOR_GROUP_ID_,false,true);
 ?>
 <TABLE class= "Zav" cellpadding="0" cellspacing="2" border="0">
 <BR>
