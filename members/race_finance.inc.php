@@ -74,11 +74,11 @@ while ($zaznam=mysql_fetch_assoc($vysledek_prihlaseni))
 	$row[] = $zaznam['sort_name'];
 	
 	$amount = $zaznam['amount'];
-	$input_amount = '<input type="number" id="am'.$i.'" name="am'.$i.'" value="'.$amount.'" />';
+	$input_amount = '<input type="number" id="am'.$i.'" name="am'.$i.'" value="'.$amount.'" size="5" maxlength="10" />';
 	$row[] = $input_amount;
 	
 	$note = $zaznam['note'];
-	$input_note = '<input type="text" id="nt'.$i.'" name="nt'.$i.'" value="'.$note.'" />';
+	$input_note = '<input type="text" id="nt'.$i.'" name="nt'.$i.'" value="'.$note.'" size="40" maxlength="200" />';
 	$row[] = $input_note;
 	
 	$row[] = $zaznam['kat'];
@@ -104,11 +104,11 @@ while ($zaznam=mysql_fetch_assoc($vysledek_platici))
 	$row[] = $zaznam['sort_name'];
 
 	$amount = $zaznam['amount'];
-	$input_amount = '<input type="number" id="am'.$i.'" name="am'.$i.'" value="'.$amount.'" />';
+	$input_amount = '<input type="number" id="am'.$i.'" name="am'.$i.'" value="'.$amount.'" size="5" maxlength="10" />';
 	$row[] = $input_amount;
 	
 	$note = $zaznam['note'];
-	$input_note = '<input type="text" id="nt'.$i.'" name="nt'.$i.'" value="'.$note.'" />';
+	$input_note = '<input type="text" id="nt'.$i.'" name="nt'.$i.'" value="'.$note.'" size="40" maxlength="200" />';
 	$row[] = $input_note;
 
 	$row[] = $zaznam['kat'];
@@ -155,11 +155,11 @@ while ($zaznam=mysql_fetch_assoc($vysledek_neprihlaseni))
 	$row[] = $zaznam['sort_name'];
 	
 	$amount = $zaznam['amount'];
-	$input_amount = '<input type="number" id="am'.$i.'" name="am'.$i.'" value="'.$amount.'" />';
+	$input_amount = '<input type="number" id="am'.$i.'" name="am'.$i.'" value="'.$amount.'" size="5" maxlength="10" />';
 	$row[] = $input_amount;
 	
 	$note = $zaznam['note'];
-	$input_note = '<input type="text" id="nt'.$i.'" name="nt'.$i.'" value="'.$note.'" />';
+	$input_note = '<input type="text" id="nt'.$i.'" name="nt'.$i.'" value="'.$note.'" size="40" maxlength="200" />';
 	$row[] = $input_note;
 	
 	$row[] = $zaznam['kat'];

@@ -17,13 +17,13 @@ db_Connect();
 
 include_once './payment.inc.php'; // pomocne funkce a javascript pro finance
 
-if (IsSet($payment))	
+if (IsSet($payment))
 {
 
 	$editor_id = $usr->user_id;
 	$id_zavod = $race_id;
 	$datum = null;
-	if ($payment == "pay")	
+	if ($payment == "pay")
 	{
 		$i = 1;
 		$var = "userid".$i;
@@ -36,7 +36,7 @@ if (IsSet($payment))
 			$amount = $$var;
 			$var = "nt".$i;
 			$note = $$var;
-				
+
 			if ($amount != "")
 			{
 				if ($payment_id)
@@ -48,7 +48,7 @@ if (IsSet($payment))
 			}
 			$i++;
 			$var = "userid".$i;
-		}				
+		}
 	}
 }
 
@@ -61,7 +61,7 @@ DrawPageTitle('Finance závodu', false);
 ?>
 <CENTER>
 <script language="javascript">
-<!-- 
+<!--
 	javascript:set_default_size(800,800);
 //-->
 </script>

@@ -11,7 +11,7 @@
 @$vysledek_user_name=MySQL_Query("select us.sort_name name from ".TBL_USER." us where us.id = ".$user_id);
 $zaznam_user_name=MySQL_Fetch_Array($vysledek_user_name);
 
-DrawPageSubTitle('Historie úètu pro '.$zaznam_user_name['name']);
+DrawPageSubTitle('Historie úètu pro èlena: '.$zaznam_user_name['name']);
 
 include_once ("./common_race.inc.php");
 include_once ('./url.inc.php');

@@ -11,7 +11,7 @@ if (!IsLoggedSmallManager() && !IsLoggedManager() && !IsLoggedFinance())
 	exit;
 }
 
-$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+//$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
 db_Connect();
 
@@ -27,6 +27,7 @@ if (IsSet($payment) && IsLoggedFinance())
 	if ($payment == "out" or $payment == "in")
 	{
 		$payment == "out"?$amount = -$amount:$amount;
+		$user_id = (IsSet($user_id) && is_numeric($user_id)) ? (int)$user_id : 0;
 		createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod);
 	}
 	if ($payment == "storno")
@@ -59,12 +60,16 @@ function refreshParent() {
 
 if (IsSet($change) && $change == "change" && IsLoggedFinance())
 {
+	$set_back_button = true;
 	include ("./user_finance_update.inc.php");
 } else if (IsSet($storno) && $storno == "storno" && IsLoggedFinance())
 {
+	$set_back_button = true;
 	include ("./user_finance_storno.inc.php");
 } else
 {
+	$set_back_button = false;
+	$user_id = (IsSet($user_id) && is_numeric($user_id)) ? (int)$user_id : 0;
 	include ("./user_finance.inc.php");
 	
 	if (IsLoggedFinance())
@@ -82,6 +87,12 @@ if (IsSet($change) && $change == "change" && IsLoggedFinance())
 ?>
 <hr>
 <br>
+<?
+if (!$set_back_button && $user_id != 0)
+	echo('<BUTTON onclick="location.href=\'user_finance_view.php?user_id='.$user_id.'\'; self.focus();">Obnov stránku</BUTTON>&nbsp;');
+if ($set_back_button && $user_id != 0)
+	echo('<BUTTON onclick="location.href=\'user_finance_view.php?user_id='.$user_id.'\'; self.focus();">Zpìt</BUTTON>&nbsp;');
+?>
 <BUTTON onclick="javascript:close_popup();">Zavøi okno</BUTTON><BR>
 </CENTER>
 </BODY>
