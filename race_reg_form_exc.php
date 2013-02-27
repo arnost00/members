@@ -17,7 +17,7 @@ if (!IsLoggedRegistrator())
 $id_zav = (IsSet($id_zav)&& is_numeric($id_zav)) ? (int)$id_zav : 0;
 $termin = (IsSet($termin)&& is_numeric($termin)) ? (($termin >= 0 && $termin <= 5) ? (int)$termin : 0) : 0;
 $ff = (IsSet($ff)&& is_numeric($ff)) ? (($ff >= 0 && $ff <= 1) ? (int)$ff : 0) : 0;	// output format
-$creg = (IsSet($creg)&& is_numeric($creg)) ? (($creg >= 2) ? 2 : 0) : 0;	// output for central registration
+$creg = (IsSet($creg)&& is_numeric($creg)) ? (($creg >= 2) ? 2 : (int)$creg) : 0;	// output for central registration
 
 if($ff == 1)
 {
