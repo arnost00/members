@@ -17,7 +17,7 @@ if (!IsLoggedRegistrator())
 $id_zav = (IsSet($id_zav)&& is_numeric($id_zav)) ? (int)$id_zav : 0;
 $termin = (IsSet($termin)&& is_numeric($termin)) ? (($termin >= 0 && $termin <= 5) ? (int)$termin : 0) : 0;
 $ff = (IsSet($ff)&& is_numeric($ff)) ? (($ff >= 0 && $ff <= 1) ? (int)$ff : 0) : 0;	// output format
-$creg = (IsSet($creg)&& is_numeric($creg)) ? (($creg >= 1) ? 1 : 0) : 0;	// output for central registration
+$creg = (IsSet($creg)&& is_numeric($creg)) ? (($creg >= 2) ? 2 : 0) : 0;	// output for central registration
 
 if($ff == 1)
 {
@@ -32,6 +32,7 @@ else
 }
 
 define('SPACE_CHAR',' ');
+define('SEMICOLON_CHAR',';');
 
 define('KAT_LEN',10);
 define('SI_LEN2005',10);
@@ -67,28 +68,38 @@ else
 {
 	while ($zaznam=MySQL_Fetch_Array($vysledek))
 	{
-		$lic = GetLicence($zaznam['lic'],$zaznam['lic_mtbo'],$zaznam['lic_lob'],$race_type);
-		$str = RegNumToStr($zaznam['reg']).SPACE_CHAR;
-		$str .= str_pad(($id_zav > 0) ? $zaznam['kat'] : '',KAT_LEN,SPACE_CHAR).SPACE_CHAR;
-		$si_chip = (int)$zaznam['si_chip'];
-		if($id_zav > 0)
+		if ($creg == 2)
+		{	// ORIS
+			$str = RegNumToStr($zaznam['reg']).SEMICOLON_CHAR;
+			$str.= $zaznam['jmeno'].SEMICOLON_CHAR;
+			$str.= $zaznam['prijmeni'];
+			echo $g_shortcut.$str."\n";//<BR>";
+		}
+		else
 		{
-			if ($si_chip == 0 || $zaznam['t_si_chip'] != 0)
-				$si_chip = $zaznam['t_si_chip'];
-		}
-		$str .= str_pad($si_chip,SI_LEN2005,'0',STR_PAD_LEFT).SPACE_CHAR;
+			$lic = GetLicence($zaznam['lic'],$zaznam['lic_mtbo'],$zaznam['lic_lob'],$race_type);
+			$str = RegNumToStr($zaznam['reg']).SPACE_CHAR;
+			$str .= str_pad(($id_zav > 0) ? $zaznam['kat'] : '',KAT_LEN,SPACE_CHAR).SPACE_CHAR;
+			$si_chip = (int)$zaznam['si_chip'];
+			if($id_zav > 0)
+			{
+				if ($si_chip == 0 || $zaznam['t_si_chip'] != 0)
+					$si_chip = $zaznam['t_si_chip'];
+			}
+			$str .= str_pad($si_chip,SI_LEN2005,'0',STR_PAD_LEFT).SPACE_CHAR;
 
-		$str .= str_pad($zaznam['prijmeni'].' '.$zaznam['jmeno'],NAME_LEN,SPACE_CHAR).SPACE_CHAR;
-		$str .= $lic;
-		if($creg == 1)
-		{	// datum narození (59-64) ve tvaru rrmmdd
-			
-			$str .= SPACE_CHAR.SQLDate2StringReg($zaznam['datum']);
+			$str .= str_pad($zaznam['prijmeni'].' '.$zaznam['jmeno'],NAME_LEN,SPACE_CHAR).SPACE_CHAR;
+			$str .= $lic;
+			if($creg == 1)
+			{	// datum narození (59-64) ve tvaru rrmmdd
+				
+				$str .= SPACE_CHAR.SQLDate2StringReg($zaznam['datum']);
+			}
+			$str .= SPACE_CHAR;
+			if($id_zav > 0)
+				$str .= $zaznam['pozn'];
+			echo $g_shortcut.$str."\n";//<BR>";
 		}
-		$str .= SPACE_CHAR;
-		if($id_zav > 0)
-			$str .= $zaznam['pozn'];
-		echo $g_shortcut.$str."\n";//<BR>";
 	}
 }
 

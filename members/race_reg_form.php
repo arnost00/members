@@ -75,10 +75,10 @@ function submit_form(termin)
 	return true;
 }
 
-function submit_form_reg()
+function submit_form_reg(reg_type)
 {
 	document.form_exp_reg.termin.value=0;
-	document.form_exp_reg.creg.value=1;
+	document.form_exp_reg.creg.value=reg_type;
 	document.form_exp_reg.submit();
 	return true;
 }
@@ -113,7 +113,8 @@ Zpùsob výpisu:<input type="radio" name="ff" value="0" id="radio_ff0" checked="ch
 <? } else { ?>
 <BUTTON onclick="submit_form(0); return false;">Proveï akci</BUTTON>
 <? } ?>
-<BUTTON onclick="submit_form_reg(); return false;">Výpis pro centrální registraci</BUTTON>
+<BUTTON onclick="submit_form_reg(1); return false;">Výpis pro centrální registraci (ObHana)</BUTTON>
+<BUTTON onclick="submit_form_reg(2); return false;">Výpis pro centrální registraci (ORIS)</BUTTON>
 </FORM>
 <BUTTON onclick="javascript:close_popup();">Zavøi</BUTTON>
 <?//------------------------------?>
