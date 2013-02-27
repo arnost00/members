@@ -53,7 +53,6 @@ if ($oris == 1)
 	}
 	else
 		return '000000';
-
 	}
 	
 	$delim = ';';
@@ -68,9 +67,12 @@ if ($oris == 1)
 		echo $delim;
 		echo $zaznam["datum"];
 		echo $delim;
-		echo SQLDatumToRc($zaznam["datum"],$zaznam["poh"] == 'D').'/0000'; //$zaznam["rc"];
+		if ($zaznam["rc"] == '')
+			echo SQLDatumToRc($zaznam["datum"],$zaznam["poh"] == 'D').'/0000';
+		else
+			echo substr($zaznam["rc"],0,6).'/'.substr($zaznam["rc"],6);
 		echo $delim;
-		echo 'CZ'; // neni sloupec v nasi DB :(
+		echo $zaznam['narodnost'];
 		echo $delim;
 		echo ($zaznam["poh"] == 'D') ? 'F' : 'M';
 		echo $delim;
@@ -82,7 +84,7 @@ if ($oris == 1)
 }
 else
 {
-	echo('pøíjmeni;jméno;datum narození;reg;email;adresa;mesto;psc;tel.domù;tel.práce; tel.mobilní;si.èip;licence OB;licence MTBO;licence LOB;');
+	echo('pøíjmeni;jméno;datum narození;reg;email;adresa;mesto;psc;tel.domù;tel.práce; tel.mobilní;si.èip;licence OB;licence MTBO;licence LOB;národnost;');
 	echo("\n");
 
 	function echo_col($text)
@@ -135,6 +137,8 @@ else
 		echo_col($zaznam['lic_mtbo']);
 		echo_delim();
 		echo_col($zaznam['lic_lob']);
+		echo_delim();
+		echo_col($zaznam['narodnost']);
 		echo_delim();
 		echo("\n");
 	}

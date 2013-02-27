@@ -27,6 +27,7 @@ if (IsLogged())
 		$zaznam['hidden'] = 0;
 		$zaznam['fin'] = '';
 		$zaznam['rc'] = '';
+		$zaznam['narodnost'] = 'CZ';
 	}
 ?>
 <FORM METHOD=POST ACTION="./user_new_exc.php<?if (IsSet($update)) echo "?update=".$update?>">
@@ -49,12 +50,20 @@ $data_tbl = new html_table_form();
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 
+include ('country_list_array.inc.php');
+
+$country_sel = '<SELECT NAME="narodnost">';
+$country_sel .= generate_combobox_data($zaznam['narodnost']);
+$country_sel .= '</SELECT>';
+
+
 echo $data_tbl->get_new_row('Pøíjmení', '<INPUT TYPE="text" NAME="prijmeni" SIZE=30 MAXLENGTH=30 VALUE="'.$zaznam["prijmeni"].'">');
 echo $data_tbl->get_new_row('Jméno', '<INPUT TYPE="text" NAME="jmeno" SIZE=30 MAXLENGTH=20 VALUE="'.$zaznam["jmeno"].'">');
 $find_reg_text = (!IsSet($update)) ? ' <a href="javascript:open_win_ex(\'./find_reg.php\',\'\',600,400)">Hledání volných reg.è.</a>': '';
 echo $data_tbl->get_new_row('Registraèní èíslo', $g_shortcut.'&nbsp;&nbsp;<INPUT TYPE="text" NAME="reg" SIZE=4 MAXLENGTH=4 VALUE="'.RegNumToStr($zaznam['reg']).'">'.$find_reg_text);
 echo $data_tbl->get_new_row('Èíslo SI èipu', '<INPUT TYPE="text" NAME="si" SIZE=10 MAXLENGTH=9 VALUE="'.$zaznam["si_chip"].'">');
 echo $data_tbl->get_new_row('Datum narození', '<INPUT TYPE="text" NAME="datum" SIZE=10 VALUE="'.SQLDate2String($zaznam["datum"]).'">&nbsp;&nbsp;(DD.MM.RRRR)');
+echo $data_tbl->get_new_row('Národnost', $country_sel);
 echo $data_tbl->get_new_row('Adresa', '<INPUT TYPE="text" NAME="adresa" SIZE=60 MAXLENGTH=50 VALUE="'.$zaznam["adresa"].'">');
 echo $data_tbl->get_new_row('Mìsto', '<INPUT TYPE="text" NAME="mesto" SIZE=30 MAXLENGTH=25 VALUE="'.$zaznam["mesto"].'">');
 echo $data_tbl->get_new_row('PSÈ', '<INPUT TYPE="text" NAME="psc" SIZE=10 MAXLENGTH=6 VALUE="'.$zaznam["psc"].'">');
