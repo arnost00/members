@@ -48,6 +48,7 @@ $lic_mtbo=correct_sql_string($lic_mtbo);
 $lic_lob=correct_sql_string($lic_lob);
 $fin=correct_sql_string($fin);
 $rc=correct_sql_string($rc);
+$narodnost=correct_sql_string($narodnost);
 
 if (IsLoggedAdmin())
 {
@@ -55,7 +56,7 @@ if (IsLoggedAdmin())
 	{
 		$update = (isset($update) && is_numeric($update)) ? (int)$update : 0;
 
-		$result=MySQL_Query("UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic='$lic', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin', rc='$rc' WHERE id='$update'")
+		$result=MySQL_Query("UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic='$lic', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin', rc='$rc', narodnost='$narodnost' WHERE id='$update'")
 			or die("Chyba pøi provádìní dotazu do databáze.");
 		if ($result == FALSE)
 			die ("Nepodaøilo se zmìnit údaje èlena.");
@@ -63,7 +64,7 @@ if (IsLoggedAdmin())
 	}
 	else
 	{
-		$result=MySQL_Query("INSERT INTO ".TBL_USER." (prijmeni,jmeno,datum,adresa,mesto,psc,tel_domu,tel_zam,tel_mobil,email,reg,si_chip,hidden,sort_name,poh,lic,lic_mtbo,lic_lob,fin,rc) VALUES ('$prijmeni','$jmeno','$datum','$adresa','$mesto','$psc','$domu','$zam','$mobil','$email','$reg','$si','$hidden','$name2','$poh','$lic','$lic_mtbo','$lic_lob','$fin','$rc')")
+		$result=MySQL_Query("INSERT INTO ".TBL_USER." (prijmeni,jmeno,datum,adresa,mesto,psc,tel_domu,tel_zam,tel_mobil,email,reg,si_chip,hidden,sort_name,poh,lic,lic_mtbo,lic_lob,fin,rc,narodnost) VALUES ('$prijmeni','$jmeno','$datum','$adresa','$mesto','$psc','$domu','$zam','$mobil','$email','$reg','$si','$hidden','$name2','$poh','$lic','$lic_mtbo','$lic_lob','$fin','$rc','$narodnost')")
 			or die("Chyba pøi provádìní dotazu do databáze.");
 		if ($result == FALSE)
 			die ("Nepodaøilo se vložit èlena.");
@@ -79,7 +80,7 @@ else if (IsLoggedManager() || IsLoggedSmallManager())
 	{
 		$update = (isset($update) && is_numeric($update)) ? (int)$update : 0;
 		
-		$result=MySQL_Query("UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic='$lic', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin' WHERE id='$update'")
+		$result=MySQL_Query("UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic='$lic', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin' , narodnost='$narodnost' WHERE id='$update'")
 			or die("Chyba pøi provádìní dotazu do databáze.");
 		if ($result == FALSE)
 			die ("Nepodaøilo se zmìnit údaje èlena.");
@@ -87,7 +88,7 @@ else if (IsLoggedManager() || IsLoggedSmallManager())
 	}
 	else
 	{
-		$result=MySQL_Query("INSERT INTO ".TBL_USER." (prijmeni,jmeno,datum,adresa,mesto,psc,tel_domu,tel_zam,tel_mobil,email,reg,si_chip,hidden,sort_name,poh,lic,lic_mtbo,lic_lob,fin) VALUES ('$prijmeni','$jmeno','$datum','$adresa','$mesto','$psc','$domu','$zam','$mobil','$email','$reg','$si','$hidden','$name2','$poh','$lic','$lic_mtbo','$lic_lob','$fin')")
+		$result=MySQL_Query("INSERT INTO ".TBL_USER." (prijmeni,jmeno,datum,adresa,mesto,psc,tel_domu,tel_zam,tel_mobil,email,reg,si_chip,hidden,sort_name,poh,lic,lic_mtbo,lic_lob,fin,narodnost) VALUES ('$prijmeni','$jmeno','$datum','$adresa','$mesto','$psc','$domu','$zam','$mobil','$email','$reg','$si','$hidden','$name2','$poh','$lic','$lic_mtbo','$lic_lob','$fin','$narodnost')")
 			or die("Chyba pøi provádìní dotazu do databáze.");
 		if ($result == FALSE)
 			die ("Nepodaøilo se vložit èlena.");
@@ -108,7 +109,7 @@ else if (IsLoggedUser())
 
 		$hidden = 0;	// unhidden users only
 
-		$result=MySQL_Query("UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin' WHERE id='$update'")
+		$result=MySQL_Query("UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin', narodnost='$narodnost' WHERE id='$update'")
 			or die("Chyba pøi provádìní dotazu do databáze.");
 		if ($result == FALSE)
 			die ("Nepodaøilo se zmìnit údaje èlena.");
