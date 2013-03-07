@@ -24,7 +24,6 @@ DrawPageTitle('Vytvoøení a export pøihlášky', false);
 
 db_Connect();
 
-$ver = (IsSet($ver)&& is_numeric($ver)) ? (($ver >= 0 && $ver <= 1) ? (int)$ver : 1) : 1;	// CSOB format ( 0=2004, 1=2005 )
 $gen = (IsSet($gen)&& is_numeric($gen)) ? (($gen >= 0 && $gen <= 1) ? (int)$gen : 0) : 0;
 $rt = (IsSet($rt)&& is_numeric($rt)) ? (($rt >= 0 && $rt <= 2) ? (int)$rt : 0) : 0;
 
@@ -32,7 +31,9 @@ if (!isset($kateg) || !is_array($kateg))
 	$kateg = array();
 if (!isset($pozn) || !is_array($pozn))
 	$pozn = array();
-
+if (!isset($chip) || !is_array($chip))
+	$chip = array();
+	
 if ($gen == 1)
 {
 DrawPageSubTitle('Vygenerovaná pøihláška');
@@ -40,12 +41,12 @@ DrawPageSubTitle('Vygenerovaná pøihláška');
 $rows = 0;
 $entry = '';
 
-include ('centry_export.inc.php');
+include ('exports.inc.php');
 
 $query = 'SELECT * FROM '.TBL_USER.' WHERE '.TBL_USER.'.hidden = 0 ORDER BY reg';
 @$vysledek=MySQL_Query($query);
 
-$entry = new csob_entry_export(0,$g_shortcut);
+$entry = new CSOB_Export_Entry($g_shortcut);
 
 while ($zaznam=MySQL_Fetch_Array($vysledek))
 {
@@ -55,7 +56,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 	{
 		$rows++;
 		$licence = GetLicence($zaznam['lic'],$zaznam['lic_mtbo'],$zaznam['lic_lob'],$rt);
-		$entry->add_line($zaznam['prijmeni'], $zaznam['jmeno'], $zaznam['reg'],$licence,$kateg[$u],$zaznam['si_chip'],$pozn[$u]);
+		$entry->add_line($zaznam['prijmeni'], $zaznam['jmeno'], $zaznam['reg'],$licence,$kateg[$u],$chip[$u],$pozn[$u]);
 	}
 	
 }
@@ -82,6 +83,7 @@ $data_tbl->set_header_col($col++,'Reg.è.',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Vìk',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'SI èip',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Poznámka',ALIGN_CENTER);
 
@@ -106,6 +108,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 		$kateg[$u] = '';
 	if (!isset($pozn[$u]))
 		$pozn[$u] = '';
+	$row[] = '<input type="text" name="chip['.$u.']" SIZE=9 MAXLENGTH=9 value="'.$zaznam['si_chip'].'" onfocus="javascript:select_row('.$u.');">';
 	$row[] = '<INPUT TYPE="text" NAME="kateg['.$u.']" SIZE=5 value="'.$kateg[$u].'" onfocus="javascript:select_row('.$u.');">';
 	$row[] = '<INPUT TYPE="text" NAME="pozn['.$u.']" size="25" maxlength="250" value="'.$pozn[$u].'" onfocus="javascript:select_row('.$u.');">';
 	

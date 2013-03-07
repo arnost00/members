@@ -34,114 +34,33 @@ db_Connect();
 @$vysledek=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE hidden = 0 ORDER BY sort_name ASC")
 	or die("Chyba pøi provádìní dotazu do databáze.");
 
-if ($oris == 1)
-{
-	function SQLDatumToRc($date,$female)
-	{
-	$dat=explode('-',$date);
-	if (sizeof($dat) == 3) // YYYY-MM-DD
-	{
-		$day = (int) $dat[2];
-		$month = (int) $dat[1];
-		if ($female)
-			$month += 50;
-		$year = (int) $dat[0];
-		$result = str_pad($year % 100,2,'0',STR_PAD_LEFT);
-		$result .= str_pad($month,2,'0',STR_PAD_LEFT);
-		$result .= str_pad($day,2,'0',STR_PAD_LEFT);
-		return $result;
-	}
-	else
-		return '000000';
-	}
-	
-	$delim = ';';
+include ('exports.inc.php');
 
+if ($oris == 2)
+{
+	$users = new ORIS_Export($g_shortcut);
 	while ($zaznam=MySQL_Fetch_Array($vysledek))
 	{
-		echo $g_shortcut.RegNumToStr($zaznam['reg']);
-		echo $delim;
-		echo $zaznam['jmeno'];
-		echo $delim;
-		echo $zaznam['prijmeni'];
-		echo $delim;
-		echo $zaznam["datum"];
-		echo $delim;
-		if ($zaznam["rc"] == '')
-			echo SQLDatumToRc($zaznam["datum"],$zaznam["poh"] == 'D').'/0000';
-		else
-			echo substr($zaznam["rc"],0,6).'/'.substr($zaznam["rc"],6);
-		echo $delim;
-		echo $zaznam['narodnost'];
-		echo $delim;
-		echo ($zaznam["poh"] == 'D') ? 'F' : 'M';
-		echo $delim;
-		echo $zaznam["si_chip"];
-//		echo_col(SQLDate2String());
-		echo("\n");
+		$users->add_line_contact($zaznam['reg'],$zaznam['email'], $zaznam['tel_mobil']);
 	}
-	echo("\n");
+	echo($users->generate_contacts());
+}
+else if ($oris == 1)
+{
+	$users = new ORIS_Export($g_shortcut);
+	while ($zaznam=MySQL_Fetch_Array($vysledek))
+	{
+		$users->add_line_user($zaznam['prijmeni'], $zaznam['jmeno'], $zaznam['reg'], $zaznam['si_chip'], $zaznam['poh'], $zaznam['narodnost'], $zaznam['datum'], $zaznam['rc']);
+	}
+	echo($users->generate_users());
 }
 else
 {
-	echo('pøíjmeni;jméno;datum narození;reg;email;adresa;mesto;psc;tel.domù;tel.práce; tel.mobilní;si.èip;licence OB;licence MTBO;licence LOB;národnost;');
-	echo("\n");
-
-	function echo_col($text)
-	{
-		global $par2;
-		global $par3;
-		if($par2 == 1)
-			echo('"');
-		if($par3 == 1 && is_numeric($text))
-			echo('\'');
-		echo($text);
-		if($par2 == 1)
-			echo('"');
-	}
-
-	function echo_delim()
-	{
-		global $delim;
-		echo($delim);
-	}
-
+	$users = new CSV_Export($g_shortcut,$delim,$par2,$par3);
 	while ($zaznam=MySQL_Fetch_Array($vysledek))
 	{
-		echo_col($zaznam['prijmeni']);
-		echo_delim();
-		echo_col($zaznam['jmeno']);
-		echo_delim();
-		echo_col(SQLDate2String($zaznam["datum"]));
-		echo_delim();
-		echo_col($g_shortcut.RegNumToStr($zaznam['reg']));
-		echo_delim();
-		echo_col($zaznam['email']);
-		echo_delim();
-		echo_col($zaznam['adresa']);
-		echo_delim();
-		echo_col($zaznam['mesto']);
-		echo_delim();
-		echo_col($zaznam['psc']);
-		echo_delim();
-		echo_col($zaznam['tel_domu']);
-		echo_delim();
-		echo_col($zaznam['tel_zam']);
-		echo_delim();
-		echo_col($zaznam['tel_mobil']);
-		echo_delim();
-		echo_col($zaznam['si_chip']);
-		echo_delim();
-		echo_col($zaznam['lic']);
-		echo_delim();
-		echo_col($zaznam['lic_mtbo']);
-		echo_delim();
-		echo_col($zaznam['lic_lob']);
-		echo_delim();
-		echo_col($zaznam['narodnost']);
-		echo_delim();
-		echo("\n");
+		$users->add_line_user($zaznam);
 	}
-	echo("\n");
+	echo($users->generate_users());
 }
 ?>

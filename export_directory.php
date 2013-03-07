@@ -17,7 +17,11 @@ include ('./common.inc.php');
 
 DrawPageTitle('Export adresáøe',false);
 ?>
-Doèasnì: <a href="export_directory_exc.php?oris=1">Export pro ORIS (Import èlenù klubu)</a><br>
+<ul>Doèasnì:
+	<li><a href="export_directory_exc.php?oris=1">Export pro ORIS (Import èlenù klubu)</a><br>
+	<li><a href="export_directory_exc.php?oris=2">Export pro ORIS (Import kontaktních informací)</a><br>
+</ul>
+
 
 <h3 class="LinksTitle">Parametry exportu :</h3>
 <form method="post" action="export_directory_exc.php">
