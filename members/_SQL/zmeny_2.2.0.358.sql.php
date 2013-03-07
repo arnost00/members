@@ -15,7 +15,7 @@ require ('prepare.inc.php');
 //#############################################################################
 
 # *** pridani sloupce pro narodnost (ORIS)
-$sql[1] = 'ALTER TABLE `'.TBL_USERS.'``users` ADD `narodnost` VARCHAR( 2 ) NOT NULL DEFAULT \'CZ\'';
+$sql[1] = 'ALTER TABLE `'.TBL_USER.'` ADD `narodnost` VARCHAR( 2 ) NOT NULL DEFAULT \'CZ\'';
 //#############################################################################
 
 require ('action.inc.php');
