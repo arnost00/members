@@ -222,15 +222,15 @@ function RIT_SH(divId1, divId2)
 			$data_tbl->table_width = 100;
 		echo $data_tbl->get_css()."\n";
 		echo $data_tbl->get_header()."\n";
-		$odkaz = '<a onclick ="javascript:RIT_SH(\'RIT_min\',\'RIT_normal\')" href="javascript:;" >Zobrazit více</a>';
+		$odkaz = '<a onclick ="javascript:RIT_SH(\'RIT_min\',\'RIT_normal\')" href="javascript:;" ><code>[+]</code></a>'; //Zobrazit více
 		if($zaznam['vicedenni'])
-			echo $data_tbl->get_new_row('Datum',Date2StringFT($zaznam['datum'],$zaznam['datum2']));
+			echo $data_tbl->get_new_row_extend('Datum',Date2StringFT($zaznam['datum'],$zaznam['datum2']),$odkaz);
 		else
-			echo $data_tbl->get_new_row('Datum',Date2String($zaznam['datum']));
-		echo $data_tbl->get_new_row_extend('Jméno',$zaznam['nazev'],$odkaz);
+			echo $data_tbl->get_new_row_extend('Datum',Date2String($zaznam['datum']),$odkaz);
+		echo $data_tbl->get_new_row('Jméno',$zaznam['nazev']);
 		echo $data_tbl->get_footer()."\n";
 		echo ('</div><div id="RIT_normal" style="display: none">');
-		$odkaz2 = '<a onclick ="javascript:RIT_SH(\'RIT_normal\',\'RIT_min\')" href="javascript:;" >Skrýt podrobnosti</a>';
+		$odkaz2 = '<a onclick ="javascript:RIT_SH(\'RIT_normal\',\'RIT_min\')" href="javascript:;" ><code>[-]</code></a>'; // Skrýt podrobnosti
 	}
 	else
 		$odkaz2 = '';
@@ -250,15 +250,12 @@ function RIT_SH(divId1, divId2)
 				$vedouci = $zaznamU['jmeno'].' '.$zaznamU['prijmeni'];
 		}
 	}
-
-	if($zaznam['vicedenni'])
-		echo $data_tbl->get_new_row('Datum',Date2StringFT($zaznam['datum'],$zaznam['datum2']));
+	$datum = ($zaznam['vicedenni']) ? Date2StringFT($zaznam['datum'],$zaznam['datum2']) : Date2String($zaznam['datum']);
+	if($odkaz2)
+		echo $data_tbl->get_new_row_extend('Datum',$datum,$odkaz2);
 	else
-		echo $data_tbl->get_new_row('Datum',Date2String($zaznam['datum']));
-	if ($odkaz2)
-		echo $data_tbl->get_new_row_extend('Jméno',$zaznam['nazev'],$odkaz2);
-	else
-		echo $data_tbl->get_new_row('Jméno',$zaznam['nazev']);
+		echo $data_tbl->get_new_row('Datum',$datum);
+	echo $data_tbl->get_new_row('Jméno',$zaznam['nazev']);
 	echo $data_tbl->get_new_row('Místo',$zaznam['misto']);
 	echo $data_tbl->get_new_row('Poøádající oddíl',$zaznam['oddil']);
 	echo $data_tbl->get_new_row('Typ',GetRaceTypeName($zaznam['typ']));
