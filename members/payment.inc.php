@@ -1,5 +1,6 @@
 <?php if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
+include_once './modify_log.inc.php';
 
 /**
  * library for payments
@@ -20,6 +21,8 @@ function createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod)
 	$query = "insert into ".TBL_FINANCE." (id_users_editor, id_users_user, amount, note, date, id_zavod) values 
 			(".$editor_id.", ".$user_id.", ".$amount.", '".$note."', '".$datum."', ".$id_zavod.")";
 	mysql_query($query);
+	$lastId = mysql_insert_id();
+	SaveItemToModifyLog_Add(TBL_FINANCE, "id=$lastId|user_id=$user_id|amount=$amount");
 }
 
 
@@ -28,12 +31,14 @@ function stornoPayment($editor_id, $trn_id, $storno_note)
 	$datum=date("Y-m-d");
 	$query = "update ".TBL_FINANCE." set storno='1', storno_by=".$editor_id.", storno_note='".$storno_note."', storno_date = '".$datum."' where id = $trn_id";
 	mysql_query($query);
+	SaveItemToModifyLog_Add(TBL_FINANCE, "id=$trn_id|note=$storno_note");
 }
 
 function updatePayment($editor_id, $trn_id, $amount, $note)
 {
 	$query = "update ".TBL_FINANCE." set amount=".$amount.", note='".$note."' where id = $trn_id";
 	mysql_query($query);
+	SaveItemToModifyLog_Edit(TBL_FINANCE, "id=$trn_id|user_id=$user_id|amount=$amount|note=$note");
 }
 
 /*
