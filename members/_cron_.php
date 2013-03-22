@@ -13,7 +13,7 @@ _set_global_RT_Start();
 <?php 
 
 // define only when debug (block email send)
-define('_DEBUG_SEND_',1);
+// define('_DEBUG_SEND_',1);
 
 
 
