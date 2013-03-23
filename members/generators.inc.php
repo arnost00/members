@@ -2,34 +2,30 @@
 
 <?
 
-function __InitPassChars()
+function GeneratePassword($length)
 {
-	$passchars = '';
-	for ($i=ord('a');$i<=ord('z');$i++)
-	{
-		$passchars .= chr($i);
-	}
-	for ($i=ord('A');$i<=ord('Z');$i++)
-	{
-		$passchars .= chr($i);
-	}
-	for ($i=ord('0');$i<=ord('9');$i++)
-	{
-		$passchars .= chr($i);
-	}
-	return $passchars;
-}
+// based on https://gist.github.com/tylerhall/521810#file-strong-passwords-php
 
-function GeneratePassword($p_len)
-{
-	$passchars = __InitPassChars();
-	$passchars_cnt = 62; // add sizeof
-	$newpass = '';
-	for ($i=0;$i<$p_len;$i++)
+	$sets = array();
+	$sets[] = 'abcdefghjkmnopqrstuvwxyz';
+	$sets[] = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+	$sets[] = '23456789';
+
+	$all = '';
+	$password = '';
+	foreach($sets as $set)
 	{
-		$newpass .= $passchars{rand(0,$passchars_cnt-1)};
+		$password .= $set[array_rand(str_split($set))];
+		$all .= $set;
 	}
-	return $newpass;
+
+	$all = str_split($all);
+	for($i = 0; $i < $length - count($sets); $i++)
+		$password .= $all[array_rand($all)];
+
+	$password = str_shuffle($password);
+
+	return $password;
 }
 
 // codepage 1250 to ascii
