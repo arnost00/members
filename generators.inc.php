@@ -27,7 +27,7 @@ function GeneratePassword($p_len)
 	$newpass = '';
 	for ($i=0;$i<$p_len;$i++)
 	{
-		$newpass .= $g_passchars{rand(0,$passchars_cnt-1)};
+		$newpass .= $passchars{rand(0,$passchars_cnt-1)};
 	}
 	return $newpass;
 }
