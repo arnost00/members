@@ -35,8 +35,6 @@ else
 	@$vysledek=MySQL_Query("SELECT id,datum,typ,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
 }
 
-ShowRefreshInfo(true);
-
 $data_tbl = new html_table_mc();
 $col = 0;
 $data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);

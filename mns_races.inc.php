@@ -25,7 +25,6 @@ include ('./url.inc.php');
 </script>
 
 <?
-ShowRefreshInfo();
 
 $num_rows = mysql_num_rows($vysledek);
 if ($num_rows > 0)

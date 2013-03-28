@@ -22,6 +22,8 @@ $id_us = (IsSet($id_us) && is_numeric($id_us)) ? (int)$id_us : 0;
 
 <SCRIPT LANGUAGE="JavaScript">
 <!--
+	window.opener.location.reload();
+
 	window.opener.focus();
 	window.close();
 //-->

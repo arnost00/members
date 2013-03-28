@@ -63,13 +63,6 @@ function submit_off()
 	}
 	return false;
 }
-
-//pro automaticky refresh stranky, ze ktere bylo toto okno volano
-window.onunload = refreshParent;
-function refreshParent() {
-    window.opener.location.reload();
-}
-
 //-->
 </SCRIPT>
 
