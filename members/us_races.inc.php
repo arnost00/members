@@ -32,8 +32,6 @@ $query = 'SELECT '.TBL_RACE.'.id, datum, datum2, nazev, typ, ranking, odkaz, pri
 </script>
 
 <?
-ShowRefreshInfo();
-
 $curr_date = GetCurrentDate();
 
 $num_rows = mysql_num_rows($vysledek);

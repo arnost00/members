@@ -16,8 +16,6 @@ DrawPageTitle('Pøiøazení èlenù malým trenérùm', false);
 <?
 include "./common_user.inc.php";
 
-ShowRefreshInfo();
-
 $data_tbl = new html_table_mc();
 $col = 0;
 $data_tbl->set_header_col($col++,'Poø.è.',ALIGN_CENTER);

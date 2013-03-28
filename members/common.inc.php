@@ -367,15 +367,6 @@ function GetRaceLinkHTML($link,$img=true)
 */
 }
 
-function ShowRefreshInfo($race_edit = false)
-{
-	if($race_edit)
-		$text = '(editace, kategorie)';
-	else
-		$text = '(pøihlášení, odhlášení)';
-	echo('<span class="refresh_warn">Provedení zmìny '.$text.' se ihned nezobrazí,<br> pro zobrazení je nutné znovu naèíst tuto stránku (REFRESH nebo F5) !</span><br>');
-}
-
 function GetPhpVersion()
 {
 	global $g_php_version;
