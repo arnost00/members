@@ -35,10 +35,9 @@ function checkAllVisibilities()
 }
 
 </script>
-
-<H1 class="ClubName"><?echo $g_www_name;?></H1>
-<H2 class="PageName">Upozoròování o termínech na email</H2>
-
+<?
+DrawPageTitle('Upozoròování o termínech na email');
+?>
 <CENTER>
 <?
 if (IsLogged() && $g_enable_mailinfo)
