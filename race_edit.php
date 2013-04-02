@@ -16,7 +16,7 @@ if (!IsLoggedRegistrator())
 	exit;
 }
 include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
-DrawPageTitle('Editace parametrù závodu', false);
+DrawPageTitle('Editace parametrù závodu');
 
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 

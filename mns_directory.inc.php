@@ -1,7 +1,7 @@
 <? /* trenerova stranka - editace clenu oddilu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Èlenská základna',false);
+DrawPageTitle('Èlenská základna');
 ?>
 <CENTER>
 

@@ -22,7 +22,7 @@ include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 include ("./common.inc.php");
 include ("./common_user.inc.php");
 
-DrawPageTitle('Hledání volných registraèních èísel', false);
+DrawPageTitle('Hledání volných registraèních èísel');
 ?>
 
 <TABLE width="100%" cellpadding="0" cellspacing="0" border="0">

@@ -1,7 +1,7 @@
 <?php /* trenerova stranka - editace clenu oddilu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Pøehled malých trenérù', false);
+DrawPageTitle('Pøehled malých trenérù');
 ?>
 <CENTER>
 

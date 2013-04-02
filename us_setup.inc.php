@@ -1,7 +1,7 @@
 <?php /* clenova stranka - editace informaci a nastaveni */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Nastavení osobních údajù èlenù oddílu', false);
+DrawPageTitle('Nastavení osobních údajù èlenù oddílu');
 ?>
 <CENTER>
 <?

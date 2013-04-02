@@ -18,7 +18,7 @@ $us = (int)((IsSet($us) && is_numeric($us)) ? (($us > 0) ? 1 : 0) : 0);
 $gr_id = (IsSet($gr_id) && is_numeric($gr_id)) ? (int)$gr_id : 0;
 $select = (int)((IsSet($select) && is_numeric($select)) ? (($select > 0) ? 1 : 0) : 0);
 
-DrawPageTitle('Seznam závodníkù pøihlášených na závod', false);
+DrawPageTitle('Seznam závodníkù pøihlášených na závod');
 
 db_Connect();
 

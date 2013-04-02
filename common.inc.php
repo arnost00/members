@@ -397,12 +397,8 @@ function Print_Action_Result(&$text)
 	}
 }
 
-function DrawPageTitle($title, $show_date = true)
+function DrawPageTitle($title)
 {
-	if($show_date)
-	{
-		echo('<div class="HdrDate">Dnes je : '.GetCurrentDateString().'</div>');
-	}
 	echo('<H2>'.$title.'</H2>');
 }
 

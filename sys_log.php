@@ -9,7 +9,7 @@ require ("./connect.inc.php");
 require ("./sess.inc.php");
 include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 
-DrawPageTitle('Pøihlášení do pøihláškového systému', false);
+DrawPageTitle('Pøihlášení do pøihláškového systému');
 ?>
 <FORM METHOD=POST ACTION="./login.php">
 <TABLE border="0" cellpadding="0" cellspacing="2">

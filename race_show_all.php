@@ -18,7 +18,7 @@ if (!IsLogged())
 
 include "./header.inc.php"; // header obsahuje uvod html a konci <BODY>
 
-DrawPageTitle('Køížový pøehled pøihlášek', false);
+DrawPageTitle('Køížový pøehled pøihlášek');
 
 db_Connect();
 

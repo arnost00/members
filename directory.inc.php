@@ -1,7 +1,7 @@
 <?php /* adresar clenu oddilu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Adresáø èlenù oddílu',false);
+DrawPageTitle('Adresáø èlenù oddílu');
 ?>
 <TABLE width="95%" border="0">
 <TR>

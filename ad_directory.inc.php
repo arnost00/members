@@ -1,7 +1,7 @@
 <?php /* adminova stranka - editace clenu oddilu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Èlenská základna - Administrace',false);
+DrawPageTitle('Èlenská základna - Administrace');
 ?>
 <CENTER>
 

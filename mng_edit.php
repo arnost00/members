@@ -18,7 +18,7 @@ include ('./common_user.inc.php');
 
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
-DrawPageTitle('Editace pøiøazení trenéra èlenu',false);
+DrawPageTitle('Editace pøiøazení trenéra èlenu');
 ?>
 <SCRIPT LANGUAGE="JavaScript">
 <!--

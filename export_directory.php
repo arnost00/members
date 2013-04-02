@@ -15,7 +15,7 @@ if (!IsLoggedRegistrator() && !IsLoggedManager())
 include ('./header.inc.php'); // header obsahuje uvod html a konci <BODY>
 include ('./common.inc.php');
 
-DrawPageTitle('Export adresáøe',false);
+DrawPageTitle('Export adresáøe');
 ?>
 <ul>Doèasnì:
 	<li><a href="export_directory_exc.php?oris=1">Export pro ORIS (Import èlenù klubu)</a><br>

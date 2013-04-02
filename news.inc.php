@@ -1,7 +1,7 @@
 <?php /* novinky */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Novinky', false);
+DrawPageTitle('Novinky');
 ?>
 <?
 $curr_date = GetCurrentDate();

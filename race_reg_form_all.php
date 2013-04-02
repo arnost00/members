@@ -20,7 +20,7 @@ include ("./common_race.inc.php");
 include ("./common_user.inc.php");
 include ('./url.inc.php');
 
-DrawPageTitle('Vytvoøení a export pøihlášky', false);
+DrawPageTitle('Vytvoøení a export pøihlášky');
 
 db_Connect();
 
