@@ -21,7 +21,7 @@ include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
-DrawPageTitle('Editace vedoucí na závod', false);
+DrawPageTitle('Editace vedoucí na závod');
 
 db_Connect();
 

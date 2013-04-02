@@ -1,7 +1,7 @@
 <?php /* adminova stranka - editace zavodu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Výpis zmìn v databázi',false);
+DrawPageTitle('Výpis zmìn v databázi');
 ?>
 <CENTER>
 <?

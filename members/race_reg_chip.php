@@ -18,7 +18,7 @@ include ("./common_race.inc.php");
 include ("./common_user.inc.php");
 include ('./url.inc.php');
 
-DrawPageTitle('Pøiøazení SI èipù pro závod', false);
+DrawPageTitle('Pøiøazení SI èipù pro závod');
 
 db_Connect();
 

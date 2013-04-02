@@ -1,7 +1,7 @@
 <?php /* adminova stranka - editace clenu oddilu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Skrytí èlenù a zamykání úètù',false);
+DrawPageTitle('Skrytí èlenù a zamykání úètù');
 ?>
 <CENTER>
 

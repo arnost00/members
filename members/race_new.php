@@ -17,7 +17,7 @@ if (!IsLoggedRegistrator())
 }
 
 include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
-DrawPageTitle('Vytvoøení nového závodu', false);
+DrawPageTitle('Vytvoøení nového závodu');
 
 db_Connect();
 

@@ -1,7 +1,7 @@
 <?php /* maly trener stranka - seznam sverencu pro finance */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Finance èlenù',false);
+DrawPageTitle('Finance èlenù');
 ?>
 <CENTER>
 <script language="javascript">

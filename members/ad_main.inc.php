@@ -1,7 +1,7 @@
 <?php /* adminova stranka - rozcestnik pro admina */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Administrace stránek oddílu',false);
+DrawPageTitle('Administrace stránek oddílu');
 ?>
 <CENTER>
 

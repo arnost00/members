@@ -17,7 +17,7 @@ include('./calendar.inc.php');
 <CENTER>
 
 <?
-DrawPageTitle('Kalendáø',false);
+DrawPageTitle('Kalendáø');
 
 	$curr_date = GetCurrentDate();
 	$curr_date_arr = Date2Arr($curr_date);

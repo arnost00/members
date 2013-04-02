@@ -1,7 +1,7 @@
 <?php /* trenerova stranka - prirazeni clenu trenerum */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Pøiøazení èlenù malým trenérùm', false);
+DrawPageTitle('Pøiøazení èlenù malým trenérùm');
 ?>
 <CENTER>
 

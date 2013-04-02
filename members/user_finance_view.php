@@ -44,7 +44,7 @@ if (IsSet($payment) && IsLoggedFinance())
 include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 include ("./common_user.inc.php");
 include ("./ctable.inc.php");
-DrawPageTitle('Finance èlena', false);
+DrawPageTitle('Finance èlena');
 ?>
 
 <script>

@@ -7,7 +7,7 @@ require ("./sess.inc.php");
 require ("./common.inc.php");
 
 include "./header.inc.php"; // header obsahuje uvod html a konci <BODY>
-DrawPageTitle('Chybový stav :',false);
+DrawPageTitle('Chybový stav :');
 ?>
 <TABLE width="80%" cellpadding="0" cellspacing="0" border="0">
 <TR><TD width="20px" ROWSPAN="4">&nbsp;</TD><TD ALIGN=CENTER>

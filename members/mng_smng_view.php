@@ -16,7 +16,7 @@ include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 include ("./common.inc.php");
 include ("./common_user.inc.php");
 
-DrawPageTitle('Zobrazení èlenù pøidìlených malému trenéru', false);
+DrawPageTitle('Zobrazení èlenù pøidìlených malému trenéru');
 
 DrawPageSubTitle('Trenér');
 

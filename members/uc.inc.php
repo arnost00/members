@@ -1,5 +1,5 @@
 <?
-DrawPageTitle('Informace o systému', false);
+DrawPageTitle('Informace o systému');
 ?>
 <br>
 <CENTER>

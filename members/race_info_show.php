@@ -20,7 +20,7 @@ include ("./common.inc.php");
 include ("./common_race.inc.php");
 include ('./url.inc.php');
 
-DrawPageTitle('Informace o závodì', false);
+DrawPageTitle('Informace o závodì');
 
 db_Connect();
 

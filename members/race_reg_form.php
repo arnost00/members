@@ -18,7 +18,7 @@ include ("./common_race.inc.php");
 include ("./common_user.inc.php");
 include ('./url.inc.php');
 
-DrawPageTitle('Export pøihlášky - kontrola', false);
+DrawPageTitle('Export pøihlášky - kontrola');
 
 db_Connect();
 

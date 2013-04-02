@@ -1,7 +1,7 @@
 <?php /* adminova stranka - editace clenu oddilu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Pøihlášky èlenù oddílu', false);
+DrawPageTitle('Pøihlášky èlenù oddílu');
 ?>
 <CENTER>
 <script language="javascript">
