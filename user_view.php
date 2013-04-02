@@ -22,11 +22,6 @@ $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
 DrawPageTitle('Pøehled pøihlášek na závody');
 ?>
-<script language="javascript">
-<!-- 
-	javascript:set_default_size(600,600);
-//-->
-</script>
 
 <TABLE width="100%" cellpadding="0" cellspacing="0" border="0">
 <TR>
@@ -45,7 +40,11 @@ DrawPageSubTitle('Vybraný èlen : '.$zaznamU["jmeno"].' '.$zaznamU["prijmeni"]);
 <?
 include ("./common_race.inc.php");
 
-$query = 'SELECT r.id, datum, datum2, nazev, oddil, typ, vicedenni, misto, kat FROM '.TBL_RACE.' as r LEFT JOIN '.TBL_ZAVXUS.' as z ON r.id = z.id_zavod AND z.id_user='.$id.' ORDER BY r.datum, r.datum2, r.id';
+// show all races
+//$query = 'SELECT r.id, datum, datum2, nazev, oddil, typ, vicedenni, misto, kat FROM '.TBL_RACE.' as r LEFT JOIN '.TBL_ZAVXUS.' as z ON r.id = z.id_zavod AND z.id_user='.$id.' ORDER BY r.datum, r.datum2, r.id';
+
+// show only races with registration
+$query = 'SELECT r.id, datum, datum2, nazev, oddil, typ, vicedenni, misto, kat FROM '.TBL_RACE.' as r JOIN '.TBL_ZAVXUS.' as z ON r.id = z.id_zavod AND z.id_user='.$id.' ORDER BY r.datum, r.datum2, r.id';
 
 @$vysledek=MySQL_Query($query);
 
@@ -112,6 +111,10 @@ if ($num_rows > 0)
 		}
 	}
 	echo $data_tbl->get_footer()."\n";
+}
+else
+{
+	echo('Vybraný èlen není nikam pøihlášen.<br>');
 }
 ?>
 
