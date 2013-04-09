@@ -114,7 +114,14 @@ Zpùsob výpisu:<input type="radio" name="ff" value="0" id="radio_ff0" checked="ch
 <BUTTON onclick="submit_form(0); return false;">Proveï akci</BUTTON>
 <? } ?>
 <BUTTON onclick="submit_form_reg(1); return false;">Výpis pro centrální registraci (ObHana)</BUTTON>
+<?
+	if ($g_enable_oris_support)
+	{
+?>
 <BUTTON onclick="submit_form_reg(2); return false;">Výpis pro centrální registraci (ORIS)</BUTTON>
+<?
+	}
+?>
 </FORM>
 <BUTTON onclick="javascript:close_popup();">Zavøi</BUTTON>
 <?//------------------------------?>
