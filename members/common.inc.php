@@ -454,14 +454,14 @@ function repair_html_text($html)
 
 //--------------------------------------------------------
 
-function SendEmail(&$ToA,&$msg,&$subject)
+function SendEmail(&$FromA,&$ToA,&$msg,&$subject)
 {	// send info mail
 	global $g_emailadr, $g_fullname;
 
 	$extra_headers  = 'MIME-Version: 1.0'.EMAIL_ENDL;
 	$extra_headers .= 'Content-type: text/plain; charset="Windows-1250"'.EMAIL_ENDL;
-	$extra_headers .= 'From: '.$g_fullname.' <'.$g_emailadr.'>'.EMAIL_ENDL;
-	$extra_headers .= 'Reply-To: '.$g_emailadr.EMAIL_ENDL;
+	$extra_headers .= 'From: '.$FromA.EMAIL_ENDL;
+	$extra_headers .= 'Reply-To: '.$FromA.EMAIL_ENDL;
 	$extra_headers .= 'X-Mailer: '.SYSTEM_NAME.'/'.GetCodeVersion();
 
 	$send = (bool) mail($ToA,$subject,$msg,$extra_headers);

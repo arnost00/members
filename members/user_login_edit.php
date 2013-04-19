@@ -15,7 +15,7 @@ include ("./common.inc.php");
 db_Connect();
 $id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
 
-@$vysledek=MySQL_Query("SELECT jmeno,prijmeni,datum,hidden FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
+@$vysledek=MySQL_Query("SELECT jmeno,prijmeni,datum,hidden,email,reg FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
 @$zaznam=MySQL_Fetch_Array($vysledek);
 if (!$zaznam)
 {	// error not exist
@@ -25,17 +25,55 @@ if (!$zaznam)
 include "./header.inc.php"; // header obsahuje uvod html a konci <BODY>
 DrawPageTitle('Èlenská základna - Administrace uživatelských úètù');
 
+	$id_acc = GetUserAccountId_Users($id);
+	$vysledek2=MySQL_Query("SELECT login,podpis,policy_news,policy_regs,policy_mng,policy_adm,policy_fin,locked FROM ".TBL_ACCOUNT." WHERE id = '$id_acc' LIMIT 1");
+	$zaznam2=MySQL_Fetch_Array($vysledek2);
 ?>
+<script>
+function changeVisibility(name, atr_id)
+{
+	var atr = document.getElementById(atr_id);
+	var list = document.getElementsByName(name);
+	if (atr.checked)
+	{
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "table-row";
+		}
+	} else {
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "none";
+		} 
+	}
+}
+
+//funkce pro zobrazeni/schovani vybranych casti
+function checkAllVisibilities()
+{
+<?
+	if($zaznam2 == FALSE)
+	{	// novy uzivatel
+?>
+	changeVisibility('acc_email_hide', 'id_email');
+	changeVisibility('acc_manual_hide', 'id_manual');
+<?
+	}
+	else
+	{	// editace
+?>
+	changeVisibility('pass_email_hide', 'id_email');
+	changeVisibility('pass_manual_hide', 'id_manual');
+<?
+	}
+?>
+}
+
+</script>
+
 <TABLE width="100%" cellpadding="0" cellspacing="0" border="0">
 <TR>
 <TD width="2%"></TD>
 <TD width="90%" ALIGN=left>
 <CENTER>
-<?
-	$id_acc = GetUserAccountId_Users($id);
-	$vysledek2=MySQL_Query("SELECT login,podpis,policy_news,policy_regs,policy_mng,policy_adm,policy_fin,locked FROM ".TBL_ACCOUNT." WHERE id = '$id_acc' LIMIT 1");
-	$zaznam2=MySQL_Fetch_Array($vysledek2);
-?>
 <BR><hr><BR>
 <? DrawPageSubTitle('Základní údaje o vybraném èlenovi'); ?>
 <TABLE width="90%">
@@ -71,53 +109,63 @@ DrawPageTitle('Èlenská základna - Administrace uživatelských úètù');
 ?>
 <FORM METHOD=POST ACTION="./user_login_edit_exc.php?type=<? echo ($zaznam2 != FALSE) ? "1" : "2"; echo "&id=".$id;?>">
 <TABLE width="90%">
+<?
+	if($zaznam2 == FALSE)
+	{
+?>
 <TR>
+	<TD colspan="3" style="padding-left:20px;"><input onclick="changeVisibility('acc_manual_hide', this.id); changeVisibility('acc_email_hide', 'id_email');" type="radio" name="action_type" value="1" checked id="id_manual"><label for="id_manual">Ruènì</label></TD></TR>
+</TR>
+<?
+	}
+?>
+<TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD width="30%" align="right">Pøihlašovací jméno</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="login" SIZE=20 VALUE="<? echo $zaznam2["login"]; ?>"></TD>
 </TR>
-<TR>
+<TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD width="30%" align="right">Podpis uživatele</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="podpis" SIZE=20 VALUE="<?echo  $zaznam2["podpis"]?>"></TD>
 </TR>
-<TR>
+<TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD width="30%" align="right"></TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="checkbox" NAME="news" SIZE=15 VALUE="1" <? if ($zaznam2["policy_news"]) echo "checked" ?> >Povoleno psaní novinek</TD>
 </TR>
-<TR>
+<TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD width="30%" align="right"></TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="checkbox" NAME="mng" SIZE=15 VALUE="<? echo (!IsLoggedAdmin() && $zaznam2["policy_mng"] == _MNG_BIG_INT_VALUE_) ? '2' : '1'; ?>" <? if ($zaznam2["policy_mng"] == _MNG_SMALL_INT_VALUE_) echo "checked"; if (!IsLoggedAdmin() && $zaznam2["policy_mng"] == _MNG_BIG_INT_VALUE_) echo "disabled"; ?> >Uživatel je malým trenenérem (mùže mìnit údaje a pøihlášky vybraných èlenù)</TD>
 </TR>
 <? if (IsLoggedAdmin())
 { ?>
-<TR>
+<TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD width="30%" align="right"></TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="checkbox" NAME="mng2" SIZE=15 VALUE="1" <? if ($zaznam2["policy_mng"] == _MNG_BIG_INT_VALUE_) echo "checked" ?> >Uživatel je trenenérem (mùže mìnit údaje a pøihlášky èlenù)</TD>
 </TR>
-<TR>
+<TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD width="30%" align="right"></TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="checkbox" NAME="regs" SIZE=15 VALUE="1" <? if ($zaznam2["policy_regs"]) echo "checked" ?> >Uživatel je pøihlašovatelem (mùže editovat pøihlášky èlenù - provádí export)</TD>
 </TR>
 <? if ($g_enable_finances)
 { ?>
-<TR>
+<TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD width="30%" align="right"></TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="checkbox" NAME="fin" SIZE=15 VALUE="1" <? if ($zaznam2["policy_fin"]) echo "checked" ?> >Uživatel je finanèníkem</TD>
 </TR>
 <? } ?>
-<TR>
+<TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD width="30%" align="right"></TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="checkbox" NAME="adm" SIZE=15 VALUE="1" <? if ($zaznam2["policy_adm"]) echo "checked" ?> >Uživatel je správcem</TD>
-</TR>
+</TR name="acc_manual_hide" id="acc_manual_hide">
 <? if ($zaznam2["locked"] != 0) { ?>
-<TR>
+<TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD width="45%" align="right">Tento uživatel má</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><span class="WarningText">uzamèený úèet</span></TD>
@@ -126,23 +174,46 @@ DrawPageTitle('Èlenská základna - Administrace uživatelských úètù');
 
 <?
 }
-?>
-<?
 if($zaznam2 == FALSE)
 { // novy ucet
+include ('generators.inc.php');
 ?>
-<TR>
+<TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD colspan="3"></TD>
 </TR>
-<TR>
+<TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD width="30%" align="right">Nové heslo:</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="password" NAME="nheslo" VALUE="" SIZE="20"></TD>
 </TR>
-<TR>
+<TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD width="30%" align="right">Nové heslo (ovìøení):</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="password" NAME="nheslo2" VALUE="" SIZE="20"></TD>
+</TR>
+<TR name="acc_manual_hide" id="acc_manual_hide">
+	<TD colspan="3">&nbsp;</TD>
+</TR>
+<TR>
+	<TD colspan="3" style="padding-left:20px;"><input onclick="changeVisibility('acc_email_hide', this.id); changeVisibility('acc_manual_hide', 'id_manual');" type="radio" name="action_type" value="2" id="id_email"><label for="id_email">Vygenerovat a zaslat emailem</label></TD>
+</TR>
+<TR name="acc_email_hide" id="acc_email_hide">
+	<TD width="30%" align="right">Pøihlašovací jméno</TD>
+	<TD width="5"></TD>
+	<TD><INPUT TYPE="text" NAME="login_g" SIZE=20 VALUE="<? echo GenerateLogin($zaznam) ?>"></TD>
+</TR>
+<TR name="acc_email_hide" id="acc_email_hide">
+	<TD width="30%" align="right">Podpis uživatele</TD>
+	<TD width="5"></TD>
+	<TD><INPUT TYPE="text" NAME="podpis_g" SIZE=20 VALUE="<?echo $zaznam["jmeno"]?>"></TD>
+</TR>
+<TR name="acc_email_hide" id="acc_email_hide">
+	<TD width="30%" align="right">Email pro zaslání údajù:</TD>
+	<TD width="5"></TD>
+	<TD><INPUT TYPE="text" NAME="email" VALUE="<?echo $zaznam["email"]?>" SIZE="40"></TD>
+</TR>
+<TR name="acc_email_hide" id="acc_email_hide">
+	<TD colspan="3">&nbsp;</TD>
 </TR>
 <?
 }
@@ -178,14 +249,31 @@ if($zaznam2 != FALSE)
 <FORM METHOD=POST ACTION="./user_login_edit_exc.php?type=3&id=<?echo $id;?>">
 <TABLE width="90%">
 <TR>
+	<TD colspan="3" style="padding-left:20px;"><input onclick="changeVisibility('pass_manual_hide', this.id); changeVisibility('pass_email_hide', 'id_email');" type="radio" name="action_type" value="1" checked id="id_manual"><label for="id_manual">Ruènì</label></TD></TR>
+</TR>
+<TR name="pass_manual_hide" id="pass_manual_hide">
 	<TD width="45%" align="right">Nové heslo:</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="password" NAME="nheslo" VALUE="" SIZE="20"></TD>
 </TR>
-<TR>
+<TR name="pass_manual_hide" id="pass_manual_hide">
 	<TD width="45%" align="right">Nové heslo (ovìøení):</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="password" NAME="nheslo2" VALUE="" SIZE="20"></TD>
+</TR>
+<TR name="pass_manual_hide" id="pass_manual_hide">
+	<TD colspan="3">&nbsp;</TD>
+</TR>
+<TR>
+	<TD colspan="3" style="padding-left:20px;"><input onclick="changeVisibility('pass_email_hide', this.id); changeVisibility('pass_manual_hide', 'id_manual');" type="radio" name="action_type" value="2" id="id_email"><label for="id_email">Vygenerovat a zaslat emailem</label></TD>
+</TR>
+<TR name="pass_email_hide" id="pass_email_hide">
+	<TD width="30%" align="right">Email pro zaslání údajù:</TD>
+	<TD width="5"></TD>
+	<TD><INPUT TYPE="text" NAME="email" VALUE="<?echo $zaznam["email"]?>" SIZE="40"></TD>
+</TR>
+<TR name="pass_email_hide" id="pass_email_hide">
+	<TD colspan="3">&nbsp;</TD>
 </TR>
 <TR>
 	<TD colspan="3"></TD>
@@ -222,5 +310,7 @@ if($zaznam2 != FALSE)
 </TD></TR>
 </TABLE>
 
+<!-- pro aktualizaci zobrazeni/schovani casti, ktere nema uzivatel pouzity -->
+<style onload="checkAllVisibilities()"/>
 </BODY>
 </HTML>

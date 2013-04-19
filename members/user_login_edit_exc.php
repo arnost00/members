@@ -7,10 +7,67 @@ require('./sess.inc.php');
 require('./const_strings.inc.php');
 require('./modify_log.inc.php');
 
+function GenerateInfoEmail($type,$id,$login,$heslo,$email)
+{
+	global $g_baseadr, $g_emailadr, $g_shortcut, $g_fullname;
+	define ('DIV_LINE','-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-');
+	define ('EMAIL_ENDL',"\n");
+
+	$name = '';
+	@$vysledek=MySQL_Query("SELECT jmeno,prijmeni FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
+	if ($zaznam=MySQL_Fetch_Array($vysledek))
+	{
+		$name = $zaznam['jmeno'].' '.$zaznam['prijmeni'];
+	}
+	
+	if ($login == '')
+	{
+		$id_acc=GetUserAccountId_Users($id);
+		@$vysledek=MySQL_Query("SELECT login FROM ".TBL_ACCOUNT." WHERE id = '$id_acc' LIMIT 1");
+		if ($zaznam=MySQL_Fetch_Array($vysledek))
+		{
+			$login = $zaznam['login'];
+		}
+	}
+	
+	$full_msg = 'Dobrý den, '.EMAIL_ENDL.EMAIL_ENDL;
+	if ($type == 1) // nove heslo
+		$full_msg .= 'Bylo vám vygenerováno nové heslo pro váš úèet v pøihláškovém systému oddílu '.$g_shortcut.'.'.EMAIL_ENDL.EMAIL_ENDL;
+	else if ($type == 2) // novy ucet
+		$full_msg .= 'Byl vám vytvoøen nový úèet v pøihláškovém systému oddílu '.$g_shortcut.'.'.EMAIL_ENDL.EMAIL_ENDL;
+	$full_msg .= 'Adresa: '.$g_baseadr.EMAIL_ENDL;
+	if ($name != '')
+		$full_msg .= 'Jméno : '.$name.EMAIL_ENDL;
+	if ($login != '')
+		$full_msg .= 'Login : '.$login.EMAIL_ENDL;
+	$full_msg .= 'Heslo : '.$heslo.EMAIL_ENDL.EMAIL_ENDL;
+	$full_msg .= 'V pøípadì problémù s pøihlášením, smìøujte pøípadné dotazy na email '.$g_emailadr.'.'.EMAIL_ENDL.EMAIL_ENDL;
+	$full_msg .= 'Vygenerované heslo si lze po pøihlášení v systému zmìnit.'.EMAIL_ENDL.EMAIL_ENDL;
+	$full_msg .= DIV_LINE.EMAIL_ENDL;
+	$full_msg .= 'Na tento email prosím neodpovídejte, byl vytvoøen pøihláškovým systémem oddílu '.$g_shortcut.'.'.EMAIL_ENDL;
+	
+	$subject = 'pøihláškový systém - informace o úètu';
+	$from_email = $g_fullname.' <'.$g_emailadr.'>';
+/*
+	// DEV - output
+	$fp = fopen(dirname(__FILE__) .'/logs/dbg_login_mail_'.md5(date('d.m.Y - H:i:s')).'.txt', 'a');
+	fputs($fp, 'To: '.$email."\r\n");
+	fputs($fp, 'From: '.$from_email."\r\n");
+	fputs($fp, 'Subject: '.$subject."\r\n");
+	fputs($fp, DIV_LINE."\r\n");
+	fputs($fp, $full_msg."\r\n");
+	fclose($fp);
+*/
+	require ('version.inc.php');
+	require('common.inc.php');
+	SendEmail($from_email,$email,$full_msg,$subject);
+}
+
 if (IsLoggedAdmin())
 {
 	$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 	$type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
+	$action_type = (IsSet($action_type) && is_numeric($action_type)) ? (int)$action_type : 1;
 
 	db_Connect();
 	include "./common_user.inc.php";
@@ -64,7 +121,15 @@ if (IsLoggedAdmin())
 		$mng=correct_sql_string($mng);
 		$fin=correct_sql_string($fin);
 		$adm=correct_sql_string($adm);
-		
+
+		if ($action_type == 2)
+		{
+			include ('generators.inc.php');
+			$login=correct_sql_string($login_g);
+			$podpis=correct_sql_string($podpis_g);
+			$nheslo2 = $nheslo = GeneratePassword(8);
+		}
+
 		if ($login=="" || $podpis=="" || $nheslo=="" || $nheslo2=="")
 			$result=CS_EMPTY_ITEM;
 		else if (!CheckIfLoginIsValid($login,0))
@@ -99,9 +164,19 @@ if (IsLoggedAdmin())
 				$result = CS_ACC_CREATED;
 			}
 			SaveItemToModifyLog_Add(TBL_ACCOUNT,'acc.id = '.$id2.' login = "'.$login.'" ['.$podpis.']');
+			if ($action_type == 2 && $email != '')
+			{	// send email
+				GenerateInfoEmail(2,$id,$login,$nheslo,$email);
+			}
 		}
 		break;
 	case 3: // password
+		if ($action_type == 2)
+		{
+			include ('generators.inc.php');
+			$nheslo2 = $nheslo = GeneratePassword(8);
+		}
+
 		if ($nheslo=="" || $nheslo2=="")
 			$result=CS_EMPTY_ITEM;
 		else if (strlen($nheslo) < 4)
@@ -119,6 +194,10 @@ if (IsLoggedAdmin())
 			else
 				$result = CS_USER_PASS_UPDATED;
 			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id2.' - pass');
+			if ($action_type == 2 && $email != '')
+			{	// send email
+				GenerateInfoEmail(1,$id,'',$nheslo,$email);
+			}
 		}
 		break;
 	default:
@@ -130,6 +209,7 @@ else if (IsLoggedManager())
 {
 	$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 	$type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
+	$action_type = (IsSet($action_type) && is_numeric($action_type)) ? (int)$action_type : 1;
 	
 	db_Connect();
 	include "./common_user.inc.php";
@@ -171,6 +251,14 @@ else if (IsLoggedManager())
 		$news=correct_sql_string($news);
 		$mng2=correct_sql_string($mng2);
 
+		if ($action_type == 2)
+		{
+			include ('generators.inc.php');
+			$login=correct_sql_string($login_g);
+			$podpis=correct_sql_string($podpis_g);
+			$nheslo2 = $nheslo = GeneratePassword(8);
+		}
+
 		if ($login=="" || $podpis=="" || $nheslo=="" || $nheslo2=="")
 			$result=CS_EMPTY_ITEM;
 		else if (!CheckIfLoginIsValid($login,0))
@@ -205,9 +293,19 @@ else if (IsLoggedManager())
 				$result = CS_ACC_CREATED;
 			}
 			SaveItemToModifyLog_Add(TBL_ACCOUNT,'acc.id = '.$id2.' login = "'.$login.'" ['.$podpis.']');
+			if ($action_type == 2 && $email != '')
+			{	// send email
+				GenerateInfoEmail(2,$id,$login,$nheslo,$email);
+			}
 		}
 		break;
 	case 3: // password
+		if ($action_type == 2)
+		{
+			include ('generators.inc.php');
+			$nheslo2 = $nheslo = GeneratePassword(8);
+		}
+
 		if ($nheslo=="" || $nheslo2=="")
 			$result=CS_EMPTY_ITEM;
 		else if (strlen($nheslo) < 4)
@@ -225,6 +323,10 @@ else if (IsLoggedManager())
 			else
 				$result = CS_USER_PASS_UPDATED;
 			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id2.' - pass');
+			if ($action_type == 2 && $email != '')
+			{	// send email
+				GenerateInfoEmail(1,$id,'',$nheslo,$email);
+			}
 		}
 		break;
 	default:
