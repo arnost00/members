@@ -38,7 +38,7 @@ function updatePayment($editor_id, $trn_id, $amount, $note)
 {
 	$query = "update ".TBL_FINANCE." set amount=".$amount.", note='".$note."' where id = $trn_id";
 	mysql_query($query);
-	SaveItemToModifyLog_Edit(TBL_FINANCE, "id=$trn_id|user_id=$user_id|amount=$amount|note=$note");
+	SaveItemToModifyLog_Edit(TBL_FINANCE, "id=$trn_id|user_id=$editor_id|amount=$amount|note=$note");
 }
 
 /*
