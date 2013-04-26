@@ -1,0 +1,17 @@
+@CHARSET "UTF-8";
+
+div.update-categories {
+	margin: 10px 0 0 0;
+	padding: 10px 0 0 0;
+	border: 2px solid gray;
+	text-align: center;
+}
+
+div.update-categories > div.sub-title {
+	text-align: left;
+}
+
+div.link-top {
+	width: 100%;
+	text-align: right;
+}
