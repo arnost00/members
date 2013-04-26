@@ -28,6 +28,7 @@ header("Pragma: no-cache");
 	<TITLE><? echo $g_www_title; ?></TITLE>
 	<LINK href="main.css.php" rel="StyleSheet" type="text/css" >
 	<script src="functions.js" type="text/javascript"></script>
+	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	<link rel="alternate" type="application/rss+xml" title="RSS export" href="rss.php" />
 
 	<script language="javascript">
