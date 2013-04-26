@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="css_finance.css" media="screen" />
 <?php /* finance -  show exact race finance */
 
 $query_prihlaseni = "
@@ -47,20 +48,6 @@ RaceInfoTable($zaznam_z,'',false,false,true);
 include_once ('./url.inc.php');
 
 ?>
-
-<style>
-div.update-categories {
-	margin: 10px 0 0 0;
-	padding: 10px 0 0 0;
-	border: 2px solid gray;
-	text-align: center;
-}
-
-div>div.sub-title {
-	text-align: left;
-}
-</style>
-
 <div class="update-categories">
 <div class="sub-title">Naplò pouze vybrané kategorie pro pøihlášené závodníky</div>
 Vše<input type="checkbox" id="all-ckbx"/><div id="ckbx-cat"></div>
@@ -227,7 +214,7 @@ if ($i == 1)
 echo $data_tbl->get_footer()."\n";
 
 ?>
-<br>
+<div class="link-top"><a href="#top">Nahoru ...</a></div>
 <input type="submit" value="Vytvoøit nové platby">
 </form>
 
