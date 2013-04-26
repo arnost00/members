@@ -44,7 +44,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek_historie))
 	$row[] = $zaznam['amount'];
 	$row[] = $zaznam['note'];
 	$row[] = $zaznam['name'];
-	isset($finance_readonly)?"":IsLoggedFinance()?$row[]=" <a href=\"?change=change&trn_id=".$zaznam['fin_id']."\">Zmìnit</a> / <a href=\"?storno=storno&trn_id=".$zaznam['fin_id']."\">Storno</a>":"";
+	isset($finance_readonly)?"":IsLoggedFinance()?$row[]=" <a href=\"?change=change&trn_id=".$zaznam['fin_id']."\">Zmìnit</a>&nbsp;/&nbsp;<a href=\"?storno=storno&trn_id=".$zaznam['fin_id']."\">Storno</a>":"";
 	
 	$sum_amount += $zaznam['amount'];
 	
