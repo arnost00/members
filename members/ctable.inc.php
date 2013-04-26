@@ -270,7 +270,7 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 		}
 
 		//__________________________________________________________________
-		function get_new_row_arr($row_arr)// pole sloupcu
+		function get_new_row_arr($row_arr, $row_class="")// pole sloupcu
 		{
 			$cols = count ($row_arr);
 			if ($cols == 0) return '';
@@ -278,7 +278,7 @@ if (!defined('HTML_TABLE_CLASS_INCLUDED'))
 				$rc = 'highlight';
 			else
 				$rc= ((++$this->row_idx % 2) == 0) ? 'r1' : 'r2';
-			$row = '<TR class="'.$rc.'" valign="top">';
+			$row = '<TR class="'.$rc.' '.$row_class.'" valign="top">';
 			for($i = 0; $i < $cols; $i++)
 			{
 				$row .= '<TD class="'.$this->class_name.$this->cols_align[$i].'"';
