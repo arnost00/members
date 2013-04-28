@@ -1,8 +1,8 @@
 @CHARSET "UTF-8";
 
 div.update-categories {
-	margin: 10px 0 0 0;
-	padding: 10px 0 0 0;
+	margin: 10px 5px 5px 5px;
+	padding: 5px 5px 5px 5px;
 	border: 2px solid gray;
 	text-align: center;
 }
@@ -14,4 +14,8 @@ div.update-categories > div.sub-title {
 div.link-top {
 	width: 100%;
 	text-align: right;
+}
+
+div.update-categories > div#ckbx-cat{
+	padding: 2px 2px 2px 2px;
 }
