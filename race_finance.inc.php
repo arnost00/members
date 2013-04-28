@@ -51,8 +51,8 @@ include_once ('./url.inc.php');
 <div class="update-categories">
 <div class="sub-title">Naplò pouze vybrané kategorie pro pøihlášené závodníky</div>
 Vše<input type="checkbox" id="all-ckbx"/><div id="ckbx-cat"></div>
-<label for="in-amount">Èástka</label><input type="number" id="in-amount"/>
-<label for="in-note">Poznámka</label><input type="text" id="in-note"/>
+<label for="in-amount">Èástka&nbsp;</label><input type="number" id="in-amount"/>
+<label for="in-note">&nbsp;Poznámka&nbsp;</label><input type="text" id="in-note"/>
 <button onclick="fillInputsByCategory()">Vlož</button>
 </div>
 
@@ -73,7 +73,7 @@ function fillInputsByCategory() {
 			$("input.amount-"+value).val(amount);
 			$("input.note-"+value).val(note);
 		}
-				
+
 	});
 }
 </script>
