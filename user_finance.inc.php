@@ -25,6 +25,7 @@ $data_tbl->set_header_col($col++,'Datum závodu',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Èástka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Poznámka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Zapsal',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'Reklamace',ALIGN_LEFT);
 isset($finance_readonly)?"":IsLoggedFinance()?$data_tbl->set_header_col($col++,'Možnosti',ALIGN_LEFT):"";
 
 
@@ -44,6 +45,9 @@ while ($zaznam=MySQL_Fetch_Array($vysledek_historie))
 	$row[] = $zaznam['amount'];
 	$row[] = $zaznam['note'];
 	$row[] = $zaznam['name'];
+//priprava pro pouziti ajaxu a jquery
+// 	$row[] = "<div class=\"div-claim\" claim=\"".$zaznam['fin_id']."\" id=\"claim-".$zaznam['fin_id']."\">Problém?</div>";
+	$row[] = '<A HREF="javascript:open_win(\'./claim.php?payment_id='.$zaznam['fin_id'].'\',\'\')">Problém?</A>';
 	isset($finance_readonly)?"":IsLoggedFinance()?$row[]=" <a href=\"?change=change&trn_id=".$zaznam['fin_id']."\">Zmìnit</a>&nbsp;/&nbsp;<a href=\"?storno=storno&trn_id=".$zaznam['fin_id']."\">Storno</a>":"";
 	
 	$sum_amount += $zaznam['amount'];
@@ -63,4 +67,37 @@ $row[] = "<span class='amount$class'>".$sum_amount."</span>";
 echo $data_tbl->get_new_row_arr($row)."\n";
 echo $data_tbl->get_footer()."\n";
 
+?>
+
+<?
+//priprava pro pouziti ajaxu a jquery
+// <div style="display: none;" id="dialog-modal">
+// <form action="http://localhost/members/index.php?id=200&subid=10">
+// <fieldset>
+// <label for="dialog-text" id="label-dialog-text"></label>
+// <textarea rows="3" id="dialog-text"></textarea>
+// <button type="submit">Odešli</button>
+// </fieldset>
+// </form>
+// </div>
+
+//   <style>
+//     textarea#dialog-text { width:95%; padding: 10px; }
+//     fieldset { padding:0; border:0; margin-top:10px; }
+//   </style>
+
+// <script>
+// $(".div-claim").click(function () {
+// 	var id = $(this).prop("id");
+// 	$("#label-dialog-text").prop("innerHTML",id);
+//     $("#dialog-modal").dialog({
+//         width: 500,
+//         height: 220,
+//         modal: true,
+//         autoOpen: false,
+//         title: "Zadej reklamaci"
+//     });
+// 	$("#dialog-modal").dialog("open");
+// });
+// </script>
 ?>
