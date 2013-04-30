@@ -6,6 +6,25 @@ include_once './modify_log.inc.php';
  * library for payments
 */
 
+/*
+ * vytvor reklamaci platby
+ */
+function createClaim($user_id, $payment_id, $claim_text)
+{
+	
+	$query = "insert into ".TBL_CLAIM." (user_id, payment_id, text) 
+		values (".$user_id.", ".$payment_id.", '".$claim_text."')";
+	mysql_query($query);
+}
+
+/*
+ * edituj reklamaci
+ */
+function updateClaim($claim_id, $claim_text)
+{
+	$query = "update ".TBL_CLAIM." set text='".$claim_text."' where id = $claim_id";
+	mysql_query($query);
+}
 
 /* 
  * vytvor platbu
@@ -25,7 +44,9 @@ function createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod)
 	SaveItemToModifyLog_Add(TBL_FINANCE, "id=$lastId|user_id=$user_id|amount=$amount");
 }
 
-
+/*
+ * nastav platbu jako stornovanou
+ */
 function stornoPayment($editor_id, $trn_id, $storno_note)
 {
 	$datum=date("Y-m-d");
