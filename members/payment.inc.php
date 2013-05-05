@@ -55,9 +55,9 @@ function stornoPayment($editor_id, $trn_id, $storno_note)
 	SaveItemToModifyLog_Add(TBL_FINANCE, "id=$trn_id|note=$storno_note");
 }
 
-function updatePayment($editor_id, $trn_id, $amount, $note)
+function updatePayment($editor_id, $trn_id, $id_zavod, $amount, $note)
 {
-	$query = "update ".TBL_FINANCE." set amount=".$amount.", note='".$note."' where id = $trn_id";
+	$query = "update ".TBL_FINANCE." set id_zavod=".$id_zavod.", amount=".$amount.", note='".$note."' where id = $trn_id";
 	mysql_query($query);
 	SaveItemToModifyLog_Edit(TBL_FINANCE, "id=$trn_id|user_id=$editor_id|amount=$amount|note=$note");
 }

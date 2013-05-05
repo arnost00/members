@@ -1,7 +1,7 @@
 <?php /* finance -  show form for outgoing payment*/ 
 if (!defined("__HIDE_TEST__")) exit;
 
-$sql_query = "select fin.id, fin.id_users_user, fin.id_users_editor, fin.amount, fin.note, fin.date, rc.nazev zavod_nazev, from_unixtime(rc.datum,'%Y-%c-%e') zavod_datum from ".TBL_FINANCE." fin 
+$sql_query = "select fin.id, fin.id_users_user, fin.id_users_editor, fin.amount, fin.note, fin.date, rc.nazev zavod_nazev, rc.id zavod_id, from_unixtime(rc.datum,'%Y-%c-%e') zavod_datum from ".TBL_FINANCE." fin 
 	left join ".TBL_RACE." rc on fin.id_zavod = rc.id
 	where fin.id = ".$trn_id;
 $vysledek_platba=mysql_query($sql_query);
@@ -22,12 +22,26 @@ echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 
 if ($zaznam_platba['zavod_nazev'] == null)
+{
 	$race_text = '---';
+	$race_id = null;
+}
 else
+{
 	$race_text = $zaznam_platba["zavod_nazev"]."&nbsp;-&nbsp;".formatDate($zaznam_platba["zavod_datum"]);
+	$race_id = $zaznam_platba["zavod_id"];
+}
+$race_sel = '<select name="id_zavod">';
+@$vysledek_zavody=mysql_query("select id, nazev, from_unixtime(datum,'%Y-%c-%e') datum_text from ".TBL_RACE." order by datum desc");
+while ($zaznam=MySQL_Fetch_Array($vysledek_zavody))
+{
+	($zaznam["id"] == $race_id)?$selected="selected":$selected="";
+	$race_sel .= "<option ".$selected." value=".$zaznam["id"].">".$zaznam["nazev"]."&nbsp;-&nbsp;".formatDate($zaznam["datum_text"])."</option>";
+}
+$race_sel .= '</select>';
 
 echo $data_tbl->get_new_row('<label for="datum">Datum platby</label>', '<input name="datum" type="text" disabled value="'.SQLDate2String($zaznam_platba['date']).'" size="8" />');
-echo $data_tbl->get_new_row('<label for="race">Z·vod</label>', '<input name="race" type="text" disabled value="'.$race_text.'" size="40" maxlength="100" />');
+echo $data_tbl->get_new_row('<label for="race">Z·vod</label>', $race_sel);
 echo $data_tbl->get_new_row('<label for="amount">»·stka</label>', '<input name="amount" type="text" onkeyup="checkAmount(this);" maxlength="5" value="'.$zaznam_platba["amount"].'" size="5" maxlength="10" />');
 echo $data_tbl->get_new_row('<label for="note">Pozn·mka</label>', '<input name="note" type="text" value="'.$zaznam_platba["note"].'" size="40" maxlength="200" />');
 
