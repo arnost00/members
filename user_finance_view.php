@@ -36,7 +36,7 @@ if (IsSet($payment) && IsLoggedFinance())
 	}
 	if ($payment == "update")
 	{
-		updatePayment($editor_id, $trn_id, $amount, $note);
+		updatePayment($editor_id, $trn_id, $id_zavod, $amount, $note);
 	}
 }
 
