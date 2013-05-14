@@ -22,5 +22,6 @@ define ('TBL_ZAVXUS','zavxus');
 define ('TBL_MODLOG','modify_log');
 define ('TBL_MAILINFO','mailinfo');
 define ('TBL_FINANCE','finance');
+define ('TBL_CLAIM','claim');
 
 ?>

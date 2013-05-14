@@ -25,7 +25,8 @@ $data_tbl->set_header_col($col++,'Datum závodu',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Èástka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Poznámka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Zapsal',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Reklamace',ALIGN_LEFT);
+if ($g_enable_finances_claim)
+	$data_tbl->set_header_col($col++,'Reklamace',ALIGN_LEFT);
 isset($finance_readonly)?"":IsLoggedFinance()?$data_tbl->set_header_col($col++,'Možnosti',ALIGN_LEFT):"";
 
 
@@ -47,7 +48,8 @@ while ($zaznam=MySQL_Fetch_Array($vysledek_historie))
 	$row[] = $zaznam['name'];
 //priprava pro pouziti ajaxu a jquery
 // 	$row[] = "<div class=\"div-claim\" claim=\"".$zaznam['fin_id']."\" id=\"claim-".$zaznam['fin_id']."\">Problém?</div>";
-	$row[] = '<A HREF="javascript:open_win(\'./claim.php?payment_id='.$zaznam['fin_id'].'\',\'\')">Problém?</A>';
+	if ($g_enable_finances_claim)
+		$row[] = '<A HREF="javascript:open_win(\'./claim.php?payment_id='.$zaznam['fin_id'].'\',\'\')">Problém?</A>';
 	isset($finance_readonly)?"":IsLoggedFinance()?$row[]=" <a href=\"?change=change&trn_id=".$zaznam['fin_id']."\">Zmìnit</a>&nbsp;/&nbsp;<a href=\"?storno=storno&trn_id=".$zaznam['fin_id']."\">Storno</a>":"";
 	
 	$sum_amount += $zaznam['amount'];

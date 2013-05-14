@@ -28,6 +28,7 @@ AddZmenyFile('2.1.0.88');
 AddZmenyFile('2.1.0.89');
 AddZmenyFile('2.1.0.90');
 AddZmenyFile('2.2.0.309');
+AddZmenyFile('2.2.0.319');
 AddZmenyFile('2.2.0.358');
 AddZmenyFile('2.2.0.389');
 

@@ -78,6 +78,7 @@ $g_color_profile = '_colors_black_blue.php';
 
 // finance
 $g_enable_finances = true;
+$g_enable_finances_claim = true;
 
 // enable ORIS support
 $g_enable_oris_support = true;
