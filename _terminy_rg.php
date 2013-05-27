@@ -173,7 +173,7 @@ if (mysql_num_rows($vysledek) > 0)
 
 		if($zaznam['send'] > 0)
 		{
-			if($zaznam['terminy'] > 1)
+			if($zaznam['prihlasky'] > 1)
 				$send = $zaznam['send'].'.t.';
 			else
 				$send = 'Ano';
