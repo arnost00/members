@@ -41,7 +41,7 @@ if (IsSet($payment))
 			{
 				if ($payment_id)
 				{
-					updatePayment($editor_id, $payment_id, $amount, $note);
+					updatePayment($editor_id, $payment_id, $id_zavod, $amount, $note);
 				} else {
 					createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod);
 				}
