@@ -10,6 +10,7 @@ DrawPageTitle('Pøehled reklamací èlenù');
 //-->
 </script>
 <?
+
 include "./common_user.inc.php";
 
 $query = 'select * from `tst_finance` as f inner join
