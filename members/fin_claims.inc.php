@@ -1,4 +1,4 @@
-<?php /* financnik - seznam sverencu pro finance */
+<?php /* financnik - seznam reklamaci */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
 DrawPageTitle('Pøehled reklamací èlenù');
