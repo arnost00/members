@@ -3,6 +3,16 @@ if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
 DrawPageTitle('Finance èlenù');
 ?>
+<TABLE width="95%" border="0">
+<TR>
+<TD align="right">
+<? if ( IsLoggedFinance() ) { ?>
+<a href="javascript:open_win_ex('./fin_directory_export_exc.php','',600,600);">Export financí</a>
+<? } ?>
+</TD></TR>
+</TABLE>
+<br>
+
 <CENTER>
 <script language="javascript">
 <!-- 

@@ -271,6 +271,28 @@ class CSV_Export
 		return $text;
 	}
 	
+	public function generate_csv($arr_labels, $arr_fields)
+	{
+		$text = '';
+		$text = implode($this->delim, $arr_labels);
+		$text .= "\n";
+
+		foreach($this->data as $zaznam)
+		{
+			$str = '';
+			foreach($arr_fields as $field)
+			{
+				$str .= $this->get_col($zaznam[$field]);
+				$str .= $this->delim;
+			}
+
+			$text .= $str;
+			$text .= "\n";
+		}
+		$text .= "\n";
+		return $text;
+	}
+	
 
 	protected function get_col($text)
 	{
