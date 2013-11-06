@@ -40,6 +40,9 @@ $is_termin_show_on = $is_registrator_on && ($zaznam_z['prihlasky'] > 1);
 if($is_termin_show_on && $new_termin != 0)
 	$termin = $new_termin;
 
+if ($zaznam_z['prihlasky'] <= 1 && $is_registrator_on && $termin == 0)
+	$termin = 1;
+
 if($termin != 0)
 {
 	if ($zaznam != false)
@@ -84,7 +87,7 @@ if($termin != 0)
 	}
 }
 //echo " -".$kateg." u clena ".$user_id." a s pozn.: '".$pozn."'<BR>";
-if ($is_termin_show_on)
+if ($gr_id != 0)
 	header("location: ".$g_baseadr."race_regs_1.php?gr_id=".$gr_id."&id=".$id);
 else
 	header("location: ".$g_baseadr."race_regs_1.php?id=".$id);
