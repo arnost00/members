@@ -24,7 +24,7 @@ TXT_Header();
 
 db_Connect();
 
-@$vysledek=MySQL_Query("SELECT f.date, u.sort_name as name, f.amount, f.note FROM `tst_finance` f join `tst_users` u on u.id = f.id_users_user ORDER BY f.date desc")
+@$vysledek=MySQL_Query("SELECT f.date, u.sort_name as name, f.amount, f.note FROM `tst_finance` f join `tst_users` u on u.id = f.id_users_user where f.storno is null ORDER BY f.date desc")
 	or die("Chyba pøi provádìní dotazu do databáze.");
 
 include ('exports.inc.php');
