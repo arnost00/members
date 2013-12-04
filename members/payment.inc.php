@@ -15,6 +15,8 @@ function createClaim($user_id, $payment_id, $claim_text)
 	$query = "insert into ".TBL_CLAIM." (user_id, payment_id, text) 
 		values (".$user_id.", ".$payment_id.", '".$claim_text."')";
 	mysql_query($query);
+	$query = "update ".TBL_FINANCE." set claim = 1 where id = $payment_id";
+	mysql_query($query);
 }
 
 /*
@@ -23,6 +25,17 @@ function createClaim($user_id, $payment_id, $claim_text)
 function updateClaim($claim_id, $claim_text)
 {
 	$query = "update ".TBL_CLAIM." set text='".$claim_text."' where id = $claim_id";
+	mysql_query($query);
+}
+
+/*
+ * uzavri reklamaci
+ */
+function closeClaim($claim_id, $payment_id)
+{
+	$query = "update ".TBL_CLAIM." set closed = 1 where id = $claim_id";
+	mysql_query($query);
+	$query = "update ".TBL_FINANCE." set claim = 0 where id = $payment_id";
 	mysql_query($query);
 }
 
@@ -82,8 +95,6 @@ function getUserPercent($id)
 	//TODO popremyslet, zda by nebylo lepsi vracet false (nebo -1, null?) v pripade, kdy je user na flatrate
 	//TODO nebo rovnou nespojit s getUserPaymentMethod, kdy by vracela False a zaroven i vysi procent
 	$select = "select flatrate, percents from '".TBL_USER."' where id = $id";
-	
-// 	while ($zaznam=MySQL_Fetch_Array($vysledek))
 	
 	if ($flatrate) return -1;
 	return $percent;

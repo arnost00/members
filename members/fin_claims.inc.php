@@ -13,7 +13,7 @@ DrawPageTitle('Pøehled reklamací èlenù');
 
 include "./common_user.inc.php";
 
-$query = 'select * from `tst_finance` as f inner join
+$query = 'select *, f.id as fin_id from `tst_finance` as f inner join
 `tst_claim` as c on f.id = c.payment_id inner join
 `tst_users` as u on f.id_users_user = u.id left join
 `tst_zavod` as r on f.id_zavod = r.id
@@ -51,8 +51,8 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 		$row[] = $zaznam['amount'];
 		$row[] = $zaznam['note'];
 		$row[] = $zaznam['text'];
-		$options = "Historie";
-		$row[] = $options;
+		if ($g_enable_finances_claim)
+			$row[] = '<A HREF="javascript:open_win(\'./claim.php?payment_id='.$zaznam['fin_id'].'\',\'\')">Problém?</A>';
 		echo $data_tbl->get_new_row_arr($row)."\n";
 	}
 	echo $data_tbl->get_footer()."\n";
