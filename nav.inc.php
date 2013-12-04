@@ -121,6 +121,7 @@ function DrawMenuGroupHeader($name)
 		DrawMenuGroupHeader('Menu finanèníka');
 		DrawMenuItem('Èlenská základna',_FINANCE_GROUP_ID_,1);
 		DrawMenuItem('Pøehled závodù',_FINANCE_GROUP_ID_,2);
+		if ($g_enable_finances_claim) DrawMenuItem('Pøehled reklamací',_FINANCE_GROUP_ID_,3);
 	}
 	if(IsLoggedAdmin())
 	{
