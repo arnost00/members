@@ -112,8 +112,10 @@ else
 	$prihlasky5=correct_sql_string($prihlasky5);
 	$etap=correct_sql_string($etap);
 	$oddil=correct_sql_string($oddil);
+	
+	!isset($transport)?$transport=null:$transport=1;
 
-	$result=MySQL_Query("UPDATE ".TBL_RACE." SET datum='$datum', datum2='$datum2', nazev='$nazev', misto='$misto', typ='$typ', zebricek='$zebricek2', ranking='$ranking', prihlasky='$prihlasky', odkaz='$odkaz', prihlasky1='$prihlasky1', prihlasky2='$prihlasky2', prihlasky3='$prihlasky3', prihlasky4='$prihlasky4', prihlasky5='$prihlasky5', etap='$etap', poznamka='$poznamka', oddil='$oddil', modify_flag='$modify_flag' WHERE id='$id'")
+	$result=MySQL_Query("UPDATE ".TBL_RACE." SET datum='$datum', datum2='$datum2', nazev='$nazev', misto='$misto', typ='$typ', zebricek='$zebricek2', ranking='$ranking', prihlasky='$prihlasky', odkaz='$odkaz', prihlasky1='$prihlasky1', prihlasky2='$prihlasky2', prihlasky3='$prihlasky3', prihlasky4='$prihlasky4', prihlasky5='$prihlasky5', etap='$etap', poznamka='$poznamka', oddil='$oddil', modify_flag='$modify_flag', transport='$transport' WHERE id='$id'")
 		or die("Chyba pøi provádìní dotazu do databáze.");
 	if ($result == FALSE)
 		die ("Nepodaøilo se zmìnit údaje o závodì.");

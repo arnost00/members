@@ -2,7 +2,7 @@
 <?php /* finance -  show exact race finance */
 
 $query_prihlaseni = "
-select u.id u_id, u.sort_name, f.id, f.amount, f.note, zu.kat from ".TBL_USER." u inner join
+select u.id u_id, u.sort_name, f.id, f.amount, f.note, zu.kat, zu.transport from ".TBL_USER." u inner join
 ".TBL_ZAVXUS." zu on u.id = zu.id_user left join
 (select * from ".TBL_FINANCE." where id_zavod = $race_id and storno is null) f on f.id_users_user = zu.id_user
 where zu.id_zavod = $race_id and u.hidden = '0' order by u.sort_name
@@ -11,7 +11,7 @@ $vysledek_prihlaseni = mysql_query($query_prihlaseni);
 
 $query_platici = "
 select u.id u_id, u.sort_name, f.id, f.amount, f.note, null kat from ".TBL_USER." u inner join
-(select * from ".TBL_FINANCE." where id_zavod = $race_id and storno is null) f on f.id_users_user = u.id
+(select * from ".TBL_FINANCE." where id_zavod = $race_id and storno is null) f on f.id_users_user = u.id 
 where f.id_zavod = $race_id
 and u.id not in (select id_user from ".TBL_ZAVXUS." where id_zavod = $race_id) 
 and u.hidden = '0' 
@@ -89,6 +89,7 @@ $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Èástka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Poznámka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'Doprava',ALIGN_CENTER);
 IsLoggedFinance()?$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER):"";
 
 
@@ -116,11 +117,14 @@ while ($zaznam=mysql_fetch_assoc($vysledek_prihlaseni))
 	$row[] = $input_note;
 	
 	$row[] = "<span class=\"cat\">".$zaznam['kat']."</span>";
+	$trans=$zaznam['transport']==1?"ANO":"&nbsp;";
+	$row[] = "<span>".$trans."</span>";
 	$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['u_id'].'\',\'\')">Platby</A>';
 	$row_text .= '<input type="hidden" id="userid'.$i.'" name="userid'.$i.'" value="'.$zaznam["u_id"].'"/><input type="hidden" id="paymentid'.$i.'" name="paymentid'.$i.'" value="'.$zaznam["id"].'"/>'; 
 	$row[] = $row_text;
 	
 	$row_class = "cat-".$zaznam['kat'];
+
 	echo $data_tbl->get_new_row_arr($row, $row_class)."\n";
 	$i++;
 }
@@ -147,7 +151,7 @@ while ($zaznam=mysql_fetch_assoc($vysledek_platici))
 	$row[] = $input_note;
 
 	$row[] = $zaznam['kat'];
-
+	
 	$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['u_id'].'\',\'\')">Platby</A>';
 	$row_text .= '<input type="hidden" id="userid'.$i.'" name="userid'.$i.'" value="'.$zaznam["u_id"].'"/><input type="hidden" id="paymentid'.$i.'" name="paymentid'.$i.'" value="'.$zaznam["id"].'"/>';
 	$row[] = $row_text;	
@@ -198,6 +202,7 @@ while ($zaznam=mysql_fetch_assoc($vysledek_neprihlaseni))
 	$row[] = $input_note;
 	
 	$row[] = $zaznam['kat'];
+	
 	// 	IsLoggedFinance()?$row[]=" <a href=\"?change=change&trn_id=".$zaznam['fin_id']."\">Zmìnit</a> / <a href=\"?storno=storno&trn_id=".$zaznam['fin_id']."\">Storno</a>":"";
 	$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['u_id'].'\',\'\')">Platby</A>';
 	$row_text .= '<input type="hidden" id="userid'.$i.'" name="userid'.$i.'" value="'.$zaznam["u_id"].'"/><input type="hidden" id="paymentid'.$i.'" name="paymentid'.$i.'" value="'.$zaznam["id"].'"/>';

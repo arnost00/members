@@ -47,7 +47,7 @@ else
 <TR>
 	<TD width="130" align="right">Datum</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="datum" SIZE=8>&nbsp;&nbsp(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="datum" SIZE=8>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <?
 }
@@ -104,6 +104,11 @@ else
 			<option value='0'>NE</option>
 		</select>
 	</TD>
+</TR>
+<TR>
+	<TD width="130" align="right">Spoleèná doprava</TD>
+	<TD width="5"></TD>
+	<TD><input type="checkbox" name="transport" id="transport" checked></TD>
 </TR>
 <TR>
 	<TD width="130" align="right">Odkaz</TD>
