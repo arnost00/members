@@ -115,6 +115,11 @@ else
 	</TD>
 </TR>
 <TR>
+	<TD width="130" align="right">Spoleèná doprava</TD>
+	<TD width="5"></TD>
+	<TD><input type="checkbox" name="transport" id="transport" <?if ($zaznam["transport"]==1) echo " CHECKED";?>></TD>
+</TR>
+<TR>
 	<TD width="130" align="right">Odkaz</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="odkaz" SIZE=60 maxlength=100 value="<?echo (($zaznam['odkaz'] != '') ? cononize_url($zaznam['odkaz'],1):''); ?>"></TD>

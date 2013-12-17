@@ -85,8 +85,6 @@ else
 
 <FORM METHOD=POST ACTION="us_race_regon_exc.php" name="form1" onsubmit="return check_reg(this);">
 
-<? DrawPageSubTitle('Výbìr kategorie'); ?>
-
 Do které kategorie chcete pøihlásit:&nbsp;
 <?
 echo'<br>';
@@ -97,8 +95,15 @@ for ($i=0; $i<count($kategorie)-1; $i++)
 }
 
 echo'<BR><BR>Vybraná kategorie:&nbsp;<INPUT TYPE="text" NAME="kat" size=4 value="'.$zaznam_rg['kat'].'"><BR>';
-?>
 
+if ($zaznam_z["transport"]==1)
+{
+	echo "<BR><BR>";
+	$trans=$zaznam_rg["transport"]?"CHECKED":"";
+	echo 'Chci využít spoleènou dopravu&nbsp;<input type="checkbox" name="transport" id="transport" '.$trans.'>';
+}
+
+?>
 <BR><BR>
 Poznámka&nbsp;<INPUT TYPE="text" name="pozn" size="50" maxlength="250" value="<?echo $zaznam_rg['pozn']?>">&nbsp;(do&nbsp;pøihlášky)
 <BR><BR>
@@ -120,7 +125,7 @@ if ($new)
 else
 {
 ?>
-<INPUT TYPE="submit" value="Zmìnit kategorii">
+<INPUT TYPE="submit" value="Zmìnit údaje">
 &nbsp;&nbsp;&nbsp;&nbsp;<BUTTON onclick="return submit_off();">Odhlásit za závodu</BUTTON>
 <?
 }
@@ -156,12 +161,15 @@ echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
 $i=0;
+$trans=0;
 while ($zaznam=MySQL_Fetch_Array($vysledek))
 {
 	@$vysledek1=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE id=$zaznam[id_user] LIMIT 1");
 	$zaznam1=MySQL_Fetch_Array($vysledek1);
 	$i++;
 
+	$zaznam["transport"]?$trans++:"";
+	
 	$row = array();
 	$row[] = $i.'<!-- '.$zaznam['id'].' -->';
 	$row[] = $zaznam1['jmeno'];
@@ -174,6 +182,8 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 	echo $data_tbl->get_new_row_arr($row)."\n";
 }
 echo $data_tbl->get_footer()."\n";
+
+echo $zaznam_z["transport"]?"<BR>Poèet pøihlášených na dopravu: $trans":"";
 ?>
 
 <BR>

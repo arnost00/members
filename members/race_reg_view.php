@@ -22,7 +22,7 @@ DrawPageTitle('Seznam závodníkù pøihlášených na závod');
 
 db_Connect();
 
-$query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.termin, z.si_chip as t_si_chip, z.id_user FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id.' ORDER BY z.termin ASC, z.id ASC';
+$query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.termin, z.si_chip as t_si_chip, z.id_user, z.transport transport FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id.' ORDER BY z.termin ASC, z.id ASC';
 
 @$vysledek=MySQL_Query($query);
 
@@ -64,12 +64,15 @@ echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
 $i=0;
+$trans=0;
 while ($zaznam=MySQL_Fetch_Array($vysledek))
 {
 	if(($select == 0 || $zaznam['chief_id'] == $usr->user_id || $zaznam['id_user'] == $usr->user_id) && $zaznam['hidden'] == 0)
 	{
 		$i++;
 
+		$zaznam["transport"]?$trans++:"";
+		
 		$row = array();
 		$row[] = $i.'<!-- '.$zaznam['id'].' -->';
 		$row[] = $zaznam['jmeno'];
@@ -94,6 +97,8 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 	}
 }
 echo $data_tbl->get_footer()."\n";
+
+echo $zaznam_z["transport"]?"<BR>Poèet pøihlášených na dopravu: $trans":"";
 ?>
 
 <BR>

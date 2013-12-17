@@ -28,22 +28,24 @@ if ($kat != '')
 	$zaznam_z = MySQL_Fetch_Array($vysledek_z);
 
 	$termin = raceterms::GetCurr4RegTerm($zaznam_z);
+	
+	!isset($transport)?$transport=null:$transport=1;
 
 	if ($novy)
 	{
 		$vysledek=MySQL_Query("SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod='$id_zav' and id_user='$id_us'");
 		if ($vysledek != FALSE && ($zaznam = MySQL_Fetch_Array($vysledek)) != FALSE )
 		{	// latest new == update
-			MySQL_Query("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$pozn', pozn_in='$pozn2', termin='$termin' WHERE id_zavod='$id_zav' and id_user='$id_us'");
+			MySQL_Query("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$pozn', pozn_in='$pozn2', termin='$termin', transport='$transport' WHERE id_zavod='$id_zav' and id_user='$id_us'");
 		}
 		else
 		{	// really new
-			MySQL_Query("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in,termin) VALUES ('$id_us','$id_zav','$kat','$pozn','$pozn2','$termin')");	
+			MySQL_Query("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in, termin, transport) VALUES ('$id_us','$id_zav','$kat','$pozn','$pozn2','$termin','$transport')");	
 		}
 	}
 	else
 	{	// update
-		MySQL_Query("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$pozn', pozn_in='$pozn2' WHERE id='$id_z'");
+		MySQL_Query("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$pozn', pozn_in='$pozn2', transport='$transport' WHERE id='$id_z'");
 	}
 
 }
