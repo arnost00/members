@@ -89,8 +89,8 @@ $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Èástka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Poznámka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Doprava',ALIGN_CENTER);
-IsLoggedFinance()?$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER):"";
 
 
 echo $data_tbl->get_css()."\n";
@@ -117,11 +117,12 @@ while ($zaznam=mysql_fetch_assoc($vysledek_prihlaseni))
 	$row[] = $input_note;
 	
 	$row[] = "<span class=\"cat\">".$zaznam['kat']."</span>";
-	$trans=$zaznam['transport']==1?"ANO":"&nbsp;";
-	$row[] = "<span>".$trans."</span>";
+
 	$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['u_id'].'\',\'\')">Platby</A>';
 	$row_text .= '<input type="hidden" id="userid'.$i.'" name="userid'.$i.'" value="'.$zaznam["u_id"].'"/><input type="hidden" id="paymentid'.$i.'" name="paymentid'.$i.'" value="'.$zaznam["id"].'"/>'; 
 	$row[] = $row_text;
+	$trans=$zaznam['transport']==1?"ANO":"&nbsp;";
+	$row[] = "<span>".$trans."</span>";
 	
 	$row_class = "cat-".$zaznam['kat'];
 
@@ -154,7 +155,8 @@ while ($zaznam=mysql_fetch_assoc($vysledek_platici))
 	
 	$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['u_id'].'\',\'\')">Platby</A>';
 	$row_text .= '<input type="hidden" id="userid'.$i.'" name="userid'.$i.'" value="'.$zaznam["u_id"].'"/><input type="hidden" id="paymentid'.$i.'" name="paymentid'.$i.'" value="'.$zaznam["id"].'"/>';
-	$row[] = $row_text;	
+	$row[] = $row_text;
+	$row[] = '';
 
 	echo $data_tbl->get_new_row_arr($row)."\n";
 	$i++;
@@ -178,7 +180,7 @@ $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Èástka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Poznámka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
-IsLoggedFinance()?$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER):"";
+$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
@@ -203,7 +205,6 @@ while ($zaznam=mysql_fetch_assoc($vysledek_neprihlaseni))
 	
 	$row[] = $zaznam['kat'];
 	
-	// 	IsLoggedFinance()?$row[]=" <a href=\"?change=change&trn_id=".$zaznam['fin_id']."\">Zmìnit</a> / <a href=\"?storno=storno&trn_id=".$zaznam['fin_id']."\">Storno</a>":"";
 	$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['u_id'].'\',\'\')">Platby</A>';
 	$row_text .= '<input type="hidden" id="userid'.$i.'" name="userid'.$i.'" value="'.$zaznam["u_id"].'"/><input type="hidden" id="paymentid'.$i.'" name="paymentid'.$i.'" value="'.$zaznam["id"].'"/>';
 	$row[] = $row_text;
