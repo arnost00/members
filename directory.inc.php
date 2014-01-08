@@ -6,7 +6,7 @@ DrawPageTitle('Adresáø èlenù oddílu');
 <TABLE width="95%" border="0">
 <TR>
 <TD align="right">
-<? if ( IsLoggedManager() || IsLoggedRegistrator()) { ?>
+<? if ( IsLoggedManager() || IsLoggedRegistrator() || IsLoggedSmallAdmin() || IsLoggedAdmin()) { ?>
 <a href="javascript:open_win_ex('./export_directory.php','',600,600);">Export adresáøe</a>
 <? } ?>
 </TD></TR>
