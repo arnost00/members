@@ -6,7 +6,7 @@ require('./cfg/_colors.php');
 require ('./connect.inc.php');
 require ('./sess.inc.php');
 
-if (!IsLoggedRegistrator() && !IsLoggedManager())
+if (!IsLoggedManager() && !IsLoggedRegistrator() && !IsLoggedSmallAdmin() && !IsLoggedAdmin())
 {
 	header('location: '.$g_baseadr.'error.php?code=21');
 	exit;

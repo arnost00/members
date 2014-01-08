@@ -226,6 +226,8 @@ class CSV_Export
 	{
 		$text = '';
 		$text .= 'pøíjmeni;jméno;datum narození;reg;email;adresa;mesto;psc;tel.domù;tel.práce; tel.mobilní;si.èip;licence OB;licence MTBO;licence LOB;národnost;';
+		if (IsLoggedSmallAdmin() || IsLoggedAdmin())
+			$text .= 'rodné èíslo;';
 		$text .= "\n";
 
 		foreach($this->data as $zaznam)
@@ -263,7 +265,11 @@ class CSV_Export
 			$str .= $this->delim;
 			$str .= $this->get_col($zaznam['narodnost']);
 			$str .= $this->delim;
-
+			if (IsLoggedSmallAdmin() || IsLoggedAdmin())
+			{
+				$str .= $this->get_col($zaznam['rc']);
+				$str .= $this->delim;
+			}
 			$text .= $str;
 			$text .= "\n";
 		}
