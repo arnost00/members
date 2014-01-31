@@ -21,7 +21,7 @@ include('./csort.inc.php');
 $sc = new column_sort_db();
 $sc->add_column('sort_name','');
 $sc->add_column('reg','');
-$sc->set_url('index.php?id=300&subid=3',true);
+$sc->set_url('index.php?id=700&subid=1',true);
 $sub_query = $sc->get_sql_string();
 
 $query = "SELECT id,prijmeni,jmeno,reg,hidden FROM ".TBL_USER.$sub_query;
@@ -95,7 +95,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 	}
 	$row[] = $acc;
 	$row[] = $acc_r.'</code>';
-	$row[] = '<A HREF="./user_edit.php?id='.$zaznam['id'].'">Edit</A>&nbsp;/&nbsp;<A HREF="./user_login_edit.php?id='.$zaznam["id"].'">Úèet</A>&nbsp;/&nbsp;<A HREF="./user_del_exc.php?id='.$zaznam["id"]."\" onclick=\"return confirm_delete('".$zaznam["jmeno"].' '.$zaznam["prijmeni"]."')\" class=\"Erase\">Smazat</A>";
+	$row[] = '<A HREF="./user_edit.php?id='.$zaznam['id'].'&cb=700">Edit</A>&nbsp;/&nbsp;<A HREF="./user_login_edit.php?id='.$zaznam["id"].'&cb=700">Úèet</A>&nbsp;/&nbsp;<A HREF="./user_del_exc.php?id='.$zaznam["id"]."\" onclick=\"return confirm_delete('".$zaznam["jmeno"].' '.$zaznam["prijmeni"]."')\" class=\"Erase\">Smazat</A>";
 	echo $data_tbl->get_new_row_arr($row)."\n";
 }
 echo $data_tbl->get_footer()."\n";

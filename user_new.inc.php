@@ -80,7 +80,7 @@ echo $data_tbl->get_new_row('Licence OB', GetLicenceComboBox('lic',$zaznam["lic"
 echo $data_tbl->get_new_row('Licence MTBO', GetLicenceComboBox('lic_mtbo',$zaznam["lic_mtbo"]));
 echo $data_tbl->get_new_row('Licence LOB', GetLicenceComboBox('lic_lob',$zaznam["lic_lob"]));
 
-if (IsLoggedAdmin())
+if (IsLoggedSmallAdmin())
 {
 	echo $data_tbl->get_new_row_text('', '<INPUT TYPE="checkbox" NAME="hidden" SIZE=15 VALUE="1"'.(($zaznam["hidden"] == 1) ? ' checked' : '').'> Skrytý èlen (vidí ho jen admin)');
 	echo $data_tbl->get_new_row('Rodné èíslo', '<INPUT TYPE="text" NAME="rc" SIZE=30 MAXLENGTH=10 VALUE="'.$zaznam["rc"].'"> (9999999999)');

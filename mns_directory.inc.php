@@ -70,9 +70,9 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 			else
 			{
 				$val=GetUserAccountId_Users($zaznam['id']);
-				$row_text = '<A HREF="./mns_user_edit.php?id='.$zaznam['id'].'">Editovat</A>';
+				$row_text = '<A HREF="./mns_user_edit.php?id='.$zaznam['id'].'&cb=600">Editovat</A>';
 				if ($val)
-					$row_text .= '&nbsp;/&nbsp;<A HREF="./mns_user_login_edit.php?id='.$zaznam['id'].'">Úèet</A>';
+					$row_text .= '&nbsp;/&nbsp;<A HREF="./mns_user_login_edit.php?id='.$zaznam['id'].'&cb=600">Úèet</A>';
 			}
 			$row[] = $row_text;
 			echo $data_tbl->get_new_row_arr($row)."\n";

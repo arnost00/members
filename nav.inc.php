@@ -114,6 +114,7 @@ function DrawMenuGroupHeader($name)
 	if(IsLoggedSmallAdmin())
 	{
 		DrawMenuGroupHeader('Menu správce');
+		DrawMenuItem('Èlenská základna',_SMALL_ADMIN_GROUP_ID_,1);
 		DrawMenuItem('Správa úètù',_SMALL_ADMIN_GROUP_ID_,3);
 	}
 	if(IsLoggedFinance() && $g_enable_finances)
@@ -129,7 +130,6 @@ function DrawMenuGroupHeader($name)
 		DrawMenuItem('Servisní menu',_ADMIN_GROUP_ID_,1);
 		DrawMenuItem('Pøihlášky na závody',_ADMIN_GROUP_ID_,2);
 		DrawMenuItem('Editace závodù',_ADMIN_GROUP_ID_,5);
-		DrawMenuItem('Èlenská základna',_ADMIN_GROUP_ID_,3);
 		DrawMenuItem('Úèty / Náhled',_ADMIN_GROUP_ID_,4);
 		DrawMenuItem('Výpis zmìn',_ADMIN_GROUP_ID_,6);
 	}

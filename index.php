@@ -133,9 +133,6 @@ if($g_is_system_running || IsLoggedAdmin())
 					case 2:
 						include "./rg_ad_races.inc.php";
 						break;
-					case 3:
-						include "./ad_directory.inc.php";
-						break;
 					case 4:
 						include "./ad_accview.inc.php";
 						break;
@@ -145,6 +142,7 @@ if($g_is_system_running || IsLoggedAdmin())
 					case 6:
 						include "./ad_modify_log.inc.php";
 						break;
+					case 3:
 					default:
 						include "./news.inc.php";
 				}
@@ -157,6 +155,9 @@ if($g_is_system_running || IsLoggedAdmin())
 			{
 				switch($subid)
 				{
+					case 1:
+						include "./ads_directory.inc.php";
+						break;
 					case 3:
 						include "./ads_mod_users.inc.php";
 						break;

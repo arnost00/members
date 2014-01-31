@@ -8,10 +8,10 @@ require ('./modify_log.inc.php');
 
 if (!IsSet($fin)) $fin = 0;
 if (!IsSet($rc)) $rc = '';
+if (!IsSet($hidden)) $hidden = 0;
 
 include "./common.inc.php";
 
-if (!IsSet($hidden)) $hidden = 0;
 $datum = String2SQLDateDMY($datum);
 
 // --> filling of czech sort helping column
@@ -50,14 +50,14 @@ $fin=correct_sql_string($fin);
 $rc=correct_sql_string($rc);
 $narodnost=correct_sql_string($narodnost);
 
-if (IsLoggedAdmin())
+if (IsLoggedSmallAdmin())
 {
 	if (IsSet($update))
 	{
 		$update = (isset($update) && is_numeric($update)) ? (int)$update : 0;
 
 		$result=MySQL_Query("UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic='$lic', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin', rc='$rc', narodnost='$narodnost' WHERE id='$update'")
-			or die("Chyba pøi provádìní dotazu do databáze.");
+				or die("Chyba pøi provádìní dotazu do databáze.");
 		if ($result == FALSE)
 			die ("Nepodaøilo se zmìnit údaje èlena.");
 		SaveItemToModifyLog_Edit(TBL_USER,$jmeno.' '.$prijmeni.' ['.$reg.']');
@@ -70,7 +70,7 @@ if (IsLoggedAdmin())
 			die ("Nepodaøilo se vložit èlena.");
 		SaveItemToModifyLog_Add(TBL_USER,$jmeno.' '.$prijmeni.' ['.$reg.']');
 	}
-	header("location: ".$g_baseadr."index.php?id=300&subid=3");
+	header("location: ".$g_baseadr."index.php?id=700&subid=1");
 }
 else if (IsLoggedManager() || IsLoggedSmallManager())
 {

@@ -130,7 +130,7 @@ if ($num_rows > 0)
 
 	echo $data_tbl->get_footer()."\n";
 }
-echo('<a href="race_reg_form_exc.php" target="_blank">Výpis všech èlenù pro centrální registraci</a><br>');
+//obsolete - echo('<a href="race_reg_form_exc.php" target="_blank">Výpis všech èlenù pro centrální registraci</a><br>');
 echo('<a href="race_reg_form_all.php" target="_blank">Vytvoøení a export pøihlášky pro prázdný závod</a><br>');
 ?>
 <BR><hr><BR>

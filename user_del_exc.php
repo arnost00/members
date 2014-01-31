@@ -6,9 +6,15 @@ require ('./connect.inc.php');
 require ('./sess.inc.php');
 require ('./modify_log.inc.php');
 
-if (IsLoggedAdmin())
+if (IsLoggedSmallAdmin())
 {
 	$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+
+	if ($id == $usr->user_id)
+	{
+		header("location: ".$g_baseadr."error.php?code=202");
+		exit;
+	}
 
 	db_Connect();
 	include "./common_user.inc.php";
@@ -22,7 +28,7 @@ if (IsLoggedAdmin())
 		@$vysledek=MySQL_Query("DELETE FROM ".TBL_USXUS." WHERE id_accounts = '$id2'");
 		SaveItemToModifyLog_Delete(TBL_ACCOUNT,'user.id = '.$id.' acc.id = '.$id2);
 	}
-	header("location: ".$g_baseadr."index.php?id=300&subid=3");
+	header("location: ".$g_baseadr."index.php?id=700&subid=1");
 }
 else if (IsLoggedManager())
 {
