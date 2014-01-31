@@ -7,7 +7,6 @@ DrawPageTitle('Administrace stránek oddílu');
 
 <A HREF="index.php?id=<? echo (_ADMIN_GROUP_ID_); ?>&subid=2" class="NaviColSm">Pøihlášky na závody</A><BR>
 <A HREF="index.php?id=<? echo (_ADMIN_GROUP_ID_); ?>&subid=5" class="NaviColSm">Editace závodù</A><BR><BR>
-<A HREF="index.php?id=<? echo (_ADMIN_GROUP_ID_); ?>&subid=3" class="NaviColSm">Èlenská základna oddílu</A><BR><BR>
 <A HREF="index.php?id=<? echo (_ADMIN_GROUP_ID_); ?>&subid=4" class="NaviColSm">Náhled na úèty</A><BR>
 <A HREF="index.php?id=<? echo (_ADMIN_GROUP_ID_); ?>&subid=6" class="NaviColSm">Výpis zmìn v databázi</A><BR>
 

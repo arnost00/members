@@ -25,7 +25,6 @@ $sc->set_url('index.php?id=500&subid=1',true);
 $sub_query = $sc->get_sql_string();
 
 $query = "SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob FROM ".TBL_USER.$sub_query;
-
 @$vysledek=MySQL_Query($query);
 
 if (IsSet($result) && is_numeric($result) && $result != 0)
@@ -87,7 +86,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 		else
 			$acc = '-';
 		$row[] = $acc;
-		$row[] = '<A HREF="./user_edit.php?id='.$zaznam['id'].'">Edit</A>&nbsp;/&nbsp;<A HREF="./user_login_edit.php?id='.$zaznam["id"].'">Úèet</A>&nbsp;/&nbsp;<A HREF="./user_del_exc.php?id='.$zaznam["id"]."\" onclick=\"return confirm_delete('".$zaznam["jmeno"].' '.$zaznam["prijmeni"]."')\" class=\"Erase\">Smazat</A>";
+		$row[] = '<A HREF="./user_edit.php?id='.$zaznam['id'].'&cb=500">Edit</A>&nbsp;/&nbsp;<A HREF="./user_login_edit.php?id='.$zaznam["id"].'&cb=500">Úèet</A>&nbsp;/&nbsp;<A HREF="./user_del_exc.php?id='.$zaznam["id"]."\" onclick=\"return confirm_delete('".$zaznam["jmeno"].' '.$zaznam["prijmeni"]."')\" class=\"Erase\">Smazat</A>";
 		echo $data_tbl->get_new_row_arr($row)."\n";
 	}
 }

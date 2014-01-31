@@ -63,7 +63,7 @@ function GenerateInfoEmail($type,$id,$login,$heslo,$email)
 	SendEmail($from_email,$email,$full_msg,$subject);
 }
 
-if (IsLoggedAdmin())
+if (IsLoggedSmallAdmin())
 {
 	$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 	$type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
@@ -203,7 +203,7 @@ if (IsLoggedAdmin())
 	default:
 		$result=CS_UNKNOWN_ERROR;
 	}
-	header("location: ".$g_baseadr."index.php?id=300&subid=3&result=".$result);
+	header("location: ".$g_baseadr."index.php?id=700&subid=1&result=".$result);
 }
 else if (IsLoggedManager())
 {

@@ -6,7 +6,7 @@ define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 require ("connect.inc.php");
 require ("sess.inc.php");
 require ("ctable.inc.php");
-if (!IsLoggedAdmin() && !IsLoggedManager())
+if (!IsLoggedSmallAdmin() && !IsLoggedManager())
 {
 	header("location: ".$g_baseadr."error.php?code=21");
 	exit;
@@ -32,11 +32,20 @@ DrawPageTitle('Èlenská základna - Editace uživatele');
 <BR><hr><BR>
 <? include ("user_new.inc.php"); ?>
 <BR><hr><BR>
-<? if (IsLoggedManager()) { ?>
-<A HREF="index.php?id=500&subid=1">Zpìt na seznam èlenù</A><BR>
-<? } else { ?>
-<A HREF="index.php?id=300&subid=3">Zpìt na seznam èlenù</A><BR>
-<? } ?>
+<?
+	if (!IsSet($cb)) $cb = 0;
+	$cb = (int)$cb;
+	if ($cb == 0)
+	{
+		if (IsLoggedSmallAdmin())
+			$cb = 700;
+		else if (IsLoggedManager())
+			$cb = 700;
+		else
+			$cb = 600;
+	}
+	echo('<A HREF="index.php?id='.$cb.'&subid=1">Zpìt na seznam èlenù</A><BR>');
+?>
 <BR><hr><BR>
 </CENTER>
 </TD>

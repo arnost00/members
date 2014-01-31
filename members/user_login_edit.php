@@ -4,7 +4,7 @@
 
 require ("./connect.inc.php");
 require ("./sess.inc.php");
-if (!IsLoggedAdmin() && !IsLoggedManager())
+if (!IsLoggedSmallAdmin() && !IsLoggedManager())
 {
 	header("location: ".$g_baseadr."error.php?code=21");
 	exit;
@@ -137,9 +137,9 @@ function checkAllVisibilities()
 <TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD width="30%" align="right"></TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="checkbox" NAME="mng" SIZE=15 VALUE="<? echo (!IsLoggedAdmin() && $zaznam2["policy_mng"] == _MNG_BIG_INT_VALUE_) ? '2' : '1'; ?>" <? if ($zaznam2["policy_mng"] == _MNG_SMALL_INT_VALUE_) echo "checked"; if (!IsLoggedAdmin() && $zaznam2["policy_mng"] == _MNG_BIG_INT_VALUE_) echo "disabled"; ?> >Uživatel je malým trenenérem (mùže mìnit údaje a pøihlášky vybraných èlenù)</TD>
+	<TD><INPUT TYPE="checkbox" NAME="mng" SIZE=15 VALUE="<? echo (!IsLoggedSmallAdmin() && $zaznam2["policy_mng"] == _MNG_BIG_INT_VALUE_) ? '2' : '1'; ?>" <? if ($zaznam2["policy_mng"] == _MNG_SMALL_INT_VALUE_) echo "checked"; if (!IsLoggedSmallAdmin() && $zaznam2["policy_mng"] == _MNG_BIG_INT_VALUE_) echo "disabled"; ?> >Uživatel je malým trenenérem (mùže mìnit údaje a pøihlášky vybraných èlenù)</TD>
 </TR>
-<? if (IsLoggedAdmin())
+<? if (IsLoggedSmallAdmin())
 { ?>
 <TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD width="30%" align="right"></TD>
@@ -293,11 +293,20 @@ if($zaznam2 != FALSE)
 </TABLE>
 </FORM>
 <BR><hr><BR>
-<? if (IsLoggedManager()) { ?>
-<A HREF="index.php?id=500&subid=1">Zpìt na seznam èlenù</A><BR>
-<? } else { ?>
-<A HREF="index.php?id=300&subid=3">Zpìt na seznam èlenù</A><BR>
-<? } ?>
+<?
+	if (!IsSet($cb)) $cb = 0;
+	$cb = (int)$cb;
+	if ($cb == 0)
+	{
+		if (IsLoggedSmallAdmin())
+			$cb = 700;
+		else if (IsLoggedManager())
+			$cb = 700;
+		else
+			$cb = 600;
+	}
+	echo('<A HREF="index.php?id='.$cb.'&subid=1">Zpìt na seznam èlenù</A><BR>');
+?>
 <BR><hr><BR>
 </CENTER>
 </TD>
