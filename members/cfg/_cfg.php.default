@@ -83,5 +83,7 @@ $g_enable_finances_claim = true;
 // enable ORIS support
 $g_enable_oris_support = true;
 
+$g_custom_entry_list_text = '';
+
 }	// define (PHP_GLOBAL_CFG_INCLUDED)
 ?>
