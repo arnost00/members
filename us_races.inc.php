@@ -147,4 +147,10 @@ echo('<a href="race_reg_form_all.php" target="_blank">Vytvoøení a export pøihláš
 ?>
 <br>
 Informace o závodu lze zobrazit kliknutím na název daného závodu.<br>
+<?
+if ($g_custom_entry_list_text != '')
+{
+	echo('<br><div style="border-top:1px solid '.$g_colors['body_hr_line'].'; padding:10px;">'.$g_custom_entry_list_text.'</div><br>');
+}
+?>
 </CENTER>
