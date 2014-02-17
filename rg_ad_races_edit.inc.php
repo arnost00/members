@@ -28,11 +28,11 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 
 if (!$g_is_release)
 {	// pri debug zobrazit
-	@$vysledek=MySQL_Query("SELECT id,datum,typ,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto,modify_flag FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum , datum2, id');
+	@$vysledek=MySQL_Query("SELECT id,datum,typ,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto,modify_flag,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum , datum2, id');
 }
 else
 {
-	@$vysledek=MySQL_Query("SELECT id,datum,typ,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
+	@$vysledek=MySQL_Query("SELECT id,datum,typ,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
 }
 
 $data_tbl = new html_table_mc();
@@ -75,8 +75,8 @@ if($vysledek && ($num_rows = mysql_num_rows($vysledek)) > 0)
 			$datum=Date2String($zaznam['datum']);
 
 		$row[] = $prefix.$datum.$suffix;
-		$row[] = "<A href=\"javascript:open_race_info(".$zaznam['id'].")\" class=\"adr_name\">".$prefix.$zaznam['nazev'].$suffix."</A>";
-		$row[] = $prefix.$zaznam['misto'].$suffix;
+		$row[] = "<A href=\"javascript:open_race_info(".$zaznam['id'].")\" class=\"adr_name\">".$prefix.GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']).$suffix."</A>";
+		$row[] = $prefix.GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']).$suffix;
 		$row[] = $prefix.$zaznam['oddil'].$suffix;
 		$row[] = GetRaceTypeImg($zaznam['typ']);
 		$row[] = GetRaceLinkHTML($zaznam['odkaz']);
