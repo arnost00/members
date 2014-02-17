@@ -54,7 +54,7 @@ if( $rtype == 1)
 }
 else
 {	// jednodenni
-	$datum2 = '';
+	$datum2 = 0;
 	$vicedenni = 0;
 	$etap = 1;
 }
@@ -90,7 +90,7 @@ else // zavod nenalezen proto nasteven na pridani zavodu
 if ($odkaz != '')
 	$odkaz = cononize_url ($odkaz);
 
-if ($datum=='' || ($datum2=='' && $rtype == 1) || $nazev=='' || $id == 0)
+if ($datum==0 || ($datum2==0 && $rtype == 1) || $nazev=='' || $id == 0)
 {
 	header("location: ".$g_baseadr."error.php?code=42");
 	exit;
@@ -120,7 +120,6 @@ else
 		or die("Chyba pøi provádìní dotazu do databáze.");
 	if ($result == FALSE)
 		die ("Nepodaøilo se zmìnit údaje o závodì.");
-
 }
 ?>
 <SCRIPT LANGUAGE="JavaScript">
