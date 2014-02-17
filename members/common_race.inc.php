@@ -227,7 +227,7 @@ function RIT_SH(divId1, divId2)
 			echo $data_tbl->get_new_row_extend('Datum',Date2StringFT($zaznam['datum'],$zaznam['datum2']),$odkaz);
 		else
 			echo $data_tbl->get_new_row_extend('Datum',Date2String($zaznam['datum']),$odkaz);
-		echo $data_tbl->get_new_row('Jméno',$zaznam['nazev']);
+		echo $data_tbl->get_new_row('Jméno',GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']));
 		echo $data_tbl->get_footer()."\n";
 		echo ('</div><div id="RIT_normal" style="display: none">');
 		$odkaz2 = '<a onclick ="javascript:RIT_SH(\'RIT_normal\',\'RIT_min\')" href="javascript:;" ><code>[-]</code></a>'; // Skrýt podrobnosti
@@ -255,8 +255,8 @@ function RIT_SH(divId1, divId2)
 		echo $data_tbl->get_new_row_extend('Datum',$datum,$odkaz2);
 	else
 		echo $data_tbl->get_new_row('Datum',$datum);
-	echo $data_tbl->get_new_row('Jméno',$zaznam['nazev']);
-	echo $data_tbl->get_new_row('Místo',$zaznam['misto']);
+	echo $data_tbl->get_new_row('Jméno',GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']));
+	echo $data_tbl->get_new_row('Místo',GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']));
 	echo $data_tbl->get_new_row('Poøádající oddíl',$zaznam['oddil']);
 	echo $data_tbl->get_new_row('Typ',GetRaceTypeName($zaznam['typ']));
 	echo $data_tbl->get_new_row('Žebøíèek',GetZebricekName2($zaznam['zebricek']));

@@ -20,7 +20,7 @@ $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
 $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 0;  // old races
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC);
 
-@$vysledek=MySQL_Query("SELECT id, datum, typ, datum2, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, nazev, vicedenni, odkaz, vedouci, oddil, send, misto FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
+@$vysledek=MySQL_Query("SELECT id, datum, typ, datum2, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, nazev, vicedenni, odkaz, vedouci, oddil, send, misto, cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
 
 $num_rows = mysql_num_rows($vysledek);
 if ($num_rows > 0)
@@ -84,8 +84,8 @@ if ($num_rows > 0)
 		}
 		//----------------------------
 		$row[] = $prefix.$datum.$suffix;
-		$row[] = "<A href=\"javascript:open_race_info(".$zaznam['id'].")\" class=\"adr_name\">".$prefix.$zaznam['nazev'].$suffix."</A>";
-		$row[] = $prefix.$zaznam['misto'].$suffix;
+		$row[] = "<A href=\"javascript:open_race_info(".$zaznam['id'].")\" class=\"adr_name\">".$prefix.GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']).$suffix."</A>";
+		$row[] = $prefix.GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']).$suffix;
 		$row[] = $prefix.$zaznam['oddil'].$suffix;
 		$row[] = GetRaceTypeImg($zaznam['typ']).'</A>';
 		$row[] = GetRaceLinkHTML($zaznam['odkaz']);

@@ -46,7 +46,7 @@ if(SHOW_USER)
 
 $curr_date = GetCurrentDate();
 
-@$vysledek=MySQL_Query("SELECT id,datum,datum2,nazev,typ,ranking,odkaz,prihlasky, prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, vicedenni,misto,oddil, vedouci FROM ".TBL_RACE." WHERE datum >= ".$curr_date." AND datum <= ".IncDate($curr_date,GC_SHOW_RACE_DAYS)." ORDER BY datum, datum2, id");
+@$vysledek=MySQL_Query("SELECT id,datum,datum2,nazev,typ,ranking,odkaz,prihlasky, prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, vicedenni,misto,oddil, vedouci, cancelled FROM ".TBL_RACE." WHERE datum >= ".$curr_date." AND datum <= ".IncDate($curr_date,GC_SHOW_RACE_DAYS)." ORDER BY datum, datum2, id");
 
 if (mysql_num_rows($vysledek) > 0)
 {
@@ -74,7 +74,8 @@ if (mysql_num_rows($vysledek) > 0)
 		else
 			$datum=Date2String($zaznam['datum']);
 
-		$nazev = '<A href="javascript:open_race_info('.$zaznam['id'].')" class="adr_name">'.$zaznam['nazev'].'</A>';
+		$nazev = '<A href="javascript:open_race_info('.$zaznam['id'].')" class="adr_name">'.GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']).'</A>';
+		$misto = GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']);
 		$oddil = $zaznam['oddil'];
 		$typ = GetRaceTypeImg($zaznam['typ']);
 		$odkaz = GetRaceLinkHTML($zaznam['odkaz']);
@@ -88,7 +89,6 @@ if (mysql_num_rows($vysledek) > 0)
 			}
 		}
 
-		
 		if($g_enable_race_boss)
 		{
 			$boss = '-';
@@ -99,10 +99,10 @@ if (mysql_num_rows($vysledek) > 0)
 				if($zaznamU != FALSE)
 					$boss = $zaznamU['jmeno'].' '.$zaznamU['prijmeni'];
 			}
-			echo $data_tbl->get_new_row($datum,$nazev,$zaznam['misto'],$oddil,$typ,$odkaz,$prihl,$boss);
+			echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ,$odkaz,$prihl,$boss);
 		}
 		else
-			echo $data_tbl->get_new_row($datum,$nazev,$zaznam['misto'],$oddil,$typ,$odkaz,$prihl);
+			echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ,$odkaz,$prihl);
 	}
 	echo $data_tbl->get_footer()."\n";
 }
@@ -119,7 +119,7 @@ DrawPageSubTitle('Nejbližší pøihlášky (do '.GC_SHOW_REG_DAYS.' dní)');
 
 $d1 = $curr_date;
 $d2 = IncDate($curr_date,GC_SHOW_REG_DAYS);
-$query = 'SELECT id, datum, datum2, nazev, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, vedouci FROM '.TBL_RACE.' WHERE ((prihlasky1 >= '.$d1.' && prihlasky1 <= '.$d2.') || (prihlasky2 >= '.$d1.' && prihlasky2 <= '.$d2.') || (prihlasky3 >= '.$d1.' && prihlasky3 <= '.$d2.') || (prihlasky4 >= '.$d1.' && prihlasky4 <= '.$d2.') || (prihlasky5 >= '.$d1.' && prihlasky5 <= '.$d2.')) ORDER BY datum';
+$query = 'SELECT id, datum, datum2, nazev, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, vedouci, cancelled FROM '.TBL_RACE.' WHERE ((prihlasky1 >= '.$d1.' && prihlasky1 <= '.$d2.') || (prihlasky2 >= '.$d1.' && prihlasky2 <= '.$d2.') || (prihlasky3 >= '.$d1.' && prihlasky3 <= '.$d2.') || (prihlasky4 >= '.$d1.' && prihlasky4 <= '.$d2.') || (prihlasky5 >= '.$d1.' && prihlasky5 <= '.$d2.')) ORDER BY datum';
 @$vysledek=MySQL_Query($query);
 
 if (mysql_num_rows($vysledek) > 0)
@@ -156,7 +156,9 @@ if (mysql_num_rows($vysledek) > 0)
 		$time_to_reg = GetTimeToReg($prihlasky_curr[0]);
 		$termin = raceterms::ColorizeTermUser($time_to_reg,$prihlasky_curr,$prihlasky_out_term);
 
-		$nazev = "<A href=\"javascript:open_race_info(".$zaznam['id'].")\" class=\"adr_name\">".$zaznam['nazev']."</A>";
+		$nazev = "<A href=\"javascript:open_race_info(".$zaznam['id'].")\" class=\"adr_name\">".GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled'])."</A>";
+		$misto = GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']);
+		
 		$oddil = $zaznam['oddil'];
 		$typ = GetRaceTypeImg($zaznam['typ']);
 		$odkaz = GetRaceLinkHTML($zaznam['odkaz']);
@@ -212,14 +214,14 @@ if (mysql_num_rows($vysledek) > 0)
 					$boss = $zaznamU['jmeno'].' '.$zaznamU['prijmeni'];
 			}
 			if(SHOW_USER)
-				echo $data_tbl->get_new_row($datum,$nazev,$zaznam['misto'],$oddil,$typ,$odkaz,$prihl,$termin,$boss);
+				echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ,$odkaz,$prihl,$termin,$boss);
 			else
-				echo $data_tbl->get_new_row($datum,$nazev,$zaznam['misto'],$oddil,$typ,$odkaz,$prihl2,$termin,$boss);
+				echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ,$odkaz,$prihl2,$termin,$boss);
 		}
 		else if(SHOW_USER)
-			echo $data_tbl->get_new_row($datum,$nazev,$zaznam['misto'],$oddil,$typ,$odkaz,$prihl,$termin);
+			echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ,$odkaz,$prihl,$termin);
 		else
-			echo $data_tbl->get_new_row($datum,$nazev,$zaznam['misto'],$oddil,$typ,$odkaz,$prihl2,$termin);
+			echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ,$odkaz,$prihl2,$termin);
 	}
 	echo $data_tbl->get_footer()."\n";
 }

@@ -74,6 +74,12 @@ else
 	<TD class="DataValue"><INPUT TYPE="text" NAME="oddil" SIZE=9 maxlength=7 value="<?echo $zaznam["oddil"]?>">&nbsp;&nbsp;(XYZ) nebo (XYZ+ABC)</TD>
 </TR>
 <TR>
+	<TD width="130" align="right">Zrušeno</TD>
+	<TD width="5"></TD>
+	<TD><input type="checkbox" name="cancelled" id="cancelled" <?if ($zaznam["cancelled"]==1) echo " CHECKED";?>></TD>
+</TR>
+
+<TR>
 	<TD width="130" align="right">Typ</TD>
 	<TD width="5"></TD>
 	<TD>

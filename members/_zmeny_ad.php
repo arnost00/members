@@ -116,7 +116,7 @@ include ('url.inc.php');
 
 $curr_date = GetCurrentDate();
 
-$query="SELECT id,datum,typ,datum2,nazev,vicedenni,odkaz,oddil,misto,modify_flag FROM ".TBL_RACE.' ORDER BY datum, datum2, id';
+$query="SELECT id,datum,typ,datum2,nazev,vicedenni,odkaz,oddil,misto,modify_flag,cancelled FROM ".TBL_RACE.' ORDER BY datum, datum2, id';
 
 @$vysledek=MySQL_Query($query);
 
@@ -140,7 +140,7 @@ if (mysql_num_rows($vysledek) > 0)
 		else
 			$datum=Date2String($zaznam['datum']);
 
-		$nazev = $zaznam['nazev'];
+		$nazev = GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']);
 		$oddil = $zaznam['oddil'];
 		$odkaz = GetRaceLinkHTML($zaznam['odkaz']);
 		echo('<td class="center">'.$datum.'</td>');

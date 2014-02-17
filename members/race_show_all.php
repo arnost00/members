@@ -44,7 +44,7 @@ else
 @$vysledek=MySQL_Query("SELECT id,hidden,prijmeni,jmeno FROM ".TBL_USER." ORDER BY sort_name ASC")
 	or die("Chyba pøi provádìní dotazu do databáze.");
 
-$sql_query = "SELECT id,datum,datum2,nazev,misto,vicedenni,oddil FROM ".TBL_RACE;
+$sql_query = "SELECT id,datum,datum2,nazev,misto,vicedenni,oddil,cancelled FROM ".TBL_RACE;
 if($old == 0)
 {
 	$curr_date = GetCurrentDate();
@@ -67,9 +67,9 @@ while ($race=MySQL_Fetch_Array($races))
 	$tip_code = 'onMouseOut="hideTip();" onMouseOver="doTooltip(event,'.++$i.');"';
 	$races_arr[] = $race["id"];
 	if($race['vicedenni'])
-		$race_msg[$i] = Date2StringFT($race['datum'],$race['datum2']).'<BR>'.$race['nazev'].'<BR>'.$race['misto'].'<BR>'.$race['oddil'];
+		$race_msg[$i] = Date2StringFT($race['datum'],$race['datum2']).'<BR>'.GetFormatedTextDel($race['nazev'],$race['cancelled']).'<BR>'.GetFormatedTextDel($race['misto'],$race['cancelled']).'<BR>'.$race['oddil'];
 	else
-		$race_msg[$i] = Date2String($race['datum']).'<BR>'.$race['nazev'].'<BR>'.$race['misto'].'<BR>'.$race['oddil'];
+		$race_msg[$i] = Date2String($race['datum']).'<BR>'.GetFormatedTextDel($race['nazev'],$race['cancelled']).'<BR>'.GetFormatedTextDel($race['misto'],$race['cancelled']).'<BR>'.$race['oddil'];
 	$race_dta[$i-1] = 0;
 	$data_tbl->set_header_col($col++,$datum,ALIGN_CENTER,0,$tip_code);
 }

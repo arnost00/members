@@ -476,4 +476,14 @@ function SendEmail(&$FromA,&$ToA,&$msg,&$subject)
 }
 //--------------------------------------------------------
 
+function GetFormatedTextDel(&$text, $cancelled = false)
+{
+	$result = '';
+	if ($cancelled)
+		$result .= '<del>';
+	$result .= $text;
+	if ($cancelled)
+		$result .= '</del>';
+	return $result;
+}
 ?>

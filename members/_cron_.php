@@ -143,7 +143,9 @@ function GetMailRaceInfoLineTf(&$zaznam,&$reg_term)
 	$nazev = $zaznam['nazev'];
 	$oddil = $zaznam['oddil'];
 
-	return $datum.' / '.$nazev.' / '.$oddil.' ['.$termin.']';
+	$cancelled = ($zaznam['cancelled'] != 0) ? ' / ZRUŠENO' : '';
+
+	return $datum.' / '.$nazev.' / '.$oddil.' ['.$termin.']'.$cancelled;
 }
 
 function GetMailRaceInfoLine(&$zaznam)
@@ -156,7 +158,9 @@ function GetMailRaceInfoLine(&$zaznam)
 	$nazev = $zaznam['nazev'];
 	$oddil = $zaznam['oddil'];
 
-	return $datum.' / '.$nazev.' / '.$oddil;
+	$cancelled = ($zaznam['cancelled'] != 0) ? ' / ZRUŠENO' : '';
+
+	return $datum.' / '.$nazev.' / '.$oddil.$cancelled;
 }
 
 function GenerateEmail(&$ToA,&$msg)

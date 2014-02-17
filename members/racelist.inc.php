@@ -62,7 +62,8 @@ if ($num_rows > 0)
 		$time_to_reg = GetTimeToReg($prihlasky_curr[0]);
 		$termin = raceterms::ColorizeTermUser($time_to_reg,$prihlasky_curr,$prihlasky_out_term);
 
-		$nazev = '<A href="javascript:open_race_info('.$zaznam['id'].')" class="adr_name">'.$zaznam['nazev'].'</A>';
+		$nazev = '<A href="javascript:open_race_info('.$zaznam['id'].')" class="adr_name">'.GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']).'</A>';
+		$misto = GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']);
 		$oddil = $zaznam['oddil'];
 		$typ = GetRaceTypeImg($zaznam['typ']);
 		$odkaz = GetRaceLinkHTML($zaznam['odkaz']);
@@ -89,10 +90,10 @@ if ($num_rows > 0)
 				if($zaznamU != FALSE)
 					$boss = $zaznamU['jmeno'].' '.$zaznamU['prijmeni'];
 			}
-			echo $data_tbl->get_new_row($datum,$nazev,$zaznam['misto'],$oddil,$typ,$odkaz,$prihl2,$termin,$boss);
+			echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ,$odkaz,$prihl2,$termin,$boss);
 		}
 		else
-			echo $data_tbl->get_new_row($datum,$nazev,$zaznam['misto'],$oddil,$typ,$odkaz,$prihl2,$termin);
+			echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ,$odkaz,$prihl2,$termin);
 		$i++;
 		$old_year = Date2Year($zaznam['datum']);
 	}

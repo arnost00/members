@@ -124,7 +124,7 @@ $curr_date = GetCurrentDate();
 
 $d1 = $curr_date;
 
-$query="SELECT id,datum,typ,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,nazev,vicedenni,odkaz,vedouci, oddil,send,misto FROM ".TBL_RACE.' WHERE datum >= '.$d1.' || datum2 >= '.$d1.' ORDER BY datum, datum2, id';
+$query="SELECT id,datum,typ,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,nazev,vicedenni,odkaz,vedouci, oddil,send,misto, cancelled FROM ".TBL_RACE.' WHERE datum >= '.$d1.' || datum2 >= '.$d1.' ORDER BY datum, datum2, id';
 
 @$vysledek=MySQL_Query($query);
 
@@ -180,7 +180,7 @@ if (mysql_num_rows($vysledek) > 0)
 		}
 		else
 			$send = 'Ne';
-		$nazev = $zaznam['nazev'];
+		$nazev = GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']);
 		$oddil = $zaznam['oddil'];
 		$odkaz = GetRaceLinkHTML($zaznam['odkaz']);
 		echo('<td class="center">'.$datum.'</td>');
