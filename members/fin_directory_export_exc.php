@@ -17,14 +17,14 @@ $delim = ';';
 $par2 = 1; //quotes
 $par3 = 0; //apostrophes
 
-$arr_labels = array('datum', 'jméno', 'èástka', 'kometáø');
-$arr_fields = array('date', 'name', 'amount', 'note'); 
+$arr_labels = array('datum', 'reg.', 'jméno', 'èástka', 'kometáø');
+$arr_fields = array('date', 'reg', 'name', 'amount', 'note'); 
 
 TXT_Header();
 
 db_Connect();
 
-@$vysledek=MySQL_Query("SELECT f.date, u.sort_name as name, f.amount, f.note FROM `".TBL_FINANCE."` f join `".TBL_USER."` u on u.id = f.id_users_user where f.storno is null ORDER BY f.date desc")
+@$vysledek=MySQL_Query("SELECT f.date, concat('".$g_shortcut."',u.reg) as reg, u.sort_name as name, f.amount, f.note FROM `".TBL_FINANCE."` f join `".TBL_USER."` u on u.id = f.id_users_user where f.storno is null ORDER BY f.date desc")
 	or die("Chyba pøi provádìní dotazu do databáze.");
 
 include ('exports.inc.php');
