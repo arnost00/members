@@ -74,4 +74,9 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 ?>
 
 <BR>
+
+<?
+include 'fin_directory_club_sum.php';
+?>
+
 </CENTER>
