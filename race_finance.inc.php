@@ -97,7 +97,8 @@ echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
-$sum_amount = 0;
+$sum_plus_amount = 0;
+$sum_minus_amount = 0;
 $i = 1;
 
 echo $data_tbl->get_subheader_row("Pøihlášení")."\n";
@@ -109,6 +110,8 @@ while ($zaznam=mysql_fetch_assoc($vysledek_prihlaseni))
 	$row[] = $zaznam['sort_name'];
 	
 	$amount = $zaznam['amount'];
+	$amount>0?$sum_plus_amount+=$amount:$sum_minus_amount+=$amount;
+	
 	$input_amount = '<input class="amount-'.$zaznam['kat'].'" type="number" id="am'.$i.'" name="am'.$i.'" value="'.$amount.'" size="5" maxlength="10" />';
 	$row[] = $input_amount;
 	
@@ -144,6 +147,8 @@ while ($zaznam=mysql_fetch_assoc($vysledek_platici))
 	$row[] = $zaznam['sort_name'];
 
 	$amount = $zaznam['amount'];
+	$amount>0?$sum_plus_amount+=$amount:$sum_minus_amount+=$amount;
+	
 	$input_amount = '<input type="number" id="am'.$i.'" name="am'.$i.'" value="'.$amount.'" size="5" maxlength="10" />';
 	$row[] = $input_amount;
 	
@@ -168,9 +173,11 @@ if (($i - $i0) == 0)
 
 echo $data_tbl->get_footer()."\n";
 
+echo "<div style=\"text-align:right; margin-right:3%\"><b><font>Èástka celkem: ".($sum_minus_amount+$sum_plus_amount)."</font></b> <font size=-5> | plus: ".$sum_plus_amount." | mínus: ".$sum_minus_amount."</font></div>";
 
 echo '<br><input type="submit" value="Zmìnit platby"/>';
 echo '</form>';
+
 echo "<form method=\"post\" action=\"?payment=pay&race_id=$race_id\">";
 
 DrawPageSubTitle('Ostatní závodníci');
