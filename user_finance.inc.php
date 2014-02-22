@@ -69,9 +69,14 @@ $row[] = "<span class='amount$class'>".$sum_amount."</span>";
 echo $data_tbl->get_new_row_arr($row)."\n";
 echo $data_tbl->get_footer()."\n";
 
-?>
 
-<?
+//------------ formular pro prevod financi mezi cleny
+$return_url = 'http://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]; 
+// $return_url = substr($_SERVER["SCRIPT_NAME"],strrpos($_SERVER["SCRIPT_NAME"],"/")+1);
+$return_url = parse_url($return_url, PHP_URL_QUERY);
+include 'user_finance_transfer_form.inc.php';
+
+
 //priprava pro pouziti ajaxu a jquery
 // <div style="display: none;" id="dialog-modal">
 // <form action="http://localhost/members/index.php?id=200&subid=10">

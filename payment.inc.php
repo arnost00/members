@@ -51,7 +51,7 @@ function createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod)
 	else
 		$datum = String2SQLDateDMY($datum);
 	$query = "insert into ".TBL_FINANCE." (id_users_editor, id_users_user, amount, note, date, id_zavod) values 
-			(".$editor_id.", ".$user_id.", ".$amount.", '".$note."', '".$datum."', ".$id_zavod.")";
+			(".$editor_id.", ".$user_id.", ".$amount.", '".$note."', '".$datum."', '".$id_zavod."')";
 	mysql_query($query);
 	$lastId = mysql_insert_id();
 	SaveItemToModifyLog_Add(TBL_FINANCE, "id=$lastId|user_id=$user_id|amount=$amount");
