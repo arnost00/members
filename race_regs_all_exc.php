@@ -2,6 +2,8 @@
 <?
 @extract($_REQUEST);
 
+//TBD: podpora entry_locked
+
 require ("./connect.inc.php");
 require ("./sess.inc.php");
 if (!IsLoggedRegistrator() && !IsLoggedManager()&& !IsLoggedSmallManager())

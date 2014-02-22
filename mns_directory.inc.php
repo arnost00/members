@@ -15,7 +15,7 @@ $sc->add_column('reg','');
 $sc->set_url('index.php?id=600&subid=1',true);
 $sub_query = $sc->get_sql_string();
 
-$query = 'SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob FROM '.TBL_USER.' WHERE chief_id = '.$usr->user_id.' OR id = '.$usr->user_id.$sub_query;
+$query = 'SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob,entry_locked FROM '.TBL_USER.' WHERE chief_id = '.$usr->user_id.' OR id = '.$usr->user_id.$sub_query;
 //$query = 'SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob FROM '.TBL_USER.' WHERE chief_id = '.$usr->user_id.' OR id = '.$usr->user_id.' ORDER BY sort_name ASC '
 @$vysledek=MySQL_Query($query);
 
@@ -35,6 +35,7 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 	$data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 	$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_CENTER,"Registraèní èíslo");
+	$data_tbl->set_header_col_with_help($col++,'Pøihl.',ALIGN_CENTER,"Možnost pøihlašování se èlena na závody");
 	$data_tbl->set_header_col_with_help($col++,'L.OB',ALIGN_CENTER,"Licence pro OB");
 	$data_tbl->set_header_col_with_help($col++,'L.MTBO',ALIGN_CENTER,"Licence pro MTBO");
 	$data_tbl->set_header_col_with_help($col++,'L.LOB',ALIGN_CENTER,"Licence pro LOB");
@@ -58,6 +59,10 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 			$row[] = $zaznam['prijmeni'];
 			$row[] = $zaznam['jmeno'];
 			$row[] = RegNumToStr($zaznam['reg']);
+			if ($zaznam['entry_locked'] != 0)
+				$row[] = '<span class="WarningText">Ne</span>';
+			else
+				$row[] = '';
 			$row[] = ($zaznam['lic'] != 'C' || $zaznam['lic'] != '-') ? '<B>'.$zaznam['lic'].'</B>' : $zaznam['lic'];
 			$row[] = ($zaznam['lic_mtbo'] != 'C' || $zaznam['lic_mtbo'] != '-') ? '<B>'.$zaznam['lic_mtbo'].'</B>' : $zaznam['lic_mtbo'];
 			$row[] = ($zaznam['lic_lob'] != 'C' || $zaznam['lic_lob'] != '-') ? '<B>'.$zaznam['lic_lob'].'</B>' : $zaznam['lic_lob'];

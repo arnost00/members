@@ -33,6 +33,9 @@ $zaznam_z = MySQL_Fetch_Array($vysledek_z);
 @$vysledek_rg=MySQL_Query("SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod=$id_zav and id_user=$id_us");
 $zaznam_rg=MySQL_Fetch_Array($vysledek_rg);
 
+@$vysledek_u=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE id=$id_us");
+$zaznam_u = MySQL_Fetch_Array($vysledek_u);
+
 $new = ($zaznam_rg && $zaznam_rg['kat'] != '') ? 0 : 1;
 
 ?>
@@ -83,6 +86,30 @@ else
 <BR><BR>
 <hr><BR>
 
+<?
+if ($zaznam_u['entry_locked'] != 0)
+{
+	echo('<span class="WarningText">Máte zamknutou možnost se pøihlašovat.</span>'."<br>\n");
+
+	if ($zaznam_rg['kat'] != '')
+	{
+		echo('<BR><BR>Vybraná kategorie:&nbsp;'.$zaznam_rg['kat']);
+		if ($zaznam_z["transport"]==1)
+		{
+			echo "<BR><BR>";
+			$trans=$zaznam_rg["transport"]?"Ano":"Ne";
+			echo 'Chci využít spoleènou dopravu:&nbsp;'.$trans;
+		}
+		echo "<BR><BR>";
+		echo 'Poznámka:&nbsp;'.$zaznam_rg['pozn'].'&nbsp;(do&nbsp;pøihlášky)';
+		echo "<BR><BR>";
+		echo 'Poznámka:&nbsp;'.$zaznam_rg['pozn_in'].'&nbsp;(interní)';
+		echo "<BR><BR>";
+	}
+}
+else
+{	// zacatek - povoleno prihlasovani
+?>
 <FORM METHOD=POST ACTION="us_race_regon_exc.php" name="form1" onsubmit="return check_reg(this);">
 
 Do které kategorie chcete pøihlásit:&nbsp;
@@ -94,7 +121,9 @@ for ($i=0; $i<count($kategorie)-1; $i++)
 	echo "<button onclick=\"javascript:zmen_kat('".$kategorie[$i]."');return false;\">".$kategorie[$i]."</button>";
 }
 
-echo'<BR><BR>Vybraná kategorie:&nbsp;<INPUT TYPE="text" NAME="kat" size=4 value="'.$zaznam_rg['kat'].'"><BR>';
+echo('<BR><BR>Vybraná kategorie:&nbsp;');
+echo('<INPUT TYPE="text" NAME="kat" size=4 value="'.$zaznam_rg['kat'].'">');
+echo("<BR>\n");
 
 if ($zaznam_z["transport"]==1)
 {
@@ -132,6 +161,8 @@ else
 ?>
 </FORM>
 <?
+} // konec - povoleno prihlasovani
+
 if(strlen($zaznam_z['poznamka']) > 0)
 {
 ?>

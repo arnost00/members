@@ -30,6 +30,13 @@ if(SHOW_USER)
 		$zav_t[$z]=$zaznam1['termin'];
 		$zaz[]=$zaznam1['id_zavod'];
 	}
+	
+	@$vysledek2=MySQL_Query("SELECT * FROM ".TBL_USER." where id=$usr->user_id");
+	$entry_lock = false;
+	if ($zaznam2=MySQL_Fetch_Array($vysledek2))
+	{
+		$entry_lock = ($zaznam2['entry_locked'] != 0);
+	}
 ?>
 <script language="javascript">
 <!-- 
@@ -124,6 +131,10 @@ $query = 'SELECT id, datum, datum2, nazev, typ, ranking, odkaz, prihlasky, prihl
 
 if (mysql_num_rows($vysledek) > 0)
 {
+	if (SHOW_USER && $entry_lock)
+	{
+		echo('<span class="WarningText">Máte zamknutou možnost se pøihlašovat.</span>'."<br>\n");
+	}
 	$data_tbl = new html_table_mc();
 	$col = 0;
 	$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
@@ -182,7 +193,7 @@ if (mysql_num_rows($vysledek) > 0)
 				{
 					$prihl = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._USER_GROUP_ID_.'&id='.$zaznam['id']."&us=1','')\"><span class=\"Highlight\">".$zav[$zaznam["id"]].'</span></A> / '.$zav_t[$zaznam["id"]];
 				}
-				else if (!$prihl_finish)
+				else if (!$prihl_finish && !$entry_lock)
 				{
 					$prihl = "<A HREF=\"javascript:open_win('./us_race_regon.php?id_zav=".$zaznam['id']."&id_us=".$usr->user_id."','')\" class=\"Highlight\">".$zav[$zaznam["id"]]."</A> / <A HREF=\"javascript:open_win('./us_race_regoff_exc.php?id_zav=".$zaznam['id']."&id_us=".$usr->user_id."','')\" onclick=\"return confirm_delete();\" class=\"Erase\">Od.</A>";
 				}
@@ -193,14 +204,14 @@ if (mysql_num_rows($vysledek) > 0)
 			}
 			else
 			{
-				if (!$prihl_finish)
+				if (!$prihl_finish && !$entry_lock)
 				{
 					$prihl = "<A HREF=\"javascript:open_win('./us_race_regon.php?id_zav=".$zaznam["id"]."&id_us=".$usr->user_id."','')\">Pøihl.</A> / ".$zbr;
 				}
 				else
 				{
 					$prihl = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._USER_GROUP_ID_."&id=".$zaznam["id"]."&us=1','')\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>";
-				}			
+				}
 			}
 		}
 		if($g_enable_race_boss)

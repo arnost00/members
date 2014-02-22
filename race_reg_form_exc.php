@@ -48,7 +48,7 @@ else
 {
 	$query= 'SELECT prijmeni, jmeno, reg, si_chip, lic, lic_mtbo, lic_lob, datum FROM '.TBL_USER.' WHERE `hidden` = 0 ORDER by reg';
 	$race_type = 0; // OB
-	$creg = 1; // central reg.
+//	$creg = 1; // central reg.
 }
 
 @$vysledek=MySQL_Query($query);
