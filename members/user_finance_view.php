@@ -23,7 +23,14 @@ if (IsSet($payment) && IsLoggedFinance())
 {
 
  	$editor_id = $usr->user_id;
-
+ 	
+ 	if ($payment == "both")
+ 	{
+ 		//odecist penize z uctu ODKUD
+ 		createPayment($id_from, $id_from, -$amount, $note, null, null);
+ 		//pripsat penize na ucet KOMU
+ 		createPayment($id_from, $id_to, $amount, $note, null, null);
+ 	}
 	if ($payment == "out" or $payment == "in")
 	{
 		$payment == "out"?$amount = -$amount:$amount;
@@ -70,6 +77,7 @@ if (IsSet($change) && $change == "change" && IsLoggedFinance())
 {
 	$set_back_button = false;
 	$user_id = (IsSet($user_id) && is_numeric($user_id)) ? (int)$user_id : 0;
+	
 	include ("./user_finance.inc.php");
 	
 	if (IsLoggedFinance())
