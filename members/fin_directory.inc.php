@@ -16,9 +16,18 @@ DrawPageTitle('Finance èlenù');
 <CENTER>
 <script language="javascript">
 <!-- 
-	javascript:set_default_size(800,800);
+javascript:set_default_size(800,800);
+
+function confirm_entry_lock(name) {
+	return confirm('Opravdu chcete zamknout èlenu oddílu možnost se pøihlašovat? \n Jméno èlena : "'+name+'" \n Èlen nebude mít možnost se pøihlásit na závody!');
+}
+
+function confirm_entry_unlock(name) {
+	return confirm('Opravdu chcete odemknout èlenu oddílu možnost se pøihlašovat ? \n Jméno èlena : "'+name+'"');
+}
 //-->
 </script>
+
 <?
 include "./common_user.inc.php";
 include('./csort.inc.php');
@@ -28,8 +37,11 @@ $sc->add_column('sort_name','');
 $sc->add_column('reg','');
 $sc->set_url('index.php?id=800&subid=10',true);
 $sub_query = $sc->get_sql_string();
-
+/*
 $query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob, ifnull(sum(f.amount),0) sum_amount FROM '.TBL_USER.' u 
+		left join (select * from '.TBL_FINANCE.' fin where (fin.storno != 1 or fin.storno is null)) f on u.id=f.id_users_user group by u.id '.$sub_query;
+*/
+$query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,entry_locked, ifnull(sum(f.amount),0) sum_amount FROM '.TBL_USER.' u 
 		left join (select * from '.TBL_FINANCE.' fin where (fin.storno != 1 or fin.storno is null)) f on u.id=f.id_users_user group by u.id '.$sub_query;
 
 @$vysledek=MySQL_Query($query);
@@ -44,6 +56,7 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 	$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 	$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_CENTER,"Registraèní èíslo");
 	$data_tbl->set_header_col_with_help($col++,'Fin.st.',ALIGN_CENTER,"Aktuální finanèní stav");
+	$data_tbl->set_header_col_with_help($col++,'Pøihl.',ALIGN_CENTER,"Možnost pøihlašování se èlena na závody");
 	$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 
 	echo $data_tbl->get_css()."\n";
@@ -64,7 +77,15 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 			$row[] = RegNumToStr($zaznam['reg']);
 			$zaznam['sum_amount']<0?$class="red":$class="";
 			$row[] = "<span class='amount$class'>".$zaznam['sum_amount']."</span>";
+			if ($zaznam['entry_locked'] != 0)
+				$row[] = '<span class="WarningText">Ne</span>';
+			else
+				$row[] = '';
 			$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['id'].'\',\'\')">Pøehled</A>';
+			$row_text .= '&nbsp;/&nbsp;';
+			$lock = ($zaznam['entry_locked'] != 0) ? 'Odemknout' : 'Zamknout';
+			$lock_onclick = ($zaznam['entry_locked'] != 0) ? 'confirm_entry_unlock' : 'confirm_entry_lock';
+			$row_text .= '<A HREF="./user_lock2_exc.php?gr_id='._FINANCE_GROUP_ID_.'&id='.$zaznam['id'].'" onclick="return '.$lock_onclick.'(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')">'.$lock.'</A>';
 			$row[] = $row_text;
 			echo $data_tbl->get_new_row_arr($row)."\n";
 		}

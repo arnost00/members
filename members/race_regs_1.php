@@ -69,8 +69,9 @@ Zmìna kategorie - se provede zmìnou textového pole s kategorií pro vybraného èle
 <?
 
 $sub_query = (IsLoggedRegistrator() || IsLoggedManager()) ? '' : ' AND '.TBL_USER.'.chief_id = '.$usr->user_id.' OR '.TBL_USER.'.id = '.$usr->user_id;
+$sub_query2 = '';//(IsLoggedSmallManager() || IsLoggedManager()) ? ' AND '.TBL_USER.'.entry_locked = 0' : '';
 
-$query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, kat, pozn, pozn_in, termin FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query.' ORDER BY reg ASC';
+$query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, kat, pozn, pozn_in, termin, entry_locked FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query.$sub_query2.' ORDER BY reg ASC';
 
 @$vysledek=MySQL_Query($query);
 
@@ -87,32 +88,35 @@ $i=0;
 //$prihl_cl=0;
 while ($zaznam=MySQL_Fetch_Array($vysledek))
 {
-	if($zaznam['kat'] == NULL)
-	{	// neni prihlasen
-		$us_rows[$i][0] = '';
-		$us_rows[$i][1] = '';
-		$us_rows[$i][2] = '';
-		if($is_termin_show_on)
-			$us_rows[$i][3] = (($termin != 0) ? $termin : $zaznam_z['prihlasky']);
-	}
-	else
+	if ($zaznam['entry_locked'] == 0)
 	{
-		//$prihl_cl++;
-		if($zaznam['termin'] == $termin || $is_termin_show_on)
-		{
-			$us_rows[$i][0] = $zaznam['kat'];
-			$us_rows[$i][1] = $zaznam['pozn'];
-			$us_rows[$i][2] = $zaznam['pozn_in'];
+		if($zaznam['kat'] == NULL)
+		{	// neni prihlasen
+			$us_rows[$i][0] = '';
+			$us_rows[$i][1] = '';
+			$us_rows[$i][2] = '';
 			if($is_termin_show_on)
-				$us_rows[$i][3] = $zaznam['termin'];
+				$us_rows[$i][3] = (($termin != 0) ? $termin : $zaznam_z['prihlasky']);
 		}
 		else
 		{
-			continue;
+			//$prihl_cl++;
+			if($zaznam['termin'] == $termin || $is_termin_show_on)
+			{
+				$us_rows[$i][0] = $zaznam['kat'];
+				$us_rows[$i][1] = $zaznam['pozn'];
+				$us_rows[$i][2] = $zaznam['pozn_in'];
+				if($is_termin_show_on)
+					$us_rows[$i][3] = $zaznam['termin'];
+			}
+			else
+			{
+				continue;
+			}
 		}
+		echo '<option value="'.$zaznam['id'].'">'.$zaznam['prijmeni'].' '.$zaznam['jmeno'].' ['.RegNumToStr($zaznam['reg'])."]</option>\n";
+		$i++;
 	}
-	echo '<option value="'.$zaznam['id'].'">'.$zaznam['prijmeni'].' '.$zaznam['jmeno'].' ['.RegNumToStr($zaznam['reg'])."]</option>\n";
-	$i++;
 }
 echo '</SELECT>&nbsp;*</TD>'."\n";
 echo'<SCRIPT LANGUAGE="JavaScript">'."\n";

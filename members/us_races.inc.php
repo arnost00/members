@@ -17,6 +17,13 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 $query = 'SELECT '.TBL_RACE.'.id, datum, datum2, nazev, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, kat, termin, vedouci, cancelled FROM '.TBL_RACE.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_RACE.'.id = '.TBL_ZAVXUS.'.id_zavod AND '.TBL_ZAVXUS.'.id_user='.$usr->user_id.$sql_sub_query.' ORDER BY datum, datum2, '.TBL_RACE.'.id';
 @$vysledek=MySQL_Query($query);
 
+@$vysledek2=MySQL_Query("SELECT * FROM ".TBL_USER." where id=$usr->user_id");
+$entry_lock = false;
+if ($zaznam2=MySQL_Fetch_Array($vysledek2))
+{
+	$entry_lock = ($zaznam2['entry_locked'] != 0);
+}
+
 ?>
 
 <script language="javascript">
@@ -37,6 +44,11 @@ $curr_date = GetCurrentDate();
 $num_rows = mysql_num_rows($vysledek);
 if ($num_rows > 0)
 {
+	if ($entry_lock)
+	{
+		echo('<span class="WarningText">Máte zamknutou možnost se pøihlašovat.</span>'."<br><br>\n");
+	}
+
 	show_link_to_actual_race($num_rows);
 
 	$data_tbl = new html_table_mc();
@@ -85,7 +97,7 @@ if ($num_rows > 0)
 
 		if($zaznam['kat'] == NULL)
 		{	// neni prihlasen
-			if (!$prihl_finish)
+			if (!$prihl_finish && !$entry_lock)
 			{
 				$row[] = "<A HREF=\"javascript:open_win('./us_race_regon.php?id_zav=".$zaznam["id"]."&id_us=".$usr->user_id."','')\">Pøihl.</A> / ".$zbr;
 			}
@@ -101,7 +113,7 @@ if ($num_rows > 0)
 			{
 				$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._USER_GROUP_ID_.'&id='.$zaznam['id']."&us=1','')\"><span class=\"Highlight\">".$zaznam['kat'].'</span></A> / '.$zaznam['termin'];
 			}
-			else if (!$prihl_finish)
+			else if (!$prihl_finish && !$entry_lock)
 			{
 				$row[] = "<A HREF=\"javascript:open_win('./us_race_regon.php?id_zav=".$zaznam['id']."&id_us=".$usr->user_id."','')\" class=\"Highlight\">".$zaznam['kat']."</A> / <A HREF=\"javascript:open_win('./us_race_regoff_exc.php?id_zav=".$zaznam['id']."&id_us=".$usr->user_id."','')\" onclick=\"return confirm_delete();\" class=\"Erase\">Od.</A>";
 			}
