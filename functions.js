@@ -114,4 +114,13 @@ function isValidLogin(subject)
     return false;
   }
 }
+
+function isPositiveNumber(subject)
+{
+	num = parseInt(subject.value);
+	if (num > 0) return true;
+	alert("Èíslo musí být kladné");
+	return false;
+}
+
 //-->
