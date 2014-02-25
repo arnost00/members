@@ -25,27 +25,10 @@ $data_tbl = new html_table_form();
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 
-
-if (IsLoggedFinance())
-{
-	//vsichni vsem
-	$from_select = createHTMLSelectFromSQLSelect("id_from", "id", '$record["sort_name"]." :: ".$record["reg"]', "select id, reg, sort_name from `".TBL_USER."` order by sort_name asc;");
-	$to_select = createHTMLSelectFromSQLSelect("id_to", "id", '$record["sort_name"]." :: ".$record["reg"]', "select id, reg, sort_name from `".TBL_USER."` order by sort_name asc;");
-} 
-else if (IsLoggedSmallManager())
-{
-	//sverenci
-	$from_select = createHTMLSelectFromSQLSelect("id_from", "id", '$record["sort_name"]." :: ".$record["reg"]', "select id, reg, sort_name from `".TBL_USER."` where chief_id = ".$usr->user_id." order by sort_name asc;");
-	//vsichni
-	$to_select = createHTMLSelectFromSQLSelect("id_to", "id", '$record["sort_name"]." :: ".$record["reg"]', "select id, reg, sort_name from `".TBL_USER."` order by sort_name asc;");
-}
-else
-{
-	//pouze ja
-	$from_select = createHTMLSelectFromSQLSelect("id_from", "id", '$record["sort_name"]." :: ".$record["reg"]', "select id, reg, sort_name from `".TBL_USER."` where id = ".$user_id." order by sort_name asc;");
-	//vsichni krome me
-	$to_select = createHTMLSelectFromSQLSelect("id_to", "id", '$record["sort_name"]." :: ".$record["reg"]', "select id, reg, sort_name from `".TBL_USER."` where id <> ".$user_id." order by sort_name asc;");
-}
+//pouze ja
+$from_select = createHTMLSelectFromSQLSelect("id_from", "id", '$record["sort_name"]." :: ".$record["reg"]', "select id, reg, sort_name from `".TBL_USER."` where id = ".$user_id." order by sort_name asc;");
+//vsichni krome me
+$to_select = createHTMLSelectFromSQLSelect("id_to", "id", '$record["sort_name"]." :: ".$record["reg"]', "select id, reg, sort_name from `".TBL_USER."` where id <> ".$user_id." order by sort_name asc;");
 
 echo $data_tbl->get_new_row('<label for="id_from">Pøevést od</label>', $from_select);
 echo $data_tbl->get_new_row('<label for="id_to">Pøevést komu</label>', $to_select);
