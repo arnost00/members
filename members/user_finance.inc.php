@@ -67,6 +67,34 @@ $row[] = '';
 $sum_amount<0?$class="red":$class="";
 $row[] = "<span class='amount$class'>".$sum_amount."</span>";
 echo $data_tbl->get_new_row_arr($row)."\n";
+
+//--------------pridani vypisu stavu kont sverencu pro rodice
+$nch_query = "select u.id, u.sort_name, ifnull(sum(f.amount),0) as sum from `".TBL_USER."` u left join `".TBL_FINANCE."` f on u.id = f.id_users_user where f.storno is null and (u.chief_pay = $user_id) group by u.id;";
+$nch_result = mysql_query($nch_query);
+if (mysql_num_rows($nch_result))
+{
+	while ($nch_record = mysql_fetch_array($nch_result))
+	{
+		$row = array();
+		$row[] = '';
+		$row[] = $nch_record['sort_name'];
+		$row[] = '';
+		$nch_record['sum']<0?$class="red":$class="";
+		$row[] = "<span class='amount$class'>".$nch_record['sum']."</span>";
+		$sum_amount += $nch_record['sum'];
+		echo $data_tbl->get_new_row_arr($row)."\n";
+	}
+	echo $data_tbl->get_break_row()."\n";
+	//vypis konecneho zustatku vcetne sverencu
+	$row = array();
+	$row[] = '';
+	$row[] = "Kompletní zùstatek";
+	$row[] = '';
+	$sum_amount<0?$class="red":$class="";
+	$row[] = "<span class='amount$class'>".$sum_amount."</span>";
+	echo $data_tbl->get_new_row_arr($row)."\n";
+	//-------------------------------------------------------------
+}
 echo $data_tbl->get_footer()."\n";
 
 
