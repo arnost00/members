@@ -19,7 +19,7 @@ include ("./common.inc.php");
 include_once './payment.inc.php'; // pomocne funkce a javascript pro finance
 
 // vytvorit platbu - out nebo in
-if (IsSet($payment) && IsLoggedFinance())
+if (IsSet($payment) && IsLogged())
 {
 
  	$editor_id = $usr->user_id;
