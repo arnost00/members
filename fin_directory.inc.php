@@ -41,8 +41,17 @@ $sub_query = $sc->get_sql_string();
 $query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob, ifnull(sum(f.amount),0) sum_amount FROM '.TBL_USER.' u 
 		left join (select * from '.TBL_FINANCE.' fin where (fin.storno != 1 or fin.storno is null)) f on u.id=f.id_users_user group by u.id '.$sub_query;
 */
-$query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,entry_locked, ifnull(sum(f.amount),0) sum_amount FROM '.TBL_USER.' u 
+/*
+$query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,entry_locked, ifnull(sum(f.amount),0) sum_amount, chief_pay FROM '.TBL_USER.' u 
 		left join (select * from '.TBL_FINANCE.' fin where (fin.storno != 1 or fin.storno is null)) f on u.id=f.id_users_user group by u.id '.$sub_query;
+*/
+$query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,entry_locked, ifnull(f.sum_amount,0) sum_amount, (n.amount+f.sum_amount) total_amount, u.chief_pay FROM '.TBL_USER.' u 
+		left join (select sum(fin.amount) sum_amount, id_users_user from '.TBL_FINANCE.' fin where (fin.storno is null) group by fin.id_users_user) f on u.id=f.id_users_user 
+		left join (select ui.chief_pay payer_id, ifnull(sum(fi.amount),0) amount from '.TBL_USER.' ui 
+			left join '.TBL_FINANCE.' fi on fi.id_users_user = ui.id where ui.chief_pay is not null and (fi.storno is null or fi.storno != 1) group by ui.chief_pay) n on u.id=n.payer_id 
+		group by u.id ORDER BY u.`sort_name` ASC;';
+
+// echo "|$query|";
 
 @$vysledek=MySQL_Query($query);
 
@@ -76,7 +85,11 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 			$row[] = $zaznam['jmeno'];
 			$row[] = RegNumToStr($zaznam['reg']);
 			$zaznam['sum_amount']<0?$class="red":$class="";
-			$row[] = "<span class='amount$class'>".$zaznam['sum_amount']."</span>";
+			$zaznam['total_amount']!=null?$chief_sum="/".$zaznam['total_amount']:$chief_sum="";
+			$chief_pay_mark = "";
+			($zaznam['chief_pay']>0 and $zaznam['chief_pay']<>$zaznam['id'])?$chief_pay_mark = "*":$chief_pay_mark = ""; 
+// 			($zaznam['chief_pay']>0 and $zaznam['chief_pay']<>$zaznam['id'])?$class="green":$class=$class; 
+			$row[] = "<span class='amount$class'>".$zaznam['sum_amount'].$chief_pay_mark.$chief_sum."</span>";
 			if ($zaznam['entry_locked'] != 0)
 				$row[] = '<span class="WarningText">Ne</span>';
 			else

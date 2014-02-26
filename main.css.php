@@ -432,6 +432,10 @@ TABLE.calendar TD.today
 	color: red;
 }
 
+.amountgreen {
+	color: green;
+}
+
 .amount {
 }
 
