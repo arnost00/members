@@ -49,7 +49,7 @@ DrawPageTitle('Èlenská základna - Editace uživatele');
 $return_url = 'http://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
 $return_url = parse_url($return_url, PHP_URL_QUERY);
 
-$user_id = $usr->user_id;
+$user_id = $id;
 $chief_query = "select u.chief_id, ch.sort_name as chief_name, u.chief_pay from `".TBL_USER."` u join `".TBL_USER."` ch on u.chief_id = ch.id where u.id = $user_id";
 // echo "|$chief_query|";
 $chief_result = mysql_query($chief_query);
