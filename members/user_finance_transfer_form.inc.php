@@ -1,16 +1,10 @@
 <?
-function createHTMLSelectFromSQLSelect($select_name, $option_value, $option_label, $SQLselect)
+function createHTMLSelect($select_name, $options)
 {	
 	$select = "<select name=\"$select_name\">";
-	$result=mysql_query($SQLselect);
-	while ($record=MySQL_Fetch_Array($result))
+	foreach ($options as $option)
 	{
- 		$select .= "<option value=$record[$option_value]>";		
-
- 		$str = "\$select .= ".$option_label.";";
- 		eval($str);
- 		
- 		$select .= "</option>";
+		$select .= "<option value=".$option['value'].">".$option['label']."</option>";
 	}
 	$select .= '</select>';
 	return $select;
@@ -25,10 +19,20 @@ $data_tbl = new html_table_form();
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 
-//pouze ja
-$from_select = createHTMLSelectFromSQLSelect("id_from", "id", '$record["sort_name"]." :: ".$record["reg"]', "select id, reg, sort_name from `".TBL_USER."` where id = ".$user_id." order by sort_name asc;");
-//vsichni krome me
-$to_select = createHTMLSelectFromSQLSelect("id_to", "id", '$record["sort_name"]." :: ".$record["reg"]', "select id, reg, sort_name from `".TBL_USER."` where id <> ".$user_id." order by sort_name asc;");
+$users_query = "select id, reg, sort_name  from `".TBL_USER."` where hidden=false order by sort_name asc;";
+$users_result=mysql_query($users_query);
+$from_options = array();
+$to_options = array();
+while ($record=MySQL_Fetch_Array($users_result))
+{
+	$opt[] = array();
+	$opt['value'] = $record['id'];
+	$opt['label'] = $record["sort_name"]." :: ".$record["reg"];
+	($record['id'] == $user_id)?$from_options[] = $opt:$to_options[] = $opt; 
+}
+
+$from_select = createHTMLSelect("id_from", $from_options);
+$to_select = createHTMLSelect("id_to", $to_options);
 
 echo $data_tbl->get_new_row('<label for="id_from">Pøevést od</label>', $from_select);
 echo $data_tbl->get_new_row('<label for="id_to">Pøevést komu</label>', $to_select);
