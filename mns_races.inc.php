@@ -8,24 +8,28 @@ DrawPageTitle('Hromadné pøihlášky na závody');
 include ("./common_race.inc.php");
 include ('./url.inc.php');
 
-@$vysledek=MySQL_Query("SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, nazev,misto,ranking,typ,vicedenni,odkaz,oddil,cancelled FROM ".TBL_RACE." ORDER BY datum, datum2, id");
+$fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
+$fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
+$fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 0;  // old races
+$sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC);
+
+@$vysledek=MySQL_Query("SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, nazev,misto,ranking,typ,vicedenni,odkaz,oddil,cancelled FROM ".TBL_RACE.$sql_sub_query." ORDER BY datum, datum2, id");
 
 ?>
 
 <script language="javascript">
 <!-- 
-	/*	"status=yes,width=600,height=350"	*/
+	/* "status=yes,width=600,height=350" */
 
 	function confirm_delete() {
-		return confirm('Opravdu se chcete odhlasit?');
+		return confirm('Opravdu se chcete odhlásit?');
 	}
 
-	javascript:set_default_size(700,600);
+	javascript:set_default_size(800,600);
 //-->
 </script>
 
 <?
-
 $num_rows = mysql_num_rows($vysledek);
 if ($num_rows > 0)
 {
@@ -55,7 +59,6 @@ if ($num_rows > 0)
 
 		$prefix = ($zaznam['datum'] < GetCurrentDate()) ? '<span class="TextAlertExp">' : '';
 		$suffix = ($zaznam['datum'] < GetCurrentDate()) ? '</span>' : '';
-
 		$row = array();
 		//----------------------------
 		if($zaznam['vicedenni'])
