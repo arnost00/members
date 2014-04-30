@@ -10,7 +10,7 @@ if (!defined('SYSTEM_VERSION_INCLUDED'))
 	function GetCodeVersion()
 	{
 		//pro zmenu podverze staci tento soubor komitnout ;)
-		$actualVersion = '$LastChangedRevision: 409 $';
+		$actualVersion = '$LastChangedRevision: 435 $';
 		$actualVersion = explode(' ', $actualVersion);
 		return "v2.5.0.$actualVersion[1] dbg";
 	}
