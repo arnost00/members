@@ -13,8 +13,11 @@ $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
 $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 1;  // old races
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC);
 
-@$vysledek=MySQL_Query("SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, nazev,oddil,ranking,typ,vicedenni,odkaz,misto, cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
+@$vysledek=MySQL_Query("SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,nazev,oddil,ranking,typ,vicedenni,odkaz,misto,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
 
+@$result_amount=MySQL_Query("select id_zavod, sum(amount) amount from ".TBL_FINANCE." where storno is null group by id_zavod;");
+while ($rec=mysql_fetch_array($result_amount)) $race_amount[$rec["id_zavod"]]=$rec["amount"];
+// print_r($race_amount);
 ?>
 
 <script language="javascript">
@@ -37,7 +40,8 @@ if ($num_rows > 0)
 	$data_tbl->set_header_col_with_help($col++,'Poø.',ALIGN_CENTER,"Poøadatel");
 	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
 	$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
-
+	$data_tbl->set_header_col($col++,'Platba',ALIGN_CENTER);
+	
 	echo $data_tbl->get_css()."\n";
 	echo $data_tbl->get_header()."\n";
 	echo $data_tbl->get_header_row()."\n";
@@ -62,7 +66,8 @@ if ($num_rows > 0)
 		$row[] = $prefix.$zaznam['oddil'].$suffix;
 		$row[] = GetRaceTypeImg($zaznam['typ']).'</A>';
 		$row[] = '<A HREF="javascript:open_win(\'./race_finance_view.php?race_id='.$zaznam['id'].'\',\'\')">Pøehled</A>';
-
+		$row[] = isset($race_amount[$zaznam['id']])?$race_amount[$zaznam['id']]:"";
+		
 		if (!$brk_tbl && $zaznam['datum'] >= GetCurrentDate())
 		{
 			if($i != 1)
