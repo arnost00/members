@@ -48,7 +48,7 @@ class CSOB_Export_Entry
 		{
 			$str = RegNumToStr($zaznam['reg']).SPACE_CHAR;
 			$str .= str_pad($zaznam['kat'],KAT_LEN,SPACE_CHAR).SPACE_CHAR;
-			$str .= str_pad($zaznam['si'],SI_LEN2005,'0',STR_PAD_LEFT).SPACE_CHAR;
+			$str .= str_pad($zaznam['si'],SI_LEN2005,SPACE_CHAR).SPACE_CHAR;
 			$str .= str_pad($zaznam['prijmeni'].' '.$zaznam['jmeno'],NAME_LEN,SPACE_CHAR).SPACE_CHAR;
 			$str .= $zaznam['lic'];
 			if($with_born_dates != false)
