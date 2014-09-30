@@ -176,12 +176,16 @@ if(strlen($zaznam_z['poznamka']) > 0)
 <?
 DrawPageSubTitle('Pøihlášení závodníci');
 
+$is_spol_dopr_on = ($zaznam_z["transport"]==1);
+
 $data_tbl = new html_table_mc();
 $col = 0;
 $data_tbl->set_header_col($col++,'Poø.',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
+if($is_spol_dopr_on)
+	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,'Spoleèná doprava');
 if($zaznam_z['prihlasky'] > 1)
 	$data_tbl->set_header_col($col++,'Termín',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Pozn.',ALIGN_LEFT);
@@ -199,13 +203,21 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 	$zaznam1=MySQL_Fetch_Array($vysledek1);
 	$i++;
 
-	$zaznam["transport"]?$trans++:"";
-	
 	$row = array();
 	$row[] = $i.'<!-- '.$zaznam['id'].' -->';
 	$row[] = $zaznam1['jmeno'];
 	$row[] = $zaznam1['prijmeni'];
 	$row[] = '<B>'.$zaznam['kat'].'</B>';
+	if($is_spol_dopr_on)
+	{
+		if ($zaznam["transport"])
+		{
+			$row[] = '<B>X</B>';
+			$trans++;
+		}
+		else
+			$row[] = '';
+	}
 	if($zaznam_z['prihlasky'] > 1)
 		$row[] = $zaznam['termin'];
 	$row[] = $zaznam['pozn'];
@@ -214,7 +226,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 }
 echo $data_tbl->get_footer()."\n";
 
-echo $zaznam_z["transport"]?"<BR>Poèet pøihlášených na dopravu: $trans":"";
+echo $is_spol_dopr_on?"<BR>Poèet pøihlášených na dopravu: $trans":"";
 ?>
 
 <BR>
