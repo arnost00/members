@@ -41,6 +41,8 @@ RaceInfoTable($zaznam_z,'',$gr_id != _REGISTRATOR_GROUP_ID_,false,true);
 <?
 DrawPageSubTitle('Pøihlášení závodníci');
 
+$is_spol_dopr_on = ($zaznam_z["transport"]==1);
+
 $data_tbl = new html_table_mc();
 $col = 0;
 $data_tbl->set_header_col($col++,'Poø.',ALIGN_CENTER);
@@ -52,6 +54,8 @@ if ($us == 0)
 	$data_tbl->set_header_col($col++,'SI èip',ALIGN_RIGHT);
 }
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
+if($is_spol_dopr_on)
+	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,'Spoleèná doprava');
 if($zaznam_z['prihlasky'] > 1)
 	$data_tbl->set_header_col($col++,'Termín',ALIGN_CENTER);
 if (IsLogged())
@@ -71,8 +75,6 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 	{
 		$i++;
 
-		$zaznam["transport"]?$trans++:"";
-		
 		$row = array();
 		$row[] = $i.'<!-- '.$zaznam['id'].' -->';
 		$row[] = $zaznam['jmeno'];
@@ -86,6 +88,16 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 				$row[] = (($zaznam['t_si_chip'] != 0) ? '<span class="TemporaryChip">'.SINumToStr($zaznam['t_si_chip']).'</span>' : SINumToStr($zaznam['si_chip']));
 		}
 		$row[] = '<B>'.$zaznam['kat'].'</B>';
+		if($is_spol_dopr_on)
+		{
+			if ($zaznam["transport"])
+			{
+				$row[] = '<B>X</B>';
+				$trans++;
+			}
+			else
+				$row[] = '';
+		}
 		if($zaznam_z['prihlasky'] > 1)
 			$row[] = $zaznam['termin'];
 		if(IsLogged())
@@ -98,7 +110,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 }
 echo $data_tbl->get_footer()."\n";
 
-echo $zaznam_z["transport"]?"<BR>Poèet pøihlášených na dopravu: $trans":"";
+echo $is_spol_dopr_on?"<BR>Poèet pøihlášených na dopravu: $trans":"";
 ?>
 
 <BR>

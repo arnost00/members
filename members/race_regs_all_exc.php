@@ -31,6 +31,7 @@ $zaznam_z = MySQL_Fetch_Array($vysledek_z);
 
 $is_registrator_on = IsCalledByRegistrator($gr_id);
 $is_termin_edit_on = $is_registrator_on && ($zaznam_z['prihlasky'] > 1);
+$is_spol_dopr_on = ($zaznam_z["transport"]==1);
 
 $termin = raceterms::GetCurr4RegTerm($zaznam_z);
 
@@ -43,6 +44,7 @@ while ($zaznamZ=MySQL_Fetch_Array($vysledek))
 		$poz = correct_sql_string($pozn[$user]);
 		$poz2 = correct_sql_string($pozn2[$user]);
 		$cterm = $termin;
+		$trans = ($is_spol_dopr_on && IsSet($transport[$user])) ? 1 : null;
 		if($is_registrator_on)
 		{
 			if($is_termin_edit_on && $term[$user] != 0)
@@ -69,7 +71,7 @@ while ($zaznamZ=MySQL_Fetch_Array($vysledek))
 				$poz2=correct_sql_string($poz2);
 				$cterm=correct_sql_string($cterm);
 			
-				$result=MySQL_Query("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$poz', pozn_in='$poz2', termin='$cterm' WHERE id_zavod = '$id' AND id_user = '$user'")
+				$result=MySQL_Query("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$poz', pozn_in='$poz2', termin='$cterm', transport='$trans' WHERE id_zavod = '$id' AND id_user = '$user'")
 					or die("Chyba pøi provádìní dotazu do databáze.");
 				if ($result == FALSE)
 					die ("Nepodaøilo se zmìnit pøihlášku èlena.");
@@ -85,7 +87,7 @@ while ($zaznamZ=MySQL_Fetch_Array($vysledek))
 				$poz2=correct_sql_string($poz2);
 				$cterm=correct_sql_string($cterm);
 			
-				$result=MySQL_Query("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in,termin) VALUES ('$user','$id','$kat', '$poz','$poz2','$cterm')")
+				$result=MySQL_Query("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in, termin, transport) VALUES ('$user','$id','$kat','$poz','$poz2','$cterm','$trans')")
 					or die("Chyba pøi provádìní dotazu do databáze.");
 				if ($result == FALSE)
 					die ("Nepodaøilo se zmìnit pøihlášku èlena.");
