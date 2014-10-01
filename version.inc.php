@@ -5,12 +5,12 @@ if (!defined('SYSTEM_VERSION_INCLUDED'))
 	define('SYSTEM_VERSION_INCLUDED', 1);
 
 	define('SYSTEM_NAME','members');
-	define('SYSTEM_AUTORS','Arnošt a Kenia');
+	define('SYSTEM_AUTORS','Arnošt, Kenia a LuF');
 
 	function GetCodeVersion()
 	{
 		//pro zmenu podverze staci tento soubor komitnout ;)
-		$actualVersion = '$LastChangedRevision: 437 $';
+		$actualVersion = '$LastChangedRevision: 441 $';
 		$actualVersion = explode(' ', $actualVersion);
 		return "v2.5.3.$actualVersion[1] dbg";
 	}
