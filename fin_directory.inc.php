@@ -88,7 +88,7 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 			$zaznam['total_amount']!=null?$chief_sum="/".$zaznam['total_amount']:$chief_sum="";
 			$chief_pay_mark = "";
 			($zaznam['chief_pay']>0 and $zaznam['chief_pay']<>$zaznam['id'])?$chief_pay_mark = "*":$chief_pay_mark = ""; 
-// 			($zaznam['chief_pay']>0 and $zaznam['chief_pay']<>$zaznam['id'])?$class="green":$class=$class; 
+ 			($zaznam['chief_pay']>0 and $zaznam['chief_pay']<>$zaznam['id'])?$class="green":$class=$class; 
 			$row[] = "<span class='amount$class'>".$zaznam['sum_amount'].$chief_pay_mark.$chief_sum."</span>";
 			if ($zaznam['entry_locked'] != 0)
 				$row[] = '<span class="WarningText">Ne</span>';
