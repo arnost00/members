@@ -30,7 +30,7 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 </script>
 
 <?
-$num_rows = mysql_num_rows($vysledek);
+$num_rows = ($vysledek != FALSE) ? mysql_num_rows($vysledek) : 0;
 if ($num_rows > 0)
 {
 	show_link_to_actual_race($num_rows);
