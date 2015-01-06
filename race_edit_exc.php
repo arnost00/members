@@ -113,7 +113,8 @@ else
 	$etap=correct_sql_string($etap);
 	$oddil=correct_sql_string($oddil);
 
-	$transport = !isset($transport)? null: 1;
+	if (!isset($transport))
+		$transport=0;
 	$cancelled = !isset($cancelled)? 0: 1;
 
 	$result=MySQL_Query("UPDATE ".TBL_RACE." SET datum='$datum', datum2='$datum2', nazev='$nazev', misto='$misto', typ='$typ', zebricek='$zebricek2', ranking='$ranking', prihlasky='$prihlasky', odkaz='$odkaz', prihlasky1='$prihlasky1', prihlasky2='$prihlasky2', prihlasky3='$prihlasky3', prihlasky4='$prihlasky4', prihlasky5='$prihlasky5', etap='$etap', poznamka='$poznamka', oddil='$oddil', modify_flag='$modify_flag', transport='$transport', cancelled='$cancelled' WHERE id='$id'")

@@ -84,6 +84,7 @@ echo '<TD><SELECT name="user_id" size=1 onchange="javascript:aktu_line();">'."\n
 $is_registrator_on = IsCalledByRegistrator($gr_id);
 $is_termin_show_on = $is_registrator_on && ($zaznam_z['prihlasky'] > 1);
 $is_spol_dopr_on = ($zaznam_z["transport"]==1);
+$is_spol_dopr_auto = ($zaznam_z["transport"]==2);
 $spol_dopr_idx = 3;
 if($is_termin_show_on)
 	$spol_dopr_idx++;
@@ -149,6 +150,14 @@ if($is_spol_dopr_on)
 	echo '<TD align="right">Spoleèná doprava</TD>';
 	echo '<TD width="5"></TD>';
 	echo '<TD><INPUT TYPE="checkbox" NAME="transport"></TD>';
+	echo '</TR>';
+}
+else if ($is_spol_dopr_auto)
+{
+	echo '<TR>';
+	echo '<TD align="right">Spoleèná doprava</TD>';
+	echo '<TD width="5"></TD>';
+	echo '<TD>Automaticky</TD>';
 	echo '</TR>';
 }
 echo '<TR>';
