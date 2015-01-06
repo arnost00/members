@@ -131,6 +131,11 @@ if ($zaznam_z["transport"]==1)
 	$trans=$zaznam_rg["transport"]?"CHECKED":"";
 	echo 'Chci využít spoleènou dopravu&nbsp;<input type="checkbox" name="transport" id="transport" '.$trans.'>';
 }
+else if ($zaznam_z["transport"]==2)
+{
+	echo "<BR><BR>";
+	echo 'Spoleèná doprava je zadána automaticky.';
+}
 
 ?>
 <BR><BR>

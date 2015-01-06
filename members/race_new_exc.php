@@ -73,7 +73,8 @@ else
 	$oddil=correct_sql_string($oddil);
 	$modify_flag=correct_sql_string($modify_flag);
 	
-	!isset($transport)?$transport=null:$transport=1;
+	if (!isset($transport))
+		$transport=0;
 	
 	
 	$result=MySQL_Query("INSERT INTO ".TBL_RACE." (datum, datum2, nazev, misto, typ, zebricek, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, etap, poznamka, vicedenni, oddil, modify_flag, transport) VALUES ('$datum', '$datum2', '$nazev', '$misto', '$typ', '$zebricek2', '$ranking', '$odkaz', '$prihlasky', '$prihlasky1', '$prihlasky2', '$prihlasky3', '$prihlasky4', '$prihlasky5', '$etap', '$poznamka', '$vicedenni', '$oddil', '$modify_flag', '$transport')")

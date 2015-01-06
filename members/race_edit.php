@@ -95,7 +95,7 @@ else
 	</TD>
 </TR>
 <TR>
-	<TD width="130" align="right">Žebøíèek</TD>
+	<TD width="130" align="right" valign="top">Žebøíèek</TD>
 	<TD width="5"></TD>
 	<TD>
 <?
@@ -121,9 +121,13 @@ else
 	</TD>
 </TR>
 <TR>
-	<TD width="130" align="right">Spoleèná doprava</TD>
+	<TD width="130" align="right" valign="top">Spoleèná doprava</TD>
 	<TD width="5"></TD>
-	<TD><input type="checkbox" name="transport" id="transport" <?if ($zaznam["transport"]==1) echo " CHECKED";?>></TD>
+	<TD>
+		<input type="radio" name="transport" value="0" id="radio_ff0" <?if ($zaznam["transport"]==0) echo "checked=\"checked\"";?>><label for="radio_ff0">Bez spoleèné dopravy</label><br>
+		<input type="radio" name="transport" value="1" id="radio_ff1" <?if ($zaznam["transport"]==1) echo "checked=\"checked\"";?>><label for="radio_ff1">Spoleèná doprava s výbìrem úèasti</label><br>
+		<input type="radio" name="transport" value="2" id="radio_ff2" <?if ($zaznam["transport"]==2) echo "checked=\"checked\"";?>><label for="radio_ff2">Automatická spoleèná doprava</label>
+	</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">Odkaz</TD>
@@ -143,7 +147,7 @@ if($zaznam['vicedenni'])
 }
 ?>
 <TR>
-	<TD width="130" align="right">Poznámka k závodu</TD>
+	<TD width="130" align="right" valign="top">Poznámka k závodu</TD>
 	<TD width="5"></TD>
 	<TD>
 	<TEXTAREA name="poznamka" cols="45" rows="5"><?echo $zaznam["poznamka"];?></TEXTAREA>

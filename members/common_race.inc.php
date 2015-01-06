@@ -297,7 +297,20 @@ function RIT_SH(divId1, divId2)
 		echo $data_tbl->get_new_row('Vedoucí',$vedouci);
 	if(is_array($add_row))
 		echo $data_tbl->get_new_row($add_row[0],$add_row[1]);
-	echo $data_tbl->get_new_row('Spoleèná doprava',$zaznam['transport']?"Ano":"Ne");
+	switch($zaznam['transport'])
+	{
+	case 0: 
+		$transport = 'Ne';
+		break;
+	case 1: 
+		$transport = 'Ano';
+		break;
+	case 2: 
+		$transport = 'Ano - automaticky';
+		break;
+	}
+
+	echo $data_tbl->get_new_row('Spoleèná doprava',$transport);
 	echo $data_tbl->get_footer()."\n";
 	if ($expandable)
 	{
