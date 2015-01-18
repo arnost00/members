@@ -1,5 +1,4 @@
-<?php /* finance -  show exact user finance */
- /* zamezeni samostatneho vykonani */ ?>
+<?php /* finance -  show exact user finance */ ?>
 
 <?
 @$vysledek_historie=MySQL_Query("select fin.id fin_id, rc.nazev zavod_nazev, rc.cancelled zavod_cancelled, from_unixtime(rc.datum,'%Y-%c-%e') zavod_datum, fin.amount amount, fin.note note, us.sort_name name, fin.date `date` from ".TBL_FINANCE." fin 
@@ -7,11 +6,22 @@
 		left join ".TBL_RACE." rc on fin.id_zavod = rc.id
 		where fin.id_users_user = ".$user_id." and fin.storno is null  order by fin.date asc, fin.id asc");
 
-//vytazeni jmena uzivatele
-@$vysledek_user_name=MySQL_Query("select us.sort_name name from ".TBL_USER." us where us.id = ".$user_id);
+//vytazeni jmena uzivatele a typu prispevku
+$vysledek_user_name=MySQL_Query("select us.sort_name name, ft.nazev ft_nazev from ".TBL_USER." us LEFT JOIN ".TBL_FINANCE_TYPES." ft ON us.finance_type = ft.id where us.id = ".$user_id);
 $zaznam_user_name=MySQL_Fetch_Array($vysledek_user_name);
+/*
+select us.sort_name name, ft.nazev ft_nazev from users us 
+LEFT JOIN  finance_types ft 
+ON us.finance_type = ft.id
+where us.id = '1'
+*/
 
 DrawPageSubTitle('Historie úètu pro èlena: '.$zaznam_user_name['name']);
+
+if ($zaznam_user_name['ft_nazev'] != null)
+{
+	DrawPageSubTitle('Typ oddílového pøíspìvku èlena: '.$zaznam_user_name['ft_nazev']);
+}
 
 include_once ("./common_race.inc.php");
 include_once ('./url.inc.php');

@@ -252,7 +252,13 @@ if($g_is_system_running || IsLoggedAdmin())
 						include "fin_races.inc.php";
 						break;
 					case 3:
-						if ($g_enable_finances_claim) include "fin_claims.inc.php";
+						if ($g_enable_finances_claim) 
+							include "fin_claims.inc.php";
+						else
+							include "./news.inc.php";
+						break;
+					case 4:
+						include "fin_types.inc.php";
 						break;
 					default:
 						include "./news.inc.php";

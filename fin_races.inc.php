@@ -22,7 +22,7 @@ while ($rec=mysql_fetch_array($result_amount)) $race_amount[$rec["id_zavod"]]=$r
 
 <script language="javascript">
 <!-- 
-	javascript:set_default_size(800,800);
+	javascript:set_default_size(1000,800);
 //-->
 </script>
 

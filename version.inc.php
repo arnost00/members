@@ -12,12 +12,12 @@ if (!defined('SYSTEM_VERSION_INCLUDED'))
 		//pro zmenu podverze staci tento soubor komitnout ;)
 		$actualVersion = '$LastChangedRevision: 451 $';
 		$actualVersion = explode(' ', $actualVersion);
-		return "v2.5.5.$actualVersion[1] dbg";
+		return "v2.6.0.$actualVersion[1] dbg";
 	}
 
 	function GetDevelopYears()
 	{
-		return "2002-2014";
+		return "2002-2015";
 	}
 }
 ?>
