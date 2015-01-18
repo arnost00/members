@@ -38,7 +38,7 @@ function DrawMenuGroupHeader($name)
 	global $g_colors;
 
 	echo '<TR><TD height="10"></TD></TR>'."\n";
-	echo '<TR><TD valign="top" align="left" bgcolor="'.$g_colors['nav_bgcolor_group_header'].'">&nbsp;<span class="NaviGroup">'.$name.' :</span></TD></TR>';
+	echo '<TR><TD valign="top" align="left" bgcolor="'.$g_colors['nav_bgcolor_group_header'].'">&nbsp;<span class="NaviGroup">'.$name.'&nbsp;:</span></TD></TR>';
 	echo "\n";
 }
 
@@ -78,7 +78,7 @@ function DrawMenuGroupHeader($name)
 		{
 			DrawMenuItem('Aktualitky',4,0);
 		}
-		DrawMenuGroupHeader('Èlenské menu');
+		DrawMenuGroupHeader('Èlenské&nbsp;menu');
 		DrawMenuItem('Pøihlášky na závody',_USER_GROUP_ID_,2);
 		if ($g_enable_finances)
 			DrawMenuItem('Finance', _USER_GROUP_ID_, 10);
@@ -89,13 +89,13 @@ function DrawMenuGroupHeader($name)
 	}
 	if(IsLoggedRegistrator())
 	{
-		DrawMenuGroupHeader('Menu pøihlašovatele');
+		DrawMenuGroupHeader('Menu&nbsp;pøihlašovatele');
 		DrawMenuItem('Pøihlášky na závody',_REGISTRATOR_GROUP_ID_,1);
 		DrawMenuItem('Editace závodù',_REGISTRATOR_GROUP_ID_,4);
 	}
 	if(IsLoggedManager())
 	{
-		DrawMenuGroupHeader('Menu trenéra');
+		DrawMenuGroupHeader('Menu&nbsp;trenéra');
 		DrawMenuItem('Pøihlášky na závody',_MANAGER_GROUP_ID_,2);
 		DrawMenuItem('Èlenská základna',_MANAGER_GROUP_ID_,1);
 		DrawMenuItem('Pøiøazení skupin èlenù',_MANAGER_GROUP_ID_,3);
@@ -105,7 +105,7 @@ function DrawMenuGroupHeader($name)
 	}
 	else if (IsLoggedSmallManager())
 	{
-		DrawMenuGroupHeader('Menu malého trenéra');
+		DrawMenuGroupHeader('Menu&nbsp;malého&nbsp;trenéra');
 		DrawMenuItem('Pøihlášky na závody',_SMALL_MANAGER_GROUP_ID_,2);
 		DrawMenuItem('Èlenská základna',_SMALL_MANAGER_GROUP_ID_,1);
 		if ($g_enable_finances)
@@ -113,16 +113,17 @@ function DrawMenuGroupHeader($name)
 	}
 	if(IsLoggedSmallAdmin())
 	{
-		DrawMenuGroupHeader('Menu správce');
+		DrawMenuGroupHeader('Menu&nbsp;správce');
 		DrawMenuItem('Èlenská základna',_SMALL_ADMIN_GROUP_ID_,1);
 		DrawMenuItem('Správa úètù',_SMALL_ADMIN_GROUP_ID_,3);
 	}
 	if(IsLoggedFinance() && $g_enable_finances)
 	{
-		DrawMenuGroupHeader('Menu finanèníka');
+		DrawMenuGroupHeader('Menu&nbsp;finanèníka');
 		DrawMenuItem('Èlenská základna',_FINANCE_GROUP_ID_,1);
 		DrawMenuItem('Pøehled závodù',_FINANCE_GROUP_ID_,2);
 		if ($g_enable_finances_claim) DrawMenuItem('Pøehled reklamací',_FINANCE_GROUP_ID_,3);
+		DrawMenuItem('Typy pøíspìvkù',_FINANCE_GROUP_ID_,4);
 	}
 	if(IsLoggedAdmin())
 	{

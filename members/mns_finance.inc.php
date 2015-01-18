@@ -19,7 +19,8 @@ $sc->add_column('sort_name','');
 $sc->add_column('reg','');
 $sc->set_url('index.php?id=600&subid=10',true);
 $sub_query = $sc->get_sql_string();
-$query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob, ifnull(sum(f.amount),0) sum_amount FROM '.TBL_USER.' u 
+$query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob, ifnull(sum(f.amount),0) sum_amount, ft.nazev FROM '.TBL_USER.' u 
+		left join '.TBL_FINANCE_TYPES.' ft on ft.id = u.finance_type
 		left join '.TBL_FINANCE.' f on u.id=f.id_users_user where f.storno is null AND u.chief_id = '.$usr->user_id.' and u.chief_pay is null group by u.id '.$sub_query;
 // echo "|$query|";
 @$vysledek=MySQL_Query($query);
@@ -31,7 +32,8 @@ $sc_family->add_column('sort_name','');
 $sc_family->add_column('reg','');
 $sc_family->set_url('index.php?id=600&subid=10',true);
 $sub_query_family = $sc_family->get_sql_string();
-$query_family = 'SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob, ifnull(sum(f.amount),0) sum_amount FROM '.TBL_USER.' u
+$query_family = 'SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob, ifnull(sum(f.amount),0) sum_amount, ft.nazev FROM '.TBL_USER.' u
+		left join '.TBL_FINANCE_TYPES.' ft on ft.id = u.finance_type
 		left join '.TBL_FINANCE.' f on u.id=f.id_users_user where f.storno is null AND u.chief_id = '.$usr->user_id.' and u.chief_pay = '.$usr->user_id.' group by u.id '.$sub_query;
 @$vysledek_family=MySQL_Query($query_family);
 //---------------------------------------------------------
@@ -47,6 +49,7 @@ function showNursechildAndFamilyTables($vysledek, $sc, $showTotal)
 	$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 	$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_CENTER,"Registraèní èíslo");
 	$data_tbl->set_header_col_with_help($col++,'Fin.st.',ALIGN_CENTER,"Aktuální finanèní stav");
+	$data_tbl->set_header_col_with_help($col++,'Typ o.p.',ALIGN_CENTER,"Typ oddílových pøíspìvkù");
 	$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 	
 	echo $data_tbl->get_css()."\n";
@@ -70,6 +73,7 @@ function showNursechildAndFamilyTables($vysledek, $sc, $showTotal)
 			$total+=$zaznam['sum_amount'];
 			$zaznam['sum_amount']<0?$class="red":$class="";
 			$row[] = "<span class='amount$class'>".$zaznam['sum_amount']."</span>";
+			$row[] = ($zaznam['nazev'] != null)? $zaznam['nazev'] : '-';
 			$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['id'].'\',\'\')">Pøehled</A>';
 			$row[] = $row_text;
 			echo $data_tbl->get_new_row_arr($row)."\n";

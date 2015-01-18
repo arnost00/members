@@ -2,16 +2,18 @@
 <?php /* finance -  show exact race finance */
 
 $query_prihlaseni = "
-select u.id u_id, u.sort_name, f.id, f.amount, f.note, zu.kat, zu.transport from ".TBL_USER." u inner join
+select u.id u_id, u.sort_name, f.id, f.amount, f.note, zu.kat, zu.transport, ft.nazev from ".TBL_USER." u inner join
 ".TBL_ZAVXUS." zu on u.id = zu.id_user left join
 (select * from ".TBL_FINANCE." where id_zavod = $race_id and storno is null) f on f.id_users_user = zu.id_user
+left join ".TBL_FINANCE_TYPES." ft on ft.id = u.finance_type
 where zu.id_zavod = $race_id and u.hidden = '0' order by u.sort_name
 ";
 $vysledek_prihlaseni = mysql_query($query_prihlaseni);
 
 $query_platici = "
-select u.id u_id, u.sort_name, f.id, f.amount, f.note, null kat from ".TBL_USER." u inner join
+select u.id u_id, u.sort_name, f.id, f.amount, f.note, null kat, ft.nazev from ".TBL_USER." u inner join
 (select * from ".TBL_FINANCE." where id_zavod = $race_id and storno is null) f on f.id_users_user = u.id 
+left join ".TBL_FINANCE_TYPES." ft on ft.id = u.finance_type
 where f.id_zavod = $race_id
 and u.id not in (select id_user from ".TBL_ZAVXUS." where id_zavod = $race_id) 
 and u.hidden = '0' 
@@ -20,15 +22,18 @@ order by u.sort_name
 $vysledek_platici = mysql_query($query_platici);
 
 $query_neprihlaseni = "
-select u.id u_id, u.sort_name, null id, null amount, null note, null kat from ".TBL_USER." u where id not in
+select u.id u_id, u.sort_name, null id, null amount, null note, null kat, ft.nazev from ".TBL_USER." u 
+left join ".TBL_FINANCE_TYPES." ft on ft.id = u.finance_type
+where u.id not in 
 (SELECT distinct(f.id_users_user) id
 FROM ".TBL_FINANCE." f where f.id_zavod = $race_id and f.storno is null
-union
+union 
 SELECT distinct(zu.id_user) id
 FROM ".TBL_ZAVXUS." zu where zu.id_zavod = $race_id) 
 and u.hidden = '0' 
 order by u.sort_name
 ";
+
 $vysledek_neprihlaseni = mysql_query($query_neprihlaseni);
 
 //vytazeni informaci o zavode
@@ -89,6 +94,7 @@ $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Èástka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Poznámka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
+$data_tbl->set_header_col_with_help($col++,'Typ o.p.',ALIGN_CENTER,"Typ oddílových pøíspìvkù");
 $data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Doprava',ALIGN_CENTER);
 
@@ -120,6 +126,7 @@ while ($zaznam=mysql_fetch_assoc($vysledek_prihlaseni))
 	$row[] = $input_note;
 	
 	$row[] = "<span class=\"cat\">".$zaznam['kat']."</span>";
+	$row[] = ($zaznam['nazev'] != null)? $zaznam['nazev'] : '-';
 
 	$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['u_id'].'\',\'\')">Platby</A>';
 	$row_text .= '<input type="hidden" id="userid'.$i.'" name="userid'.$i.'" value="'.$zaznam["u_id"].'"/><input type="hidden" id="paymentid'.$i.'" name="paymentid'.$i.'" value="'.$zaznam["id"].'"/>'; 
@@ -157,6 +164,7 @@ while ($zaznam=mysql_fetch_assoc($vysledek_platici))
 	$row[] = $input_note;
 
 	$row[] = $zaznam['kat'];
+	$row[] = ($zaznam['nazev'] != null)? $zaznam['nazev'] : '-';
 	
 	$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['u_id'].'\',\'\')">Platby</A>';
 	$row_text .= '<input type="hidden" id="userid'.$i.'" name="userid'.$i.'" value="'.$zaznam["u_id"].'"/><input type="hidden" id="paymentid'.$i.'" name="paymentid'.$i.'" value="'.$zaznam["id"].'"/>';
@@ -187,6 +195,7 @@ $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Èástka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Poznámka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
+$data_tbl->set_header_col_with_help($col++,'Typ o.p.',ALIGN_CENTER,"Typ oddílových pøíspìvkù");
 $data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 
 echo $data_tbl->get_css()."\n";
@@ -211,6 +220,7 @@ while ($zaznam=mysql_fetch_assoc($vysledek_neprihlaseni))
 	$row[] = $input_note;
 	
 	$row[] = $zaznam['kat'];
+	$row[] = ($zaznam['nazev'] != null)? $zaznam['nazev'] : '-';
 	
 	$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['u_id'].'\',\'\')">Platby</A>';
 	$row_text .= '<input type="hidden" id="userid'.$i.'" name="userid'.$i.'" value="'.$zaznam["u_id"].'"/><input type="hidden" id="paymentid'.$i.'" name="paymentid'.$i.'" value="'.$zaznam["id"].'"/>';
