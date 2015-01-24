@@ -40,7 +40,7 @@ else
 			$row = array();
 			$row[] = $zaznam['id'];
 			$row[] = $zaznam['nazev'];
-			$row[] = $zaznam['popis'];
+			$row[] = nl2br ($zaznam['popis']);
 			$row[] = '<A HREF="./fin_type_edit.php?id='.$zaznam['id'].'">Editovat</A>&nbsp;/&nbsp;<A HREF="./fin_type_del_exc.php?id='.$zaznam['id'].'" onclick="return confirm_delete()" class="Erase">Smazat</A>';
 
 			echo $data_tbl->get_new_row_arr($row)."\n";

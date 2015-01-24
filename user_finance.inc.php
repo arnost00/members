@@ -26,7 +26,6 @@ if ($zaznam_user_name['ft_nazev'] != null)
 include_once ("./common_race.inc.php");
 include_once ('./url.inc.php');
 
-
 $data_tbl = new html_table_mc();
 $col = 0;
 $data_tbl->set_header_col($col++,'Datum transakce',ALIGN_CENTER);

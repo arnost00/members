@@ -52,6 +52,9 @@ RaceInfoTable($zaznam_z,'',false,false,true);
 
 include_once ('./url.inc.php');
 
+include_once ('./common_fin.inc.php');
+$enable_fin_types = IsFinanceTypeTblFilled();
+
 ?>
 <div class="update-categories">
 <div class="sub-title">Naplò pouze vybrané kategorie pro pøihlášené závodníky</div>
@@ -94,7 +97,8 @@ $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Èástka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Poznámka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
-$data_tbl->set_header_col_with_help($col++,'Typ o.p.',ALIGN_CENTER,"Typ oddílových pøíspìvkù");
+if ($enable_fin_types)
+	$data_tbl->set_header_col_with_help($col++,'Typ o.p.',ALIGN_CENTER,"Typ oddílových pøíspìvkù");
 $data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Doprava',ALIGN_CENTER);
 
@@ -126,7 +130,8 @@ while ($zaznam=mysql_fetch_assoc($vysledek_prihlaseni))
 	$row[] = $input_note;
 	
 	$row[] = "<span class=\"cat\">".$zaznam['kat']."</span>";
-	$row[] = ($zaznam['nazev'] != null)? $zaznam['nazev'] : '-';
+	if ($enable_fin_types)
+		$row[] = ($zaznam['nazev'] != null)? $zaznam['nazev'] : '-';
 
 	$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['u_id'].'\',\'\')">Platby</A>';
 	$row_text .= '<input type="hidden" id="userid'.$i.'" name="userid'.$i.'" value="'.$zaznam["u_id"].'"/><input type="hidden" id="paymentid'.$i.'" name="paymentid'.$i.'" value="'.$zaznam["id"].'"/>'; 
@@ -164,7 +169,8 @@ while ($zaznam=mysql_fetch_assoc($vysledek_platici))
 	$row[] = $input_note;
 
 	$row[] = $zaznam['kat'];
-	$row[] = ($zaznam['nazev'] != null)? $zaznam['nazev'] : '-';
+	if ($enable_fin_types)
+		$row[] = ($zaznam['nazev'] != null)? $zaznam['nazev'] : '-';
 	
 	$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['u_id'].'\',\'\')">Platby</A>';
 	$row_text .= '<input type="hidden" id="userid'.$i.'" name="userid'.$i.'" value="'.$zaznam["u_id"].'"/><input type="hidden" id="paymentid'.$i.'" name="paymentid'.$i.'" value="'.$zaznam["id"].'"/>';
@@ -195,7 +201,8 @@ $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Èástka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Poznámka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
-$data_tbl->set_header_col_with_help($col++,'Typ o.p.',ALIGN_CENTER,"Typ oddílových pøíspìvkù");
+if ($enable_fin_types)
+	$data_tbl->set_header_col_with_help($col++,'Typ o.p.',ALIGN_CENTER,"Typ oddílových pøíspìvkù");
 $data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 
 echo $data_tbl->get_css()."\n";
@@ -220,7 +227,8 @@ while ($zaznam=mysql_fetch_assoc($vysledek_neprihlaseni))
 	$row[] = $input_note;
 	
 	$row[] = $zaznam['kat'];
-	$row[] = ($zaznam['nazev'] != null)? $zaznam['nazev'] : '-';
+	if ($enable_fin_types)
+		$row[] = ($zaznam['nazev'] != null)? $zaznam['nazev'] : '-';
 	
 	$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['u_id'].'\',\'\')">Platby</A>';
 	$row_text .= '<input type="hidden" id="userid'.$i.'" name="userid'.$i.'" value="'.$zaznam["u_id"].'"/><input type="hidden" id="paymentid'.$i.'" name="paymentid'.$i.'" value="'.$zaznam["id"].'"/>';
