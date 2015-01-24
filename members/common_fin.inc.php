@@ -36,4 +36,17 @@ function GetFinMailFlagDesc(&$mflags)
 	return $result;
 }
 
+function IsFinanceTypeTblFilled()
+{
+	@$vysledek=MySQL_Query("SELECT id FROM ".TBL_FINANCE_TYPES.' ORDER BY id');
+	if ($vysledek === FALSE )
+	{
+		return 0;
+	}
+	else
+	{
+		return mysql_num_rows($vysledek);
+	}
+}
+
 ?>
