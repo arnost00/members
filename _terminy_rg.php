@@ -26,7 +26,7 @@ require ('common_rg_race.inc.php')
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=windows-1250">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta http-equiv="Content-language" content="cs">
 </head>
 <style type="text/css">
@@ -113,7 +113,7 @@ db_Connect();
 ?>
 <center>
 <hr>
-<h1>Přehled přihlášek pro přihlašovatele</h1>
+<h1>PĹ™ehled pĹ™ihlĂˇĹˇek pro pĹ™ihlaĹˇovatele</h1>
 <hr><br>
 <?
 include ('common_race.inc.php');
@@ -133,12 +133,12 @@ if (mysql_num_rows($vysledek) > 0)
 	echo('<table>'."\n");
 	echo('<tr>');
 	echo('<th rowspan=2>Datum</th>');
-	echo('<th rowspan=2>Název</th>');
-	echo('<th rowspan=2>Poř.</th>');
+	echo('<th rowspan=2>NĂˇzev</th>');
+	echo('<th rowspan=2>PoĹ™.</th>');
 	echo('<th rowspan=2>W</th>');
-	echo('<th colspan=2>Termín přihlášek</th>');
+	echo('<th colspan=2>TermĂ­n pĹ™ihlĂˇĹˇek</th>');
 	echo('<th rowspan=2>OP</th>');
-	echo('<th rowspan=2>Pomocný seznam termínů</th>');
+	echo('<th rowspan=2>PomocnĂ˝ seznam termĂ­nĹŻ</th>');
 	echo('</tr>'."\n");
 	echo('<tr>');
 	echo('<th>byl</th>');
@@ -197,7 +197,7 @@ if (mysql_num_rows($vysledek) > 0)
 }
 else
 {
-	echo('V nejbližších '.GC_SHOW_REG_DAYS.' dnech není žádná přihláška na závod.');
+	echo('V nejbliĹľĹˇĂ­ch '.GC_SHOW_REG_DAYS.' dnech nenĂ­ ĹľĂˇdnĂˇ pĹ™ihlĂˇĹˇka na zĂˇvod.');
 }
 ?>
 <br>

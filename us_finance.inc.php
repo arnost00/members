@@ -1,7 +1,7 @@
 <?php /* zavody - zobrazeni zavodu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Finance èlena');
+DrawPageTitle('Finance Älena');
 ?>
 <CENTER>
 <?

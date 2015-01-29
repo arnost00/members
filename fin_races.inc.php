@@ -1,7 +1,7 @@
 <?php /* zavody - zobrazeni zavodu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Pøehled závodù pro finance');
+DrawPageTitle('PÅ™ehled zÃ¡vodÅ¯ pro finance');
 ?>
 <CENTER>
 <?
@@ -35,11 +35,11 @@ if ($num_rows > 0)
 	$data_tbl = new html_table_mc();
 	$col = 0;
 	$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
-	$data_tbl->set_header_col_with_help($col++,'Poø.',ALIGN_CENTER,"Poøadatel");
-	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
-	$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'NÃ¡zev',ALIGN_LEFT);
+	$data_tbl->set_header_col($col++,'MÃ­sto',ALIGN_LEFT);
+	$data_tbl->set_header_col_with_help($col++,'PoÅ™.',ALIGN_CENTER,"PoÅ™adatel");
+	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ zÃ¡vodu");
+	$data_tbl->set_header_col($col++,'MoÅ¾nosti',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Platba',ALIGN_CENTER);
 	
 	echo $data_tbl->get_css()."\n";
@@ -65,7 +65,7 @@ if ($num_rows > 0)
 		$row[] = $prefix.GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']).$suffix;
 		$row[] = $prefix.$zaznam['oddil'].$suffix;
 		$row[] = GetRaceTypeImg($zaznam['typ']).'</A>';
-		$row[] = '<A HREF="javascript:open_win(\'./race_finance_view.php?race_id='.$zaznam['id'].'\',\'\')">Pøehled</A>';
+		$row[] = '<A HREF="javascript:open_win(\'./race_finance_view.php?race_id='.$zaznam['id'].'\',\'\')">PÅ™ehled</A>';
 		$row[] = isset($race_amount[$zaznam['id']])?$race_amount[$zaznam['id']]:"";
 		
 		if (!$brk_tbl && $zaznam['datum'] >= GetCurrentDate())

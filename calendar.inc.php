@@ -45,7 +45,7 @@ if (!defined('_CALENDAR_INCLUDED'))
 
 	function _GetMonthName($m)
 	{
-		$arr_months = array(1=>'leden','únor','bøezen','duben','kvìten','èerven','èervenec','srpen','záøí','øíjen','listopad','prosinec');
+		$arr_months = array(1=>'leden','Ãºnor','bÅ™ezen','duben','kvÄ›ten','Äerven','Äervenec','srpen','zÃ¡Å™Ã­','Å™Ã­jen','listopad','prosinec');
 		return $arr_months[$m];
 	}
 
@@ -55,7 +55,7 @@ if (!defined('_CALENDAR_INCLUDED'))
 			return '';
 
 		global $g_daylist;
-		$arr_days = array('Po','Út','St','Èt','Pá','So','Ne');
+		$arr_days = array('Po','Ãšt','St','ÄŒt','PÃ¡','So','Ne');
 
 		$curr = false;
 		$curr_day = 0;

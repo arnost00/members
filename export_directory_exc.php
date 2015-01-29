@@ -32,7 +32,7 @@ TXT_Header();
 db_Connect();
 
 @$vysledek=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE hidden = 0 ORDER BY sort_name ASC")
-	or die("Chyba pøi provádìní dotazu do databáze.");
+	or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 
 include ('exports.inc.php');
 

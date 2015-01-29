@@ -11,7 +11,7 @@ $zaznam_platba=MySQL_Fetch_Array($vysledek_platba);
 @$vysledek_user_name=MySQL_Query("select us.sort_name name from ".TBL_USER." us where us.id = ".$zaznam_platba['id_users_user']);
 $zaznam_user_name=MySQL_Fetch_Array($vysledek_user_name);
 
-DrawPageSubTitle('Zmìna platby pro èlena: '.$zaznam_user_name['name']);
+DrawPageSubTitle('ZmÄ›na platby pro Älena: '.$zaznam_user_name['name']);
 $user_id = $zaznam_platba['id_users_user'];
 ?>
 <form class="form" action="?payment=update&user_id=<?=$zaznam_platba["id_users_user"];?>&trn_id=<?=$trn_id;?>" method="post">
@@ -41,9 +41,9 @@ while ($zaznam=MySQL_Fetch_Array($vysledek_zavody))
 $race_sel .= '</select>';
 
 echo $data_tbl->get_new_row('<label for="datum">Datum platby</label>', '<input name="datum" type="text" disabled value="'.SQLDate2String($zaznam_platba['date']).'" size="8" />');
-echo $data_tbl->get_new_row('<label for="race">Závod</label>', $race_sel);
-echo $data_tbl->get_new_row('<label for="amount">Èástka</label>', '<input name="amount" type="text" onkeyup="checkAmount(this);" maxlength="5" value="'.$zaznam_platba["amount"].'" size="5" maxlength="10" />');
-echo $data_tbl->get_new_row('<label for="note">Poznámka</label>', '<input name="note" type="text" value="'.$zaznam_platba["note"].'" size="40" maxlength="200" />');
+echo $data_tbl->get_new_row('<label for="race">ZÃ¡vod</label>', $race_sel);
+echo $data_tbl->get_new_row('<label for="amount">ÄŒÃ¡stka</label>', '<input name="amount" type="text" onkeyup="checkAmount(this);" maxlength="5" value="'.$zaznam_platba["amount"].'" size="5" maxlength="10" />');
+echo $data_tbl->get_new_row('<label for="note">PoznÃ¡mka</label>', '<input name="note" type="text" value="'.$zaznam_platba["note"].'" size="40" maxlength="200" />');
 
 echo $data_tbl->get_empty_row();
 echo $data_tbl->get_new_row('','<input type="submit" value="Odeslat"/>');

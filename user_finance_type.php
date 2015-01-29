@@ -28,7 +28,7 @@ $sql_query2 = 'SELECT * FROM '.TBL_FINANCE_TYPES.' ORDER BY id';
 include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 include ("./common.inc.php");
 
-DrawPageTitle('Vıbìr typu oddílového pøíspìvku pro èlena');
+DrawPageTitle('VÃ½bÄ›r typu oddÃ­lovÃ©ho pÅ™Ã­spÄ›vku pro Älena');
 
 DrawPageSubTitle($zaznam['sort_name']);
 
@@ -51,7 +51,7 @@ function get_row($id,$nazev,$popis,$selected_id)
 <?
 if ($vysledek === FALSE )
 {
-	echo('Chyba v databázi, kontaktuje administrátora.<br>');
+	echo('Chyba v databÃ¡zi, kontaktuje administrÃ¡tora.<br>');
 }
 else
 {
@@ -63,7 +63,7 @@ else
 	echo $data_tbl->get_header()."\n";
 
 	//row 0
-	$rows = get_row(0,'Není definováno','',$zaznam["finance_type"])."\n";
+	$rows = get_row(0,'NenÃ­ definovÃ¡no','',$zaznam["finance_type"])."\n";
 
 	$num_rows = mysql_num_rows($vysledek2);
 	if ($num_rows > 0)
@@ -75,10 +75,10 @@ else
 			$rows .= "\n";
 		}
 		
-	echo $data_tbl->get_new_row_text('Typ pøíspìvku',$rows);
+	echo $data_tbl->get_new_row_text('Typ pÅ™Ã­spÄ›vku',$rows);
 /*
 
-Název', '<INPUT TYPE="text" NAME="nazev" size="50" MAXLENGTH=50 VALUE="'.$zaznam['nazev'].'">');
+NÃ¡zev', '<INPUT TYPE="text" NAME="nazev" size="50" MAXLENGTH=50 VALUE="'.$zaznam['nazev'].'">');
 echo $data_tbl->get_new_row('Popis', '<TEXTAREA name="popis" cols="50" rows="10" wrap=virtual>'.$zaznam['popis'].'</TEXTAREA>');
 */
 echo $data_tbl->get_empty_row();
@@ -92,7 +92,7 @@ echo $data_tbl->get_footer()."\n";
 }
 ?>
 <BR><hr><BR>
-<A HREF="index.php?id=800&subid=1">Zpìt</A><BR>
+<A HREF="index.php?id=800&subid=1">ZpÄ›t</A><BR>
 <BR><hr><BR>
 </CENTER>
 </TD>

@@ -22,7 +22,7 @@ include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 include ("./common.inc.php");
 include ("./common_user.inc.php");
 
-DrawPageTitle('Hledání volnıch registraèních èísel');
+DrawPageTitle('HledÃ¡nÃ­ volnÃ½ch registraÄnÃ­ch ÄÃ­sel');
 ?>
 
 <TABLE width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -37,10 +37,10 @@ $data_tbl = new html_table_form();
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 
-echo $data_tbl->get_new_row('Registraèní èíslo', $g_shortcut.'&nbsp;&nbsp;<input type="text" name="reg" value="'.(($reg != 0)? RegNumToStr($reg) : '').'"> (9999)');
-echo $data_tbl->get_new_row('Rok narození', '<input type="text" name="year" value="'.(($year != 0)? $year : '').'"> (9999)');
+echo $data_tbl->get_new_row('RegistraÄnÃ­ ÄÃ­slo', $g_shortcut.'&nbsp;&nbsp;<input type="text" name="reg" value="'.(($reg != 0)? RegNumToStr($reg) : '').'"> (9999)');
+echo $data_tbl->get_new_row('Rok narozenÃ­', '<input type="text" name="year" value="'.(($year != 0)? $year : '').'"> (9999)');
 echo $data_tbl->get_empty_row();
-echo $data_tbl->get_new_row('','<INPUT TYPE="submit" VALUE="Vyhledat"> <BUTTON onclick="javascript:close_popup();">Zavøít</BUTTON>');
+echo $data_tbl->get_new_row('','<INPUT TYPE="submit" VALUE="Vyhledat"> <BUTTON onclick="javascript:close_popup();">ZavÅ™Ã­t</BUTTON>');
 echo $data_tbl->get_footer()."\n";
 ?>
 </form>
@@ -50,16 +50,16 @@ if($reg != 0 || $year != 0)
 	db_Connect();
 	if($reg != 0)
 	{
-		DrawPageSubTitle('Dle registraèního èísla - '.$g_shortcut.RegNumToStr($reg));
+		DrawPageSubTitle('Dle registraÄnÃ­ho ÄÃ­sla - '.$g_shortcut.RegNumToStr($reg));
 		@$vysledek=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE reg = ".$reg." ORDER BY reg ASC");
 		$cnt= ($vysledek != FALSE) ? mysql_num_rows($vysledek) : 0;
 		if($cnt > 0)
 		{
 			$data_tbl = new html_table_mc();
 			$col = 0;
-			$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_LEFT,"Registraèní èíslo");
-			$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-			$data_tbl->set_header_col($col++,'Aktivní',ALIGN_CENTER);
+			$data_tbl->set_header_col_with_help($col++,'Reg.Ä.',ALIGN_LEFT,"RegistraÄnÃ­ ÄÃ­slo");
+			$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT);
+			$data_tbl->set_header_col($col++,'AktivnÃ­',ALIGN_CENTER);
 
 			echo $data_tbl->get_css()."\n";
 			echo $data_tbl->get_header()."\n";
@@ -76,11 +76,11 @@ if($reg != 0 || $year != 0)
 			echo $data_tbl->get_footer()."\n";
 		}
 		else
-			echo('Registraèní èíslo '.$g_shortcut.RegNumToStr($reg).' nebylo nalezeno.');
+			echo('RegistraÄnÃ­ ÄÃ­slo '.$g_shortcut.RegNumToStr($reg).' nebylo nalezeno.');
 	}
 	else if($year != 0)
 	{
-		DrawPageSubTitle('Dle roku narození - '.$year);
+		DrawPageSubTitle('Dle roku narozenÃ­ - '.$year);
 		
 		if($year > 100)
 			$year = $year % 100;
@@ -94,9 +94,9 @@ if($reg != 0 || $year != 0)
 		{
 			$data_tbl = new html_table_mc();
 			$col = 0;
-			$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_LEFT,"Registraèní èíslo");
-			$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-			$data_tbl->set_header_col($col++,'Aktivní',ALIGN_CENTER);
+			$data_tbl->set_header_col_with_help($col++,'Reg.Ä.',ALIGN_LEFT,"RegistraÄnÃ­ ÄÃ­slo");
+			$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT);
+			$data_tbl->set_header_col($col++,'AktivnÃ­',ALIGN_CENTER);
 
 			echo $data_tbl->get_css()."\n";
 			echo $data_tbl->get_header()."\n";
@@ -113,7 +113,7 @@ if($reg != 0 || $year != 0)
 			echo $data_tbl->get_footer()."\n";
 		}
 		else
-			echo('Nebyl nalezen ádnı èlen s rokem narození '.$year);
+			echo('Nebyl nalezen Å¾Ã¡dnÃ½ Älen s rokem narozenÃ­ '.$year);
 	}
 }
 ?>

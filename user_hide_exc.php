@@ -24,9 +24,9 @@ if (IsLoggedSmallAdmin())
 			$hidden = (bool)($zaznam['hidden']);
 			$hidden = !$hidden;
 			$result=MySQL_Query('UPDATE '.TBL_USER.' SET hidden=\''.$hidden.'\' WHERE `id`=\''.$id."'")
-				or die('Chyba pøi provádìní dotazu do databáze.');
+				or die('Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.');
 			if ($result == FALSE)
-				die ('Nepodaøilo se skrıt/zpøístupnit èlena.');
+				die ('NepodaÅ™ilo se skrÃ½t/zpÅ™Ã­stupnit Älena.');
 			$hidden_result = true;
 			SaveItemToModifyLog_Edit(TBL_USER,'user.id = '.$id.' - hide ('.(int)$hidden.')');
 		}
@@ -40,9 +40,9 @@ if (IsLoggedSmallAdmin())
 			{
 				$lock = $hidden;
 				$result=MySQL_Query('UPDATE '.TBL_ACCOUNT.' SET locked=\''.$lock.'\' WHERE `id`=\''.$id2."'")
-					or die('Chyba pøi provádìní dotazu do databáze.');
+					or die('Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.');
 				if ($result == FALSE)
-					die ('Nepodaøilo se zamèít/odemèít úèet èlena.');
+					die ('NepodaÅ™ilo se zamÄÃ­t/odemÄÃ­t ÃºÄet Älena.');
 				SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id2.' - lock ('.(int)$lock.')');
 			}
 		}

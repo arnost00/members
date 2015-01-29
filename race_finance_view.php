@@ -57,7 +57,7 @@ include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 include ("./common.inc.php");
 include ("./common_user.inc.php");
 include ("./ctable.inc.php");
-DrawPageTitle('Finance závodu');
+DrawPageTitle('Finance zÃ¡vodu');
 ?>
 <CENTER>
 <script language="javascript">
@@ -72,7 +72,7 @@ include ("./race_finance.inc.php");
 ?>
 <hr>
 <br>
-<BUTTON onclick="javascript:close_popup();">Zavøi okno</BUTTON><BR>
+<BUTTON onclick="javascript:close_popup();">ZavÅ™i okno</BUTTON><BR>
 </CENTER>
 </BODY>
 </HTML>

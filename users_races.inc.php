@@ -1,7 +1,7 @@
 <?php /* adminova stranka - editace clenu oddilu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Pøihlášky èlenù oddílu');
+DrawPageTitle('PÅ™ihlÃ¡Å¡ky ÄlenÅ¯ oddÃ­lu');
 ?>
 <CENTER>
 <script language="javascript">
@@ -18,11 +18,11 @@ include "./common_user.inc.php";
 
 $data_tbl = new html_table_mc();
 $col = 0;
-$data_tbl->set_header_col($col++,'Poø.è.',ALIGN_CENTER,40);
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT,150);
-$data_tbl->set_header_col($col++,'Reg.è.',ALIGN_CENTER,50);
-$data_tbl->set_header_col($col++,'SI èip',ALIGN_CENTER,50);
-$data_tbl->set_header_col($col++,'Pøihlášky',ALIGN_CENTER,80);
+$data_tbl->set_header_col($col++,'PoÅ™.Ä.',ALIGN_CENTER,40);
+$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT,150);
+$data_tbl->set_header_col($col++,'Reg.Ä.',ALIGN_CENTER,50);
+$data_tbl->set_header_col($col++,'SI Äip',ALIGN_CENTER,50);
+$data_tbl->set_header_col($col++,'PÅ™ihlÃ¡Å¡ky',ALIGN_CENTER,80);
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";

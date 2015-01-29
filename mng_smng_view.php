@@ -16,9 +16,9 @@ include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 include ("./common.inc.php");
 include ("./common_user.inc.php");
 
-DrawPageTitle('Zobrazení èlenù pøidìlených malému trenéru');
+DrawPageTitle('ZobrazenÃ­ ÄlenÅ¯ pÅ™idÄ›lenÃ½ch malÃ©mu trenÃ©ru');
 
-DrawPageSubTitle('Trenér');
+DrawPageSubTitle('TrenÃ©r');
 
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
@@ -30,19 +30,19 @@ db_Connect();
 $data_tbl = new html_table_nfo;
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
-echo $data_tbl->get_new_row('Jméno',$zaznam0['jmeno'].' '.$zaznam0['prijmeni']);
-echo $data_tbl->get_new_row('Registraèní èíslo',$g_shortcut.RegNumToStr($zaznam0['reg']));
+echo $data_tbl->get_new_row('JmÃ©no',$zaznam0['jmeno'].' '.$zaznam0['prijmeni']);
+echo $data_tbl->get_new_row('RegistraÄnÃ­ ÄÃ­slo',$g_shortcut.RegNumToStr($zaznam0['reg']));
 echo $data_tbl->get_footer()."\n";
 
-DrawPageSubTitle('Pøiøazení èlenové');
+DrawPageSubTitle('PÅ™iÅ™azenÃ­ ÄlenovÃ©');
 
 $i=1;
 $data_tbl = new html_table_mc();
 $col = 0;
-$data_tbl->set_header_col($col++,'Poø.è.',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_CENTER,"Registraèní èíslo");
+$data_tbl->set_header_col($col++,'PoÅ™.Ä.',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'PÅ™Ã­jmenÃ­',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT);
+$data_tbl->set_header_col_with_help($col++,'Reg.Ä.',ALIGN_CENTER,"RegistraÄnÃ­ ÄÃ­slo");
 $data_tbl->set_header_col_with_help($col++,'L.OB',ALIGN_CENTER,"Licence pro OB");
 $data_tbl->set_header_col_with_help($col++,'L.MTBO',ALIGN_CENTER,"Licence pro MTBO");
 $data_tbl->set_header_col_with_help($col++,'L.LOB',ALIGN_CENTER,"Licence pro LOB");
@@ -72,7 +72,7 @@ echo $data_tbl->get_footer()."\n";
 
 ?>
 <BR>
-<BUTTON onclick="javascript:close_popup();">Zpìt</BUTTON>
+<BUTTON onclick="javascript:close_popup();">ZpÄ›t</BUTTON>
 </TD></TR></TABLE>
 
 </body>

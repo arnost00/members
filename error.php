@@ -7,7 +7,7 @@ require ("./sess.inc.php");
 require ("./common.inc.php");
 
 include "./header.inc.php"; // header obsahuje uvod html a konci <BODY>
-DrawPageTitle('Chybový stav :');
+DrawPageTitle('ChybovÃ½ stav :');
 ?>
 <TABLE width="80%" cellpadding="0" cellspacing="0" border="0">
 <TR><TD width="20px" ROWSPAN="4">&nbsp;</TD><TD ALIGN=CENTER>
@@ -16,20 +16,20 @@ DrawPageTitle('Chybový stav :');
 if (IsSet($code) && $code != 0)
 {
 	$errors_list = array ( // preddefinovany seznam chybovych hlasek
-		11 => 'Nepodaøilo se navázat spojení s databází.',
-		12 => 'Chyba pøi komunikaci s databází.',
-		21 => 'Do této oblasti nemáte pøístupová práva, kontaktujte správce stránek.',
-		31 => 'Nemáte pøístupová práva pro psaní a mazání novinek, kontaktujte správce stránek.',
-		32 => 'Je potøeba zadat nìjaké údaje pro vytvoøení novinky.',
-		42 => 'Je potøeba zadat nìjaké údaje pro vytvoøení závodu.',
-		52 => 'Je potøeba zadat nìjaké údaje pro zmìnu upozoròování na email.',
-		62 => 'Je potøeba zadat nìjaké údaje pro vytvoøení typu oddílového pøíspìvku.',
-		101 => 'Neexistující uživatel. Zadejte správné uživatelské jméno.',
-		102 => 'Špatnì zadané heslo! Zkuste zadat heslo znovu.',
-		103 => 'Uèet je zablokován! Pokud nevíte dùvod, kontaktujte správce stránek.',
-		201 => 'Nebyl nalezen požadovaný záznam.',
+		11 => 'NepodaÅ™ilo se navÃ¡zat spojenÃ­ s databÃ¡zÃ­.',
+		12 => 'Chyba pÅ™i komunikaci s databÃ¡zÃ­.',
+		21 => 'Do tÃ©to oblasti nemÃ¡te pÅ™Ã­stupovÃ¡ prÃ¡va, kontaktujte sprÃ¡vce strÃ¡nek.',
+		31 => 'NemÃ¡te pÅ™Ã­stupovÃ¡ prÃ¡va pro psanÃ­ a mazÃ¡nÃ­ novinek, kontaktujte sprÃ¡vce strÃ¡nek.',
+		32 => 'Je potÅ™eba zadat nÄ›jakÃ© Ãºdaje pro vytvoÅ™enÃ­ novinky.',
+		42 => 'Je potÅ™eba zadat nÄ›jakÃ© Ãºdaje pro vytvoÅ™enÃ­ zÃ¡vodu.',
+		52 => 'Je potÅ™eba zadat nÄ›jakÃ© Ãºdaje pro zmÄ›nu upozorÅˆovÃ¡nÃ­ na email.',
+		62 => 'Je potÅ™eba zadat nÄ›jakÃ© Ãºdaje pro vytvoÅ™enÃ­ typu oddÃ­lovÃ©ho pÅ™Ã­spÄ›vku.',
+		101 => 'NeexistujÃ­cÃ­ uÅ¾ivatel. Zadejte sprÃ¡vnÃ© uÅ¾ivatelskÃ© jmÃ©no.',
+		102 => 'Å patnÄ› zadanÃ© heslo! Zkuste zadat heslo znovu.',
+		103 => 'UÄet je zablokovÃ¡n! Pokud nevÃ­te dÅ¯vod, kontaktujte sprÃ¡vce strÃ¡nek.',
+		201 => 'Nebyl nalezen poÅ¾adovanÃ½ zÃ¡znam.',
 		202 => 'Nelze smazat sebe sama.',
-		9999 => 'Neznámá chyba.'
+		9999 => 'NeznÃ¡mÃ¡ chyba.'
 	);
 	$text = $errors_list[$code];
 	if (strlen($text) == 0)
@@ -55,10 +55,10 @@ else
  $reff = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
  if ($reff != '')
  {
-	echo('<BR><A href="'.$reff.'">Zpìt</A>');
+	echo('<BR><A href="'.$reff.'">ZpÄ›t</A>');
  }
 ?>
-<BR><A href="<? echo $g_baseadr?>">Zpìt na úvodní stránku</A><BR><BR><BR>
+<BR><A href="<? echo $g_baseadr?>">ZpÄ›t na ÃºvodnÃ­ strÃ¡nku</A><BR><BR><BR>
 <hr><BR>
 </TD></TR>
 <TR><TD ALIGN=CENTER>

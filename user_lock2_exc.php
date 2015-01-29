@@ -22,9 +22,9 @@ if (IsLoggedSmallAdmin() || IsLoggedFinance())
 		$lock = (bool)($zaznam2['entry_locked']);
 		$lock = !$lock;
 		$result=MySQL_Query('UPDATE '.TBL_USER.' SET entry_locked=\''.$lock.'\' WHERE `id`=\''.$id."'")
-			or die('Chyba pøi provádìní dotazu do databáze.');
+			or die('Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.');
 		if ($result == FALSE)
-			die ('Nepodaøilo se zamèít/odemèít pøihlášky èlena.');
+			die ('NepodaÅ™ilo se zamÄÃ­t/odemÄÃ­t pÅ™ihlÃ¡Å¡ky Älena.');
 		SaveItemToModifyLog_Edit(TBL_USER,$zaznam2['jmeno'].' '.$zaznam2['prijmeni'].' ['.$zaznam2['reg'].'] - entry lock ('.(int)$lock.')');
 	}
 	header('location: '.$g_baseadr.'index.php?id='.$gr_id.'&subid=1');

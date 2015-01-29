@@ -20,7 +20,7 @@ include ("./common.inc.php");
 include ("./common_race.inc.php");
 include ('./url.inc.php');
 
-DrawPageTitle('Informace o závodì');
+DrawPageTitle('Informace o zÃ¡vodÄ›');
 
 db_Connect();
 
@@ -30,14 +30,14 @@ $zaznam_z = MySQL_Fetch_Array($vysledek_z);
 RaceInfoTable($zaznam_z,'',false,true,false);
 ?>
 <BR>
-<BUTTON onclick="javascript:close_popup();">Zpìt</BUTTON>
+<BUTTON onclick="javascript:close_popup();">ZpÄ›t</BUTTON>
 
 <BR>
 <?
 if(strlen($zaznam_z['poznamka']) > 0)
 {
 ?>
-<p><b>Doplòující informace o závodì (interní)</b> :<br>
+<p><b>DoplÅˆujÃ­cÃ­ informace o zÃ¡vodÄ› (internÃ­)</b> :<br>
 <?
 	echo('&nbsp;&nbsp;&nbsp;'.$zaznam_z['poznamka'].'</p>');
 }

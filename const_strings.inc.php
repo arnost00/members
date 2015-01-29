@@ -28,43 +28,43 @@ function GetResultString($code)
 	switch($code)
 	{
 		case CS_EMPTY_ITEM:
-			$result = 'Musíš nìco zadat!'; break;
+			$result = 'MusÃ­Å¡ nÄ›co zadat!'; break;
 		case CS_MIN_LEN_LOGIN:
-			$result = 'Minimální délka pøihlašovací jména je 4 znaky !'; break;
+			$result = 'MinimÃ¡lnÃ­ dÃ©lka pÅ™ihlaÅ¡ovacÃ­ jmÃ©na je 4 znaky !'; break;
 		case CS_LOGIN_EXIST:
-			$result = 'Toto pøihlašovací jméno ji existuje.'; break;
+			$result = 'Toto pÅ™ihlaÅ¡ovacÃ­ jmÃ©no jiÅ¾ existuje.'; break;
 		case CS_LOGIN_UPDATED:
-			$result = 'Podpis a pøihlašovací jméno byly aktualizovány.'; break;
+			$result = 'Podpis a pÅ™ihlaÅ¡ovacÃ­ jmÃ©no byly aktualizovÃ¡ny.'; break;
 		case CS_BAD_CUR_PASS:
-			$result = 'Špatnì zadané souèasné heslo !'; break;
+			$result = 'Å patnÄ› zadanÃ© souÄasnÃ© heslo !'; break;
 		case CS_NODIFF_PASS:
-			$result = 'Nové i staré heslo nemùe bıt stejné !'; break;
+			$result = 'NovÃ© i starÃ© heslo nemÅ¯Å¾e bÃ½t stejnÃ© !'; break;
 		case CS_MIN_LEN_PASS:
-			$result = 'Minimální délka hesla jsou 4 znaky !'; break;
+			$result = 'MinimÃ¡lnÃ­ dÃ©lka hesla jsou 4 znaky !'; break;
 		case CS_DIFF_NEWPASS:
-			$result = 'Nové heslo i kontrolní heslo musejí bıt stejná !'; break;
+			$result = 'NovÃ© heslo i kontrolnÃ­ heslo musejÃ­ bÃ½t stejnÃ¡ !'; break;
 		case CS_PASS_UPDATED:
-			$result = 'Heslo bylo zmìnìno.'; break;
+			$result = 'Heslo bylo zmÄ›nÄ›no.'; break;
 		case CS_ACC_UPDATED:
-			$result = 'Byl upraven úèet èlena.'; break;
+			$result = 'Byl upraven ÃºÄet Älena.'; break;
 		case CS_ACC_CREATED:
-			$result = 'Byl zaloen novı úèet.'; break;
+			$result = 'Byl zaloÅ¾en novÃ½ ÃºÄet.'; break;
 		case CS_USER_PASS_UPDATED:
-			$result = 'Bylo zmìnìno heslo èlena.'; break;
+			$result = 'Bylo zmÄ›nÄ›no heslo Älena.'; break;
 		case CS_ADM_PASS_REQ:
-			$result = 'Musíš zadat heslo admina!'; break;
+			$result = 'MusÃ­Å¡ zadat heslo admina!'; break;
 		case CS_ADM_NOT_FOUND:
-			$result = 'Nepodaøilo se najít admina !!!'; break;
+			$result = 'NepodaÅ™ilo se najÃ­t admina !!!'; break;
 		case CS_USER_LOCK_ACC:
-			$result = 'Byl zamèen/odemèen úèet èlena.'; break;
+			$result = 'Byl zamÄen/odemÄen ÃºÄet Älena.'; break;
 		case CS_ADM_PASS_WRONG:
-			$result = 'Musíš zadat správné heslo admina!'; break;
+			$result = 'MusÃ­Å¡ zadat sprÃ¡vnÃ© heslo admina!'; break;
 /*
 		case :
 			$result = ''; break;
 */
 		case CS_UNKNOWN_ERROR:
-			$result = 'Neznámá chyba.'; break;
+			$result = 'NeznÃ¡mÃ¡ chyba.'; break;
 		default :
 			$result = '';
 	}

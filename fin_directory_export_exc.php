@@ -17,7 +17,7 @@ $delim = ';';
 $par2 = 1; //quotes
 $par3 = 0; //apostrophes
 
-$arr_labels = array('datum', 'reg.', 'jméno', 'èástka', 'kometáø');
+$arr_labels = array('datum', 'reg.', 'jmÃ©no', 'ÄÃ¡stka', 'kometÃ¡Å™');
 $arr_fields = array('date', 'reg', 'name', 'amount', 'note'); 
 
 TXT_Header();
@@ -25,7 +25,7 @@ TXT_Header();
 db_Connect();
 
 @$vysledek=MySQL_Query("SELECT f.date, concat('".$g_shortcut."',u.reg) as reg, u.sort_name as name, f.amount, f.note FROM `".TBL_FINANCE."` f join `".TBL_USER."` u on u.id = f.id_users_user where f.storno is null ORDER BY f.date desc")
-	or die("Chyba pøi provádìní dotazu do databáze.");
+	or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 
 include ('exports.inc.php');
 

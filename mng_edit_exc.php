@@ -18,9 +18,9 @@ $mng = (IsSet($mng) && is_numeric($mng)) ? (int)$mng : 0;
 if($id > 0)
 {
 	$result=MySQL_Query("UPDATE ".TBL_USER." SET `chief_id`='$mng' WHERE `id` = '$id'")
-		or die("Chyba pøi provádìní dotazu do databáze.");
+		or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 	if ($result == FALSE)
-		die ("Nepodaøilo se zmìnit pøihlášku èlena.");
+		die ("NepodaÅ™ilo se zmÄ›nit pÅ™ihlÃ¡Å¡ku Älena.");
 }
 ?>
 

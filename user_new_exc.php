@@ -14,17 +14,8 @@ include "./common.inc.php";
 
 $datum = String2SQLDateDMY($datum);
 
-// --> filling of czech sort helping column
+// filling of czech sort helping column
 $name2 = $prijmeni." ".$jmeno;
-switch ($g_czech_sort)
-{
-	case 1 :	// cp1250 -> iso?
-		$name2 = cp2iso($name2);
-		break;
-	case 2 :	//	 without changes
-		break;
-}
-// <-- end
 
 db_Connect();
 
@@ -57,17 +48,17 @@ if (IsLoggedSmallAdmin())
 		$update = (isset($update) && is_numeric($update)) ? (int)$update : 0;
 
 		$result=MySQL_Query("UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic='$lic', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin', rc='$rc', narodnost='$narodnost' WHERE id='$update'")
-				or die("Chyba pøi provádìní dotazu do databáze.");
+				or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 		if ($result == FALSE)
-			die ("Nepodaøilo se zmìnit údaje èlena.");
+			die ("NepodaÅ™ilo se zmÄ›nit Ãºdaje Älena.");
 		SaveItemToModifyLog_Edit(TBL_USER,$jmeno.' '.$prijmeni.' ['.$reg.']');
 	}
 	else
 	{
 		$result=MySQL_Query("INSERT INTO ".TBL_USER." (prijmeni,jmeno,datum,adresa,mesto,psc,tel_domu,tel_zam,tel_mobil,email,reg,si_chip,hidden,sort_name,poh,lic,lic_mtbo,lic_lob,fin,rc,narodnost) VALUES ('$prijmeni','$jmeno','$datum','$adresa','$mesto','$psc','$domu','$zam','$mobil','$email','$reg','$si','$hidden','$name2','$poh','$lic','$lic_mtbo','$lic_lob','$fin','$rc','$narodnost')")
-			or die("Chyba pøi provádìní dotazu do databáze.");
+			or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 		if ($result == FALSE)
-			die ("Nepodaøilo se vloit èlena.");
+			die ("NepodaÅ™ilo se vloÅ¾it Älena.");
 		SaveItemToModifyLog_Add(TBL_USER,$jmeno.' '.$prijmeni.' ['.$reg.']');
 	}
 	header("location: ".$g_baseadr."index.php?id=700&subid=1");
@@ -81,17 +72,17 @@ else if (IsLoggedManager() || IsLoggedSmallManager())
 		$update = (isset($update) && is_numeric($update)) ? (int)$update : 0;
 		
 		$result=MySQL_Query("UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic='$lic', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin' , narodnost='$narodnost' WHERE id='$update'")
-			or die("Chyba pøi provádìní dotazu do databáze.");
+			or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 		if ($result == FALSE)
-			die ("Nepodaøilo se zmìnit údaje èlena.");
+			die ("NepodaÅ™ilo se zmÄ›nit Ãºdaje Älena.");
 		SaveItemToModifyLog_Edit(TBL_USER,$jmeno.' '.$prijmeni.' ['.$reg.']');
 	}
 	else
 	{
 		$result=MySQL_Query("INSERT INTO ".TBL_USER." (prijmeni,jmeno,datum,adresa,mesto,psc,tel_domu,tel_zam,tel_mobil,email,reg,si_chip,hidden,sort_name,poh,lic,lic_mtbo,lic_lob,fin,narodnost) VALUES ('$prijmeni','$jmeno','$datum','$adresa','$mesto','$psc','$domu','$zam','$mobil','$email','$reg','$si','$hidden','$name2','$poh','$lic','$lic_mtbo','$lic_lob','$fin','$narodnost')")
-			or die("Chyba pøi provádìní dotazu do databáze.");
+			or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 		if ($result == FALSE)
-			die ("Nepodaøilo se vloit èlena.");
+			die ("NepodaÅ™ilo se vloÅ¾it Älena.");
 		SaveItemToModifyLog_Add(TBL_USER,$jmeno.' '.$prijmeni.' ['.$reg.']');
 	}
 	if (IsSet($update) && $update == $usr->user_id)
@@ -110,9 +101,9 @@ else if (IsLoggedUser())
 		$hidden = 0;	// unhidden users only
 
 		$result=MySQL_Query("UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin', narodnost='$narodnost' WHERE id='$update'")
-			or die("Chyba pøi provádìní dotazu do databáze.");
+			or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 		if ($result == FALSE)
-			die ("Nepodaøilo se zmìnit údaje èlena.");
+			die ("NepodaÅ™ilo se zmÄ›nit Ãºdaje Älena.");
 		SaveItemToModifyLog_Edit(TBL_USER,$jmeno.' '.$prijmeni.' ['.$reg.']');
 	}
 	header("location: ".$g_baseadr."index.php?id=200&subid=3");

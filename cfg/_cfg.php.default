@@ -29,20 +29,17 @@ $g_dbpass='root';
 // jmeno databaze
 $g_dbname='members';
 
-// typ ceskeho trideni v db. (1 = cs-iso, 2 = cs-win1250)
-$g_czech_sort=2;
-
 //==================================================================
 // http server
 //==================================================================
 // jmeno WWW serveru
 $g_shortcut='ZBM';
-$g_fullname='SK éabov¯esky Brno';
+$g_fullname='SK ≈Ωabov≈ôesky Brno';
 $g_www_title= $g_shortcut.' :: '.$g_fullname;
 $g_www_name= $g_shortcut.' - '.$g_fullname;
 
-$g_www_meta_description = "Str·nky oddÌlu orientaËnÌho bÏhu ".$g_fullname;
-$g_www_meta_keyword = $g_shortcut.", éabov¯esky, Zabovresky";
+$g_www_meta_description = "Str√°nky odd√≠lu orientaƒçn√≠ho bƒõhu ".$g_fullname;
+$g_www_meta_keyword = $g_shortcut.", ≈Ωabov≈ôesky, Zabovresky";
 
 // zakladni URL adresa WWW serveru (ukoncen "/" !!)
 $g_baseadr='http://localhost/members/';

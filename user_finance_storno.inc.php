@@ -11,7 +11,7 @@ $zaznam_platba=MySQL_Fetch_Array($vysledek_platba);
 @$vysledek_user_name=MySQL_Query("select us.sort_name name from ".TBL_USER." us where us.id = ".$zaznam_platba['id_users_user']);
 $zaznam_user_name=MySQL_Fetch_Array($vysledek_user_name);
 
-DrawPageSubTitle('Storno platby pro èlena: '.$zaznam_user_name['name']);
+DrawPageSubTitle('Storno platby pro Älena: '.$zaznam_user_name['name']);
 $user_id = $zaznam_platba['id_users_user'];
 ?>
 <form class="form" action="?payment=storno&trn_id=<?=$trn_id;?>&user_id=<?=$zaznam_platba["id_users_user"];?>" method="post">
@@ -27,10 +27,10 @@ else
 	$race_text = $zaznam_platba["zavod_nazev"]."&nbsp;-&nbsp;".formatDate($zaznam_platba["zavod_datum"]);
 
 echo $data_tbl->get_new_row('<label for="datum">Datum platby</label>', '<input name="datum" type="text" disabled value="'.SQLDate2String($zaznam_platba['date']).'" size="8" />');
-echo $data_tbl->get_new_row('<label for="race">Závod</label>', '<input name="race" type="text" disabled value="'.$race_text.'" size="40" maxlength="100" />');
-echo $data_tbl->get_new_row('<label for="amount">Originální èástka</label>', '<input name="amount" type="text" disabled value="'.$zaznam_platba["amount"].'" size="5" maxlength="10" />');
-echo $data_tbl->get_new_row('<label for="note">Originální poznámka</label>', '<input name="note" type="text" disabled value="'.$zaznam_platba["note"].'" size="40" maxlength="200" />');
-echo $data_tbl->get_new_row('<label for="storno_note">Poznámka</label>', '<input name="storno_note" type="text" size="40" maxlength="200" />');
+echo $data_tbl->get_new_row('<label for="race">ZÃ¡vod</label>', '<input name="race" type="text" disabled value="'.$race_text.'" size="40" maxlength="100" />');
+echo $data_tbl->get_new_row('<label for="amount">OriginÃ¡lnÃ­ ÄÃ¡stka</label>', '<input name="amount" type="text" disabled value="'.$zaznam_platba["amount"].'" size="5" maxlength="10" />');
+echo $data_tbl->get_new_row('<label for="note">OriginÃ¡lnÃ­ poznÃ¡mka</label>', '<input name="note" type="text" disabled value="'.$zaznam_platba["note"].'" size="40" maxlength="200" />');
+echo $data_tbl->get_new_row('<label for="storno_note">PoznÃ¡mka</label>', '<input name="storno_note" type="text" size="40" maxlength="200" />');
 
 echo $data_tbl->get_empty_row();
 echo $data_tbl->get_new_row('','<input type="submit" value="Odeslat"/>');

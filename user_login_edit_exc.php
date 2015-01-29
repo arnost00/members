@@ -30,23 +30,23 @@ function GenerateInfoEmail($type,$id,$login,$heslo,$email)
 		}
 	}
 	
-	$full_msg = 'Dobrı den, '.EMAIL_ENDL.EMAIL_ENDL;
+	$full_msg = 'DobrÃ½ den, '.EMAIL_ENDL.EMAIL_ENDL;
 	if ($type == 1) // nove heslo
-		$full_msg .= 'Bylo vám vygenerováno nové heslo pro váš úèet v pøihláškovém systému oddílu '.$g_shortcut.'.'.EMAIL_ENDL.EMAIL_ENDL;
+		$full_msg .= 'Bylo vÃ¡m vygenerovÃ¡no novÃ© heslo pro vÃ¡Å¡ ÃºÄet v pÅ™ihlÃ¡Å¡kovÃ©m systÃ©mu oddÃ­lu '.$g_shortcut.'.'.EMAIL_ENDL.EMAIL_ENDL;
 	else if ($type == 2) // novy ucet
-		$full_msg .= 'Byl vám vytvoøen novı úèet v pøihláškovém systému oddílu '.$g_shortcut.'.'.EMAIL_ENDL.EMAIL_ENDL;
+		$full_msg .= 'Byl vÃ¡m vytvoÅ™en novÃ½ ÃºÄet v pÅ™ihlÃ¡Å¡kovÃ©m systÃ©mu oddÃ­lu '.$g_shortcut.'.'.EMAIL_ENDL.EMAIL_ENDL;
 	$full_msg .= 'Adresa: '.$g_baseadr.EMAIL_ENDL;
 	if ($name != '')
-		$full_msg .= 'Jméno : '.$name.EMAIL_ENDL;
+		$full_msg .= 'JmÃ©no : '.$name.EMAIL_ENDL;
 	if ($login != '')
 		$full_msg .= 'Login : '.$login.EMAIL_ENDL;
 	$full_msg .= 'Heslo : '.$heslo.EMAIL_ENDL.EMAIL_ENDL;
-	$full_msg .= 'V pøípadì problémù s pøihlášením, smìøujte pøípadné dotazy na email '.$g_emailadr.'.'.EMAIL_ENDL.EMAIL_ENDL;
-	$full_msg .= 'Vygenerované heslo si lze po pøihlášení v systému zmìnit.'.EMAIL_ENDL.EMAIL_ENDL;
+	$full_msg .= 'V pÅ™Ã­padÄ› problÃ©mÅ¯ s pÅ™ihlÃ¡Å¡enÃ­m, smÄ›Å™ujte pÅ™Ã­padnÃ© dotazy na email '.$g_emailadr.'.'.EMAIL_ENDL.EMAIL_ENDL;
+	$full_msg .= 'VygenerovanÃ© heslo si lze po pÅ™ihlÃ¡Å¡enÃ­ v systÃ©mu zmÄ›nit.'.EMAIL_ENDL.EMAIL_ENDL;
 	$full_msg .= DIV_LINE.EMAIL_ENDL;
-	$full_msg .= 'Na tento email prosím neodpovídejte, byl vytvoøen pøihláškovım systémem oddílu '.$g_shortcut.'.'.EMAIL_ENDL;
+	$full_msg .= 'Na tento email prosÃ­m neodpovÃ­dejte, byl vytvoÅ™en pÅ™ihlÃ¡Å¡kovÃ½m systÃ©mem oddÃ­lu '.$g_shortcut.'.'.EMAIL_ENDL;
 	
-	$subject = 'pøihláškovı systém - informace o úètu';
+	$subject = 'pÅ™ihlÃ¡Å¡kovÃ½ systÃ©m - informace o ÃºÄtu';
 	$from_email = $g_fullname.' <'.$g_emailadr.'>';
 /*
 	// DEV - output
@@ -105,9 +105,9 @@ if (IsLoggedSmallAdmin())
 		else
 		{
 			$vysledek=MySQL_Query("UPDATE ".TBL_ACCOUNT." SET login='$login', podpis='$podpis', policy_news='$news', policy_regs='$regs', policy_mng='$mng', policy_adm='$adm', policy_fin='$fin' WHERE id='$id2'")
-				or die("Chyba pøi provádìní dotazu do databáze.");
+				or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 			if ($vysledek == FALSE)
-				die ("Nepodaøilo se upravit úèet èlenu.");
+				die ("NepodaÅ™ilo se upravit ÃºÄet Älenu.");
 			else
 				$result = CS_ACC_UPDATED;
 			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id2.' login = "'.$login.'" ['.$podpis.']');
@@ -154,13 +154,13 @@ if (IsLoggedSmallAdmin())
 			}
 			// <--
 			$vysledek=MySQL_Query("INSERT INTO ".TBL_ACCOUNT." (id,login,heslo,policy_news,policy_regs,policy_mng,policy_adm,policy_fin,podpis) VALUES ('$id2','$login','$hheslo','$news','$regs','$mng','$adm','$fin','$podpis')")
-				or die("Chyba pøi provádìní dotazu do databáze.");
+				or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 			if ($vysledek == FALSE)
-				die ("Nepodaøilo se zaloit úèet èlenu.");
+				die ("NepodaÅ™ilo se zaloÅ¾it ÃºÄet Älenu.");
 			else
 			{
 				$vysledek=MySQL_Query("INSERT INTO ".TBL_USXUS." (id_accounts,id_users) VALUES ('$id2','$id')")
-					or die("Chyba pøi provádìní dotazu do databáze.");
+					or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 				$result = CS_ACC_CREATED;
 			}
 			SaveItemToModifyLog_Add(TBL_ACCOUNT,'acc.id = '.$id2.' login = "'.$login.'" ['.$podpis.']');
@@ -188,9 +188,9 @@ if (IsLoggedSmallAdmin())
 			$id2 = GetUserAccountId_Users($id);
 			$hheslo = md5($nheslo);
 			$vysledek=MySQL_Query("UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id2'")
-				or die("Chyba pøi provádìní dotazu do databáze.");
+				or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 			if ($vysledek == FALSE)
-				die ("Nepodaøilo se upravit heslo èlena.");
+				die ("NepodaÅ™ilo se upravit heslo Älena.");
 			else
 				$result = CS_USER_PASS_UPDATED;
 			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id2.' - pass');
@@ -237,9 +237,9 @@ else if (IsLoggedManager())
 		else
 		{
 			$result=MySQL_Query("UPDATE ".TBL_ACCOUNT." SET login='$login', podpis='$podpis', policy_news='$news', policy_mng='$mng2' WHERE id='$id2'")
-				or die("Chyba pøi provádìní dotazu do databáze.");
+				or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 			if ($result == FALSE)
-				die ("Nepodaøilo se upravit úèet èlenu.");
+				die ("NepodaÅ™ilo se upravit ÃºÄet Älenu.");
 			else
 				$result = CS_ACC_UPDATED;
 			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id2.' login = "'.$login.'" ['.$podpis.']');
@@ -283,13 +283,13 @@ else if (IsLoggedManager())
 			}
 			// <--
 			$result=MySQL_Query("INSERT INTO ".TBL_ACCOUNT." (id,login,heslo,policy_news,policy_regs,policy_mng,podpis) VALUES ('$id2','$login','$hheslo','$news',0,'$mng2','$podpis')")
-				or die("Chyba pøi provádìní dotazu do databáze.");
+				or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 			if ($result == FALSE)
-				die ("Nepodaøilo se zaloit úèet èlenu.");
+				die ("NepodaÅ™ilo se zaloÅ¾it ÃºÄet Älenu.");
 			else
 			{
 				$result=MySQL_Query("INSERT INTO ".TBL_USXUS." (id_accounts,id_users) VALUES ('$id2','$id')")
-					or die("Chyba pøi provádìní dotazu do databáze.");
+					or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 				$result = CS_ACC_CREATED;
 			}
 			SaveItemToModifyLog_Add(TBL_ACCOUNT,'acc.id = '.$id2.' login = "'.$login.'" ['.$podpis.']');
@@ -317,9 +317,9 @@ else if (IsLoggedManager())
 			$id2 = GetUserAccountId_Users($id);
 			$hheslo = md5($nheslo);
 			$result=MySQL_Query("UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id2'")
-				or die("Chyba pøi provádìní dotazu do databáze.");
+				or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 			if ($result == FALSE)
-				die ("Nepodaøilo se upravit heslo èlena.");
+				die ("NepodaÅ™ilo se upravit heslo Älena.");
 			else
 				$result = CS_USER_PASS_UPDATED;
 			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id2.' - pass');
@@ -358,9 +358,9 @@ else if (IsLoggedSmallManager())
 			$id2 = GetUserAccountId_Users($id);
 			$hheslo = md5($nheslo);
 			$result=MySQL_Query("UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id2'")
-				or die("Chyba pøi provádìní dotazu do databáze.");
+				or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 			if ($result == FALSE)
-				die ("Nepodaøilo se upravit heslo èlena.");
+				die ("NepodaÅ™ilo se upravit heslo Älena.");
 			else
 				$result = CS_USER_PASS_UPDATED;
 			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id2.' - pass');

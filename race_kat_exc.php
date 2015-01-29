@@ -46,9 +46,9 @@ $kategorie = $kat.$kat_n;
 $kategorie=correct_sql_string($kategorie);
 
 $result=MySQL_Query('UPDATE '.TBL_RACE." SET `kategorie`='$kategorie' WHERE `id`='$id'")
-	or die('Chyba pøi provádìní dotazu do databáze.');
+	or die('Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.');
 if ($result == FALSE)
-	die ('Nepodaøilo se zmìnit údaje o závodì.');
+	die ('NepodaÅ™ilo se zmÄ›nit Ãºdaje o zÃ¡vodÄ›.');
 
 ?>
 <SCRIPT LANGUAGE="JavaScript">

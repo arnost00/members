@@ -21,9 +21,9 @@ $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 if($id > 0)
 {
 	$result=MySQL_Query("UPDATE ".TBL_RACE." SET `vedouci`='$boss' WHERE `id`='$id'")
-		or die("Chyba pøi provádìní dotazu do databáze.");
+		or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 	if ($result == FALSE)
-		die ("Nepodaøilo se zmìnit údaje o závodì.");
+		die ("NepodaÅ™ilo se zmÄ›nit Ãºdaje o zÃ¡vodÄ›.");
 }
 
 ?>

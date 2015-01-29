@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>DB / Service & Upgrade</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=windows-1250">
+	<meta http-equiv="Content-Type" content="text/html; UTF-8">
 
 <style type="text/css">
 .ErrorText {

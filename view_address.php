@@ -26,7 +26,7 @@ include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 include ("./common.inc.php");
 include ("./common_user.inc.php");
 
-DrawPageTitle('Informace o èlenovi');
+DrawPageTitle('Informace o Älenovi');
 ?>
 
 <TABLE width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -41,17 +41,17 @@ $data_tbl->table_width = 100;
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 
-echo $data_tbl->get_new_row('Jméno', $zaznam["jmeno"].' '.$zaznam["prijmeni"]);
-echo $data_tbl->get_new_row('Registraèní èíslo', $g_shortcut.RegNumToStr($zaznam["reg"]));
-echo $data_tbl->get_new_row('Èíslo SI èipu', SINumToStr($zaznam["si_chip"]));
+echo $data_tbl->get_new_row('JmÃ©no', $zaznam["jmeno"].' '.$zaznam["prijmeni"]);
+echo $data_tbl->get_new_row('RegistraÄnÃ­ ÄÃ­slo', $g_shortcut.RegNumToStr($zaznam["reg"]));
+echo $data_tbl->get_new_row('ÄŒÃ­slo SI Äipu', SINumToStr($zaznam["si_chip"]));
 if (IsLoggedRegistrator())
-	echo $data_tbl->get_new_row('Datum narození', SQLDate2String($zaznam["datum"]));
+	echo $data_tbl->get_new_row('Datum narozenÃ­', SQLDate2String($zaznam["datum"]));
 echo $data_tbl->get_new_row('Adresa', $zaznam['adresa']);
-echo $data_tbl->get_new_row('Mìsto', $zaznam['mesto']);
-echo $data_tbl->get_new_row('PSÈ', $zaznam['psc']);
+echo $data_tbl->get_new_row('MÄ›sto', $zaznam['mesto']);
+echo $data_tbl->get_new_row('PSÄŒ', $zaznam['psc']);
 echo $data_tbl->get_new_row('Email', GetEmailHTML(ParseEmails($zaznam["email"])));
-echo $data_tbl->get_new_row('Tel. domù', $zaznam["tel_domu"]);
-echo $data_tbl->get_new_row('Tel. zamìstnání', $zaznam["tel_zam"]);
+echo $data_tbl->get_new_row('Tel. domÅ¯', $zaznam["tel_domu"]);
+echo $data_tbl->get_new_row('Tel. zamÄ›stnÃ¡nÃ­', $zaznam["tel_zam"]);
 echo $data_tbl->get_new_row('Mobil', $zaznam["tel_mobil"]);
 echo $data_tbl->get_new_row('Licence OB', $zaznam['lic']);
 echo $data_tbl->get_new_row('Licence MTBO', $zaznam['lic_mtbo']);
@@ -60,7 +60,7 @@ echo $data_tbl->get_new_row('Licence LOB', $zaznam['lic_lob']);
 echo $data_tbl->get_footer()."\n";
 ?>
 
-<BR><BUTTON onclick="javascript:close_popup();">Zavøít</BUTTON></TD></TR>
+<BR><BUTTON onclick="javascript:close_popup();">ZavÅ™Ã­t</BUTTON></TD></TR>
 </CENTER>
 </TD>
 <TD width="2%"></TD>

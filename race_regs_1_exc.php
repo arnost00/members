@@ -57,9 +57,9 @@ if($termin != 0)
 		{	// del
 //			echo "DEL";
 			$result=MySQL_Query("DELETE FROM ".TBL_ZAVXUS." WHERE id_zavod = '$id' AND id_user = '$user_id'")
-				or die("Chyba pøi provádìní dotazu do databáze.");
+				or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 			if ($result == FALSE)
-				die ("Nepodaøilo se zmìnit pøihlášku èlena.");
+				die ("NepodaÅ™ilo se zmÄ›nit pÅ™ihlÃ¡Å¡ku Älena.");
 		}
 		else
 		{	// update
@@ -70,9 +70,9 @@ if($termin != 0)
 			$termin=correct_sql_string($termin);
 			
 			$result=MySQL_Query("UPDATE ".TBL_ZAVXUS." SET kat='$kateg', pozn='$pozn', pozn_in='$pozn2', termin='$termin', transport = '$transport' WHERE id_zavod = '$id' AND id_user = '$user_id'")
-				or die("Chyba pøi provádìní dotazu do databáze.");
+				or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 			if ($result == FALSE)
-				die ("Nepodaøilo se zmìnit pøihlášku èlena.");
+				die ("NepodaÅ™ilo se zmÄ›nit pÅ™ihlÃ¡Å¡ku Älena.");
 		}
 	}
 	else
@@ -86,9 +86,9 @@ if($termin != 0)
 			$termin=correct_sql_string($termin);
 
 			$result=MySQL_Query("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in,termin,transport) VALUES ('$user_id','$id','$kateg', '$pozn', '$pozn2','$termin','$transport')")
-				or die("Chyba pøi provádìní dotazu do databáze.");
+				or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 			if ($result == FALSE)
-				die ("Nepodaøilo se zmìnit pøihlášku èlena.");
+				die ("NepodaÅ™ilo se zmÄ›nit pÅ™ihlÃ¡Å¡ku Älena.");
 		}
 	}
 }

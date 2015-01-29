@@ -2,19 +2,19 @@
 <?
 
 $g_zebricek [0]['id'] = 0x0001;
-$g_zebricek [0]['nm'] = 'Celostátní';
+$g_zebricek [0]['nm'] = 'CelostÃ¡tnÃ­';
 $g_zebricek [1]['id'] = 0x0002;
 $g_zebricek [1]['nm'] = 'Morava';
 $g_zebricek [2]['id'] = 0x0004;
-$g_zebricek [2]['nm'] = 'Èechy';
+$g_zebricek [2]['nm'] = 'ÄŒechy';
 $g_zebricek [3]['id'] = 0x0008;
-$g_zebricek [3]['nm'] = 'Oblastní';
+$g_zebricek [3]['nm'] = 'OblastnÃ­';
 $g_zebricek [4]['id'] = 0x0010;
-$g_zebricek [4]['nm'] = 'Mistrovství';
+$g_zebricek [4]['nm'] = 'MistrovstvÃ­';
 $g_zebricek [5]['id'] = 0x0020;
-$g_zebricek [5]['nm'] = 'Štafety';
+$g_zebricek [5]['nm'] = 'Å tafety';
 $g_zebricek [6]['id'] = 0x0080;
-$g_zebricek [6]['nm'] = 'Veøejný';
+$g_zebricek [6]['nm'] = 'VeÅ™ejnÃ½';
 
 $g_zebricek_cnt = 7;
 
@@ -35,18 +35,18 @@ $g_racetype [3]['nm'] = 'O-Trail';
 $g_racetype [3]['enum'] = 'trail';
 $g_racetype [3]['img'] = 'trl';
 $g_racetype [4]['id'] = 0x0010;
-$g_racetype [4]['nm'] = 'Jiné';
+$g_racetype [4]['nm'] = 'JinÃ©';
 $g_racetype [4]['enum'] = 'jine';
 $g_racetype [4]['img'] = 'mcs';
 
 $g_racetype_cnt = 5;
 
 $g_modify_flag [0]['id'] = 0x0001;
-$g_modify_flag [0]['nm'] = 'Termín pøihlášek';
+$g_modify_flag [0]['nm'] = 'TermÃ­n pÅ™ihlÃ¡Å¡ek';
 $g_modify_flag [1]['id'] = 0x0002;
-$g_modify_flag [1]['nm'] = 'Závod pøidán';
+$g_modify_flag [1]['nm'] = 'ZÃ¡vod pÅ™idÃ¡n';
 $g_modify_flag [2]['id'] = 0x0004;
-$g_modify_flag [2]['nm'] = 'Termin závodu';
+$g_modify_flag [2]['nm'] = 'Termin zÃ¡vodu';
 
 $g_modify_flag_cnt = 3;
 
@@ -188,8 +188,8 @@ $g_kategorie ['oblz'] = 'D10N;D12;D14;D16;D18;D21C;D21D;D35;D45;D55;H10N;H12;H14
 $g_kategorie ['oblz_vetsi'] = 'D10N;D12C;D14C;D16C;D18C;D21C;D21D;D35C;D45C;D55C;H10N;H12C;H14C;H16C;H18C;H21C;H21D;H35C;H45C;H55C;HDR;';
 $g_kategorie ['becka'] = 'D12B;D14B;D16B;D18B;D20B;D21B;D21C;D35B;D40B;D45B;D50B;D55B;D60B;D65B;H12B;H14B;H16B;H18B;H20B;H21B;H21C;H35B;H40B;H45B;H50B;H55B;H60B;H65B;H70B;H75B;';
 $g_kategorie ['acka'] = 'D16A;D18A;D20A;D21A;D21E;H16A;H18A;H20A;H21A;H21E;';
-$g_kategorie ['stafety'] = 'D14;D18;D21;D105;D140;H14;H18;H21;H105;H140;H165;dorost;dospìlí;HD175;HD235;';
-$g_kategorie ['MTBO'] = 'W14;W17;W20;W21E;W21A;W21B;W40;W50;M14;M17;M20;M21E;M21A;M21B;M21C;M40 Long;M40 Short;M50;OPEN Short;OPEN Long;';
+$g_kategorie ['stafety'] = 'D14;D18;D21;D105;D140;H14;H18;H21;H105;H140;H165;dorost;dospÄ›lÃ­;HD175;HD235;';
+$g_kategorie ['MTBO'] = 'W14;W17;W20;W21E;W21A;W21B;W40;W50;M14;M17;M20;M21E;M21A;M21B;M21C;M40Â Long;M40Â Short;M50;OPENÂ Short;OPENÂ Long;';
 
 require('./common_race2.inc.php');
 
@@ -222,15 +222,15 @@ function RIT_SH(divId1, divId2)
 			$data_tbl->table_width = 100;
 		echo $data_tbl->get_css()."\n";
 		echo $data_tbl->get_header()."\n";
-		$odkaz = '<a onclick ="javascript:RIT_SH(\'RIT_min\',\'RIT_normal\')" href="javascript:;" ><code>[+]</code></a>'; //Zobrazit více
+		$odkaz = '<a onclick ="javascript:RIT_SH(\'RIT_min\',\'RIT_normal\')" href="javascript:;" ><code>[+]</code></a>'; //Zobrazit vÃ­ce
 		if($zaznam['vicedenni'])
 			echo $data_tbl->get_new_row_extend('Datum',Date2StringFT($zaznam['datum'],$zaznam['datum2']),$odkaz);
 		else
 			echo $data_tbl->get_new_row_extend('Datum',Date2String($zaznam['datum']),$odkaz);
-		echo $data_tbl->get_new_row('Jméno',GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']));
+		echo $data_tbl->get_new_row('JmÃ©no',GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']));
 		echo $data_tbl->get_footer()."\n";
 		echo ('</div><div id="RIT_normal" style="display: none">');
-		$odkaz2 = '<a onclick ="javascript:RIT_SH(\'RIT_normal\',\'RIT_min\')" href="javascript:;" ><code>[-]</code></a>'; // Skrýt podrobnosti
+		$odkaz2 = '<a onclick ="javascript:RIT_SH(\'RIT_normal\',\'RIT_min\')" href="javascript:;" ><code>[-]</code></a>'; // SkrÃ½t podrobnosti
 	}
 	else
 		$odkaz2 = '';
@@ -255,46 +255,46 @@ function RIT_SH(divId1, divId2)
 		echo $data_tbl->get_new_row_extend('Datum',$datum,$odkaz2);
 	else
 		echo $data_tbl->get_new_row('Datum',$datum);
-	echo $data_tbl->get_new_row('Jméno',GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']));
-	echo $data_tbl->get_new_row('Místo',GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']));
-	echo $data_tbl->get_new_row('Poøádající oddíl',$zaznam['oddil']);
+	echo $data_tbl->get_new_row('JmÃ©no',GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']));
+	echo $data_tbl->get_new_row('MÃ­sto',GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']));
+	echo $data_tbl->get_new_row('PoÅ™Ã¡dajÃ­cÃ­ oddÃ­l',$zaznam['oddil']);
 	echo $data_tbl->get_new_row('Typ',GetRaceTypeName($zaznam['typ']));
-	echo $data_tbl->get_new_row('Žebøíèek',GetZebricekName2($zaznam['zebricek']));
+	echo $data_tbl->get_new_row('Å½ebÅ™Ã­Äek',GetZebricekName2($zaznam['zebricek']));
 	echo $data_tbl->get_new_row('Ranking',($zaznam['ranking'] == 1) ? 'Ano' : 'Ne');
-	echo $data_tbl->get_new_row('WWW stránky',GetRaceLinkHTML($zaznam['odkaz'],false));
+	echo $data_tbl->get_new_row('WWW strÃ¡nky',GetRaceLinkHTML($zaznam['odkaz'],false));
 	if($zaznam['vicedenni'])
 	{
-		echo $data_tbl->get_new_row('Poèet etap',$zaznam['etap']);
+		echo $data_tbl->get_new_row('PoÄet etap',$zaznam['etap']);
 	}
 	if($zaznam['prihlasky'] > 1)
 	{
-		echo $data_tbl->get_new_row('Termínù pøihlášek',$zaznam['prihlasky']);
+		echo $data_tbl->get_new_row('TermÃ­nÅ¯ pÅ™ihlÃ¡Å¡ek',$zaznam['prihlasky']);
 		if($show_curr_term)
 		{
 			$prihlasky_curr = raceterms::GetActiveRegDateArr($zaznam);
-			$tp = ($prihlasky_curr[0] != 0) ? Date2String($prihlasky_curr[0]).' - termím è.'.$prihlasky_curr[1] : 'není';
-			echo $data_tbl->get_new_row('Aktivní termín',$tp);
+			$tp = ($prihlasky_curr[0] != 0) ? Date2String($prihlasky_curr[0]).' - termÃ­m Ä.'.$prihlasky_curr[1] : 'nenÃ­';
+			echo $data_tbl->get_new_row('AktivnÃ­ termÃ­n',$tp);
 		}
-		echo $data_tbl->get_new_row('Termíny pøihlášek',raceterms::ListRegDates($zaznam));
+		echo $data_tbl->get_new_row('TermÃ­ny pÅ™ihlÃ¡Å¡ek',raceterms::ListRegDates($zaznam));
 	}
 	else
-		echo $data_tbl->get_new_row('Termín pøihlášek',Date2String($zaznam['prihlasky1']));
+		echo $data_tbl->get_new_row('TermÃ­n pÅ™ihlÃ¡Å¡ek',Date2String($zaznam['prihlasky1']));
 	if(IsLoggedRegistrator())
 	{
 		if($zaznam['send'] > 0)
 		{
 			if($zaznam['prihlasky'] > 1)
-				$send = $zaznam['send'].'.termín';
+				$send = $zaznam['send'].'.termÃ­n';
 			else
 				$send = 'Ano';
 		}
 		else
 			$send = 'Ne';
 
-		echo $data_tbl->get_new_row('Pøihláška odeslána',$send);
+		echo $data_tbl->get_new_row('PÅ™ihlÃ¡Å¡ka odeslÃ¡na',$send);
 	}
 	if($g_enable_race_boss)
-		echo $data_tbl->get_new_row('Vedoucí',$vedouci);
+		echo $data_tbl->get_new_row('VedoucÃ­',$vedouci);
 	if(is_array($add_row))
 		echo $data_tbl->get_new_row($add_row[0],$add_row[1]);
 	switch($zaznam['transport'])
@@ -310,7 +310,7 @@ function RIT_SH(divId1, divId2)
 		break;
 	}
 
-	echo $data_tbl->get_new_row('Spoleèná doprava',$transport);
+	echo $data_tbl->get_new_row('SpoleÄnÃ¡ doprava',$transport);
 	echo $data_tbl->get_footer()."\n";
 	if ($expandable)
 	{
@@ -326,7 +326,7 @@ function form_filter_racelist($page,&$filterA,&$filterB,&$filterC)
 	$urlA = "'./".$page.'&fB='.$filterB.'&fC='.$filterC.'&fA=\'';
 	$urlB = "'./".$page.'&fA='.$filterA.'&fC='.$filterC.'&fB=\'';
 	$urlC = "'./".$page.'&fA='.$filterA.'&fB='.$filterB.'&fC=\'';
-	$filter_arr_niceA = array(0=>'všechny',1=>'jen OB',2=>'jen MTBO',3=>'jen LOB',4=>'jen nezaøazené');
+	$filter_arr_niceA = array(0=>'vÅ¡echny',1=>'jen OB',2=>'jen MTBO',3=>'jen LOB',4=>'jen nezaÅ™azenÃ©');
 	$filter_arr_sqlA = array(1=>'ob',2=>'mtbo',3=>'lob',4=>'jine');
 	if($filterA > 0 && $filterA < 5)
 		$result = ' WHERE `typ`=\''.$filter_arr_sqlA[$filterA]."'";
@@ -352,7 +352,7 @@ function form_filter_racelist($page,&$filterA,&$filterB,&$filterC)
 ?>
 <table><tr><td>
 <form>
-Typ zobrazených závodù&nbsp;
+Typ zobrazenÃ½ch zÃ¡vodÅ¯&nbsp;
 <?
 	echo('<select name="fA" onchange="javascript:window.open('.$urlA.'+this.options[this.selectedIndex].value,\'_top\')">'."\n");
 	for($ii=0; $ii<count($filter_arr_niceA); $ii++)
@@ -364,10 +364,10 @@ Typ zobrazených závodù&nbsp;
 </form>
 </td><td>&nbsp;&nbsp;</td><td>
 <form>
-Zaøazení zobrazených závodù&nbsp;
+ZaÅ™azenÃ­ zobrazenÃ½ch zÃ¡vodÅ¯&nbsp;
 <?
 	echo('<select name="fB" onchange="javascript:window.open('.$urlB.'+this.options[this.selectedIndex].value,\'_top\')">'."\n");
-	echo('<option value="0"'.(($filterB == 0)? ' selected' : '').'>všechny</option>'."\n");
+	echo('<option value="0"'.(($filterB == 0)? ' selected' : '').'>vÅ¡echny</option>'."\n");
 	for($ii=0; $ii<$g_zebricek_cnt; $ii++)
 	{
 		echo('<option value="'.($ii+1).'"'.(($filterB == $ii+1)? ' selected' : '').'>'.$g_zebricek[$ii]['nm'].'</option>'."\n");
@@ -376,7 +376,7 @@ Zaøazení zobrazených závodù&nbsp;
 </select>
 </form>
 </td><td>&nbsp;&nbsp;</td><td valign="top">
-<INPUT TYPE="checkbox" NAME="fC" onClick="javascript:window.open(<? echo($urlC);?>+Number(this.checked),'_top')" id="fC" value="1"<? if ($filterC != 0) echo(' checked');?>><label for="fC">Zobrazit staré závody</label>
+<INPUT TYPE="checkbox" NAME="fC" onClick="javascript:window.open(<? echo($urlC);?>+Number(this.checked),'_top')" id="fC" value="1"<? if ($filterC != 0) echo(' checked');?>><label for="fC">Zobrazit starÃ© zÃ¡vody</label>
 
 </td></tr>
 </table>
@@ -387,7 +387,7 @@ Zaøazení zobrazených závodù&nbsp;
 function show_link_to_actual_race(&$num_rows)
 {
 	if($num_rows > GC_MIN_RACES_2_SHOW_LINK)
-		echo('<a href="#actual_races">Jdi na aktuální závody</a><br>');
+		echo('<a href="#actual_races">Jdi na aktuÃ¡lnÃ­ zÃ¡vody</a><br>');
 }
 
 ?>

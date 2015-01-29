@@ -1,7 +1,7 @@
 <?php /* adminova stranka - editace zavodu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Kalendáø závodù - Editace závodù');
+DrawPageTitle('KalendÃ¡Å™ zÃ¡vodÅ¯ - Editace zÃ¡vodÅ¯');
 ?>
 <CENTER>
 <script language="javascript">
@@ -38,16 +38,16 @@ else
 $data_tbl = new html_table_mc();
 $col = 0;
 $data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
-$data_tbl->set_header_col_with_help($col++,'Poø.',ALIGN_CENTER,"Poøadatel");
-$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
-$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web závodu");
-$data_tbl->set_header_col_with_help($col++,'Kat',ALIGN_CENTER,"Zadané kategorie");
-$data_tbl->set_header_col($col++,'Monosti',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'NÃ¡zev',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'MÃ­sto',ALIGN_LEFT);
+$data_tbl->set_header_col_with_help($col++,'PoÅ™.',ALIGN_CENTER,"PoÅ™adatel");
+$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ zÃ¡vodu");
+$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web zÃ¡vodu");
+$data_tbl->set_header_col_with_help($col++,'Kat',ALIGN_CENTER,"ZadanÃ© kategorie");
+$data_tbl->set_header_col($col++,'MoÅ¾nosti',ALIGN_CENTER);
 if (!$g_is_release)
 {	// pri debug zobrazit
-	$data_tbl->set_header_col($col++,'Zmìny',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'ZmÄ›ny',ALIGN_CENTER);
 }
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
@@ -107,8 +107,8 @@ echo $data_tbl->get_footer()."\n";
 
 echo '<BR><hr><BR>';
 
-echo("<A HREF=\"javascript:open_win('./race_new.php?type=0','')\">Vytvoøit novı závod</A><br>");
-echo("<A HREF=\"javascript:open_win('./race_new.php?type=1','')\">Vytvoøit novı vícedenní závod</A><br>");
+echo("<A HREF=\"javascript:open_win('./race_new.php?type=0','')\">VytvoÅ™it novÃ½ zÃ¡vod</A><br>");
+echo("<A HREF=\"javascript:open_win('./race_new.php?type=1','')\">VytvoÅ™it novÃ½ vÃ­cedennÃ­ zÃ¡vod</A><br>");
 
 ?>
 </CENTER>

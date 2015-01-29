@@ -31,16 +31,16 @@ if (IsLoggedEditor())
 			$update = (isset($update) && is_numeric($update)) ? (int)$update : 0;
 
 			$result=MySQL_Query("UPDATE ".TBL_NEWS." SET datum='$datum2', nadpis='$nadpis', text='$text' WHERE id='$update'")
-				or die("Chyba pøi provádìní dotazu do databáze.");
+				or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 			if ($result == FALSE)
-				die ("Nepodaøilo se zmìnit novinku.");
+				die ("NepodaÅ™ilo se zmÄ›nit novinku.");
 		}
 		else
 		{
 			$result = MySQL_Query("INSERT INTO ".TBL_NEWS." (id_user,datum,nadpis,text) VALUES ('$usr->account_id','$datum2','$nadpis','$text')")
-				or die("Chyba pøi provádìní dotazu do databáze.");
+				or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 			if ($result == FALSE)
-				die ("Nepodaøilo se vloit novinku.");
+				die ("NepodaÅ™ilo se vloÅ¾it novinku.");
 		}
 	
 

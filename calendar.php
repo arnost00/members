@@ -17,7 +17,7 @@ include('./calendar.inc.php');
 <CENTER>
 
 <?
-DrawPageTitle('Kalendáø');
+DrawPageTitle('KalendÃ¡Å™');
 
 	$curr_date = GetCurrentDate();
 	$curr_date_arr = Date2Arr($curr_date);
@@ -36,7 +36,7 @@ DrawPageTitle('Kalendáø');
 	GetMonthCalendar($m2,$y2);
 ?>
 
-<BR><BUTTON onclick="javascript:close_popup();">Zavøít</BUTTON></TD></TR>
+<BR><BUTTON onclick="javascript:close_popup();">ZavÅ™Ã­t</BUTTON></TD></TR>
 </CENTER>
 </TD>
 <TD width="2%"></TD>

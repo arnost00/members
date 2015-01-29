@@ -36,7 +36,7 @@ function checkAllVisibilities()
 
 </script>
 <?
-DrawPageTitle('Upozoròování o termínech na email');
+DrawPageTitle('UpozorÅˆovÃ¡nÃ­ o termÃ­nech na email');
 ?>
 <CENTER>
 <?
@@ -81,16 +81,16 @@ if ($zaznam == FALSE)
 	<TD colspan="3"><br><hr></TD>
 </TR>
 <TR>
-	<TD colspan="3" style="padding-left:20px;"><input onclick="changeVisibility('daysbefore_hide', this.id);" type="checkbox" name="active_tf" value="1" id="atf" <? echo(($zaznam['active_tf'])?' checked':'')?>><label for="active_tf">Blíící se konec termínu pøihlášek ...</label></TD>
+	<TD colspan="3" style="padding-left:20px;"><input onclick="changeVisibility('daysbefore_hide', this.id);" type="checkbox" name="active_tf" value="1" id="atf" <? echo(($zaznam['active_tf'])?' checked':'')?>><label for="active_tf">BlÃ­Å¾Ã­cÃ­ se konec termÃ­nu pÅ™ihlÃ¡Å¡ek ...</label></TD>
 </TR>
 <!-- id a name jsou zde kvuli chybe IE pro spravnou funkcnost getElementsByName -->
 <TR name="daysbefore_hide" id="daysbefore_hide">
-	<TD width="40%" align="right">Kolik dní pøed termínem upozoròovat</TD>
+	<TD width="40%" align="right">Kolik dnÃ­ pÅ™ed termÃ­nem upozorÅˆovat</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="daysbefore" SIZE=3 VALUE="<? echo $zaznam["daysbefore"]; ?>"> [<? echo($g_mailinfo_minimal_daysbefore.' a '.$g_mailinfo_maximal_daysbefore);?> dní]</TD>
+	<TD><INPUT TYPE="text" NAME="daysbefore" SIZE=3 VALUE="<? echo $zaznam["daysbefore"]; ?>"> [<? echo($g_mailinfo_minimal_daysbefore.' aÅ¾ '.$g_mailinfo_maximal_daysbefore);?> dnÃ­]</TD>
 </TR>
 <TR name="daysbefore_hide" id="daysbefore_hide">
-	<TD width="40%" align="right">Typy závodù</TD>
+	<TD width="40%" align="right">Typy zÃ¡vodÅ¯</TD>
 	<TD width="5"></TD>
 	<TD><span id="race_type">
 <?
@@ -103,11 +103,11 @@ if ($zaznam == FALSE)
 		echo('<br>');
 	}
 ?>
-	</span><a href="" onclick="checkAll('race_type',true); return false;">Vše</a> / <a href="" onclick="checkAll('race_type',false); return false;">Nic</a>
+	</span><a href="" onclick="checkAll('race_type',true); return false;">VÅ¡e</a> / <a href="" onclick="checkAll('race_type',false); return false;">Nic</a>
 	</TD>
 </TR>
 <TR name="daysbefore_hide" id="daysbefore_hide">
-	<TD width="40%" align="right">ebøíèek</TD>
+	<TD width="40%" align="right">Å½ebÅ™Ã­Äek</TD>
 	<TD width="5"></TD>
 	<TD><span id="zebricek">
 <?
@@ -120,33 +120,33 @@ if ($zaznam == FALSE)
 		echo('<br>');
 	}
 ?>
-	</span><a href="" onclick="checkAll('zebricek',true); return false;">Vše</a> / <a href="" onclick="checkAll('zebricek',false); return false;">Nic</a>
+	</span><a href="" onclick="checkAll('zebricek',true); return false;">VÅ¡e</a> / <a href="" onclick="checkAll('zebricek',false); return false;">Nic</a>
 	</TD>
 </TR>
 <TR>
 	<TD colspan="3"><br><hr></TD>
 </TR>
 <TR>
-	<TD colspan="3" style="padding-left:20px;"><input onclick="changeVisibility('activechange_hide', this.id);" type="checkbox" name="active_ch" value="1" id="ach" <? echo(($zaznam['active_ch'])?' checked':'')?>><label for="active_ch">Zmìny termínù nebo v kalendáøi závodù ...</label></TD>
+	<TD colspan="3" style="padding-left:20px;"><input onclick="changeVisibility('activechange_hide', this.id);" type="checkbox" name="active_ch" value="1" id="ach" <? echo(($zaznam['active_ch'])?' checked':'')?>><label for="active_ch">ZmÄ›ny termÃ­nÅ¯ nebo v kalendÃ¡Å™i zÃ¡vodÅ¯ ...</label></TD>
 </TR>
 <!-- id a name jsou zde kvuli chybe IE pro spravnou funkcnost getElementsByName -->
 <TR name="activechange_hide" id="activechange_hide">
-	<TD width="40%" align="right" valign="top">Posílat zmìny</TD>
+	<TD width="40%" align="right" valign="top">PosÃ­lat zmÄ›ny</TD>
 	<TD width="5"></TD>
 	<TD>
 <?	
 		echo('<input type="checkbox" name="ch_data[0]" value="1" id="chid_0"');
 		if(($zaznam['ch_data'] & $g_modify_flag [0]['id']) != 0)
 			echo(' checked');
-		echo('><label for="chid_0">termínu pøihlášek</label><br>');
+		echo('><label for="chid_0">termÃ­nu pÅ™ihlÃ¡Å¡ek</label><br>');
 		echo('<input type="checkbox" name="ch_data[1]" value="1" id="chid_1"');
 		if(($zaznam['ch_data'] & $g_modify_flag [1]['id']) != 0)
 			echo(' checked');
-		echo('><label for="chid_1">pøidání závodu do termínovky</label><br>');
+		echo('><label for="chid_1">pÅ™idÃ¡nÃ­ zÃ¡vodu do termÃ­novky</label><br>');
 		echo('<input type="checkbox" name="ch_data[2]" value="1" id="chid_2"');
 		if(($zaznam['ch_data'] & $g_modify_flag [2]['id']) != 0)
 			echo(' checked');
-		echo('><label for="chid_2">termínu závodu</label><br>');
+		echo('><label for="chid_2">termÃ­nu zÃ¡vodu</label><br>');
 ?>	
 	</TD>
 </TR>
@@ -162,7 +162,7 @@ if ($zaznam == FALSE)
 		{
 ?>
 <TR>
-	<TD colspan="3" style="padding-left:20px;"><input type="checkbox" name="active_rg" value="1" id="arg" <? echo(($zaznam['active_rg'])?' checked':'')?>><label for="arg">Upozornit, e uplynul interní termín</label></TD>
+	<TD colspan="3" style="padding-left:20px;"><input type="checkbox" name="active_rg" value="1" id="arg" <? echo(($zaznam['active_rg'])?' checked':'')?>><label for="arg">Upozornit, Å¾e uplynul internÃ­ termÃ­n</label></TD>
 </TR>
 <?
 		}
@@ -170,7 +170,7 @@ if ($zaznam == FALSE)
 		{
 ?>
 <TR>
-	<TD colspan="3" style="padding-left:20px;"><input type="checkbox" name="active_finf" value="1" id="afnf" <? echo(($zaznam['active_finf'])?' checked':'')?>><label for="afnf">Upozornit, na èlena je se dostal do mínusu ve financích.</label></TD>
+	<TD colspan="3" style="padding-left:20px;"><input type="checkbox" name="active_finf" value="1" id="afnf" <? echo(($zaznam['active_finf'])?' checked':'')?>><label for="afnf">Upozornit, na Älena jeÅ¾ se dostal do mÃ­nusu ve financÃ­ch.</label></TD>
 </TR>
 <?
 		}
@@ -183,24 +183,24 @@ if ($g_enable_finances)
 	<TD colspan="3"><br><hr></TD>
 </TR>
 <TR>
-	<TD colspan="3" style="padding-left:20px;"><input onclick="changeVisibility('finance_hide', this.id);" type="checkbox" name="active_fin" value="1" id="afin" <? echo(($zaznam['active_fin'])?' checked':'')?>><label for="active_fin">Upozornit o finanèním stavu ...</label></TD>
+	<TD colspan="3" style="padding-left:20px;"><input onclick="changeVisibility('finance_hide', this.id);" type="checkbox" name="active_fin" value="1" id="afin" <? echo(($zaznam['active_fin'])?' checked':'')?>><label for="active_fin">Upozornit o finanÄnÃ­m stavu ...</label></TD>
 </TR>
 <!-- id a name jsou zde kvuli chybe IE pro spravnou funkcnost getElementsByName -->
 <TR name="finance_hide" id="finance_hide">
-	<TD width="40%" align="right" valign="top">Posílat stav úètu</TD>
+	<TD width="40%" align="right" valign="top">PosÃ­lat stav ÃºÄtu</TD>
 	<TD width="5"></TD>
 	<TD>
 <?	
 		echo('<input type="checkbox" name="fin_type[0]" value="1" id="fint_0"');
 		if(($zaznam['fin_type'] & $g_fin_mail_flag [0]['id']) != 0)
 			echo(' checked');
-		echo('><label for="fint_0">pøi sníení pod limit</label> ');
-		echo('<INPUT TYPE="text" NAME="fin_limit" SIZE=5 MAXLENGTH=5 VALUE="'.$zaznam["fin_limit"].'"> Kè');
+		echo('><label for="fint_0">pÅ™i snÃ­Å¾enÃ­ pod limit</label> ');
+		echo('<INPUT TYPE="text" NAME="fin_limit" SIZE=5 MAXLENGTH=5 VALUE="'.$zaznam["fin_limit"].'"> KÄ');
 		echo('<br>');
 		echo('<input type="checkbox" name="fin_type[1]" value="1" id="fint_1"');
 		if(($zaznam['fin_type'] & $g_fin_mail_flag [1]['id']) != 0)
 			echo(' checked');
-		echo('><label for="fint_1">pøi pøechodu do mínusu</label><br>');
+		echo('><label for="fint_1">pÅ™i pÅ™echodu do mÃ­nusu</label><br>');
 ?>	
 	</TD>
 </TR>
@@ -214,7 +214,7 @@ if ($g_enable_finances)
 	<TD colspan="3"></TD>
 </TR>
 <TR>
-	<TD colspan="3" align="center"><INPUT TYPE="submit" VALUE="Zmìnit údaje"></TD>
+	<TD colspan="3" align="center"><INPUT TYPE="submit" VALUE="ZmÄ›nit Ãºdaje"></TD>
 </TR>
 <TR>
 	<TD colspan="3"></TD>

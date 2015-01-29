@@ -26,7 +26,7 @@ $update=$id;
 include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 include ("./common.inc.php");
 
-DrawPageTitle('Editace typu oddílového pøíspìvku');
+DrawPageTitle('Editace typu oddÃ­lovÃ©ho pÅ™Ã­spÄ›vku');
 ?>
 <TABLE width="100%" cellpadding="0" cellspacing="0" border="0">
 <TR>
@@ -35,7 +35,7 @@ DrawPageTitle('Editace typu oddílového pøíspìvku');
 <CENTER>
 <? include ('fin_type_edit.inc.php'); ?>
 <BR><hr><BR>
-<A HREF="index.php?id=800&subid=4">Zpìt</A><BR>
+<A HREF="index.php?id=800&subid=4">ZpÄ›t</A><BR>
 <BR><hr><BR>
 </CENTER>
 </TD>

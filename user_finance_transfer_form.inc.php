@@ -12,7 +12,7 @@ function createHTMLSelect($select_name, $options)
 ?>
 
 <hr>
-<h3>Transfer mezi èleny</h3>
+<h3>Transfer mezi Äleny</h3>
 <form class="form" action="?<?=$return_url?>&payment=both" method="post" onsubmit="return isPositiveNumber(amount)">
 <?
 $data_tbl = new html_table_form();
@@ -34,13 +34,13 @@ while ($record=MySQL_Fetch_Array($users_result))
 $from_select = createHTMLSelect("id_from", $from_options);
 $to_select = createHTMLSelect("id_to", $to_options);
 
-echo $data_tbl->get_new_row('<label for="id_from">Pøevést od</label>', $from_select);
-echo $data_tbl->get_new_row('<label for="id_to">Pøevést komu</label>', $to_select);
-echo $data_tbl->get_new_row('<label for="amount">Èástka</label>', '<input name="amount" id="amount" type="text" size="5" maxlength="10" />');
-echo $data_tbl->get_new_row('<label for="note">Poznámka</label>', '<input name="note" type="text" size="40" maxlength="200" />');
+echo $data_tbl->get_new_row('<label for="id_from">PÅ™evÃ©st od</label>', $from_select);
+echo $data_tbl->get_new_row('<label for="id_to">PÅ™evÃ©st komu</label>', $to_select);
+echo $data_tbl->get_new_row('<label for="amount">ÄŒÃ¡stka</label>', '<input name="amount" id="amount" type="text" size="5" maxlength="10" />');
+echo $data_tbl->get_new_row('<label for="note">PoznÃ¡mka</label>', '<input name="note" type="text" size="40" maxlength="200" />');
 
 echo $data_tbl->get_empty_row();
-echo $data_tbl->get_new_row('','<input type="submit" value="Provést transfer"/>');
+echo $data_tbl->get_new_row('','<input type="submit" value="ProvÃ©st transfer"/>');
 echo $data_tbl->get_footer()."\n";
 ?>
 </FORM>

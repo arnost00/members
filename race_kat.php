@@ -18,7 +18,7 @@ if (!IsLoggedRegistrator())
 }
 
 include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
-DrawPageTitle('Editace kategorií v závodu');
+DrawPageTitle('Editace kategoriÃ­ v zÃ¡vodu');
 
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
@@ -28,7 +28,7 @@ db_Connect();
 $zaznam=MySQL_Fetch_Array($vysledek);
 $kat_nf ='';
 
-DrawPageSubTitle('Vybranı závod');
+DrawPageSubTitle('VybranÃ½ zÃ¡vod');
 
 RaceInfoTable($zaznam,'',false,false,true);
 ?>
@@ -51,7 +51,7 @@ function zmen_kat_null()
 
 <FORM METHOD=POST ACTION="./race_kat_exc.php?id=<?echo $id?>" name="form2">
 
-<? DrawPageSubTitle('Kategorie v závodì'); ?>
+<? DrawPageSubTitle('Kategorie v zÃ¡vodÄ›'); ?>
 
 <?include "./race_kateg.inc.php"?>
 
@@ -59,42 +59,42 @@ function zmen_kat_null()
 
 Nestandartni kategorie&nbsp;&nbsp;
 
-<button onclick="javascript:zmen_kat_null(); return false;">Vyprázdni</button><BR>
+<button onclick="javascript:zmen_kat_null(); return false;">VyprÃ¡zdni</button><BR>
 
 <TEXTAREA name="kat_n" cols="90" rows="3"><?echo $kat_nf;?></TEXTAREA><BR>
 
 <span class="WarningText">Zadavej jako text bez uvozovek, kazdou kategorii ukonci strednikem, vse bez mezer</span>
 
-<BR><BR>Pøedefinované kategorie :
-<button onclick="javascript:zmen_kat_n('<? echo $g_kategorie ['oblz']?>'); return false;">Obl</button>&nbsp;
-<button onclick="javascript:zmen_kat_n('<? echo $g_kategorie ['oblz_vetsi']?>'); return false;">Obl vìtší</button>&nbsp;
-<button onclick="javascript:zmen_kat_n('<? echo $g_kategorie ['becka']?>'); return false;">eb.B.</button>&nbsp;
-<button onclick="javascript:zmen_kat_n('<? echo $g_kategorie ['acka']?>'); return false;">eb.A.</button>&nbsp;
-<button onclick="javascript:zmen_kat_n('<? echo $g_kategorie ['stafety']?>'); return false;">Štafety</button>
+<BR><BR>PÅ™edefinovanÃ© kategorie :
+<button onclick="javascript:zmen_kat_n('<? echo $g_kategorie ['oblz']?>'); return false;">OblÅ¾</button>&nbsp;
+<button onclick="javascript:zmen_kat_n('<? echo $g_kategorie ['oblz_vetsi']?>'); return false;">OblÅ¾ vÄ›tÅ¡Ã­</button>&nbsp;
+<button onclick="javascript:zmen_kat_n('<? echo $g_kategorie ['becka']?>'); return false;">Å¾eb.B.</button>&nbsp;
+<button onclick="javascript:zmen_kat_n('<? echo $g_kategorie ['acka']?>'); return false;">Å¾eb.A.</button>&nbsp;
+<button onclick="javascript:zmen_kat_n('<? echo $g_kategorie ['stafety']?>'); return false;">Å tafety</button>
 <button onclick="javascript:zmen_kat_n('<? echo $g_kategorie ['MTBO']?>'); return false;">MTBO</button>
 <BR>
 <BR>
 <span class="kategory_small_list">
-Obl = (<? echo $g_kategorie ['oblz']; ?>)
+OblÅ¾ = (<? echo $g_kategorie ['oblz']; ?>)
 <BR>
-Obl vìtší = (<? echo $g_kategorie ['oblz_vetsi']; ?>)
+OblÅ¾ vÄ›tÅ¡Ã­ = (<? echo $g_kategorie ['oblz_vetsi']; ?>)
 <BR>
-eb.B. = (<? echo $g_kategorie ['becka']; ?>)
+Å¾eb.B. = (<? echo $g_kategorie ['becka']; ?>)
 <BR>
-eb.A. = (<? echo $g_kategorie ['acka']; ?>)
+Å¾eb.A. = (<? echo $g_kategorie ['acka']; ?>)
 <BR>
-Štafety = (<? echo $g_kategorie ['stafety']; ?>)
+Å tafety = (<? echo $g_kategorie ['stafety']; ?>)
 <BR>
 MTBO = (<? echo $g_kategorie ['MTBO']; ?>)
 </span>
 <BR>
 
-<br><INPUT TYPE="submit" VALUE="Odeslat zmìny kategorií">&nbsp;&nbsp;
+<br><INPUT TYPE="submit" VALUE="Odeslat zmÄ›ny kategoriÃ­">&nbsp;&nbsp;
 </FORM>
 
-<BUTTON onclick="javascript:close_popup();">Zpìt</BUTTON>
+<BUTTON onclick="javascript:close_popup();">ZpÄ›t</BUTTON>
 
-<br><br>Aktuální kategorie:<br>
+<br><br>AktuÃ¡lnÃ­ kategorie:<br>
 <span class="kategory_small_list"><? echo $zaznam['kategorie'];?></span><br>
 
 </BODY>

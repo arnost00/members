@@ -18,7 +18,7 @@ include ("./common_race.inc.php");
 include ("./common_user.inc.php");
 include ('./url.inc.php');
 
-DrawPageTitle('Export pøihlášky - kontrola');
+DrawPageTitle('Export pÅ™ihlÃ¡Å¡ky - kontrola');
 
 db_Connect();
 
@@ -31,9 +31,9 @@ if($regsend >= 0 && $regsend <= 5)
 	if($regsendnow > 0)
 	{	// save new regsend...
 		$result=MySQL_Query("UPDATE ".TBL_RACE." SET `send`='$regsend' WHERE `id`='$id_zav'")
-				or die('Chyba pøi provádìní dotazu do databáze.');
+				or die('Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.');
 		if ($result == FALSE)
-			die ('Nepodaøilo se zmìnit údaje o závodì.');
+			die ('NepodaÅ™ilo se zmÄ›nit Ãºdaje o zÃ¡vodÄ›.');
 	}
 }
 else	// kontrola rozsahu
@@ -86,7 +86,7 @@ function submit_form_reg(reg_type)
 //-->
 </SCRIPT>
 <?
-DrawPageSubTitle('Vybranı závod');
+DrawPageSubTitle('VybranÃ½ zÃ¡vod');
 
 RaceInfoTable($zaznam_z,'',false,false,true);
 ?>
@@ -94,81 +94,81 @@ RaceInfoTable($zaznam_z,'',false,false,true);
 <BR>
 <FORM METHOD="GET" ACTION="race_reg_form_exc.php" name="form_exp_reg" target="_blank">
 <input type="hidden" name="id_zav" value="<? echo($id_zav); ?>">
-Zpùsob vıpisu:<input type="radio" name="ff" value="0" id="radio_ff0" checked="checked"><label for="radio_ff0">Export pøihlášky</label>&nbsp;&nbsp;
-<input type="radio" name="ff" value="1" id="radio_ff1"><label for="radio_ff1">Náhled na pøihlášku</label>
+ZpÅ¯sob vÃ½pisu:<input type="radio" name="ff" value="0" id="radio_ff0" checked="checked"><label for="radio_ff0">Export pÅ™ihlÃ¡Å¡ky</label>&nbsp;&nbsp;
+<input type="radio" name="ff" value="1" id="radio_ff1"><label for="radio_ff1">NÃ¡hled na pÅ™ihlÃ¡Å¡ku</label>
 <input type="hidden" name="termin" value="0">
 <input type="hidden" name="creg" value="0">
 <br><br>
 <? if($zaznam_z['prihlasky'] > 1)
 { ?>
-<BUTTON onclick="submit_form(0);  return false;">Proveï - všechny termíny</BUTTON>
+<BUTTON onclick="submit_form(0);  return false;">ProveÄ - vÅ¡echny termÃ­ny</BUTTON>
 <br>
 <?
 	for($ii=1; $ii<=$zaznam_z['prihlasky']; $ii++)
 	{
-		echo"<BUTTON onclick=\"submit_form(".$ii."); return false;\">Proveï - ".$ii.". termín</BUTTON>&nbsp;";
+		echo"<BUTTON onclick=\"submit_form(".$ii."); return false;\">ProveÄ - ".$ii.". termÃ­n</BUTTON>&nbsp;";
 	}
 ?>
 <br>
 <? } else { ?>
-<BUTTON onclick="submit_form(0); return false;">Proveï akci</BUTTON>
+<BUTTON onclick="submit_form(0); return false;">ProveÄ akci</BUTTON>
 <? } ?>
-<BUTTON onclick="submit_form_reg(1); return false;">Vıpis pro centrální registraci (ObHana)</BUTTON>
+<BUTTON onclick="submit_form_reg(1); return false;">VÃ½pis pro centrÃ¡lnÃ­ registraci (ObHana)</BUTTON>
 <?
 	if ($g_enable_oris_support)
 	{
 ?>
-<BUTTON onclick="submit_form_reg(2); return false;">Vıpis pro centrální registraci (ORIS)</BUTTON>
+<BUTTON onclick="submit_form_reg(2); return false;">VÃ½pis pro centrÃ¡lnÃ­ registraci (ORIS)</BUTTON>
 <?
 	}
 ?>
 </FORM>
-<BUTTON onclick="javascript:close_popup();">Zavøi</BUTTON>
+<BUTTON onclick="javascript:close_popup();">ZavÅ™i</BUTTON>
 <?//------------------------------?>
 <br><br>
 <FORM METHOD="POST" ACTION="race_reg_form.php?id_zav=<? echo($id_zav); ?>">
 <input type="hidden" name="regsendnow" value="1">
-Stav odeslání pøihlášky&nbsp;&nbsp;<select name="regsend" size="1">
-	<option value="0"<? if($regsend ==0) echo(' selected="selected"'); ?>>není odeslána</option>
+Stav odeslÃ¡nÃ­ pÅ™ihlÃ¡Å¡ky&nbsp;&nbsp;<select name="regsend" size="1">
+	<option value="0"<? if($regsend ==0) echo(' selected="selected"'); ?>>nenÃ­ odeslÃ¡na</option>
 <?
 	if($zaznam_z['prihlasky'] > 1)
 	{
 		for($ii=1; $ii<=$zaznam_z['prihlasky']; $ii++)
 		{
-			echo'<option value="'.$ii.'"'.(($regsend == $ii) ? ' selected="selected" ' : '').'>je odeslána pro '.$ii.'. termín</option>';
+			echo'<option value="'.$ii.'"'.(($regsend == $ii) ? ' selected="selected" ' : '').'>je odeslÃ¡na pro '.$ii.'. termÃ­n</option>';
 		}
 	}
 	else
 	{
 ?>
-	<option value="1"<? if($regsend ==1) echo(' selected="selected"'); ?>>je odeslána</option>
+	<option value="1"<? if($regsend ==1) echo(' selected="selected"'); ?>>je odeslÃ¡na</option>
 <?
 	}
 ?>
 </select>
-<INPUT TYPE="submit" value='Nastav stav odeslání pøihlášky'>
+<INPUT TYPE="submit" value='Nastav stav odeslÃ¡nÃ­ pÅ™ihlÃ¡Å¡ky'>
 </FORM>
 <?//------------------------------?>
 <BR><BR><hr><BR>
 
 <?
-DrawPageSubTitle('Pøihlášení závodníci');
+DrawPageSubTitle('PÅ™ihlÃ¡Å¡enÃ­ zÃ¡vodnÃ­ci');
 
 $data_tbl = new html_table_mc();
 $col = 0;
-$data_tbl->set_header_col($col++,'Poø.',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
-$data_tbl->set_header_col_with_help($col++,'Reg.',ALIGN_CENTER,"Registraèní èíslo");
-$data_tbl->set_header_col($col++,'SI èip',ALIGN_RIGHT);
+$data_tbl->set_header_col($col++,'PoÅ™.',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'PÅ™Ã­jmenÃ­',ALIGN_LEFT);
+$data_tbl->set_header_col_with_help($col++,'Reg.',ALIGN_CENTER,"RegistraÄnÃ­ ÄÃ­slo");
+$data_tbl->set_header_col($col++,'SI Äip',ALIGN_RIGHT);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Kontrola',ALIGN_CENTER);
 if($zaznam_z['prihlasky'] > 1)
 {
-	$data_tbl->set_header_col($col++,'Termín',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'TermÃ­n',ALIGN_CENTER);
 }
-$data_tbl->set_header_col($col++,'Poznámka',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Poznámka (interní)',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'PoznÃ¡mka',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'PoznÃ¡mka (internÃ­)',ALIGN_CENTER);
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
@@ -223,16 +223,16 @@ echo $data_tbl->get_footer()."\n";
 if($err_cnt > 0)
 {
 ?>
-<span class="TextCheckBad">* Kategorie v pøihlášce závodníka není definovaná jako platná kategorie pro tento závod.</span><br>
+<span class="TextCheckBad">* Kategorie v pÅ™ihlÃ¡Å¡ce zÃ¡vodnÃ­ka nenÃ­ definovanÃ¡ jako platnÃ¡ kategorie pro tento zÃ¡vod.</span><br>
 <?
-	echo('Celkovı poèet chyb v pøihlášce je '.$err_cnt.'.<br>');
+	echo('CelkovÃ½ poÄet chyb v pÅ™ihlÃ¡Å¡ce je '.$err_cnt.'.<br>');
 	// spusteni opravy vysledku ...
 }
 
 if(strlen($zaznam_z['poznamka']) > 0)
 {
 ?>
-<p><b>Doplòující informace o závodì (interní)</b> :<br>
+<p><b>DoplÅˆujÃ­cÃ­ informace o zÃ¡vodÄ› (internÃ­)</b> :<br>
 <?
 	echo('&nbsp;&nbsp;&nbsp;'.$zaznam_z['poznamka'].'</p>');
 }

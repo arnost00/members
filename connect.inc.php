@@ -26,7 +26,7 @@ if (!defined('_CONNECT_INCLUDED')) {
 			}
 		}
 		MySQL_Select_DB($g_dbname);
-		MySQL_Query("SET CHARACTER SET cp1250");
+		MySQL_Query("SET CHARACTER SET UTF-8");
 		return true;
 	}
 

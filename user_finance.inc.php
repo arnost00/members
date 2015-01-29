@@ -16,11 +16,11 @@ ON us.finance_type = ft.id
 where us.id = '1'
 */
 
-DrawPageSubTitle('Historie úètu pro èlena: '.$zaznam_user_name['name']);
+DrawPageSubTitle('Historie ÃºÄtu pro Älena: '.$zaznam_user_name['name']);
 
 if ($zaznam_user_name['ft_nazev'] != null)
 {
-	DrawPageSubTitle('Typ oddílového pøíspìvku èlena: '.$zaznam_user_name['ft_nazev']);
+	DrawPageSubTitle('Typ oddÃ­lovÃ©ho pÅ™Ã­spÄ›vku Älena: '.$zaznam_user_name['ft_nazev']);
 }
 
 include_once ("./common_race.inc.php");
@@ -29,14 +29,14 @@ include_once ('./url.inc.php');
 $data_tbl = new html_table_mc();
 $col = 0;
 $data_tbl->set_header_col($col++,'Datum transakce',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Závod',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Datum závodu',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Èástka',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Poznámka',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'ZÃ¡vod',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'Datum zÃ¡vodu',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'ÄŒÃ¡stka',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'PoznÃ¡mka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Zapsal',ALIGN_LEFT);
 if ($g_enable_finances_claim)
 	$data_tbl->set_header_col($col++,'Reklamace',ALIGN_LEFT);
-isset($finance_readonly)?"":IsLoggedFinance()?$data_tbl->set_header_col($col++,'Monosti',ALIGN_LEFT):"";
+isset($finance_readonly)?"":IsLoggedFinance()?$data_tbl->set_header_col($col++,'MoÅ¾nosti',ALIGN_LEFT):"";
 
 
 echo $data_tbl->get_css()."\n";
@@ -56,10 +56,10 @@ while ($zaznam=MySQL_Fetch_Array($vysledek_historie))
 	$row[] = $zaznam['note'];
 	$row[] = $zaznam['name'];
 //priprava pro pouziti ajaxu a jquery
-// 	$row[] = "<div class=\"div-claim\" claim=\"".$zaznam['fin_id']."\" id=\"claim-".$zaznam['fin_id']."\">Problém?</div>";
+// 	$row[] = "<div class=\"div-claim\" claim=\"".$zaznam['fin_id']."\" id=\"claim-".$zaznam['fin_id']."\">ProblÃ©m?</div>";
 	if ($g_enable_finances_claim)
-		$row[] = '<A HREF="javascript:open_win(\'./claim.php?payment_id='.$zaznam['fin_id'].'\',\'\')">Problém?</A>';
-	isset($finance_readonly)?"":IsLoggedFinance()?$row[]=" <a href=\"?change=change&trn_id=".$zaznam['fin_id']."\">Zmìnit</a>&nbsp;/&nbsp;<a href=\"?storno=storno&trn_id=".$zaznam['fin_id']."\">Storno</a>":"";
+		$row[] = '<A HREF="javascript:open_win(\'./claim.php?payment_id='.$zaznam['fin_id'].'\',\'\')">ProblÃ©m?</A>';
+	isset($finance_readonly)?"":IsLoggedFinance()?$row[]=" <a href=\"?change=change&trn_id=".$zaznam['fin_id']."\">ZmÄ›nit</a>&nbsp;/&nbsp;<a href=\"?storno=storno&trn_id=".$zaznam['fin_id']."\">Storno</a>":"";
 	
 	$sum_amount += $zaznam['amount'];
 	
@@ -71,7 +71,7 @@ if ($i > 0)
 
 $row = array();
 $row[] = '';
-$row[] = "Koneènı zùstatek";
+$row[] = "KoneÄnÃ½ zÅ¯statek";
 $row[] = '';
 $sum_amount<0?$class="red":$class="";
 $row[] = "<span class='amount$class'>".$sum_amount."</span>";
@@ -97,7 +97,7 @@ if (mysql_num_rows($nch_result))
 	//vypis konecneho zustatku vcetne sverencu
 	$row = array();
 	$row[] = '';
-	$row[] = "Kompletní zùstatek";
+	$row[] = "KompletnÃ­ zÅ¯statek";
 	$row[] = '';
 	$sum_amount<0?$class="red":$class="";
 	$row[] = "<span class='amount$class'>".$sum_amount."</span>";
@@ -119,7 +119,7 @@ include 'user_finance_transfer_form.inc.php';
 // <fieldset>
 // <label for="dialog-text" id="label-dialog-text"></label>
 // <textarea rows="3" id="dialog-text"></textarea>
-// <button type="submit">Odešli</button>
+// <button type="submit">OdeÅ¡li</button>
 // </fieldset>
 // </form>
 // </div>

@@ -1,7 +1,7 @@
 <?php /* aktuality v prihlaskach */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Aktuální informace (Aktualitky)');
+DrawPageTitle('AktuÃ¡lnÃ­ informace (Aktualitky)');
 ?>
 <CENTER>
 <script language="javascript">
@@ -14,7 +14,7 @@ DrawPageTitle('Aktuální informace (Aktualitky)');
 
 <A name="races"></A>
 <?
-DrawPageSubTitle('Nejbližší závody (do '.GC_SHOW_RACE_DAYS.' dní)');
+DrawPageSubTitle('NejbliÅ¾Å¡Ã­ zÃ¡vody (do '.GC_SHOW_RACE_DAYS.' dnÃ­)');
 
 include ('./common_race.inc.php');
 include ('./url.inc.php');
@@ -60,17 +60,17 @@ if (mysql_num_rows($vysledek) > 0)
 	$data_tbl = new html_table_mc();
 	$col = 0;
 	$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
-	$data_tbl->set_header_col_with_help($col++,'Poø.',ALIGN_CENTER,"Poøadatel");
-	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
-	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web závodu");
+	$data_tbl->set_header_col($col++,'NÃ¡zev',ALIGN_LEFT);
+	$data_tbl->set_header_col($col++,'MÃ­sto',ALIGN_LEFT);
+	$data_tbl->set_header_col_with_help($col++,'PoÅ™.',ALIGN_CENTER,"PoÅ™adatel");
+	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ zÃ¡vodu");
+	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web zÃ¡vodu");
 	if(SHOW_USER)
-		$data_tbl->set_header_col($col++,'Pøihlášen',ALIGN_CENTER);
+		$data_tbl->set_header_col($col++,'PÅ™ihlÃ¡Å¡en',ALIGN_CENTER);
 	else
-		$data_tbl->set_header_col_with_help($col++,'Pø',ALIGN_CENTER,"Zobrazit pøihlášené");
+		$data_tbl->set_header_col_with_help($col++,'PÅ™',ALIGN_CENTER,"Zobrazit pÅ™ihlÃ¡Å¡enÃ©");
 	if($g_enable_race_boss)
-		$data_tbl->set_header_col($col++,'Vedoucí',ALIGN_CENTER);
+		$data_tbl->set_header_col($col++,'VedoucÃ­',ALIGN_CENTER);
 	echo $data_tbl->get_css()."\n";
 	echo $data_tbl->get_header()."\n";
 	echo $data_tbl->get_header_row()."\n";
@@ -115,14 +115,14 @@ if (mysql_num_rows($vysledek) > 0)
 }
 else
 {
-	echo "V nejbližších ".GC_SHOW_RACE_DAYS." dnech není žádný závod.<BR>";
+	echo "V nejbliÅ¾Å¡Ã­ch ".GC_SHOW_RACE_DAYS." dnech nenÃ­ Å¾Ã¡dnÃ½ zÃ¡vod.<BR>";
 }
 ?>
 <BR>
 
 <A name="regs"></A>
 <?
-DrawPageSubTitle('Nejbližší pøihlášky (do '.GC_SHOW_REG_DAYS.' dní)');
+DrawPageSubTitle('NejbliÅ¾Å¡Ã­ pÅ™ihlÃ¡Å¡ky (do '.GC_SHOW_REG_DAYS.' dnÃ­)');
 
 $d1 = $curr_date;
 $d2 = IncDate($curr_date,GC_SHOW_REG_DAYS);
@@ -133,23 +133,23 @@ if (mysql_num_rows($vysledek) > 0)
 {
 	if (SHOW_USER && $entry_lock)
 	{
-		echo('<span class="WarningText">Máte zamknutou možnost se pøihlašovat.</span>'."<br>\n");
+		echo('<span class="WarningText">MÃ¡te zamknutou moÅ¾nost se pÅ™ihlaÅ¡ovat.</span>'."<br>\n");
 	}
 	$data_tbl = new html_table_mc();
 	$col = 0;
 	$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
-	$data_tbl->set_header_col_with_help($col++,'Poø.',ALIGN_CENTER,"Poøadatel");
-	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
-	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web závodu");
+	$data_tbl->set_header_col($col++,'NÃ¡zev',ALIGN_LEFT);
+	$data_tbl->set_header_col($col++,'MÃ­sto',ALIGN_LEFT);
+	$data_tbl->set_header_col_with_help($col++,'PoÅ™.',ALIGN_CENTER,"PoÅ™adatel");
+	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ zÃ¡vodu");
+	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web zÃ¡vodu");
 	if(SHOW_USER)
-		$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
+		$data_tbl->set_header_col($col++,'MoÅ¾nosti',ALIGN_CENTER);
 	else
-		$data_tbl->set_header_col_with_help($col++,'Pø',ALIGN_CENTER,"Zobrazit pøihlášené");
-	$data_tbl->set_header_col($col++,'Pøihlášky',ALIGN_CENTER);
+		$data_tbl->set_header_col_with_help($col++,'PÅ™',ALIGN_CENTER,"Zobrazit pÅ™ihlÃ¡Å¡enÃ©");
+	$data_tbl->set_header_col($col++,'PÅ™ihlÃ¡Å¡ky',ALIGN_CENTER);
 	if($g_enable_race_boss)
-		$data_tbl->set_header_col($col++,'Vedoucí',ALIGN_CENTER);
+		$data_tbl->set_header_col($col++,'VedoucÃ­',ALIGN_CENTER);
 	echo $data_tbl->get_css()."\n";
 	echo $data_tbl->get_header()."\n";
 	echo $data_tbl->get_header_row()."\n";
@@ -206,7 +206,7 @@ if (mysql_num_rows($vysledek) > 0)
 			{
 				if (!$prihl_finish && !$entry_lock)
 				{
-					$prihl = "<A HREF=\"javascript:open_win('./us_race_regon.php?id_zav=".$zaznam["id"]."&id_us=".$usr->user_id."','')\">Pøihl.</A> / ".$zbr;
+					$prihl = "<A HREF=\"javascript:open_win('./us_race_regon.php?id_zav=".$zaznam["id"]."&id_us=".$usr->user_id."','')\">PÅ™ihl.</A> / ".$zbr;
 				}
 				else
 				{
@@ -238,7 +238,7 @@ if (mysql_num_rows($vysledek) > 0)
 }
 else
 {
-	echo "V nejbližších ".GC_SHOW_REG_DAYS." dnech není žádná pøihláška na závod.<BR>";
+	echo "V nejbliÅ¾Å¡Ã­ch ".GC_SHOW_REG_DAYS." dnech nenÃ­ Å¾Ã¡dnÃ¡ pÅ™ihlÃ¡Å¡ka na zÃ¡vod.<BR>";
 }
 ?>
 <BR>

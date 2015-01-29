@@ -78,9 +78,9 @@ else
 	
 	
 	$result=MySQL_Query("INSERT INTO ".TBL_RACE." (datum, datum2, nazev, misto, typ, zebricek, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, etap, poznamka, vicedenni, oddil, modify_flag, transport) VALUES ('$datum', '$datum2', '$nazev', '$misto', '$typ', '$zebricek2', '$ranking', '$odkaz', '$prihlasky', '$prihlasky1', '$prihlasky2', '$prihlasky3', '$prihlasky4', '$prihlasky5', '$etap', '$poznamka', '$vicedenni', '$oddil', '$modify_flag', '$transport')")
-		or die("Chyba pøi provádìní dotazu do databáze.");
+		or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 	if ($result == FALSE)
-		die ("Nepodaøilo se vložit údaje o závodì.");
+		die ("NepodaÅ™ilo se vloÅ¾it Ãºdaje o zÃ¡vodÄ›.");
 }
 ?>
 <SCRIPT LANGUAGE="JavaScript">

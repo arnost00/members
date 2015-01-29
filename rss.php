@@ -9,7 +9,7 @@ $curr_xml_datetime = date('r');
 $curr_xml_date = date('r',mktime(0,0,0,date('m'),date('d'),date('Y')));
 
 $rss_channel = new rssGenerator_channel();
-$rss_channel->title = 'Pøihláškový systém';
+$rss_channel->title = 'PÅ™ihlÃ¡Å¡kovÃ½ systÃ©m';
 $rss_channel->link = $g_baseadr;
 $rss_channel->description = $g_www_meta_description;
 $rss_channel->language = 'cs';
@@ -21,7 +21,7 @@ $rss_channel->pubDate = $curr_xml_datetime;
 if(db_Connect(true))
 {
 	$item = new rssGenerator_item();
-	$item->title = 'Seznam závodù v nejbližších '.GC_SHOW_RACE_DAYS.' dnech';
+	$item->title = 'Seznam zÃ¡vodÅ¯ v nejbliÅ¾Å¡Ã­ch '.GC_SHOW_RACE_DAYS.' dnech';
 	$item->description = '';
 	//$item->link = $g_baseadr;
 	$item->pubDate = $curr_xml_date;
@@ -49,12 +49,12 @@ if(db_Connect(true))
 	}
 	else
 	{
-		$item->description = 'V nejbližších '.GC_SHOW_RACE_DAYS.' dnech není žádný závod.';
+		$item->description = 'V nejbliÅ¾Å¡Ã­ch '.GC_SHOW_RACE_DAYS.' dnech nenÃ­ Å¾Ã¡dnÃ½ zÃ¡vod.';
 	}
 	$rss_channel->items[] = $item;
 
 	$item = new rssGenerator_item();
-	$item->title = 'Seznam termínù pøihlášek v nejbližších '.GC_SHOW_REG_DAYS.' dnech';
+	$item->title = 'Seznam termÃ­nÅ¯ pÅ™ihlÃ¡Å¡ek v nejbliÅ¾Å¡Ã­ch '.GC_SHOW_REG_DAYS.' dnech';
 	$item->description = '';
 	//$item->link = $g_baseadr;
 	$item->pubDate = $curr_xml_date;
@@ -84,13 +84,13 @@ if(db_Connect(true))
 	}
 	else
 	{
-		$item->description = 'V nejbližších '.GC_SHOW_REG_DAYS.' dnech není žádná pøihláška na závod.';
+		$item->description = 'V nejbliÅ¾Å¡Ã­ch '.GC_SHOW_REG_DAYS.' dnech nenÃ­ Å¾Ã¡dnÃ¡ pÅ™ihlÃ¡Å¡ka na zÃ¡vod.';
 	}
 	$rss_channel->items[] = $item;
 
 
 	$item = new rssGenerator_item();
-	$item->title = 'Seznam posledních novinek';
+	$item->title = 'Seznam poslednÃ­ch novinek';
 	$item->description = '';
 	$item->link = $g_baseadr;
 	$item->pubDate = $curr_xml_date;
@@ -124,13 +124,13 @@ if(db_Connect(true))
 else
 {
 	$item = new rssGenerator_item();
-	$item->description = $item->title = 'Nepodaøilo se navázat spojení s databází.';
+	$item->description = $item->title = 'NepodaÅ™ilo se navÃ¡zat spojenÃ­ s databÃ¡zÃ­.';
 	$item->pubDate = $curr_xml_datetime;
 	$rss_channel->items[] = $item;
 }
 
 $rss_feed = new rssGenerator_rss();
-$rss_feed->encoding = 'windows-1250';
+$rss_feed->encoding = 'utf-8';
 $rss_feed->version = '2.0';
 
 header('Content-Type: text/xml');

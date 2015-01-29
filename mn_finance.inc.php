@@ -1,7 +1,7 @@
 <?php /* trener stranka - seznam sverencu pro finance */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Finance èlenù');
+DrawPageTitle('Finance ÄlenÅ¯');
 ?>
 <CENTER>
 <script language="javascript">
@@ -32,13 +32,13 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 {
 	$data_tbl = new html_table_mc();
 	$col = 0;
-	$data_tbl->set_header_col($col++,'Poø.è.',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-	$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_CENTER,"Registraèní èíslo");
-	$data_tbl->set_header_col_with_help($col++,'Fin.st.',ALIGN_CENTER,"Aktuální finanèní stav");
-	$data_tbl->set_header_col_with_help($col++,'Typ o.p.',ALIGN_CENTER,"Typ oddílových pøíspìvkù");
-	$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'PoÅ™.Ä.',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'PÅ™Ã­jmenÃ­',ALIGN_LEFT);
+	$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT);
+	$data_tbl->set_header_col_with_help($col++,'Reg.Ä.',ALIGN_CENTER,"RegistraÄnÃ­ ÄÃ­slo");
+	$data_tbl->set_header_col_with_help($col++,'Fin.st.',ALIGN_CENTER,"AktuÃ¡lnÃ­ finanÄnÃ­ stav");
+	$data_tbl->set_header_col_with_help($col++,'Typ o.p.',ALIGN_CENTER,"Typ oddÃ­lovÃ½ch pÅ™Ã­spÄ›vkÅ¯");
+	$data_tbl->set_header_col($col++,'MoÅ¾nosti',ALIGN_CENTER);
 
 	echo $data_tbl->get_css()."\n";
 	echo $data_tbl->get_header()."\n";
@@ -59,7 +59,7 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 			$zaznam['sum_amount']<0?$class="red":$class="";
 			$row[] = "<span class='amount$class'>".$zaznam['sum_amount']."</span>";
 			$row[] = ($zaznam['nazev'] != null)? $zaznam['nazev'] : '-';
-			$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['id'].'\',\'\')">Pøehled</A>';
+			$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['id'].'\',\'\')">PÅ™ehled</A>';
 			$row[] = $row_text;
 			echo $data_tbl->get_new_row_arr($row)."\n";
 		}

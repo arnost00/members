@@ -24,7 +24,7 @@ if (!$zaznam)
 }
 include "./header.inc.php"; // header obsahuje uvod html a konci <BODY>
 
-DrawPageTitle('Èlenská základna - Editace uivatelskıch úètù');
+DrawPageTitle('ÄŒlenskÃ¡ zÃ¡kladna - Editace uÅ¾ivatelskÃ½ch ÃºÄtÅ¯');
 
 ?>
 <TABLE width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -38,48 +38,48 @@ DrawPageTitle('Èlenská základna - Editace uivatelskıch úètù');
 	$zaznam2=MySQL_Fetch_Array($vysledek2);
 ?>
 <BR><hr><BR>
-<? DrawPageSubTitle('Základní údaje o vybraném èlenovi'); ?>
+<? DrawPageSubTitle('ZÃ¡kladnÃ­ Ãºdaje o vybranÃ©m Älenovi'); ?>
 <TABLE width="90%">
 <TR>
-	<TD width="45%" align="right">Pøíjmení</TD>
+	<TD width="45%" align="right">PÅ™Ã­jmenÃ­</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><?echo $zaznam["prijmeni"]?></TD>
 </TR>
 <TR>
-	<TD width="45%" align="right">Jméno</TD>
+	<TD width="45%" align="right">JmÃ©no</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><?echo $zaznam["jmeno"]?></TD>
 </TR>
 <TR>
-	<TD width="45%" align="right">Datum narození</TD>
+	<TD width="45%" align="right">Datum narozenÃ­</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><?echo Date2String($zaznam["datum"])?></TD>
 </TR>
 <TR>
-	<TD width="45%" align="right">Pøihlašovací jméno</TD>
+	<TD width="45%" align="right">PÅ™ihlaÅ¡ovacÃ­ jmÃ©no</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><?echo $zaznam2["login"]?></TD>
 </TR>
 <? if ($zaznam["hidden"] != 0) { ?>
 <TR>
-	<TD width="45%" align="right">Tento uivatel je</TD>
+	<TD width="45%" align="right">Tento uÅ¾ivatel je</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><span class="WarningText">skrytı uivatel</span></TD>
+	<TD class="DataValue"><span class="WarningText">skrytÃ½ uÅ¾ivatel</span></TD>
 </TR>
 <? } ?>
 </TABLE>
 <BR><hr>
-<? DrawPageSubTitle('Zmìna hesla'); ?>
+<? DrawPageSubTitle('ZmÄ›na hesla'); ?>
 
 <FORM METHOD=POST ACTION="./user_login_edit_exc.php?type=3&id=<?echo $id;?>">
 <TABLE width="90%">
 <TR>
-	<TD width="45%" align="right">Nové heslo:</TD>
+	<TD width="45%" align="right">NovÃ© heslo:</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="password" NAME="nheslo" VALUE="" SIZE="20"></TD>
 </TR>
 <TR>
-	<TD width="45%" align="right">Nové heslo (ovìøení):</TD>
+	<TD width="45%" align="right">NovÃ© heslo (ovÄ›Å™enÃ­):</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="password" NAME="nheslo2" VALUE="" SIZE="20"></TD>
 </TR>
@@ -87,18 +87,18 @@ DrawPageTitle('Èlenská základna - Editace uivatelskıch úètù');
 	<TD colspan="3"></TD>
 </TR>
 <TR>
-	<TD colspan="3" align="center"><INPUT TYPE="submit" VALUE="Zmìnit heslo"></TD>
+	<TD colspan="3" align="center"><INPUT TYPE="submit" VALUE="ZmÄ›nit heslo"></TD>
 </TR>
 <TR>
 	<TD colspan="3"></TD>
 </TR>
 <TR>
-	<TD colspan="3"><b>Heslo : </b>Hesla zadávejte bez diakritiky, mohou bıt i èíslice, minimálnì 4 znaky dlouhá. A nejlépe taková co kadého nenapadnou jako první. Hesla typu "12345", "brno" nebo vaše pøezdívka budou bez varování zmìnìny! Nedoporuèuji ani pouívání jmen dìtí, rodièù pøípadnì domácích mazlíèkù v pùvodní podobì. Pouijte alespoò zdrobnìlinu nebo domácí variantu, pøípadnì doplòte jméno nìjakım èíslem (kromì registraèního nebo roku narození).<BR></TD>
+	<TD colspan="3"><b>Heslo : </b>Hesla zadÃ¡vejte bez diakritiky, mohou bÃ½t i ÄÃ­slice, minimÃ¡lnÄ› 4 znaky dlouhÃ¡. A nejlÃ©pe takovÃ¡ co kaÅ¾dÃ©ho nenapadnou jako prvnÃ­. Hesla typu "12345", "brno" nebo vaÅ¡e pÅ™ezdÃ­vka budou bez varovÃ¡nÃ­ zmÄ›nÄ›ny! NedoporuÄuji ani pouÅ¾Ã­vÃ¡nÃ­ jmen dÄ›tÃ­, rodiÄÅ¯ pÅ™Ã­padnÄ› domÃ¡cÃ­ch mazlÃ­ÄkÅ¯ v pÅ¯vodnÃ­ podobÄ›. PouÅ¾ijte alespoÅˆ zdrobnÄ›linu nebo domÃ¡cÃ­ variantu, pÅ™Ã­padnÄ› doplÅˆte jmÃ©no nÄ›jakÃ½m ÄÃ­slem (kromÄ› registraÄnÃ­ho nebo roku narozenÃ­).<BR></TD>
 </TR>
 </TABLE>
 </FORM>
 <BR><hr><BR>
-<A HREF="index.php?id=600&subid=1">Zpìt na seznam èlenù</A><BR>
+<A HREF="index.php?id=600&subid=1">ZpÄ›t na seznam ÄlenÅ¯</A><BR>
 <BR><hr><BR>
 </CENTER>
 </TD>

@@ -2,9 +2,9 @@
 <?
 
 $g_fin_mail_flag [0]['id'] = 0x0001;
-$g_fin_mail_flag [0]['nm'] = 'Uèet pod hranicí';
+$g_fin_mail_flag [0]['nm'] = 'UÄet pod hranicÃ­';
 $g_fin_mail_flag [1]['id'] = 0x0002;
-$g_fin_mail_flag [1]['nm'] = 'Úèet v mínusu';
+$g_fin_mail_flag [1]['nm'] = 'ÃšÄet v mÃ­nusu';
 
 $g_fin_mail_flag_cnt = 2;
 

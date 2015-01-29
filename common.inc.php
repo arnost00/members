@@ -1,19 +1,5 @@
 <?php if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-function cp2iso($text) {
-	$text=strtr($text, "\x8A\x8D\x8E\x9A\x9D\x9E","\xA9\xAB\xAE\xB9\xBB\xBE");
-	return $text;
-}
-
-function iso2cp($text) {
-	$text=strtr($text, "\xA9\xAB\xAE\xB9\xBB\xBE","\x8A\x8D\x8E\x9A\x9D\x9E");
-	return $text;
-}
-/* pouziti :
-mysql_query("INSERT INTO tab VALUES('".cp2iso($text."')");
-> (...)
-*/
-
 //--------------------------
 
 function LogToFile($file,$msg)
@@ -336,7 +322,7 @@ function GetEmailSecuredHTML($emails)
 		{
 			if ($u != 0)
 				$mail_row.='<BR>';
-			$mail_row.= EncodeString2Bytes(str_replace(array('@','.'),array(' (zavin·Ë) ',' (teËka) '),$emails[$u]));
+			$mail_row.= EncodeString2Bytes(str_replace(array('@','.'),array(' (zavin√°ƒç) ',' (teƒçka) '),$emails[$u]));
 //			$mail_row.= EncodeString2Bytes($emails[$u]);
 		}
 		return $mail_row;
@@ -392,7 +378,7 @@ function Print_Action_Result(&$text)
 	if($text != '')
 	{
 		echo '<BR><hr><BR>';
-		echo '<span class="ResultText">V˝sledek poslednÌ provedenÈ ˙pravy :<BR>'.$text.'</span><BR>';
+		echo '<span class="ResultText">V√Ωsledek posledn√≠ proveden√© √∫pravy :<BR>'.$text.'</span><BR>';
 		echo '<BR><hr><BR>';
 	}
 }
@@ -415,7 +401,7 @@ function HTML_Header($title)
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1250">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Content-language" content="cs">
 <title><? echo($title); ?></title>
 </head>
@@ -433,7 +419,7 @@ function HTML_Footer()
 
 function TXT_Header()
 {
-	header('Content-Type: text/plain; charset=windows-1250');
+	header('Content-Type: text/plain; charset=UTF-8');
 }
 //-----------------------------------------------------------
 //	Global variables
@@ -459,7 +445,8 @@ function SendEmail(&$FromA,&$ToA,&$msg,&$subject)
 	global $g_emailadr, $g_fullname;
 
 	$extra_headers  = 'MIME-Version: 1.0'.EMAIL_ENDL;
-	$extra_headers .= 'Content-type: text/plain; charset="Windows-1250"'.EMAIL_ENDL;
+	$extra_headers .= 'Content-type: text/plain; charset="UTF-8"'.EMAIL_ENDL;
+	$extra_headers .= 'Content-Transfer-Encoding: 8bit'.EMAIL_ENDL;
 	$extra_headers .= 'From: '.$FromA.EMAIL_ENDL;
 	$extra_headers .= 'Reply-To: '.$FromA.EMAIL_ENDL;
 	$extra_headers .= 'X-Mailer: '.SYSTEM_NAME.'/'.GetCodeVersion();
@@ -486,4 +473,20 @@ function GetFormatedTextDel(&$text, $cancelled = false)
 		$result .= '</del>';
 	return $result;
 }
+
+//--------------------------------------------------------
+function mb_str_pad(
+  $input,
+  $pad_length,
+  $pad_string=" ",
+  $pad_style=STR_PAD_RIGHT,
+  $encoding="UTF-8")
+{
+    return str_pad(
+      $input,
+      strlen($input)-mb_strlen($input,$encoding)+$pad_length,
+      $pad_string,
+      $pad_style);
+}
+
 ?>

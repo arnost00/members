@@ -1,9 +1,9 @@
 <?
-DrawPageTitle('Informace o systému');
+DrawPageTitle('Informace o systÃ©mu');
 ?>
 <br>
 <CENTER>
-Pøihláškovı systém je v souèasné dobì v úpravì.<br><br>
-Zkuste tyto stránky navštívit pozdìji.<br><br>
-Pøedokládanı termín znovuzpøístupnìní systému : <? echo($g_uc_finnish);?>
+PÅ™ihlÃ¡Å¡kovÃ½ systÃ©m je v souÄasnÃ© dobÄ› v ÃºpravÄ›.<br><br>
+Zkuste tyto strÃ¡nky navÅ¡tÃ­vit pozdÄ›ji.<br><br>
+PÅ™edoklÃ¡danÃ½ termÃ­n znovuzpÅ™Ã­stupnÄ›nÃ­ systÃ©mu : <? echo($g_uc_finnish);?>
 </CENTER>

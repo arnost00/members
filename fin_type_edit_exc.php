@@ -29,16 +29,16 @@ if (IsLoggedFinance())
 			$update = (isset($update) && is_numeric($update)) ? (int)$update : 0;
 
 			$result=MySQL_Query("UPDATE ".TBL_FINANCE_TYPES." SET nazev='$nazev', popis='$popis' WHERE id='$update'")
-				or die("Chyba pøi provádìní dotazu do databáze.");
+				or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 			if ($result == FALSE)
-				die ("Nepodaøilo se zmìnit typ pøíspìvku.");
+				die ("NepodaÅ™ilo se zmÄ›nit typ pÅ™Ã­spÄ›vku.");
 		}
 		else
 		{
 			$result = MySQL_Query("INSERT INTO ".TBL_FINANCE_TYPES." (nazev,popis) VALUES ('$nazev','$popis')")
-				or die("Chyba pøi provádìní dotazu do databáze.");
+				or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 			if ($result == FALSE)
-				die ("Nepodaøilo se vloit typ pøíspìvku.");
+				die ("NepodaÅ™ilo se vloÅ¾it typ pÅ™Ã­spÄ›vku.");
 		}
 	}
 	header('location: '.$g_baseadr.'index.php?id=800&subid=4');

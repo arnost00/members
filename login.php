@@ -89,7 +89,7 @@ if (!IsLogged())
 	$sqldate= GetCurrentDate();
 	$id=$zaznam["id"];
 	MySQL_Query("UPDATE ".TBL_ACCOUNT." SET last_visit='$sqldate' WHERE id='$id'")
-		or die("Chyba pøi provádìní dotazu do databáze.");
+		or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 	//<--
 	include ("log_browser.php");
 }

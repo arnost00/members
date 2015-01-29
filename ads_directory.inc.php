@@ -1,22 +1,22 @@
 <?php /* adminova stranka - editace clenu oddilu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Èlenská základna - Administrace');
+DrawPageTitle('ÄŒlenskÃ¡ zÃ¡kladna - Administrace');
 ?>
 <CENTER>
 
 <script language="JavaScript">
 <!--
 function confirm_delete(name) {
-	return confirm('Opravdu chcete smazat èlena oddílu ? \n Jméno èlena : "'+name+'" \n Èlen bude nenávratnì smazán !!');
+	return confirm('Opravdu chcete smazat Älena oddÃ­lu ? \n JmÃ©no Älena : "'+name+'" \n ÄŒlen bude nenÃ¡vratnÄ› smazÃ¡n !!');
 }
 
 function confirm_entry_lock(name) {
-	return confirm('Opravdu chcete zamknout èlenu oddílu monost se pøihlašovat? \n Jméno èlena : "'+name+'" \n Èlen nebude mít monost se pøihlásit na závody!');
+	return confirm('Opravdu chcete zamknout Älenu oddÃ­lu moÅ¾nost se pÅ™ihlaÅ¡ovat? \n JmÃ©no Älena : "'+name+'" \n ÄŒlen nebude mÃ­t moÅ¾nost se pÅ™ihlÃ¡sit na zÃ¡vody!');
 }
 
 function confirm_entry_unlock(name) {
-	return confirm('Opravdu chcete odemknout èlenu oddílu monost se pøihlašovat ? \n Jméno èlena : "'+name+'"');
+	return confirm('Opravdu chcete odemknout Älenu oddÃ­lu moÅ¾nost se pÅ™ihlaÅ¡ovat ? \n JmÃ©no Älena : "'+name+'"');
 }
 
 -->
@@ -44,14 +44,14 @@ if (IsSet($result) && is_numeric($result) && $result != 0)
 
 $data_tbl = new html_table_mc();
 $col = 0;
-$data_tbl->set_header_col($col++,'Poø.è.',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_CENTER,"Registraèní èíslo");
-$data_tbl->set_header_col_with_help($col++,'Úèet',ALIGN_CENTER,"Stav a existence úètu");
-$data_tbl->set_header_col_with_help($col++,'Pøihl.',ALIGN_CENTER,"Monost pøihlašování se èlena na závody");
-$data_tbl->set_header_col_with_help($col++,'Práva',ALIGN_CENTER,"Pøiøazená práva (zleva) : novinky, pøihlašovatel, trenér, malı trenér, správce, finanèník");
-$data_tbl->set_header_col($col++,'Monosti',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'PoÅ™.Ä.',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'PÅ™Ã­jmenÃ­',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT);
+$data_tbl->set_header_col_with_help($col++,'Reg.Ä.',ALIGN_CENTER,"RegistraÄnÃ­ ÄÃ­slo");
+$data_tbl->set_header_col_with_help($col++,'ÃšÄet',ALIGN_CENTER,"Stav a existence ÃºÄtu");
+$data_tbl->set_header_col_with_help($col++,'PÅ™ihl.',ALIGN_CENTER,"MoÅ¾nost pÅ™ihlaÅ¡ovÃ¡nÃ­ se Älena na zÃ¡vody");
+$data_tbl->set_header_col_with_help($col++,'PrÃ¡va',ALIGN_CENTER,"PÅ™iÅ™azenÃ¡ prÃ¡va (zleva) : novinky, pÅ™ihlaÅ¡ovatel, trenÃ©r, malÃ½ trenÃ©r, sprÃ¡vce, finanÄnÃ­k");
+$data_tbl->set_header_col($col++,'MoÅ¾nosti',ALIGN_CENTER);
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
@@ -110,7 +110,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 	$row[] = $acc_r.'</code>';
 	$action = '<A HREF="./user_edit.php?id='.$zaznam['id'].'&cb=700">Edit</A>';
 	$action .= '&nbsp;/&nbsp;';
-	$action .= '<A HREF="./user_login_edit.php?id='.$zaznam["id"].'&cb=700">Úèet</A>';
+	$action .= '<A HREF="./user_login_edit.php?id='.$zaznam["id"].'&cb=700">ÃšÄet</A>';
 	$action .= '&nbsp;/&nbsp;';
 	$action .= '<A HREF="./user_del_exc.php?id='.$zaznam["id"]."\" onclick=\"return confirm_delete('".$zaznam["jmeno"].' '.$zaznam["prijmeni"]."')\" class=\"Erase\">Smazat</A>";
 	$lock = ($zaznam['entry_locked'] != 0) ? 'Odemknout' : 'Zamknout';
@@ -123,8 +123,8 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 echo $data_tbl->get_footer()."\n";
 
 echo '<BR><BR>';
-echo '(Èervené <span class="WarningText">H</span> znaèí skrytého èlena. Tj. vidí ho jen admin.)<BR>';
-echo '(Èervené <span class="WarningText">L</span> znaèí e úèet je zablokován. Tj. nejde se na nìj pøihlásit.)<BR>';
+echo '(ÄŒervenÃ© <span class="WarningText">H</span> znaÄÃ­ skrytÃ©ho Älena. Tj. vidÃ­ ho jen admin.)<BR>';
+echo '(ÄŒervenÃ© <span class="WarningText">L</span> znaÄÃ­ Å¾e ÃºÄet je zablokovÃ¡n. Tj. nejde se na nÄ›j pÅ™ihlÃ¡sit.)<BR>';
 echo '<BR><hr><BR>';
 
 include "./user_new.inc.php";
