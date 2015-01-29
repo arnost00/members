@@ -1,13 +1,13 @@
 <?php /* financnik - seznam sverencu pro finance */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Finance èlenù');
+DrawPageTitle('Finance ÄlenÅ¯');
 ?>
 <TABLE width="95%" border="0">
 <TR>
 <TD align="right">
 <? if ( IsLoggedFinance() ) { ?>
-<a href="javascript:open_win_ex('./fin_directory_export_exc.php','',600,600);">Export financí</a>
+<a href="javascript:open_win_ex('./fin_directory_export_exc.php','',600,600);">Export financÃ­</a>
 <? } ?>
 </TD></TR>
 </TABLE>
@@ -19,11 +19,11 @@ DrawPageTitle('Finance èlenù');
 javascript:set_default_size(800,800);
 
 function confirm_entry_lock(name) {
-	return confirm('Opravdu chcete zamknout èlenu oddílu možnost se pøihlašovat? \n Jméno èlena : "'+name+'" \n Èlen nebude mít možnost se pøihlásit na závody!');
+	return confirm('Opravdu chcete zamknout Älenu oddÃ­lu moÅ¾nost se pÅ™ihlaÅ¡ovat? \n JmÃ©no Älena : "'+name+'" \n ÄŒlen nebude mÃ­t moÅ¾nost se pÅ™ihlÃ¡sit na zÃ¡vody!');
 }
 
 function confirm_entry_unlock(name) {
-	return confirm('Opravdu chcete odemknout èlenu oddílu možnost se pøihlašovat ? \n Jméno èlena : "'+name+'"');
+	return confirm('Opravdu chcete odemknout Älenu oddÃ­lu moÅ¾nost se pÅ™ihlaÅ¡ovat ? \n JmÃ©no Älena : "'+name+'"');
 }
 //-->
 </script>
@@ -63,15 +63,15 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 {
 	$data_tbl = new html_table_mc();
 	$col = 0;
-	$data_tbl->set_header_col($col++,'Poø.è.',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-	$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_CENTER,"Registraèní èíslo");
-	$data_tbl->set_header_col_with_help($col++,'Fin.st.',ALIGN_CENTER,"Aktuální finanèní stav");
-	$data_tbl->set_header_col_with_help($col++,'Pøihl.',ALIGN_CENTER,"Možnost pøihlašování se èlena na závody");
+	$data_tbl->set_header_col($col++,'PoÅ™.Ä.',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'PÅ™Ã­jmenÃ­',ALIGN_LEFT);
+	$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT);
+	$data_tbl->set_header_col_with_help($col++,'Reg.Ä.',ALIGN_CENTER,"RegistraÄnÃ­ ÄÃ­slo");
+	$data_tbl->set_header_col_with_help($col++,'Fin.st.',ALIGN_CENTER,"AktuÃ¡lnÃ­ finanÄnÃ­ stav");
+	$data_tbl->set_header_col_with_help($col++,'PÅ™ihl.',ALIGN_CENTER,"MoÅ¾nost pÅ™ihlaÅ¡ovÃ¡nÃ­ se Älena na zÃ¡vody");
 	if ($enable_fin_types)
-		$data_tbl->set_header_col_with_help($col++,'Typ o.p.',ALIGN_CENTER,"Typ oddílových pøíspìvkù");
-	$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
+		$data_tbl->set_header_col_with_help($col++,'Typ o.p.',ALIGN_CENTER,"Typ oddÃ­lovÃ½ch pÅ™Ã­spÄ›vkÅ¯");
+	$data_tbl->set_header_col($col++,'MoÅ¾nosti',ALIGN_CENTER);
 
 	echo $data_tbl->get_css()."\n";
 	echo $data_tbl->get_header()."\n";
@@ -117,10 +117,10 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 			$row_text = '';
 			if ($enable_fin_types)
 			{
-				$row_text .= '<A HREF="user_finance_type.php?user_id='.$zaznam['id'].'">Zmìnit typ o.p.</A>';
+				$row_text .= '<A HREF="user_finance_type.php?user_id='.$zaznam['id'].'">ZmÄ›nit typ o.p.</A>';
 				$row_text .= '&nbsp;/&nbsp;';
 			}
-			$row_text .= '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['id'].'\',\'\')">Pøehled</A>';
+			$row_text .= '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['id'].'\',\'\')">PÅ™ehled</A>';
 			$row_text .= '&nbsp;/&nbsp;';
 			$lock = ($zaznam['entry_locked'] != 0) ? 'Odemknout' : 'Zamknout';
 			$lock_onclick = ($zaznam['entry_locked'] != 0) ? 'confirm_entry_unlock' : 'confirm_entry_lock';

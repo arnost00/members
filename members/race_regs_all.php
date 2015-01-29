@@ -20,7 +20,7 @@ include ("./common_race.inc.php");
 include ("./common_user.inc.php");
 include ('./url.inc.php');
 include('./csort.inc.php');
-DrawPageTitle('Hromadná pøihlášky na závody');
+DrawPageTitle('HromadnÃ¡ pÅ™ihlÃ¡Å¡ky na zÃ¡vody');
 
 $gr_id = (IsSet($gr_id) && is_numeric($gr_id)) ? (int)$gr_id : 0;
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
@@ -37,18 +37,18 @@ $sub_query = $sc->get_sql_string();
 @$vysledek_z=MySQL_Query("SELECT * FROM ".TBL_RACE." WHERE id=$id");
 $zaznam_z = MySQL_Fetch_Array($vysledek_z);
 
-DrawPageSubTitle('Vybranı závod');
+DrawPageSubTitle('VybranÃ½ zÃ¡vod');
 
 RaceInfoTable($zaznam_z,'',$gr_id != _REGISTRATOR_GROUP_ID_,false,true);
 ?>
 <BR>
-<? DrawPageSubTitle('Pøihlášky'); ?>
+<? DrawPageSubTitle('PÅ™ihlÃ¡Å¡ky'); ?>
 
 <p>
-Pøihlášení èlena - se provede zapsáním kategorie pro pøíslušného èlena.<BR>
-Odhlášení èlena - se provede vymazáním kategorie (prázné textové pole) pro pøíslušného èlena.<BR>
-Zmìna kategorie - se provede zmìnou textového pole s kategorií pro pøíslušného èlena.<BR>
-<span class="WarningText">Do sloupcù, které nechcete mìnit nezasahujte !!</span>
+PÅ™ihlÃ¡Å¡enÃ­ Älena - se provede zapsÃ¡nÃ­m kategorie pro pÅ™Ã­sluÅ¡nÃ©ho Älena.<BR>
+OdhlÃ¡Å¡enÃ­ Älena - se provede vymazÃ¡nÃ­m kategorie (prÃ¡znÃ© textovÃ© pole) pro pÅ™Ã­sluÅ¡nÃ©ho Älena.<BR>
+ZmÄ›na kategorie - se provede zmÄ›nou textovÃ©ho pole s kategoriÃ­ pro pÅ™Ã­sluÅ¡nÃ©ho Älena.<BR>
+<span class="WarningText">Do sloupcÅ¯, kterÃ© nechcete mÄ›nit nezasahujte !!</span>
 </p>
 
 <SCRIPT LANGUAGE="JavaScript">
@@ -76,7 +76,7 @@ function zmen_kat(kat)
 if(strlen($zaznam_z['poznamka']) > 0)
 {
 ?>
-<p><b>Doplòující informace o závodì (interní)</b> :<br>
+<p><b>DoplÅˆujÃ­cÃ­ informace o zÃ¡vodÄ› (internÃ­)</b> :<br>
 <?
 	echo('&nbsp;&nbsp;&nbsp;'.$zaznam_z['poznamka'].'</p>');
 }
@@ -85,7 +85,7 @@ $termin = raceterms::GetCurr4RegTerm($zaznam_z);
 
 if($termin == 0 && !IsLoggedAdmin() && !IsLoggedRegistrator())
 {
-	echo('Nelze provádìt pøihlášky, nejspíš u vypršely všechny termíny pøihlášek, je po závodì, èi není aktivní ádnı termín pro pøihlášení.');
+	echo('Nelze provÃ¡dÄ›t pÅ™ihlÃ¡Å¡ky, nejspÃ­Å¡ uÅ¾ vyprÅ¡ely vÅ¡echny termÃ­ny pÅ™ihlÃ¡Å¡ek, je po zÃ¡vodÄ›, Äi nenÃ­ aktivnÃ­ Å¾Ã¡dnÃ½ termÃ­n pro pÅ™ihlÃ¡Å¡enÃ­.');
 }
 else
 {
@@ -100,7 +100,7 @@ $query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, datum, kat, pozn, pozn_i
 
 @$vysledek=MySQL_Query($query);
 
-//echo "Poèet ji pøihlášenıch èlenù je ".mysql_num_rows($vysledek_p).".<BR>";
+//echo "PoÄet jiÅ¾ pÅ™ihlÃ¡Å¡enÃ½ch ÄlenÅ¯ je ".mysql_num_rows($vysledek_p).".<BR>";
 
 $is_registrator_on = IsCalledByRegistrator($gr_id);
 $is_termin_show_on = ($zaznam_z['prihlasky'] > 1);
@@ -109,18 +109,18 @@ $is_spol_dopr_on = ($zaznam_z["transport"]==1);
 
 $data_tbl = new html_table_mc();
 $col = 0;
-$data_tbl->set_header_col($col++,'Poø.è.',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Reg.è.',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Vìk',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'PoÅ™.Ä.',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'Reg.Ä.',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'PÅ™Ã­jmenÃ­',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'VÄ›k',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
 if($is_spol_dopr_on)
-	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,'Spoleèná doprava');
+	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,'SpoleÄnÃ¡ doprava');
 if($is_termin_show_on)
-	$data_tbl->set_header_col_with_help($col++,'T.',ALIGN_CENTER,"Èíslo termínu pøihlášky");
-$data_tbl->set_header_col($col++,'Poznámka',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Poznámka(interní)',ALIGN_CENTER);
+	$data_tbl->set_header_col_with_help($col++,'T.',ALIGN_CENTER,"ÄŒÃ­slo termÃ­nu pÅ™ihlÃ¡Å¡ky");
+$data_tbl->set_header_col($col++,'PoznÃ¡mka',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'PoznÃ¡mka(internÃ­)',ALIGN_CENTER);
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
@@ -195,9 +195,9 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 
 echo $data_tbl->get_footer()."\n";
 ?>
-Monosti (kategorie)<BR>
+MoÅ¾nosti (kategorie)<BR>
 <?
-	echo "<button onclick=\"javascript:zmen_kat('');return false;\">Vyprázdnit</button>&nbsp;";
+	echo "<button onclick=\"javascript:zmen_kat('');return false;\">VyprÃ¡zdnit</button>&nbsp;";
 	$kategorie=explode(';',$zaznam_z['kategorie']);
 	for ($i=0; $i<count($kategorie)-1; $i++)
 	{
@@ -205,14 +205,14 @@ Monosti (kategorie)<BR>
 	}
 ?>
 <BR>
-Vyberte závodníka klepnutím do políèka kategorie u závodníka a následnì vlote vybranou kategorii pomocí tlaèítka s názvem kategorie.<BR>
+Vyberte zÃ¡vodnÃ­ka klepnutÃ­m do polÃ­Äka kategorie u zÃ¡vodnÃ­ka a nÃ¡slednÄ› vloÅ¾te vybranou kategorii pomocÃ­ tlaÄÃ­tka s nÃ¡zvem kategorie.<BR>
 <BR>
-<INPUT TYPE="submit" value='Proveï zmìny'>
+<INPUT TYPE="submit" value='ProveÄ zmÄ›ny'>
 </FORM>
 <?
 }
 ?>
 <BR>
-<BUTTON onclick="javascript:close_popup();">Zpìt</BUTTON>
+<BUTTON onclick="javascript:close_popup();">ZpÄ›t</BUTTON>
 </BODY>
 </HTML>

@@ -1,7 +1,7 @@
 <?php /* adminova stranka - editace zavodu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Kalendáø závodù - Pøihlášky na závody');
+DrawPageTitle('KalendÃ¡Å™ zÃ¡vodÅ¯ - PÅ™ihlÃ¡Å¡ky na zÃ¡vody');
 ?>
 <CENTER>
 <script language="javascript">
@@ -30,16 +30,16 @@ if ($num_rows > 0)
 	$data_tbl = new html_table_mc();
 	$col = 0;
 	$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER,0);
-	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
-	$data_tbl->set_header_col_with_help($col++,'Poø.',ALIGN_CENTER,"Poøadatel");
-	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
-	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web závodu");
-	$data_tbl->set_header_col($col++,'Monosti',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Pøihlášky',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'NÃ¡zev',ALIGN_LEFT);
+	$data_tbl->set_header_col($col++,'MÃ­sto',ALIGN_LEFT);
+	$data_tbl->set_header_col_with_help($col++,'PoÅ™.',ALIGN_CENTER,"PoÅ™adatel");
+	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ zÃ¡vodu");
+	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web zÃ¡vodu");
+	$data_tbl->set_header_col($col++,'MoÅ¾nosti',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'PÅ™ihlÃ¡Å¡ky',ALIGN_CENTER);
 	if($g_enable_race_boss)
-		$data_tbl->set_header_col($col++,'Vedoucí',ALIGN_CENTER);
-	$data_tbl->set_header_col_with_help($col++,'OP',ALIGN_CENTER,"Stav odeslání pøihlášky");
+		$data_tbl->set_header_col($col++,'VedoucÃ­',ALIGN_CENTER);
+	$data_tbl->set_header_col_with_help($col++,'OP',ALIGN_CENTER,"Stav odeslÃ¡nÃ­ pÅ™ihlÃ¡Å¡ky");
 
 	echo $data_tbl->get_css()."\n";
 	echo $data_tbl->get_header()."\n";
@@ -91,7 +91,7 @@ if ($num_rows > 0)
 		$row[] = GetRaceLinkHTML($zaznam['odkaz']);
 		if(!$race_is_old || IsLoggedAdmin())
 		{
-			$s1 = "<A HREF=\"javascript:open_win2('./race_reg_form.php?id_zav=".$zaznam['id']."','')\">Vı.</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win2('./race_reg_chip.php?id_zav=".$zaznam['id']."','')\">SI</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_1.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$zaznam['id']."','')\">P.1</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_all.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$zaznam['id']."','')\">P.V</A>&nbsp;/&nbsp;";
+			$s1 = "<A HREF=\"javascript:open_win2('./race_reg_form.php?id_zav=".$zaznam['id']."','')\">VÃ½.</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win2('./race_reg_chip.php?id_zav=".$zaznam['id']."','')\">SI</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_1.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$zaznam['id']."','')\">P.1</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_all.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$zaznam['id']."','')\">P.V</A>&nbsp;/&nbsp;";
 			$s2 = "<A HREF=\"javascript:open_win_ex('./race_reg_view.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$zaznam['id']."','',600,600)\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
 			$row[] = $s1.$s2;
 		}
@@ -130,16 +130,16 @@ if ($num_rows > 0)
 
 	echo $data_tbl->get_footer()."\n";
 }
-//obsolete - echo('<a href="race_reg_form_exc.php" target="_blank">Vıpis všech èlenù pro centrální registraci</a><br>');
-echo('<a href="race_reg_form_all.php" target="_blank">Vytvoøení a export pøihlášky pro prázdnı závod</a><br>');
+//obsolete - echo('<a href="race_reg_form_exc.php" target="_blank">VÃ½pis vÅ¡ech ÄlenÅ¯ pro centrÃ¡lnÃ­ registraci</a><br>');
+echo('<a href="race_reg_form_all.php" target="_blank">VytvoÅ™enÃ­ a export pÅ™ihlÃ¡Å¡ky pro prÃ¡zdnÃ½ zÃ¡vod</a><br>');
 ?>
 <BR><hr><BR>
 <p>
-Vı. = Export pøihlášky ve formátu ÈSOB.<BR>
-SI = Editace (Doplnìní) SI èipù pro vybranı závod.<BR>
-P.1 = pøihlašování po jednom èlenu.<BR>
-P.V = pøihlašování všech èlenù naráz.<BR>
-Zbr = zobrazení pøihlášenıch èlenù.<BR>
-OP = Odeslána pøihláška.<BR>
+VÃ½. = Export pÅ™ihlÃ¡Å¡ky ve formÃ¡tu ÄŒSOB.<BR>
+SI = Editace (DoplnÄ›nÃ­) SI ÄipÅ¯ pro vybranÃ½ zÃ¡vod.<BR>
+P.1 = pÅ™ihlaÅ¡ovÃ¡nÃ­ po jednom Älenu.<BR>
+P.V = pÅ™ihlaÅ¡ovÃ¡nÃ­ vÅ¡ech ÄlenÅ¯ narÃ¡z.<BR>
+Zbr = zobrazenÃ­ pÅ™ihlÃ¡Å¡enÃ½ch ÄlenÅ¯.<BR>
+OP = OdeslÃ¡na pÅ™ihlÃ¡Å¡ka.<BR>
 </p>
 </CENTER>

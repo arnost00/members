@@ -8,12 +8,12 @@ $curr_date = GetCurrentDate();
 
 if (IsLoggedEditor())
 {
-	echo "<A href=\"#addnews\">P¯id·nÌ novinky ...</A><BR>\n";
+	echo "<A href=\"#addnews\">P≈ôid√°n√≠ novinky ...</A><BR>\n";
 ?>
 <script language="JavaScript">
 <!--
 function confirm_delete(date) {
-	return confirm('Opravdu chcete smazat tuto novinku ? \n Ze dne : "'+date+'" \n Novinka bude nen·vratnÏ smaz·na !!');
+	return confirm('Opravdu chcete smazat tuto novinku ? \n Ze dne : "'+date+'" \n Novinka bude nen√°vratnƒõ smaz√°na !!');
 }
 -->
 </script>
@@ -36,9 +36,9 @@ if($cnt > 0)
 	if ( IsLoggedAdmin() )
 	{
 		echo '<TR><TD></TD><TD class="LastDate">';
-		echo 'PoËet';
+		echo 'Poƒçet';
 		if ($news != 1)
-			echo ' zobrazen˝ch';
+			echo ' zobrazen√Ωch';
 		echo ' novinek : '.$cnt;
 		echo '</TD></TR>';
 	}
@@ -62,11 +62,11 @@ if($cnt > 0)
 </TABLE>
 <?
 if ($news != 1 && $cnt == GC_NEWS_LIMIT)
-	echo '<BR><BR><CENTER><A href="index.php?id=0&news=1">Zobrazit vöechny novinky</A></CENTER><BR>'."\n";
+	echo '<BR><BR><CENTER><A href="index.php?id=0&news=1">Zobrazit v≈°echny novinky</A></CENTER><BR>'."\n";
 } // aspon jeden zaznam
 else
 {
-	echo "Seznam novinek je pr·zdn˝.<BR>";
+	echo "Seznam novinek je pr√°zdn√Ω.<BR>";
 }
 //	news_sh
 

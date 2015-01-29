@@ -1,26 +1,26 @@
 <?php /* adminova stranka - editace clenu oddilu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Skrytí èlenù a zamykání úètù');
+DrawPageTitle('SkrytÃ­ ÄlenÅ¯ a zamykÃ¡nÃ­ ÃºÄtÅ¯');
 ?>
 <CENTER>
 
 <script language="JavaScript">
 <!--
 function confirm_hide(name) {
-	return confirm('Opravdu chcete skrıt èlena oddílu ? \n Jméno èlena : "'+name+'"\nÈlen nebude viditelnı v pøihláškách!');
+	return confirm('Opravdu chcete skrÃ½t Älena oddÃ­lu ? \n JmÃ©no Älena : "'+name+'"\nÄŒlen nebude viditelnÃ½ v pÅ™ihlÃ¡Å¡kÃ¡ch!');
 }
 
 function confirm_show(name) {
-	return confirm('Opravdu chcete zviditelnit èlena oddílu ? \n Jméno èlena : "'+name+'"');
+	return confirm('Opravdu chcete zviditelnit Älena oddÃ­lu ? \n JmÃ©no Älena : "'+name+'"');
 }
 
 function confirm_lock(name) {
-	return confirm('Opravdu chcete zamknout úèet èlena oddílu ? \n Jméno èlena : "'+name+'" \n Èlen nebude mít monost se pøihlásit do systému!');
+	return confirm('Opravdu chcete zamknout ÃºÄet Älena oddÃ­lu ? \n JmÃ©no Älena : "'+name+'" \n ÄŒlen nebude mÃ­t moÅ¾nost se pÅ™ihlÃ¡sit do systÃ©mu!');
 }
 
 function confirm_unlock(name) {
-	return confirm('Opravdu chcete odemknout úèet èlena oddílu ? \n Jméno èlena : "'+name+'"');
+	return confirm('Opravdu chcete odemknout ÃºÄet Älena oddÃ­lu ? \n JmÃ©no Älena : "'+name+'"');
 }
 
 -->
@@ -33,14 +33,14 @@ include "./common_user.inc.php";
 
 $data_tbl = new html_table_mc();
 $col = 0;
-$data_tbl->set_header_col($col++,'Poø.è.',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_CENTER,"Registraèní èíslo");
-$data_tbl->set_header_col_with_help($col++,'Úèet',ALIGN_CENTER,"Informace o existenci úètu");
-$data_tbl->set_header_col_with_help($col++,'Skryt',ALIGN_CENTER,"Informace zda je uivatel skrytı");
-$data_tbl->set_header_col_with_help($col++,'Zamèen',ALIGN_CENTER,"Informace o zamknutí úèty uivateli");
-$data_tbl->set_header_col($col++,'Monosti',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'PoÅ™.Ä.',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'PÅ™Ã­jmenÃ­',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT);
+$data_tbl->set_header_col_with_help($col++,'Reg.Ä.',ALIGN_CENTER,"RegistraÄnÃ­ ÄÃ­slo");
+$data_tbl->set_header_col_with_help($col++,'ÃšÄet',ALIGN_CENTER,"Informace o existenci ÃºÄtu");
+$data_tbl->set_header_col_with_help($col++,'Skryt',ALIGN_CENTER,"Informace zda je uÅ¾ivatel skrytÃ½");
+$data_tbl->set_header_col_with_help($col++,'ZamÄen',ALIGN_CENTER,"Informace o zamknutÃ­ ÃºÄty uÅ¾ivateli");
+$data_tbl->set_header_col($col++,'MoÅ¾nosti',ALIGN_CENTER);
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
@@ -58,7 +58,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 	if($zaznam['hidden'] == 0)
 	{
 		$hidd = 'Ne';
-		$action = '<A HREF="./user_hide_exc.php?id='.$zaznam['id'].'" onclick="return confirm_hide(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')">Skrıt</A>';
+		$action = '<A HREF="./user_hide_exc.php?id='.$zaznam['id'].'" onclick="return confirm_hide(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')">SkrÃ½t</A>';
 	}
 	else
 	{
@@ -106,6 +106,6 @@ echo $data_tbl->get_footer()."\n";
 
 ?>
 <br>
-Upozornìní: Èlenu je skrytím zárovìn i odebrána monost pøihlásit se do systému (zamèen úèet).<br>
+UpozornÄ›nÃ­: ÄŒlenu je skrytÃ­m zÃ¡rovÄ›n i odebrÃ¡na moÅ¾nost pÅ™ihlÃ¡sit se do systÃ©mu (zamÄen ÃºÄet).<br>
 <BR>
 </CENTER>

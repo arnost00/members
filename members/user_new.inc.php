@@ -4,10 +4,10 @@ if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 if (IsLogged())
 {
 	if(IsSet($update))
-		DrawPageSubTitle('Editace údajù vybraného èlena oddílu');
+		DrawPageSubTitle('Editace ÃºdajÅ¯ vybranÃ©ho Älena oddÃ­lu');
 	else
 	{
-		DrawPageSubTitle('Vloení nového èlena');
+		DrawPageSubTitle('VloÅ¾enÃ­ novÃ©ho Älena');
 		$zaznam['prijmeni'] = '';
 		$zaznam['jmeno'] = '';
 		$zaznam['reg'] = '';
@@ -57,19 +57,19 @@ $country_sel .= generate_combobox_data($zaznam['narodnost']);
 $country_sel .= '</SELECT>';
 
 
-echo $data_tbl->get_new_row('Pøíjmení', '<INPUT TYPE="text" NAME="prijmeni" SIZE=30 MAXLENGTH=30 VALUE="'.$zaznam["prijmeni"].'">');
-echo $data_tbl->get_new_row('Jméno', '<INPUT TYPE="text" NAME="jmeno" SIZE=30 MAXLENGTH=20 VALUE="'.$zaznam["jmeno"].'">');
-$find_reg_text = (!IsSet($update)) ? ' <a href="javascript:open_win_ex(\'./find_reg.php\',\'\',600,400)">Hledání volnıch reg.è.</a>': '';
-echo $data_tbl->get_new_row('Registraèní èíslo', $g_shortcut.'&nbsp;&nbsp;<INPUT TYPE="text" NAME="reg" SIZE=4 MAXLENGTH=4 VALUE="'.RegNumToStr($zaznam['reg']).'">'.$find_reg_text);
-echo $data_tbl->get_new_row('Èíslo SI èipu', '<INPUT TYPE="text" NAME="si" SIZE=10 MAXLENGTH=9 VALUE="'.$zaznam["si_chip"].'">');
-echo $data_tbl->get_new_row('Datum narození', '<INPUT TYPE="text" NAME="datum" SIZE=10 VALUE="'.SQLDate2String($zaznam["datum"]).'">&nbsp;&nbsp;(DD.MM.RRRR)');
-echo $data_tbl->get_new_row('Národnost', $country_sel);
+echo $data_tbl->get_new_row('PÅ™Ã­jmenÃ­', '<INPUT TYPE="text" NAME="prijmeni" SIZE=30 MAXLENGTH=30 VALUE="'.$zaznam["prijmeni"].'">');
+echo $data_tbl->get_new_row('JmÃ©no', '<INPUT TYPE="text" NAME="jmeno" SIZE=30 MAXLENGTH=20 VALUE="'.$zaznam["jmeno"].'">');
+$find_reg_text = (!IsSet($update)) ? ' <a href="javascript:open_win_ex(\'./find_reg.php\',\'\',600,400)">HledÃ¡nÃ­ volnÃ½ch reg.Ä.</a>': '';
+echo $data_tbl->get_new_row('RegistraÄnÃ­ ÄÃ­slo', $g_shortcut.'&nbsp;&nbsp;<INPUT TYPE="text" NAME="reg" SIZE=4 MAXLENGTH=4 VALUE="'.RegNumToStr($zaznam['reg']).'">'.$find_reg_text);
+echo $data_tbl->get_new_row('ÄŒÃ­slo SI Äipu', '<INPUT TYPE="text" NAME="si" SIZE=10 MAXLENGTH=9 VALUE="'.$zaznam["si_chip"].'">');
+echo $data_tbl->get_new_row('Datum narozenÃ­', '<INPUT TYPE="text" NAME="datum" SIZE=10 VALUE="'.SQLDate2String($zaznam["datum"]).'">&nbsp;&nbsp;(DD.MM.RRRR)');
+echo $data_tbl->get_new_row('NÃ¡rodnost', $country_sel);
 echo $data_tbl->get_new_row('Adresa', '<INPUT TYPE="text" NAME="adresa" SIZE=60 MAXLENGTH=50 VALUE="'.$zaznam["adresa"].'">');
-echo $data_tbl->get_new_row('Mìsto', '<INPUT TYPE="text" NAME="mesto" SIZE=30 MAXLENGTH=25 VALUE="'.$zaznam["mesto"].'">');
-echo $data_tbl->get_new_row('PSÈ', '<INPUT TYPE="text" NAME="psc" SIZE=10 MAXLENGTH=6 VALUE="'.$zaznam["psc"].'">');
+echo $data_tbl->get_new_row('MÄ›sto', '<INPUT TYPE="text" NAME="mesto" SIZE=30 MAXLENGTH=25 VALUE="'.$zaznam["mesto"].'">');
+echo $data_tbl->get_new_row('PSÄŒ', '<INPUT TYPE="text" NAME="psc" SIZE=10 MAXLENGTH=6 VALUE="'.$zaznam["psc"].'">');
 echo $data_tbl->get_new_row('Email', '<INPUT TYPE="text" NAME="email" SIZE=60 MAXLENGTH=50 VALUE="'.$zaznam["email"].'">');
-echo $data_tbl->get_new_row('Tel. domù', '<INPUT TYPE="text" NAME="domu" SIZE=20 MAXLENGTH=25 VALUE="'.$zaznam["tel_domu"].'">');
-echo $data_tbl->get_new_row('Tel. zamìstnání', '<INPUT TYPE="text" NAME="zam" SIZE=20 MAXLENGTH=25 VALUE="'.$zaznam["tel_zam"].'">');
+echo $data_tbl->get_new_row('Tel. domÅ¯', '<INPUT TYPE="text" NAME="domu" SIZE=20 MAXLENGTH=25 VALUE="'.$zaznam["tel_domu"].'">');
+echo $data_tbl->get_new_row('Tel. zamÄ›stnÃ¡nÃ­', '<INPUT TYPE="text" NAME="zam" SIZE=20 MAXLENGTH=25 VALUE="'.$zaznam["tel_zam"].'">');
 echo $data_tbl->get_new_row('Mobil', '<INPUT TYPE="text" NAME="mobil" SIZE=20 MAXLENGTH=25 VALUE="'.$zaznam["tel_mobil"].'">');
 $value = '<select name=\'poh\'>';
 $value .= '<option value=\'H\''.(($zaznam["poh"]=='H') ? ' SELECTED' : '').'>H</option>';
@@ -82,8 +82,8 @@ echo $data_tbl->get_new_row('Licence LOB', GetLicenceComboBox('lic_lob',$zaznam[
 
 if (IsLoggedSmallAdmin())
 {
-	echo $data_tbl->get_new_row_text('', '<INPUT TYPE="checkbox" NAME="hidden" SIZE=15 VALUE="1"'.(($zaznam["hidden"] == 1) ? ' checked' : '').'> Skrytı èlen (vidí ho jen admin)');
-	echo $data_tbl->get_new_row('Rodné èíslo', '<INPUT TYPE="text" NAME="rc" SIZE=30 MAXLENGTH=10 VALUE="'.$zaznam["rc"].'"> (9999999999)');
+	echo $data_tbl->get_new_row_text('', '<INPUT TYPE="checkbox" NAME="hidden" SIZE=15 VALUE="1"'.(($zaznam["hidden"] == 1) ? ' checked' : '').'> SkrytÃ½ Älen (vidÃ­ ho jen admin)');
+	echo $data_tbl->get_new_row('RodnÃ© ÄÃ­slo', '<INPUT TYPE="text" NAME="rc" SIZE=30 MAXLENGTH=10 VALUE="'.$zaznam["rc"].'"> (9999999999)');
 }
 /*
 	prijmeni 	varchar(30) 
@@ -99,9 +99,9 @@ if (IsLoggedSmallAdmin())
 */
 
 echo $data_tbl->get_empty_row();
-echo $data_tbl->get_new_row('','<INPUT TYPE="submit" VALUE="'.((IsSet($update)) ? 'Zmìnit údaje èlena' : 'Vytvoøit nového èlena').'">');
+echo $data_tbl->get_new_row('','<INPUT TYPE="submit" VALUE="'.((IsSet($update)) ? 'ZmÄ›nit Ãºdaje Älena' : 'VytvoÅ™it novÃ©ho Älena').'">');
 echo $data_tbl->get_empty_row();
-echo $data_tbl->get_new_row_simple('<b>Upozornìní:</b> Zadané jméno a další údaje se pouívají i pro potøeby registrace závodníka do centrální registrace a pøi prihlašování na závody.');
+echo $data_tbl->get_new_row_simple('<b>UpozornÄ›nÃ­:</b> ZadanÃ© jmÃ©no a dalÅ¡Ã­ Ãºdaje se pouÅ¾Ã­vajÃ­ i pro potÅ™eby registrace zÃ¡vodnÃ­ka do centrÃ¡lnÃ­ registrace a pÅ™i prihlaÅ¡ovÃ¡nÃ­ na zÃ¡vody.');
 echo $data_tbl->get_footer()."\n";
 ?>
 </FORM>

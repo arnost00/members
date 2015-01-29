@@ -1,35 +1,34 @@
 <?php /* adminova stranka - rozcestnik pro admina */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Administrace stránek oddílu');
+DrawPageTitle('Administrace strÃ¡nek oddÃ­lu');
 ?>
 <CENTER>
 
-<A HREF="index.php?id=<? echo (_ADMIN_GROUP_ID_); ?>&subid=2" class="NaviColSm">Pøihlášky na závody</A><BR>
-<A HREF="index.php?id=<? echo (_ADMIN_GROUP_ID_); ?>&subid=5" class="NaviColSm">Editace závodù</A><BR><BR>
-<A HREF="index.php?id=<? echo (_ADMIN_GROUP_ID_); ?>&subid=4" class="NaviColSm">Náhled na úèty</A><BR>
-<A HREF="index.php?id=<? echo (_ADMIN_GROUP_ID_); ?>&subid=6" class="NaviColSm">Vıpis zmìn v databázi</A><BR>
+<A HREF="index.php?id=<? echo (_ADMIN_GROUP_ID_); ?>&subid=2" class="NaviColSm">PÅ™ihlÃ¡Å¡ky na zÃ¡vody</A><BR>
+<A HREF="index.php?id=<? echo (_ADMIN_GROUP_ID_); ?>&subid=5" class="NaviColSm">Editace zÃ¡vodÅ¯</A><BR><BR>
+<A HREF="index.php?id=<? echo (_ADMIN_GROUP_ID_); ?>&subid=4" class="NaviColSm">NÃ¡hled na ÃºÄty</A><BR>
+<A HREF="index.php?id=<? echo (_ADMIN_GROUP_ID_); ?>&subid=6" class="NaviColSm">VÃ½pis zmÄ›n v databÃ¡zi</A><BR>
 
 <BR><hr>
 
-<? DrawPageSubTitle('Speciální pomocné "funkce"'); ?>
-<B>! Pouívejte jen pokud víte co èiníte !</B><BR>
+<? DrawPageSubTitle('SpeciÃ¡lnÃ­ pomocnÃ© "funkce"'); ?>
+<B>! PouÅ¾Ã­vejte jen pokud vÃ­te co ÄinÃ­te !</B><BR>
 
-<A HREF="srv_repair_czech_names_db.php" class="NaviColSm">Oprava tøídících jmen u uivatelù</A><BR>
-<A HREF="srv_repair_regs_db.php" class="NaviColSm">Oprava tabulky registrací na závody.</A><BR>
-<A HREF="_SQL/zmeny.sql.php" class="NaviColSm" target="_blank">Úpravy databáze (patche,updaty)</A><BR>
+<A HREF="srv_repair_regs_db.php" class="NaviColSm">Oprava tabulky registracÃ­ na zÃ¡vody.</A><BR>
+<A HREF="_SQL/zmeny.sql.php" class="NaviColSm" target="_blank">Ãšpravy databÃ¡ze (patche,updaty)</A><BR>
 
 <BR><hr>
 
 <? 
-DrawPageSubTitle('Informace o systému');
+DrawPageSubTitle('Informace o systÃ©mu');
 
 $data_tbl = new html_table_nfo;
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 
-echo $data_tbl->get_new_row('Název systému',SYSTEM_NAME);
-echo $data_tbl->get_new_row('Verze systému', GetCodeVersion());
+echo $data_tbl->get_new_row('NÃ¡zev systÃ©mu',SYSTEM_NAME);
+echo $data_tbl->get_new_row('Verze systÃ©mu', GetCodeVersion());
 echo $data_tbl->get_new_row('Http Server',$_SERVER['SERVER_SOFTWARE']);
 echo $data_tbl->get_new_row('Verze php', phpversion());
 echo $data_tbl->get_new_row('Verze MySQL',mysql_get_client_info().' / '.mysql_get_server_info());

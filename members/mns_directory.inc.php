@@ -1,7 +1,7 @@
 <? /* trenerova stranka - editace clenu oddilu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Èlenská základna');
+DrawPageTitle('ÄŒlenskÃ¡ zÃ¡kladna');
 ?>
 <CENTER>
 
@@ -31,15 +31,15 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 {
 	$data_tbl = new html_table_mc();
 	$col = 0;
-	$data_tbl->set_header_col($col++,'Poø.è.',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-	$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_CENTER,"Registraèní èíslo");
-	$data_tbl->set_header_col_with_help($col++,'Pøihl.',ALIGN_CENTER,"Monost pøihlašování se èlena na závody");
+	$data_tbl->set_header_col($col++,'PoÅ™.Ä.',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'PÅ™Ã­jmenÃ­',ALIGN_LEFT);
+	$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT);
+	$data_tbl->set_header_col_with_help($col++,'Reg.Ä.',ALIGN_CENTER,"RegistraÄnÃ­ ÄÃ­slo");
+	$data_tbl->set_header_col_with_help($col++,'PÅ™ihl.',ALIGN_CENTER,"MoÅ¾nost pÅ™ihlaÅ¡ovÃ¡nÃ­ se Älena na zÃ¡vody");
 	$data_tbl->set_header_col_with_help($col++,'L.OB',ALIGN_CENTER,"Licence pro OB");
 	$data_tbl->set_header_col_with_help($col++,'L.MTBO',ALIGN_CENTER,"Licence pro MTBO");
 	$data_tbl->set_header_col_with_help($col++,'L.LOB',ALIGN_CENTER,"Licence pro LOB");
-	$data_tbl->set_header_col($col++,'Monosti',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'MoÅ¾nosti',ALIGN_CENTER);
 
 	echo $data_tbl->get_css()."\n";
 	echo $data_tbl->get_header()."\n";
@@ -69,7 +69,7 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 			if ($zaznam['id'] == $usr->user_id) 
 			{
 				$row_text = '<A HREF="./index.php?id=200&subid=3">Editovat</A>';
-				$row_text .= '&nbsp;/&nbsp;<A HREF="./index.php?id=200&subid=1">Úèet</A>';
+				$row_text .= '&nbsp;/&nbsp;<A HREF="./index.php?id=200&subid=1">ÃšÄet</A>';
 				$data_tbl->set_next_row_highlighted();
 			}
 			else
@@ -77,7 +77,7 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 				$val=GetUserAccountId_Users($zaznam['id']);
 				$row_text = '<A HREF="./mns_user_edit.php?id='.$zaznam['id'].'&cb=600">Editovat</A>';
 				if ($val)
-					$row_text .= '&nbsp;/&nbsp;<A HREF="./mns_user_login_edit.php?id='.$zaznam['id'].'&cb=600">Úèet</A>';
+					$row_text .= '&nbsp;/&nbsp;<A HREF="./mns_user_login_edit.php?id='.$zaznam['id'].'&cb=600">ÃšÄet</A>';
 			}
 			$row[] = $row_text;
 			echo $data_tbl->get_new_row_arr($row)."\n";
@@ -88,7 +88,7 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 else
 {
 	echo '<BR><BR>';
-	echo '<span class="WarningText">Nemáte pøiøazeného ádného èlena oddílu. Poádejte nìkoho z "velkıch" trenérù o nápravu.</span><BR>';
+	echo '<span class="WarningText">NemÃ¡te pÅ™iÅ™azenÃ©ho Å¾Ã¡dnÃ©ho Älena oddÃ­lu. PoÅ¾Ã¡dejte nÄ›koho z "velkÃ½ch" trenÃ©rÅ¯ o nÃ¡pravu.</span><BR>';
 }
 
 ?>

@@ -1,7 +1,7 @@
 <?php /* maly trener stranka - seznam sverencu pro finance */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Finance èlenù');
+DrawPageTitle('Finance ÄlenÅ¯');
 ?>
 <CENTER>
 <script language="javascript">
@@ -44,13 +44,13 @@ function showNursechildAndFamilyTables($vysledek, $sc, $showTotal)
 	$i = 1;
 	$data_tbl = new html_table_mc();
 	$col = 0;
-	$data_tbl->set_header_col($col++,'Poø.è.',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-	$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_CENTER,"Registraèní èíslo");
-	$data_tbl->set_header_col_with_help($col++,'Fin.st.',ALIGN_CENTER,"Aktuální finanèní stav");
-	$data_tbl->set_header_col_with_help($col++,'Typ o.p.',ALIGN_CENTER,"Typ oddílovıch pøíspìvkù");
-	$data_tbl->set_header_col($col++,'Monosti',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'PoÅ™.Ä.',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'PÅ™Ã­jmenÃ­',ALIGN_LEFT);
+	$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT);
+	$data_tbl->set_header_col_with_help($col++,'Reg.Ä.',ALIGN_CENTER,"RegistraÄnÃ­ ÄÃ­slo");
+	$data_tbl->set_header_col_with_help($col++,'Fin.st.',ALIGN_CENTER,"AktuÃ¡lnÃ­ finanÄnÃ­ stav");
+	$data_tbl->set_header_col_with_help($col++,'Typ o.p.',ALIGN_CENTER,"Typ oddÃ­lovÃ½ch pÅ™Ã­spÄ›vkÅ¯");
+	$data_tbl->set_header_col($col++,'MoÅ¾nosti',ALIGN_CENTER);
 	
 	echo $data_tbl->get_css()."\n";
 	echo $data_tbl->get_header()."\n";
@@ -74,7 +74,7 @@ function showNursechildAndFamilyTables($vysledek, $sc, $showTotal)
 			$zaznam['sum_amount']<0?$class="red":$class="";
 			$row[] = "<span class='amount$class'>".$zaznam['sum_amount']."</span>";
 			$row[] = ($zaznam['nazev'] != null)? $zaznam['nazev'] : '-';
-			$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['id'].'\',\'\')">Pøehled</A>';
+			$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['id'].'\',\'\')">PÅ™ehled</A>';
 			$row[] = $row_text;
 			echo $data_tbl->get_new_row_arr($row)."\n";
 		}
@@ -103,7 +103,7 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 {
 	$no_result = false;
 	echo "<hr>";
-	DrawPageSubTitle("Svìøenci");
+	DrawPageSubTitle("SvÄ›Å™enci");
 	showNursechildAndFamilyTables($vysledek, $sc, false);
 }
 
@@ -120,7 +120,7 @@ if ($vysledek_family != FALSE && mysql_num_rows($vysledek_family) > 0)
 if ($no_result)
 {
 	echo '<BR><BR>';
-	echo '<span class="WarningText">Nemáte pøiøazeného ádného èlena oddílu. Poádejte nìkoho z "velkıch" trenérù o nápravu.</span><BR>';
+	echo '<span class="WarningText">NemÃ¡te pÅ™iÅ™azenÃ©ho Å¾Ã¡dnÃ©ho Älena oddÃ­lu. PoÅ¾Ã¡dejte nÄ›koho z "velkÃ½ch" trenÃ©rÅ¯ o nÃ¡pravu.</span><BR>';
 }
 
 ?>

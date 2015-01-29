@@ -20,7 +20,7 @@ include ("./common_race.inc.php");
 include ("./common_user.inc.php");
 include ('./url.inc.php');
 
-DrawPageTitle('Vytvo¯enÌ a export p¯ihl·öky');
+DrawPageTitle('Vytvo≈ôen√≠ a export p≈ôihl√°≈°ky');
 
 db_Connect();
 
@@ -36,7 +36,7 @@ if (!isset($chip) || !is_array($chip))
 	
 if ($gen == 1)
 {
-DrawPageSubTitle('Vygenerovan· p¯ihl·öka');
+DrawPageSubTitle('Vygenerovan√° p≈ôihl√°≈°ka');
 
 $rows = 0;
 $entry = '';
@@ -72,20 +72,20 @@ if ($rows < 5) $rows = 5;
 ?>
 
 <?
-DrawPageSubTitle('Seznam Ëlen˘');
+DrawPageSubTitle('Seznam ƒçlen≈Ø');
 ?>
 <FORM METHOD="POST" ACTION="race_reg_form_all.php" name="form_reg_all">
 <?
 
 $data_tbl = new html_table_mc();
 $col = 0;
-$data_tbl->set_header_col($col++,'Reg.Ë.',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'P¯ÌjmenÌ',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'JmÈno',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'VÏk',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'SI Ëip',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'Reg.ƒç.',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'P≈ô√≠jmen√≠',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'Jm√©no',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'Vƒõk',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'SI ƒçip',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Pozn·mka',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'Pozn√°mka',ALIGN_CENTER);
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
@@ -120,12 +120,12 @@ echo $data_tbl->get_footer()."\n";
 ?>
 <BR>
 <input type="hidden" name="gen" value="1">
-Typ z·vodu:<input type="radio" name="rt" value="0" id="radio_rt0"<? echo(($rt == 0) ? ' checked="checked"':''); ?>><label for="radio_rt0">OB</label>&nbsp;&nbsp;
+Typ z√°vodu:<input type="radio" name="rt" value="0" id="radio_rt0"<? echo(($rt == 0) ? ' checked="checked"':''); ?>><label for="radio_rt0">OB</label>&nbsp;&nbsp;
 <input type="radio" name="rt" value="1" id="radio_rt1"<? echo(($rt == 1) ? ' checked="checked"':''); ?>><label for="radio_rt1">LOB</label>&nbsp;&nbsp;
-<input type="radio" name="rt" value="2" id="radio_rt2"<? echo(($rt == 2) ? ' checked="checked"':''); ?>><label for="radio_rt2">MTBO</label><i> ... pro spr·vnÈ licence</i>
+<input type="radio" name="rt" value="2" id="radio_rt2"<? echo(($rt == 2) ? ' checked="checked"':''); ?>><label for="radio_rt2">MTBO</label><i> ... pro spr√°vn√© licence</i>
 
 <br><br>
-<INPUT TYPE="submit" VALUE="ProveÔ akci">
+<INPUT TYPE="submit" VALUE="Proveƒè akci">
 </FORM>
 <hr><BR>
 </body>

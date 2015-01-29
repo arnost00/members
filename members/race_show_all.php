@@ -18,31 +18,31 @@ if (!IsLogged())
 
 include "./header.inc.php"; // header obsahuje uvod html a konci <BODY>
 
-DrawPageTitle('Køíovı pøehled pøihlášek');
+DrawPageTitle('KÅ™Ã­Å¾ovÃ½ pÅ™ehled pÅ™ihlÃ¡Å¡ek');
 
 db_Connect();
 
 $old = (isset($old) && is_numeric($old)) ? (int) $old : 0;
 ?>
-Po nájezdu na datum závodu se zobrazí podrobnìjší informace.<BR>
+Po nÃ¡jezdu na datum zÃ¡vodu se zobrazÃ­ podrobnÄ›jÅ¡Ã­ informace.<BR>
 <?
 if($old == 0)
 {
 ?>
-<A HREF="./race_show_all.php?old=1">Zobrazit i se staršími závody</A><br>
+<A HREF="./race_show_all.php?old=1">Zobrazit i se starÅ¡Ã­mi zÃ¡vody</A><br>
 <?
 }
 else
 {
 ?>
-<A HREF="./race_show_all.php?old=0">Zobrazit jen s aktuálními závody</A><br>
+<A HREF="./race_show_all.php?old=0">Zobrazit jen s aktuÃ¡lnÃ­mi zÃ¡vody</A><br>
 <?
 }
 ?>
 <br>
 <?
 @$vysledek=MySQL_Query("SELECT id,hidden,prijmeni,jmeno FROM ".TBL_USER." ORDER BY sort_name ASC")
-	or die("Chyba pøi provádìní dotazu do databáze.");
+	or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 
 $sql_query = "SELECT id,datum,datum2,nazev,misto,vicedenni,oddil,cancelled FROM ".TBL_RACE;
 if($old == 0)
@@ -53,11 +53,11 @@ if($old == 0)
 $sql_query .= " ORDER BY datum, datum2, id";
 
 @$races=MySQL_Query($sql_query)
-	or die("Chyba pøi provádìní dotazu do databáze.");
+	or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 
 $data_tbl = new html_table_mc();
 $col = 0;
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT);
 $i=0;
 $races_arr = array();
 $race_msg = array();
@@ -74,7 +74,7 @@ while ($race=MySQL_Fetch_Array($races))
 	$data_tbl->set_header_col($col++,$datum,ALIGN_CENTER,0,$tip_code);
 }
 
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT,140);
+$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT,140);
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
@@ -123,7 +123,7 @@ while ($row=MySQL_Fetch_Array($vysledek))
 echo $data_tbl->get_header_row()."\n";
 
 $tbl_row = array();
-$tbl_row[] = 'Celkem pøihlášeno';
+$tbl_row[] = 'Celkem pÅ™ihlÃ¡Å¡eno';
 for($ii=0; $ii<sizeof($races_arr); $ii++)
 {
 	$tbl_row[] = $race_dta[$ii];

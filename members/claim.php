@@ -54,11 +54,11 @@ if ($user_id == $record_claims['user_id'])
 
 <form class="form" action="?" method="post">
 	<fieldset style="border: none;">
-		<label for="claim_text" id="label_claim_text">Co se ti nelíbí?</label>
+		<label for="claim_text" id="label_claim_text">Co se ti nelÃ­bÃ­?</label>
 		<textarea rows="3" id="claim_text" name="claim_text"><?=$actual_text?></textarea>
 		<input type="hidden" id="payment_id" name="payment_id" value="<?=$payment_id;?>"/>
-		<button type="submit" id="submit" name="submit">Odešli</button>
-		<button type="submit" id="close" name="close">Uzavøi reklamaci</button>
+		<button type="submit" id="submit" name="submit">OdeÅ¡li</button>
+		<button type="submit" id="close" name="close">UzavÅ™i reklamaci</button>
 	</fieldset>
 </form>
 

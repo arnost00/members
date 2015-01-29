@@ -1,7 +1,7 @@
 <?php /* clenova stranka - editace informaci a nastaveni */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Nastavení osobních údajù èlenù oddílu');
+DrawPageTitle('NastavenÃ­ osobnÃ­ch ÃºdajÅ¯ ÄlenÅ¯ oddÃ­lu');
 ?>
 <CENTER>
 <?
@@ -32,33 +32,33 @@ function check_form_1()
  
  if(podpis.length > max_l_podpis)
  {
-   errors += '\nPøíliš mnoho znakù v podpisu. Prosím odstraòte '+ (text.length - max_l_podpis)+ ' znakù.';
+   errors += '\nPÅ™Ã­liÅ¡ mnoho znakÅ¯ v podpisu. ProsÃ­m odstraÅˆte '+ (text.length - max_l_podpis)+ ' znakÅ¯.';
  }
  else if (podpis.length == 0)
  {
-   errors +='\nPodpis nemùe bıt prázdnı.';
+   errors +='\nPodpis nemÅ¯Å¾e bÃ½t prÃ¡zdnÃ½.';
  }
  if (login.length < 4)
  {
-   errors += '\nPøihlašovací jméno musí mít minimálnì 4 znaky.';
+   errors += '\nPÅ™ihlaÅ¡ovacÃ­ jmÃ©no musÃ­ mÃ­t minimÃ¡lnÄ› 4 znaky.';
  }
  else if (login.length > max_l_login)
  {
-   errors += '\nPøíliš mnoho znakù v pøihlašovacím jménu. Prosím odstraòte '+ (text.length - max_l_login)+ ' znakù.';
+   errors += '\nPÅ™Ã­liÅ¡ mnoho znakÅ¯ v pÅ™ihlaÅ¡ovacÃ­m jmÃ©nu. ProsÃ­m odstraÅˆte '+ (text.length - max_l_login)+ ' znakÅ¯.';
  }
  else if (!isValidLogin(login))
  {
-   errors += '\nPøihlašovací jméno obsahuje nepovolené znaky, nebo kombinace znakù.';
+   errors += '\nPÅ™ihlaÅ¡ovacÃ­ jmÃ©no obsahuje nepovolenÃ© znaky, nebo kombinace znakÅ¯.';
  }
 
  if (heslo.length == 0)
  {
-   errors +='\nOvìøovací heslo nemùe bıt prázdné.';
+   errors +='\nOvÄ›Å™ovacÃ­ heslo nemÅ¯Å¾e bÃ½t prÃ¡zdnÃ©.';
  }
 
  if (errors.length > 0)
  {
-	alert ("Formuláø nelze odeslat z následujících dùvodù:\n" + errors);
+	alert ("FormulÃ¡Å™ nelze odeslat z nÃ¡sledujÃ­cÃ­ch dÅ¯vodÅ¯:\n" + errors);
 	return false;
  }
  else
@@ -74,20 +74,20 @@ function check_form_2()
  
  if (oldheslo.length == 0)
  {
-   errors +='\nChybí staré heslo.';
+   errors +='\nChybÃ­ starÃ© heslo.';
  }
  if (heslo !=  heslo2)
  {
-   errors += '\nNové heslo se liší v zadáních.';
+   errors += '\nNovÃ© heslo se liÅ¡Ã­ v zadÃ¡nÃ­ch.';
  }
  else if (heslo.length < 4 || heslo2.length < 4)
  {
-   errors += '\nNové heslo musí mít minimálnì 4 znaky.';
+   errors += '\nNovÃ© heslo musÃ­ mÃ­t minimÃ¡lnÄ› 4 znaky.';
  }
 
  if (errors.length > 0)
  {
-	alert ("Formuláø nelze odeslat z následujících dùvodù:\n" + errors);
+	alert ("FormulÃ¡Å™ nelze odeslat z nÃ¡sledujÃ­cÃ­ch dÅ¯vodÅ¯:\n" + errors);
 	return false;
  }
  else
@@ -98,7 +98,7 @@ function check_form_2()
 </SCRIPT>
 
 <BR><hr><BR>
-<? DrawPageSubTitle('Volitelné údaje'); ?>
+<? DrawPageSubTitle('VolitelnÃ© Ãºdaje'); ?>
 
 <FORM METHOD=POST ACTION="./us_setup_exc.php?type=1&id=<?echo $usr->account_id;?>" name="us_s1" onsubmit="return check_form_1();">
 <TABLE width="90%">
@@ -108,12 +108,12 @@ function check_form_2()
 	<TD><INPUT TYPE="text" NAME="podpis" SIZE=20 VALUE="<?echo  $curr_usr["podpis"]?>"></TD>
 </TR>
 <TR>
-	<TD width="40%" align="right">Pøihlašovací jméno</TD>
+	<TD width="40%" align="right">PÅ™ihlaÅ¡ovacÃ­ jmÃ©no</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="login" SIZE=20 VALUE="<? echo $curr_usr["login"]; ?>"></TD>
 </TR>
 <TR>
-	<TD width="40%" align="right">Heslo pro ovìøení zmìny údajù</TD>
+	<TD width="40%" align="right">Heslo pro ovÄ›Å™enÃ­ zmÄ›ny ÃºdajÅ¯</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="password" NAME="hesloo" SIZE=20 VALUE=""></TD>
 </TR>
@@ -121,40 +121,40 @@ function check_form_2()
 	<TD colspan="3"></TD>
 </TR>
 <TR>
-	<TD colspan="3" align="center"><INPUT TYPE="submit" VALUE="Zmìnit údaje"></TD>
+	<TD colspan="3" align="center"><INPUT TYPE="submit" VALUE="ZmÄ›nit Ãºdaje"></TD>
 </TR>
 <TR>
 	<TD colspan="3"></TD>
 </TR>
 <TR>
-	<TD colspan="3"><B>Podpis</B> je pouit pøi zobrazování novinek jako informace kdo novinku napsal. Také se zobrazuje pøi pøihlášení v navigaèní lištì vlevo dole.</TD>
+	<TD colspan="3"><B>Podpis</B> je pouÅ¾it pÅ™i zobrazovÃ¡nÃ­ novinek jako informace kdo novinku napsal. TakÃ© se zobrazuje pÅ™i pÅ™ihlÃ¡Å¡enÃ­ v navigaÄnÃ­ liÅ¡tÄ› vlevo dole.</TD>
 </TR>
 <TR>
 	<TD colspan="3"></TD>
 </TR>
 <TR>
-	<TD colspan="3"><b>Pøihlašovací jméno : </b>Je poadováno pouití písmen bez diakritiky a mohou bıt velká a malá písmena. V pøihlašovacím jménì mohou bıt i èíslice, kromì prvního písmene. Té není dovoleno pouívání mezer v jménu. Volte jméno tak, aby se zabránilo kolizím mezi jmény uivatelù. Minimální délka jsou 4 znaky.<BR></TD>
+	<TD colspan="3"><b>PÅ™ihlaÅ¡ovacÃ­ jmÃ©no : </b>Je poÅ¾adovÃ¡no pouÅ¾itÃ­ pÃ­smen bez diakritiky a mohou bÃ½t velkÃ¡ a malÃ¡ pÃ­smena. V pÅ™ihlaÅ¡ovacÃ­m jmÃ©nÄ› mohou bÃ½t i ÄÃ­slice, kromÄ› prvnÃ­ho pÃ­smene. TÃ©Å¾ nenÃ­ dovoleno pouÅ¾Ã­vÃ¡nÃ­ mezer v jmÃ©nu. Volte jmÃ©no tak, aby se zabrÃ¡nilo kolizÃ­m mezi jmÃ©ny uÅ¾ivatelÅ¯. MinimÃ¡lnÃ­ dÃ©lka jsou 4 znaky.<BR></TD>
 </TR>
 </TABLE>
 </FORM>
 
 <BR><hr><BR>
-<? DrawPageSubTitle('Zmìna hesla'); ?>
+<? DrawPageSubTitle('ZmÄ›na hesla'); ?>
 
 <FORM METHOD=POST ACTION="./us_setup_exc.php?type=2&id=<?echo $usr->account_id;?>" name="us_s2" onsubmit="return check_form_2();">
 <TABLE width="90%">
 <TR>
-	<TD width="45%" align="right">Staré heslo:</TD>
+	<TD width="45%" align="right">StarÃ© heslo:</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="password" NAME="oldheslo" VALUE="" SIZE="20"></TD>
 </TR>
 <TR>
-	<TD width="45%" align="right">Nové heslo:</TD>
+	<TD width="45%" align="right">NovÃ© heslo:</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="password" NAME="heslo" VALUE="" SIZE="20"></TD>
 </TR>
 <TR>
-	<TD width="45%" align="right">Nové heslo (ovìøení):</TD>
+	<TD width="45%" align="right">NovÃ© heslo (ovÄ›Å™enÃ­):</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="password" NAME="heslo2" VALUE="" SIZE="20"></TD>
 </TR>
@@ -162,13 +162,13 @@ function check_form_2()
 	<TD colspan="3"></TD>
 </TR>
 <TR>
-	<TD colspan="3" align="center"><INPUT TYPE="submit" VALUE="Zmìnit heslo"></TD>
+	<TD colspan="3" align="center"><INPUT TYPE="submit" VALUE="ZmÄ›nit heslo"></TD>
 </TR>
 <TR>
 	<TD colspan="3"></TD>
 </TR>
 <TR>
-	<TD colspan="3"><b>Omezení hesla : </b>Hesla zadávejte bez diakritiky, mohou bıt i èíslice, minimálnì 4 znaky dlouhá. A nejlépe taková co kadého nenapadnou jako první. Hesla typu "12345", "brno" nebo vaše pøezdívka budou bez varování zmìnìny! Nedoporuèuji ani pouívání jmen dìtí, rodièù pøípadnì domácích mazlíèkù v pùvodní podobì. Pouijte alespoò zdrobnìlinu nebo domácí variantu, pøípadnì doplòte jméno nìjakım èíslem (kromì registraèního nebo roku narození).</TD>
+	<TD colspan="3"><b>OmezenÃ­ hesla : </b>Hesla zadÃ¡vejte bez diakritiky, mohou bÃ½t i ÄÃ­slice, minimÃ¡lnÄ› 4 znaky dlouhÃ¡. A nejlÃ©pe takovÃ¡ co kaÅ¾dÃ©ho nenapadnou jako prvnÃ­. Hesla typu "12345", "brno" nebo vaÅ¡e pÅ™ezdÃ­vka budou bez varovÃ¡nÃ­ zmÄ›nÄ›ny! NedoporuÄuji ani pouÅ¾Ã­vÃ¡nÃ­ jmen dÄ›tÃ­, rodiÄÅ¯ pÅ™Ã­padnÄ› domÃ¡cÃ­ch mazlÃ­ÄkÅ¯ v pÅ¯vodnÃ­ podobÄ›. PouÅ¾ijte alespoÅˆ zdrobnÄ›linu nebo domÃ¡cÃ­ variantu, pÅ™Ã­padnÄ› doplÅˆte jmÃ©no nÄ›jakÃ½m ÄÃ­slem (kromÄ› registraÄnÃ­ho nebo roku narozenÃ­).</TD>
 </TR>
 </TABLE>
 </FORM>

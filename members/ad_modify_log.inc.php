@@ -1,7 +1,7 @@
 <?php /* adminova stranka - editace zavodu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Výpis zmìn v databázi');
+DrawPageTitle('VÃ½pis zmÄ›n v databÃ¡zi');
 ?>
 <CENTER>
 <?
@@ -12,7 +12,7 @@ if($vysledek != FALSE)
 	$data_tbl = new html_table_mc();
 	$col = 0;
 	$data_tbl->set_header_col($col++,'Id',ALIGN_CENTER,0);
-	$data_tbl->set_header_col($col++,'Èas',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'ÄŒas',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Akce',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Tabulka',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Popis',ALIGN_CENTER);

@@ -23,7 +23,7 @@ if (!$zaznam)
 	exit;
 }
 include "./header.inc.php"; // header obsahuje uvod html a konci <BODY>
-DrawPageTitle('Èlenská základna - Administrace uivatelskıch úètù');
+DrawPageTitle('ÄŒlenskÃ¡ zÃ¡kladna - Administrace uÅ¾ivatelskÃ½ch ÃºÄtÅ¯');
 
 	$id_acc = GetUserAccountId_Users($id);
 	$vysledek2=MySQL_Query("SELECT login,podpis,policy_news,policy_regs,policy_mng,policy_adm,policy_fin,locked FROM ".TBL_ACCOUNT." WHERE id = '$id_acc' LIMIT 1");
@@ -75,37 +75,37 @@ function checkAllVisibilities()
 <TD width="90%" ALIGN=left>
 <CENTER>
 <BR><hr><BR>
-<? DrawPageSubTitle('Základní údaje o vybraném èlenovi'); ?>
+<? DrawPageSubTitle('ZÃ¡kladnÃ­ Ãºdaje o vybranÃ©m Älenovi'); ?>
 <TABLE width="90%">
 <TR>
-	<TD width="45%" align="right">Pøíjmení</TD>
+	<TD width="45%" align="right">PÅ™Ã­jmenÃ­</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><?echo $zaznam["prijmeni"]?></TD>
 </TR>
 <TR>
-	<TD width="45%" align="right">Jméno</TD>
+	<TD width="45%" align="right">JmÃ©no</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><?echo $zaznam["jmeno"]?></TD>
 </TR>
 <TR>
-	<TD width="45%" align="right">Datum narození</TD>
+	<TD width="45%" align="right">Datum narozenÃ­</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><?echo SQLDate2String($zaznam["datum"])?></TD>
 </TR>
 <? if ($zaznam["hidden"] != 0) { ?>
 <TR>
-	<TD width="45%" align="right">Tento uivatel je</TD>
+	<TD width="45%" align="right">Tento uÅ¾ivatel je</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><span class="WarningText">skrytı uivatel</span></TD>
+	<TD class="DataValue"><span class="WarningText">skrytÃ½ uÅ¾ivatel</span></TD>
 </TR>
 <? } ?>
 </TABLE>
 <BR><hr><BR>
 <?
 	if($zaznam2 != FALSE)
-		DrawPageSubTitle('Editace úètu vybraného èlena oddílu');
+		DrawPageSubTitle('Editace ÃºÄtu vybranÃ©ho Älena oddÃ­lu');
 	else
-		DrawPageSubTitle('Zaloení nového úètu vybranému èlenu oddílu');
+		DrawPageSubTitle('ZaloÅ¾enÃ­ novÃ©ho ÃºÄtu vybranÃ©mu Älenu oddÃ­lu');
 ?>
 <FORM METHOD=POST ACTION="./user_login_edit_exc.php?type=<? echo ($zaznam2 != FALSE) ? "1" : "2"; echo "&id=".$id;?>">
 <TABLE width="90%">
@@ -114,61 +114,61 @@ function checkAllVisibilities()
 	{
 ?>
 <TR>
-	<TD colspan="3" style="padding-left:20px;"><input onclick="changeVisibility('acc_manual_hide', this.id); changeVisibility('acc_email_hide', 'id_email');" type="radio" name="action_type" value="1" checked id="id_manual"><label for="id_manual">Ruènì</label></TD></TR>
+	<TD colspan="3" style="padding-left:20px;"><input onclick="changeVisibility('acc_manual_hide', this.id); changeVisibility('acc_email_hide', 'id_email');" type="radio" name="action_type" value="1" checked id="id_manual"><label for="id_manual">RuÄnÄ›</label></TD></TR>
 </TR>
 <?
 	}
 ?>
 <TR name="acc_manual_hide" id="acc_manual_hide">
-	<TD width="30%" align="right">Pøihlašovací jméno</TD>
+	<TD width="30%" align="right">PÅ™ihlaÅ¡ovacÃ­ jmÃ©no</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="login" SIZE=20 VALUE="<? echo $zaznam2["login"]; ?>"></TD>
 </TR>
 <TR name="acc_manual_hide" id="acc_manual_hide">
-	<TD width="30%" align="right">Podpis uivatele</TD>
+	<TD width="30%" align="right">Podpis uÅ¾ivatele</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="podpis" SIZE=20 VALUE="<?echo  $zaznam2["podpis"]?>"></TD>
 </TR>
 <TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD width="30%" align="right"></TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="checkbox" NAME="news" SIZE=15 VALUE="1" <? if ($zaznam2["policy_news"]) echo "checked" ?> >Povoleno psaní novinek</TD>
+	<TD><INPUT TYPE="checkbox" NAME="news" SIZE=15 VALUE="1" <? if ($zaznam2["policy_news"]) echo "checked" ?> >Povoleno psanÃ­ novinek</TD>
 </TR>
 <TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD width="30%" align="right"></TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="checkbox" NAME="mng" SIZE=15 VALUE="<? echo (!IsLoggedSmallAdmin() && $zaznam2["policy_mng"] == _MNG_BIG_INT_VALUE_) ? '2' : '1'; ?>" <? if ($zaznam2["policy_mng"] == _MNG_SMALL_INT_VALUE_) echo "checked"; if (!IsLoggedSmallAdmin() && $zaznam2["policy_mng"] == _MNG_BIG_INT_VALUE_) echo "disabled"; ?> >Uivatel je malım trenenérem (mùe mìnit údaje a pøihlášky vybranıch èlenù)</TD>
+	<TD><INPUT TYPE="checkbox" NAME="mng" SIZE=15 VALUE="<? echo (!IsLoggedSmallAdmin() && $zaznam2["policy_mng"] == _MNG_BIG_INT_VALUE_) ? '2' : '1'; ?>" <? if ($zaznam2["policy_mng"] == _MNG_SMALL_INT_VALUE_) echo "checked"; if (!IsLoggedSmallAdmin() && $zaznam2["policy_mng"] == _MNG_BIG_INT_VALUE_) echo "disabled"; ?> >UÅ¾ivatel je malÃ½m trenenÃ©rem (mÅ¯Å¾e mÄ›nit Ãºdaje a pÅ™ihlÃ¡Å¡ky vybranÃ½ch ÄlenÅ¯)</TD>
 </TR>
 <? if (IsLoggedSmallAdmin())
 { ?>
 <TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD width="30%" align="right"></TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="checkbox" NAME="mng2" SIZE=15 VALUE="1" <? if ($zaznam2["policy_mng"] == _MNG_BIG_INT_VALUE_) echo "checked" ?> >Uivatel je trenenérem (mùe mìnit údaje a pøihlášky èlenù)</TD>
+	<TD><INPUT TYPE="checkbox" NAME="mng2" SIZE=15 VALUE="1" <? if ($zaznam2["policy_mng"] == _MNG_BIG_INT_VALUE_) echo "checked" ?> >UÅ¾ivatel je trenenÃ©rem (mÅ¯Å¾e mÄ›nit Ãºdaje a pÅ™ihlÃ¡Å¡ky ÄlenÅ¯)</TD>
 </TR>
 <TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD width="30%" align="right"></TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="checkbox" NAME="regs" SIZE=15 VALUE="1" <? if ($zaznam2["policy_regs"]) echo "checked" ?> >Uivatel je pøihlašovatelem (mùe editovat pøihlášky èlenù - provádí export)</TD>
+	<TD><INPUT TYPE="checkbox" NAME="regs" SIZE=15 VALUE="1" <? if ($zaznam2["policy_regs"]) echo "checked" ?> >UÅ¾ivatel je pÅ™ihlaÅ¡ovatelem (mÅ¯Å¾e editovat pÅ™ihlÃ¡Å¡ky ÄlenÅ¯ - provÃ¡dÃ­ export)</TD>
 </TR>
 <? if ($g_enable_finances)
 { ?>
 <TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD width="30%" align="right"></TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="checkbox" NAME="fin" SIZE=15 VALUE="1" <? if ($zaznam2["policy_fin"]) echo "checked" ?> >Uivatel je finanèníkem</TD>
+	<TD><INPUT TYPE="checkbox" NAME="fin" SIZE=15 VALUE="1" <? if ($zaznam2["policy_fin"]) echo "checked" ?> >UÅ¾ivatel je finanÄnÃ­kem</TD>
 </TR>
 <? } ?>
 <TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD width="30%" align="right"></TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="checkbox" NAME="adm" SIZE=15 VALUE="1" <? if ($zaznam2["policy_adm"]) echo "checked" ?> >Uivatel je správcem</TD>
+	<TD><INPUT TYPE="checkbox" NAME="adm" SIZE=15 VALUE="1" <? if ($zaznam2["policy_adm"]) echo "checked" ?> >UÅ¾ivatel je sprÃ¡vcem</TD>
 </TR name="acc_manual_hide" id="acc_manual_hide">
 <? if ($zaznam2["locked"] != 0) { ?>
 <TR name="acc_manual_hide" id="acc_manual_hide">
-	<TD width="45%" align="right">Tento uivatel má</TD>
+	<TD width="45%" align="right">Tento uÅ¾ivatel mÃ¡</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><span class="WarningText">uzamèenı úèet</span></TD>
+	<TD class="DataValue"><span class="WarningText">uzamÄenÃ½ ÃºÄet</span></TD>
 </TR>
 <? } ?>
 
@@ -182,12 +182,12 @@ include ('generators.inc.php');
 	<TD colspan="3"></TD>
 </TR>
 <TR name="acc_manual_hide" id="acc_manual_hide">
-	<TD width="30%" align="right">Nové heslo:</TD>
+	<TD width="30%" align="right">NovÃ© heslo:</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="password" NAME="nheslo" VALUE="" SIZE="20"></TD>
 </TR>
 <TR name="acc_manual_hide" id="acc_manual_hide">
-	<TD width="30%" align="right">Nové heslo (ovìøení):</TD>
+	<TD width="30%" align="right">NovÃ© heslo (ovÄ›Å™enÃ­):</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="password" NAME="nheslo2" VALUE="" SIZE="20"></TD>
 </TR>
@@ -198,17 +198,17 @@ include ('generators.inc.php');
 	<TD colspan="3" style="padding-left:20px;"><input onclick="changeVisibility('acc_email_hide', this.id); changeVisibility('acc_manual_hide', 'id_manual');" type="radio" name="action_type" value="2" id="id_email"><label for="id_email">Vygenerovat a zaslat emailem</label></TD>
 </TR>
 <TR name="acc_email_hide" id="acc_email_hide">
-	<TD width="30%" align="right">Pøihlašovací jméno</TD>
+	<TD width="30%" align="right">PÅ™ihlaÅ¡ovacÃ­ jmÃ©no</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="login_g" SIZE=20 VALUE="<? echo GenerateLogin($zaznam) ?>"></TD>
 </TR>
 <TR name="acc_email_hide" id="acc_email_hide">
-	<TD width="30%" align="right">Podpis uivatele</TD>
+	<TD width="30%" align="right">Podpis uÅ¾ivatele</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="podpis_g" SIZE=20 VALUE="<?echo $zaznam["jmeno"]?>"></TD>
 </TR>
 <TR name="acc_email_hide" id="acc_email_hide">
-	<TD width="30%" align="right">Email pro zaslání údajù:</TD>
+	<TD width="30%" align="right">Email pro zaslÃ¡nÃ­ ÃºdajÅ¯:</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="email" VALUE="<?echo $zaznam["email"]?>" SIZE="40"></TD>
 </TR>
@@ -222,19 +222,19 @@ include ('generators.inc.php');
 	<TD colspan="3"></TD>
 </TR>
 <TR>
-	<TD colspan="3" align="center"><INPUT TYPE="submit" VALUE="<? echo ($zaznam2 != FALSE) ? "Provést zmìny" : "Zaloit úèet"; ?>"></TD>
+	<TD colspan="3" align="center"><INPUT TYPE="submit" VALUE="<? echo ($zaznam2 != FALSE) ? "ProvÃ©st zmÄ›ny" : "ZaloÅ¾it ÃºÄet"; ?>"></TD>
 </TR>
 <TR>
 	<TD colspan="3"></TD>
 </TR>
 <TR>
-	<TD colspan="3"><b>Pøihlašovací jméno : </b>Doporuèujeme pouití slova bez diakritiky a rozlišování velkım a malıch písmen (jedno kterou variantu vyberete). V pøihlašovacím jménì mohou bıt i èíslice, kromì prvního písmene. Nedoporuèujem té pouívání mezer v jménu. Volte jméno tak, aby se zabránilo kolizím mezi jmény uivatelù.<BR></TD>
+	<TD colspan="3"><b>PÅ™ihlaÅ¡ovacÃ­ jmÃ©no : </b>DoporuÄujeme pouÅ¾itÃ­ slova bez diakritiky a rozliÅ¡ovÃ¡nÃ­ velkÃ½m a malÃ½ch pÃ­smen (jedno kterou variantu vyberete). V pÅ™ihlaÅ¡ovacÃ­m jmÃ©nÄ› mohou bÃ½t i ÄÃ­slice, kromÄ› prvnÃ­ho pÃ­smene. NedoporuÄujem tÃ©Å¾ pouÅ¾Ã­vÃ¡nÃ­ mezer v jmÃ©nu. Volte jmÃ©no tak, aby se zabrÃ¡nilo kolizÃ­m mezi jmÃ©ny uÅ¾ivatelÅ¯.<BR></TD>
 </TR>
 <TR>
 	<TD colspan="3"></TD>
 </TR>
 <TR>
-	<TD colspan="3"><B>Podpis</B> je pouit pøi zobrazování novinek jako informace kdo novinku napsal. Také se zobrazuje pøi pøihlášení v navigaèní lištì vlevo dole.<BR></TD>
+	<TD colspan="3"><B>Podpis</B> je pouÅ¾it pÅ™i zobrazovÃ¡nÃ­ novinek jako informace kdo novinku napsal. TakÃ© se zobrazuje pÅ™i pÅ™ihlÃ¡Å¡enÃ­ v navigaÄnÃ­ liÅ¡tÄ› vlevo dole.<BR></TD>
 </TR>
 <?
 if($zaznam2 != FALSE)
@@ -244,20 +244,20 @@ if($zaznam2 != FALSE)
 </FORM>
 
 <BR><hr><BR>
-<? DrawPageSubTitle('Zmìna hesla'); ?>
+<? DrawPageSubTitle('ZmÄ›na hesla'); ?>
 
 <FORM METHOD=POST ACTION="./user_login_edit_exc.php?type=3&id=<?echo $id;?>">
 <TABLE width="90%">
 <TR>
-	<TD colspan="3" style="padding-left:20px;"><input onclick="changeVisibility('pass_manual_hide', this.id); changeVisibility('pass_email_hide', 'id_email');" type="radio" name="action_type" value="1" checked id="id_manual"><label for="id_manual">Ruènì</label></TD></TR>
+	<TD colspan="3" style="padding-left:20px;"><input onclick="changeVisibility('pass_manual_hide', this.id); changeVisibility('pass_email_hide', 'id_email');" type="radio" name="action_type" value="1" checked id="id_manual"><label for="id_manual">RuÄnÄ›</label></TD></TR>
 </TR>
 <TR name="pass_manual_hide" id="pass_manual_hide">
-	<TD width="45%" align="right">Nové heslo:</TD>
+	<TD width="45%" align="right">NovÃ© heslo:</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="password" NAME="nheslo" VALUE="" SIZE="20"></TD>
 </TR>
 <TR name="pass_manual_hide" id="pass_manual_hide">
-	<TD width="45%" align="right">Nové heslo (ovìøení):</TD>
+	<TD width="45%" align="right">NovÃ© heslo (ovÄ›Å™enÃ­):</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="password" NAME="nheslo2" VALUE="" SIZE="20"></TD>
 </TR>
@@ -268,7 +268,7 @@ if($zaznam2 != FALSE)
 	<TD colspan="3" style="padding-left:20px;"><input onclick="changeVisibility('pass_email_hide', this.id); changeVisibility('pass_manual_hide', 'id_manual');" type="radio" name="action_type" value="2" id="id_email"><label for="id_email">Vygenerovat a zaslat emailem</label></TD>
 </TR>
 <TR name="pass_email_hide" id="pass_email_hide">
-	<TD width="30%" align="right">Email pro zaslání údajù:</TD>
+	<TD width="30%" align="right">Email pro zaslÃ¡nÃ­ ÃºdajÅ¯:</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="email" VALUE="<?echo $zaznam["email"]?>" SIZE="40"></TD>
 </TR>
@@ -279,7 +279,7 @@ if($zaznam2 != FALSE)
 	<TD colspan="3"></TD>
 </TR>
 <TR>
-	<TD colspan="3" align="center"><INPUT TYPE="submit" VALUE="Zmìnit heslo"></TD>
+	<TD colspan="3" align="center"><INPUT TYPE="submit" VALUE="ZmÄ›nit heslo"></TD>
 </TR>
 <?
 }
@@ -288,7 +288,7 @@ if($zaznam2 != FALSE)
 	<TD colspan="3"></TD>
 </TR>
 <TR>
-	<TD colspan="3"><b>Heslo : </b>Hesla zadávejte bez diakritiky, mohou bıt i èíslice, minimálnì 4 znaky dlouhá. A nejlépe taková co kadého nenapadnou jako první. Hesla typu "12345", "brno" nebo vaše pøezdívka budou bez varování zmìnìny! Nedoporuèuji ani pouívání jmen dìtí, rodièù pøípadnì domácích mazlíèkù v pùvodní podobì. Pouijte alespoò zdrobnìlinu nebo domácí variantu, pøípadnì doplòte jméno nìjakım èíslem (kromì registraèního nebo roku narození).<BR></TD>
+	<TD colspan="3"><b>Heslo : </b>Hesla zadÃ¡vejte bez diakritiky, mohou bÃ½t i ÄÃ­slice, minimÃ¡lnÄ› 4 znaky dlouhÃ¡. A nejlÃ©pe takovÃ¡ co kaÅ¾dÃ©ho nenapadnou jako prvnÃ­. Hesla typu "12345", "brno" nebo vaÅ¡e pÅ™ezdÃ­vka budou bez varovÃ¡nÃ­ zmÄ›nÄ›ny! NedoporuÄuji ani pouÅ¾Ã­vÃ¡nÃ­ jmen dÄ›tÃ­, rodiÄÅ¯ pÅ™Ã­padnÄ› domÃ¡cÃ­ch mazlÃ­ÄkÅ¯ v pÅ¯vodnÃ­ podobÄ›. PouÅ¾ijte alespoÅˆ zdrobnÄ›linu nebo domÃ¡cÃ­ variantu, pÅ™Ã­padnÄ› doplÅˆte jmÃ©no nÄ›jakÃ½m ÄÃ­slem (kromÄ› registraÄnÃ­ho nebo roku narozenÃ­).<BR></TD>
 </TR>
 </TABLE>
 </FORM>
@@ -305,7 +305,7 @@ if($zaznam2 != FALSE)
 		else
 			$cb = 600;
 	}
-	echo('<A HREF="index.php?id='.$cb.'&subid=1">Zpìt na seznam èlenù</A><BR>');
+	echo('<A HREF="index.php?id='.$cb.'&subid=1">ZpÄ›t na seznam ÄlenÅ¯</A><BR>');
 ?>
 <BR><hr><BR>
 </CENTER>

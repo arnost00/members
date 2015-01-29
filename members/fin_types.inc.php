@@ -1,13 +1,13 @@
 <?php /* zavody - zobrazeni zavodu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('P¯ehled typ˘ oddÌlov˝ch p¯ÌspÏvk˘');
+DrawPageTitle('P≈ôehled typ≈Ø odd√≠lov√Ωch p≈ô√≠spƒõvk≈Ø');
 ?>
 <CENTER>
 <script language="JavaScript">
 <!--
 function confirm_delete() {
-	return confirm('Opravdu chcete smazat tento typ oddÌlovÈho p¯ÌspÏvku?');
+	return confirm('Opravdu chcete smazat tento typ odd√≠lov√©ho p≈ô√≠spƒõvku?');
 }
 -->
 </script><?
@@ -16,7 +16,7 @@ function confirm_delete() {
 
 if ($vysledek === FALSE )
 {
-	echo('Chyba v datab·zi, kontaktuje administr·tora.<br>');
+	echo('Chyba v datab√°zi, kontaktuje administr√°tora.<br>');
 }
 else
 {
@@ -27,9 +27,9 @@ else
 		$data_tbl = new html_table_mc();
 		$col = 0;
 		$data_tbl->set_header_col($col++,'Id',ALIGN_CENTER);
-		$data_tbl->set_header_col($col++,'N·zev',ALIGN_LEFT);
+		$data_tbl->set_header_col($col++,'N√°zev',ALIGN_LEFT);
 		$data_tbl->set_header_col($col++,'Popis',ALIGN_LEFT);
-		$data_tbl->set_header_col($col++,'Moûnosti',ALIGN_CENTER);
+		$data_tbl->set_header_col($col++,'Mo≈ænosti',ALIGN_CENTER);
 
 		echo $data_tbl->get_css()."\n";
 		echo $data_tbl->get_header()."\n";

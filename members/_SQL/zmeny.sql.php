@@ -37,7 +37,7 @@ AddZmenyFile('2.4.1.417');
 AddZmenyFile('2.4.1.423');
 AddZmenyFile('2.4.1.428');
 AddZmenyFile('2.5.4.451');
-
+AddZmenyFile('2.9.9.455');
 //#############################################################################
 
 require ('connect.inc.php');
@@ -71,7 +71,7 @@ else if ($action == 1)
 		if ($result == FALSE)
 		{
 			echo '<span class="ErrorText"><B>Chyba</B><BR>'."\n";
-			echo 'Nepodaøilo se optimalizovat tabulky v databázi.<BR>'."\n";
+			echo 'NepodaÅ™ilo se optimalizovat tabulky v databÃ¡zi.<BR>'."\n";
 			echo 'Error - '.mysql_errno().': '.mysql_error().'</span><BR>'."\n"; 
 			echo '----------<BR>'."\n";
 		}
@@ -86,7 +86,7 @@ else if ($action == 1)
 			}
 			echo '</TABLE>';
 		}
-	echo '<a href="./zmeny.sql.php">Zpìt</a>';
+	echo '<a href="./zmeny.sql.php">ZpÄ›t</a>';
 	}
 else if ($action == 2)
 {	// repair
@@ -99,7 +99,7 @@ else if ($action == 2)
 		if ($result == FALSE)
 		{
 			echo '<span class="ErrorText"><B>Chyba</B><BR>'."\n";
-			echo 'Nepodaøilo se opravit tabulky v databázi.<BR>'."\n";
+			echo 'NepodaÅ™ilo se opravit tabulky v databÃ¡zi.<BR>'."\n";
 			echo 'Error - '.mysql_errno().': '.mysql_error().'</span><BR>'."\n"; 
 			echo '----------<BR>'."\n";
 		}
@@ -114,12 +114,12 @@ else if ($action == 2)
 			}
 			echo '</TABLE>';
 		}
-	echo '<a href="./zmeny.sql.php">Zpìt</a>';
+	echo '<a href="./zmeny.sql.php">ZpÄ›t</a>';
 	}
 else
 {
 	echo '- nothing -'."\n";
-	echo '<a href="./zmeny.sql.php">Zpìt</a>';
+	echo '<a href="./zmeny.sql.php">ZpÄ›t</a>';
 }
 echo '<HR>';
 echo '<span class="HiddenText">--end--</span>'."\n";

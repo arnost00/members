@@ -45,7 +45,7 @@ if (!$g_is_release)
 {	// pri debug zobrazit
 	echo("<!-- beta-dev -->\n");
 	echo('<div id="is_debug_info">');
-	echo('!! neveøejný debug.build !!');
+	echo('!! neveÅ™ejnÃ½ debug.build !!');
 	echo('</div>');
 	echo "<!-- beta-dev -->\n";
 }

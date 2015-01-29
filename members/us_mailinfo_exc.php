@@ -50,18 +50,18 @@ else
 //		echo('update');
 //		echo("UPDATE ".TBL_MAILINFO." SET email='$email', daysbefore='$daysbefore', type='$racetype2', sub_type='$zebricek2', active_tf='$active_tf', active_ch='$active_ch', active_rg='$active_rg', ch_data='$ch_data2' WHERE id='$dbid'");
 		$result=MySQL_Query("UPDATE ".TBL_MAILINFO." SET email='$email', daysbefore='$daysbefore', type='$racetype2', sub_type='$zebricek2', active_tf='$active_tf', active_ch='$active_ch', active_rg='$active_rg', ch_data='$ch_data2', active_fin='$active_fin', active_finf='$active_finf', fin_type='$fin_type2', fin_limit='$fin_limit' WHERE id='$dbid'")
-			or die("Chyba pøi provádìní dotazu do databáze.");
+			or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 		if ($result == FALSE)
-			die ("Nepodaøilo se zmìnit údaje o upozoròování.");
+			die ("NepodaÅ™ilo se zmÄ›nit Ãºdaje o upozorÅˆovÃ¡nÃ­.");
 	}
 	else
 	{	// insert
 //		echo('insert');
 //		echo("INSERT INTO ".TBL_MAILINFO." (email, daysbefore, type, sub_type, id_user, active_tf, active_ch, active_rg, ch_data) VALUES ('$email', '$daysbefore', '$racetype2', '$zebricek2', '$id', '$active_tf', '$active_ch', '$active_rg', '$ch_data2')");
 		$result=MySQL_Query("INSERT INTO ".TBL_MAILINFO." (email, daysbefore, type, sub_type, id_user, active_tf, active_ch, active_rg, ch_data, active_fin, active_finf, fin_type, fin_limit) VALUES ('$email', '$daysbefore', '$racetype2', '$zebricek2', '$id', '$active_tf', '$active_ch', '$active_rg', '$ch_data2', '$active_fin', '$active_finf', '$fin_type2', '$fin_limit')")
-			or die("Chyba pøi provádìní dotazu do databáze.");
+			or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 		if ($result == FALSE)
-			die ("Nepodaøilo se vytvoøit údaje o upozoròování.");
+			die ("NepodaÅ™ilo se vytvoÅ™it Ãºdaje o upozorÅˆovÃ¡nÃ­.");
 	}
 	header("location: ".$g_baseadr."index.php?id=200&subid=4");
 	exit;

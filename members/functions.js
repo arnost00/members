@@ -119,7 +119,7 @@ function isPositiveNumber(subject)
 {
 	num = parseInt(subject.value);
 	if (num > 0) return true;
-	alert("Èíslo musí bıt kladné");
+	alert("ÄŒÃ­slo musÃ­ bÃ½t kladnÃ©");
 	return false;
 }
 

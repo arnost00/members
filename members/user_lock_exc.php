@@ -24,9 +24,9 @@ if (IsLoggedSmallAdmin())
 			$lock = (bool)($zaznam2['locked']);
 			$lock = !$lock;
 			$result=MySQL_Query('UPDATE '.TBL_ACCOUNT.' SET locked=\''.$lock.'\' WHERE `id`=\''.$id2."'")
-				or die('Chyba pøi provádìní dotazu do databáze.');
+				or die('Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.');
 			if ($result == FALSE)
-				die ('Nepodaøilo se zamèít/odemèít úèet èlena.');
+				die ('NepodaÅ™ilo se zamÄÃ­t/odemÄÃ­t ÃºÄet Älena.');
 			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id2.' - lock ('.(int)$lock.')');
 		}
 	}

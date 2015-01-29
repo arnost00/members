@@ -19,7 +19,7 @@ include ("./common_user.inc.php");
 include ("./common_race.inc.php");
 include ('./url.inc.php');
 
-DrawPageTitle('Pøihláška èlena na závody');
+DrawPageTitle('PÅ™ihlÃ¡Å¡ka Älena na zÃ¡vody');
 ?>
 
 <SCRIPT LANGUAGE="JavaScript">
@@ -42,28 +42,28 @@ db_Connect();
 @$vysledek_z=MySQL_Query("SELECT * FROM ".TBL_RACE." WHERE id=$id");
 $zaznam_z = MySQL_Fetch_Array($vysledek_z);
 
-DrawPageSubTitle('Vybranı závod');
+DrawPageSubTitle('VybranÃ½ zÃ¡vod');
 
 RaceInfoTable($zaznam_z,'',$gr_id != _REGISTRATOR_GROUP_ID_,false,true);
 ?>
 <BR>
-<BUTTON onclick="javascript:close_popup();">Zpìt</BUTTON>
+<BUTTON onclick="javascript:close_popup();">ZpÄ›t</BUTTON>
 <?
-DrawPageSubTitle('Pøihlášky');
+DrawPageSubTitle('PÅ™ihlÃ¡Å¡ky');
 
 $termin = raceterms::GetCurr4RegTerm($zaznam_z);
 
 if($termin == 0 && !IsLoggedAdmin() && !IsLoggedRegistrator())
 {
-	echo('Nelze provádìt pøihlášky, nejspíš u vypršely všechny termíny pøihlášek, je po závodì, èi není aktivní ádnı termín pro pøihlášení.');
+	echo('Nelze provÃ¡dÄ›t pÅ™ihlÃ¡Å¡ky, nejspÃ­Å¡ uÅ¾ vyprÅ¡ely vÅ¡echny termÃ­ny pÅ™ihlÃ¡Å¡ek, je po zÃ¡vodÄ›, Äi nenÃ­ aktivnÃ­ Å¾Ã¡dnÃ½ termÃ­n pro pÅ™ihlÃ¡Å¡enÃ­.');
 }
 else
 {
 ?>
 <p>
-Pøihlášení èlena - se provede zapsáním kategorie pro vybraného èlena.<BR>
-Odhlášení èlena - se provede vymazáním kategorie (prázné textové pole) pro vybraného èlena.<BR>
-Zmìna kategorie - se provede zmìnou textového pole s kategorií pro vybraného èlena.<BR>
+PÅ™ihlÃ¡Å¡enÃ­ Älena - se provede zapsÃ¡nÃ­m kategorie pro vybranÃ©ho Älena.<BR>
+OdhlÃ¡Å¡enÃ­ Älena - se provede vymazÃ¡nÃ­m kategorie (prÃ¡znÃ© textovÃ© pole) pro vybranÃ©ho Älena.<BR>
+ZmÄ›na kategorie - se provede zmÄ›nou textovÃ©ho pole s kategoriÃ­ pro vybranÃ©ho Älena.<BR>
 </p>
 <FORM METHOD=POST ACTION="./race_regs_1_exc.php?gr_id=<?echo $gr_id;?>&id=<?echo $id;?>" name="form1" onReset="javascript:aktu_line();">
 <?
@@ -77,7 +77,7 @@ $query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, kat, pozn, pozn_in, term
 
 echo '<TABLE width="90%">';
 echo '<TR>';
-echo '<TD align="right">Vyber èlena</TD>';
+echo '<TD align="right">Vyber Älena</TD>';
 echo '<TD width="5"></TD>';
 echo '<TD><SELECT name="user_id" size=1 onchange="javascript:aktu_line();">'."\n";
 
@@ -147,7 +147,7 @@ echo '</TR>';
 if($is_spol_dopr_on)
 {
 	echo '<TR>';
-	echo '<TD align="right">Spoleèná doprava</TD>';
+	echo '<TD align="right">SpoleÄnÃ¡ doprava</TD>';
 	echo '<TD width="5"></TD>';
 	echo '<TD><INPUT TYPE="checkbox" NAME="transport"></TD>';
 	echo '</TR>';
@@ -155,24 +155,24 @@ if($is_spol_dopr_on)
 else if ($is_spol_dopr_auto)
 {
 	echo '<TR>';
-	echo '<TD align="right">Spoleèná doprava</TD>';
+	echo '<TD align="right">SpoleÄnÃ¡ doprava</TD>';
 	echo '<TD width="5"></TD>';
 	echo '<TD>Automaticky</TD>';
 	echo '</TR>';
 }
 echo '<TR>';
-echo '<TD align="right">Poznámka</TD>';
+echo '<TD align="right">PoznÃ¡mka</TD>';
 echo '<TD width="5"></TD>';
-echo '<TD><INPUT TYPE="text" NAME="pozn" size="50" maxlength="250">&nbsp;(do&nbsp;pøihlášky)</TD>';
+echo '<TD><INPUT TYPE="text" NAME="pozn" size="50" maxlength="250">&nbsp;(do&nbsp;pÅ™ihlÃ¡Å¡ky)</TD>';
 echo '</TR><TR>';
-echo '<TD align="right">Poznámka</TD>';
+echo '<TD align="right">PoznÃ¡mka</TD>';
 echo '<TD width="5"></TD>';
-echo '<TD><INPUT TYPE="text" NAME="pozn2" size="50" maxlength="250">&nbsp;(interní)</TD>';
+echo '<TD><INPUT TYPE="text" NAME="pozn2" size="50" maxlength="250">&nbsp;(internÃ­)</TD>';
 echo '</TR>';
 if($is_termin_show_on)
 {
 	echo '<TR>';
-	echo '<TD align="right">Termín pøihlášek</TD>';
+	echo '<TD align="right">TermÃ­n pÅ™ihlÃ¡Å¡ek</TD>';
 	echo '<TD width="5"></TD>';
 	echo '<TD><INPUT TYPE="text" NAME="new_termin" size="5"></TD>';
 	echo '</TR>';
@@ -181,7 +181,7 @@ if($is_termin_show_on)
 	{
 		$kategorie=explode(';',$zaznam_z['kategorie']);
 ?>
-<TR><TD align="right" width="100">Monosti<BR>(kategorie)</TD><TD width="5"></TD><TD width="400">
+<TR><TD align="right" width="100">MoÅ¾nosti<BR>(kategorie)</TD><TD width="5"></TD><TD width="400">
 <?
 		for ($i=0; $i<count($kategorie)-1; $i++)
 		{
@@ -194,14 +194,14 @@ if($is_termin_show_on)
 	<TD colspan="3"></TD>
 </TR>
 <TR>
-	<TD colspan="3" align="center"><INPUT TYPE="submit" value='Proveï zmìnu'></TD>
+	<TD colspan="3" align="center"><INPUT TYPE="submit" value='ProveÄ zmÄ›nu'></TD>
 </TR>
 <TR>
 	<TD colspan="3"></TD>
 </TR>
 </TABLE>
 <?
-//echo "Poèet ji pøihlášenıch èlenù je ".$prihl_cl.".<BR><BR>";
+//echo "PoÄet jiÅ¾ pÅ™ihlÃ¡Å¡enÃ½ch ÄlenÅ¯ je ".$prihl_cl.".<BR><BR>";
 ?>
 <SCRIPT LANGUAGE="JavaScript">
 //<!--
@@ -236,29 +236,29 @@ window.onload = aktu_line();
 if(strlen($zaznam_z['poznamka']) > 0)
 {
 ?>
-<p><b>Doplòující informace o závodì (interní)</b> :<br>
+<p><b>DoplÅˆujÃ­cÃ­ informace o zÃ¡vodÄ› (internÃ­)</b> :<br>
 <?
 	echo('&nbsp;&nbsp;&nbsp;'.$zaznam_z['poznamka'].'</p>');
 }
 ?>
-* Pokud vybíráte èleny pomocí šipek (klávesnice), je potøeba potrvdit vıbìr stiskem klávesy Enter.
+* Pokud vybÃ­rÃ¡te Äleny pomocÃ­ Å¡ipek (klÃ¡vesnice), je potÅ™eba potrvdit vÃ½bÄ›r stiskem klÃ¡vesy Enter.
 <?
 }
 ?>
 <BR><hr><BR>
 <?
-DrawPageSubTitle('Pøihlášení závodníci');
+DrawPageSubTitle('PÅ™ihlÃ¡Å¡enÃ­ zÃ¡vodnÃ­ci');
 
 $data_tbl = new html_table_mc();
 $col = 0;
-$data_tbl->set_header_col($col++,'Poø.',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'PoÅ™.',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'PÅ™Ã­jmenÃ­',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
 if($is_spol_dopr_on)
-	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,'Spoleèná doprava');
+	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,'SpoleÄnÃ¡ doprava');
 if($zaznam_z['prihlasky'] > 1)
-	$data_tbl->set_header_col($col++,'Termín',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'TermÃ­n',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Pozn.',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Pozn.(i)',ALIGN_LEFT);
 
@@ -299,7 +299,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 }
 echo $data_tbl->get_footer()."\n";
 
-echo $is_spol_dopr_on?"<BR>Poèet pøihlášenıch na dopravu: $trans":"";
+echo $is_spol_dopr_on?"<BR>PoÄet pÅ™ihlÃ¡Å¡enÃ½ch na dopravu: $trans":"";
 ?>
 
 <BR>

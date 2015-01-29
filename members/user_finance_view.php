@@ -51,7 +51,7 @@ if (IsSet($payment) && IsLogged())
 include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 include ("./common_user.inc.php");
 include ("./ctable.inc.php");
-DrawPageTitle('Finance èlena');
+DrawPageTitle('Finance Älena');
 ?>
 
 <script>
@@ -97,11 +97,11 @@ if (IsSet($change) && $change == "change" && IsLoggedFinance())
 <br>
 <?
 if (!$set_back_button && $user_id != 0)
-	echo('<BUTTON onclick="location.href=\'user_finance_view.php?user_id='.$user_id.'\'; self.focus();">Obnov stránku</BUTTON>&nbsp;');
+	echo('<BUTTON onclick="location.href=\'user_finance_view.php?user_id='.$user_id.'\'; self.focus();">Obnov strÃ¡nku</BUTTON>&nbsp;');
 if ($set_back_button && $user_id != 0)
-	echo('<BUTTON onclick="location.href=\'user_finance_view.php?user_id='.$user_id.'\'; self.focus();">Zpìt</BUTTON>&nbsp;');
+	echo('<BUTTON onclick="location.href=\'user_finance_view.php?user_id='.$user_id.'\'; self.focus();">ZpÄ›t</BUTTON>&nbsp;');
 ?>
-<BUTTON onclick="javascript:close_popup();">Zavøi okno</BUTTON><BR>
+<BUTTON onclick="javascript:close_popup();">ZavÅ™i okno</BUTTON><BR>
 </CENTER>
 </BODY>
 </HTML>

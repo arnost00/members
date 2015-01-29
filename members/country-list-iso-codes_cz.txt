@@ -1,72 +1,72 @@
-AF:Afghánistán
+AF:AfghÃ¡nistÃ¡n
 AX:Alandy
-AL:Albánie
-DZ:Alírsko
-AS:Americká Samoa
-VI:Americké Panenské ostrovy
+AL:AlbÃ¡nie
+DZ:AlÅ¾Ã­rsko
+AS:AmerickÃ¡ Samoa
+VI:AmerickÃ© PanenskÃ© ostrovy
 AD:Andorra
 AO:Angola
 AI:Anguilla
 AQ:Antarktida
 AG:Antigua a Barbuda
 AR:Argentina
-AM:Arménie
+AM:ArmÃ©nie
 AW:Aruba
-AU:Austrálie
-AZ:Ázerbájdán
+AU:AustrÃ¡lie
+AZ:ÃzerbÃ¡jdÅ¾Ã¡n
 BS:Bahamy
 BH:Bahrajn
-BD:Bangladéš
+BD:BangladÃ©Å¡
 BB:Barbados
 BE:Belgie
 BZ:Belize
-BY:Bìlorusko
+BY:BÄ›lorusko
 BJ:Benin
 BM:Bermudy
-BT:Bhútán
-BO:Bolívie
-BQ:Bonaire, Svatı Eustach a Saba
+BT:BhÃºtÃ¡n
+BO:BolÃ­vie
+BQ:Bonaire, SvatÃ½ Eustach a Saba
 BA:Bosna a Hercegovina
 BW:Botswana
-BV:Bouvetùv ostrov
-BR:Brazílie
-IO:Britské indickooceánské území
-VG:Britské Panenské ostrovy
+BV:BouvetÅ¯v ostrov
+BR:BrazÃ­lie
+IO:BritskÃ© indickooceÃ¡nskÃ© ÃºzemÃ­
+VG:BritskÃ© PanenskÃ© ostrovy
 BN:Brunej
 BG:Bulharsko
 BF:Burkina Faso
 BI:Burundi
 CK:Cookovy ostrovy
-CW:Curaçao
-TD:Èad
-ME:Èerná Hora
-CZ:Èeská republika
-CN:Èína
-DK:Dánsko
-CD:Demokratická republika Kongo
+CW:CuraÃ§ao
+TD:ÄŒad
+ME:ÄŒernÃ¡ Hora
+CZ:ÄŒeskÃ¡ republika
+CN:ÄŒÃ­na
+DK:DÃ¡nsko
+CD:DemokratickÃ¡ republika Kongo
 DM:Dominika
-DO:Dominikánská republika
-DJ:Dibutsko
+DO:DominikÃ¡nskÃ¡ republika
+DJ:DÅ¾ibutsko
 EG:Egypt
-EC:Ekvádor
+EC:EkvÃ¡dor
 ER:Eritrea
 EE:Estonsko
 ET:Etiopie
-FO:Faerské ostrovy
-FK:Falklandy (Malvíny)
-FJ:Fidi
-PH:Filipíny
+FO:FaerskÃ© ostrovy
+FK:Falklandy (MalvÃ­ny)
+FJ:FidÅ¾i
+PH:FilipÃ­ny
 FI:Finsko
 FR:Francie
-GF:Francouzská Guyana
-TF:Francouzská jiní a antarktická území
-PF:Francouzská Polynésie
+GF:FrancouzskÃ¡ Guyana
+TF:FrancouzskÃ¡ jiÅ¾nÃ­ a antarktickÃ¡ ÃºzemÃ­
+PF:FrancouzskÃ¡ PolynÃ©sie
 GA:Gabon
 GM:Gambie
 GH:Ghana
 GI:Gibraltar
 GD:Grenada
-GL:Grónsko
+GL:GrÃ³nsko
 GE:Gruzie
 GP:Guadeloupe
 GU:Guam
@@ -76,38 +76,38 @@ GW:Guinea-Bissau
 GG:Guernsey
 GY:Guyana
 HT:Haiti
-HM:Heardùv ostrov a McDonaldovy ostrovy
+HM:HeardÅ¯v ostrov a McDonaldovy ostrovy
 HN:Honduras
 HK:Hongkong
 CL:Chile
 HR:Chorvatsko
 IN:Indie
-ID:Indonésie
-IQ:Irák
-IR:Írán
+ID:IndonÃ©sie
+IQ:IrÃ¡k
+IR:ÃrÃ¡n
 IE:Irsko
 IS:Island
-IT:Itálie
+IT:ItÃ¡lie
 IL:Izrael
 JM:Jamajka
 JP:Japonsko
 YE:Jemen
 JE:Jersey
-ZA:Jihoafrická republika
-GS:Jiní Georgie a Jiní Sandwichovy ostrovy
-KR:Jiní Korea
-SS:Jiní Súdán
-JO:Jordánsko
-KY:Kajmanské ostrovy
-KH:Kamboda
+ZA:JihoafrickÃ¡ republika
+GS:JiÅ¾nÃ­ Georgie a JiÅ¾nÃ­ Sandwichovy ostrovy
+KR:JiÅ¾nÃ­ Korea
+SS:JiÅ¾nÃ­ SÃºdÃ¡n
+JO:JordÃ¡nsko
+KY:KajmanskÃ© ostrovy
+KH:KambodÅ¾a
 CM:Kamerun
 CA:Kanada
 CV:Kapverdy
 QA:Katar
-KZ:Kazachstán
-KE:Keòa
+KZ:KazachstÃ¡n
+KE:KeÅˆa
 KI:Kiribati
-CC:Kokosové ostrovy
+CC:KokosovÃ© ostrovy
 CO:Kolumbie
 KM:Komory
 CG:Kongo
@@ -115,19 +115,19 @@ CR:Kostarika
 CU:Kuba
 KW:Kuvajt
 CY:Kypr
-KG:Kyrgyzstán
+KG:KyrgyzstÃ¡n
 LA:Laos
 LS:Lesotho
 LB:Libanon
-LR:Libérie
+LR:LibÃ©rie
 LY:Libye
-LI:Lichtenštejnsko
+LI:LichtenÅ¡tejnsko
 LT:Litva
-LV:Lotyšsko
+LV:LotyÅ¡sko
 LU:Lucembursko
 MO:Macao
 MG:Madagaskar
-HU:Maïarsko
+HU:MaÄarsko
 MK:Makedonie
 MY:Malajsie
 MW:Malawi
@@ -139,11 +139,11 @@ MA:Maroko
 MH:Marshallovy ostrovy
 MQ:Martinik
 MU:Mauricius
-MR:Mauritánie
+MR:MauritÃ¡nie
 YT:Mayotte
-UM:Menší odlehlé ostrovy USA
+UM:MenÅ¡Ã­ odlehlÃ© ostrovy USA
 MX:Mexiko
-FM:Mikronésie
+FM:MikronÃ©sie
 MD:Moldavsko
 MC:Monako
 MN:Mongolsko
@@ -152,75 +152,75 @@ MZ:Mosambik
 MM:Myanmar
 NA:Namibie
 NR:Nauru
-DE:Nìmecko
-NP:Nepál
+DE:NÄ›mecko
+NP:NepÃ¡l
 NE:Niger
-NG:Nigérie
+NG:NigÃ©rie
 NI:Nikaragua
 NU:Niue
 NL:Nizozemsko
 NF:Norfolk
 NO:Norsko
-NC:Nová Kaledonie
-NZ:Novı Zéland
-OM:Omán
-PK:Pákistán
+NC:NovÃ¡ Kaledonie
+NZ:NovÃ½ ZÃ©land
+OM:OmÃ¡n
+PK:PÃ¡kistÃ¡n
 PW:Palau
-PS:Palestinská autonomie
+PS:PalestinskÃ¡ autonomie
 PA:Panama
-PG:Papua-Nová Guinea
+PG:Papua-NovÃ¡ Guinea
 PY:Paraguay
 PE:Peru
 PN:Pitcairnovy ostrovy
-CI:Pobøeí slonoviny
+CI:PobÅ™eÅ¾Ã­ slonoviny
 PL:Polsko
 PR:Portoriko
 PT:Portugalsko
 AT:Rakousko
-RE:Réunion
-GQ:Rovníková Guinea
+RE:RÃ©union
+GQ:RovnÃ­kovÃ¡ Guinea
 RO:Rumunsko
 RU:Rusko
 RW:Rwanda
-GR:Øecko
+GR:Å˜ecko
 PM:Saint-Pierre a Miquelon
 SV:Salvador
 WS:Samoa
 SM:San Marino
-SA:Saúdská Arábie
+SA:SaÃºdskÃ¡ ArÃ¡bie
 SN:Senegal
-KP:Severní Korea
-MP:Severní Mariany
+KP:SevernÃ­ Korea
+MP:SevernÃ­ Mariany
 SC:Seychely
 SL:Sierra Leone
 SG:Singapur
 SK:Slovensko
 SI:Slovinsko
-SO:Somálsko
-AE:Spojené arabské emiráty
-GB:Spojené království
-US:Spojené státy americké
+SO:SomÃ¡lsko
+AE:SpojenÃ© arabskÃ© emirÃ¡ty
+GB:SpojenÃ© krÃ¡lovstvÃ­
+US:SpojenÃ© stÃ¡ty americkÃ©
 RS:Srbsko
-CF:Støedoafrická republika
-SD:Súdán
+CF:StÅ™edoafrickÃ¡ republika
+SD:SÃºdÃ¡n
 SR:Surinam
-SH:Svatá Helena, Ascension a Tristan da Cunha
-LC:Svatá Lucie
-BL:Svatı Bartolomìj
-KN:Svatı Kryštof a Nevis
-MF:Svatı Martin (francouzská èást)
-SX:Svatı Martin (nizozemská èást)
-ST:Svatı Tomáš a Princùv ostrov
-VC:Svatı Vincenc a Grenadiny
+SH:SvatÃ¡ Helena, Ascension a Tristan da Cunha
+LC:SvatÃ¡ Lucie
+BL:SvatÃ½ BartolomÄ›j
+KN:SvatÃ½ KryÅ¡tof a Nevis
+MF:SvatÃ½ Martin (francouzskÃ¡ ÄÃ¡st)
+SX:SvatÃ½ Martin (nizozemskÃ¡ ÄÃ¡st)
+ST:SvatÃ½ TomÃ¡Å¡ a PrincÅ¯v ostrov
+VC:SvatÃ½ Vincenc a Grenadiny
 SZ:Svazijsko
-SY:Sırie
-SB:Šalamounovy ostrovy
-ES:Španìlsko
-SJ:Špicberky a Jan Mayen
-LK:Šrí Lanka
-SE:Švédsko
-CH:Švıcarsko
-TJ:Tádikistán
+SY:SÃ½rie
+SB:Å alamounovy ostrovy
+ES:Å panÄ›lsko
+SJ:Å picberky a Jan Mayen
+LK:Å rÃ­ Lanka
+SE:Å vÃ©dsko
+CH:Å vÃ½carsko
+TJ:TÃ¡dÅ¾ikistÃ¡n
 TZ:Tanzanie
 TH:Thajsko
 TW:Tchaj-wan
@@ -230,20 +230,20 @@ TO:Tonga
 TT:Trinidad a Tobago
 TN:Tunisko
 TR:Turecko
-TM:Turkmenistán
+TM:TurkmenistÃ¡n
 TC:Turks a Caicos
 TV:Tuvalu
 UG:Uganda
 UA:Ukrajina
 UY:Uruguay
-UZ:Uzbekistán
-CX:Vánoèní ostrov
+UZ:UzbekistÃ¡n
+CX:VÃ¡noÄnÃ­ ostrov
 VU:Vanuatu
-VA:Vatikán
+VA:VatikÃ¡n
 VE:Venezuela
 VN:Vietnam
-TL:Vıchodní Timor
+TL:VÃ½chodnÃ­ Timor
 WF:Wallis a Futuna
 ZM:Zambie
-EH:Západní Sahara
+EH:ZÃ¡padnÃ­ Sahara
 ZW:Zimbabwe

@@ -7,7 +7,7 @@ function _print_upd_info ()
 {
 	global $version_upd, $g_dbserver, $g_dbname, $g_baseadr;
 
-	echo '<B>Aktualizace databáze pro verzi '.$version_upd.' a niší</B>';
+	echo '<B>Aktualizace databÃ¡ze pro verzi '.$version_upd.' a niÅ¾Å¡Ã­</B>';
 	echo "<BR>\n";
 	echo "<code><BR>\n";
 	echo 'DbServerName : <B>'.$g_dbserver."</B><BR>\n";
@@ -21,7 +21,7 @@ function _list_sql_queries (&$qlist)
 {
 	global $this_file_name;
 
-	echo '<U>SQL pøíkazy</U> :';
+	echo '<U>SQL pÅ™Ã­kazy</U> :';
 	echo "<BR>\n";
 	echo "<BR>\n";
 	echo '<code>';
@@ -32,14 +32,14 @@ function _list_sql_queries (&$qlist)
 	}
 	echo '</code>';
 	echo '<HR>';
-	echo '<BUTTON type="button" onclick="window.location = \'./'.$this_file_name.'?action=1\'">Proveï aktualizaci</BUTTON>';
+	echo '<BUTTON type="button" onclick="window.location = \'./'.$this_file_name.'?action=1\'">ProveÄ aktualizaci</BUTTON>';
 }
 
 function _run_sql_queries (&$qlist)
 {
 	$db_ok = 0;
 	$db_err = 0;
-	echo '<U>Provádím SQL pøíkazy</U> :';
+	echo '<U>ProvÃ¡dÃ­m SQL pÅ™Ã­kazy</U> :';
 	echo "<BR>\n";
 	echo "<BR>\n";
 	echo '<code>'."\n";
@@ -53,7 +53,7 @@ function _run_sql_queries (&$qlist)
 		if ($result == FALSE)
 		{
 			echo '<span class="ErrorText"><B>Chyba</B><BR>'."\n";
-			echo 'Nepodaøilo se provést zmìnu v databázi.<BR>'."\n";
+			echo 'NepodaÅ™ilo se provÃ©st zmÄ›nu v databÃ¡zi.<BR>'."\n";
 			echo 'Error - '.mysql_errno().': '.mysql_error().'</span><BR>'."\n"; 
 			echo '----------<BR>'."\n";
 			$db_err ++;
@@ -67,9 +67,9 @@ function _run_sql_queries (&$qlist)
 	}
 	echo '</code>'."\n";
 	echo '<HR>'."\n";
-	echo ' Poèet úkonù provádìnıch v db : <B>'.sizeof($qlist).'</B><BR>'."\n";
-	echo ' Správnì vykonanıch úkonù v db : <B>'.$db_ok.'</B><BR>'."\n";
-	echo ' Chybnì vykonanıch úkonù v db : <span class="ErrorText"><B>'.$db_err.'</B></span><BR>'."\n";
+	echo ' PoÄet ÃºkonÅ¯ provÃ¡dÄ›nÃ½ch v db : <B>'.sizeof($qlist).'</B><BR>'."\n";
+	echo ' SprÃ¡vnÄ› vykonanÃ½ch ÃºkonÅ¯ v db : <B>'.$db_ok.'</B><BR>'."\n";
+	echo ' ChybnÄ› vykonanÃ½ch ÃºkonÅ¯ v db : <span class="ErrorText"><B>'.$db_err.'</B></span><BR>'."\n";
 }
 
 

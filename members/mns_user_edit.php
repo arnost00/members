@@ -33,7 +33,7 @@ include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 include ("./common.inc.php");
 include ("./common_user.inc.php");
 
-DrawPageTitle('Èlenská základna - Editace uivatele');
+DrawPageTitle('ÄŒlenskÃ¡ zÃ¡kladna - Editace uÅ¾ivatele');
 ?>
 <TABLE width="100%" cellpadding="0" cellspacing="0" border="0">
 <TR>
@@ -60,7 +60,7 @@ if ($chief_id > 0) include 'us_setup_nursechild_form.inc.php';
 ?>
 
 
-<A HREF="index.php?id=600&subid=1">Zpìt na seznam èlenù</A><BR>
+<A HREF="index.php?id=600&subid=1">ZpÄ›t na seznam ÄlenÅ¯</A><BR>
 <BR><hr><BR>
 </CENTER>
 </TD>

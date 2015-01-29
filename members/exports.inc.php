@@ -47,12 +47,12 @@ class CSOB_Export_Entry
 		foreach($this->data as $zaznam)
 		{
 			$str = RegNumToStr($zaznam['reg']).SPACE_CHAR;
-			$str .= str_pad($zaznam['kat'],KAT_LEN,SPACE_CHAR).SPACE_CHAR;
-			$str .= str_pad($zaznam['si'],SI_LEN2005,SPACE_CHAR).SPACE_CHAR;
-			$str .= str_pad($zaznam['prijmeni'].' '.$zaznam['jmeno'],NAME_LEN,SPACE_CHAR).SPACE_CHAR;
+			$str .= mb_str_pad($zaznam['kat'],KAT_LEN,SPACE_CHAR).SPACE_CHAR;
+			$str .= mb_str_pad($zaznam['si'],SI_LEN2005,SPACE_CHAR).SPACE_CHAR;
+			$str .= mb_str_pad($zaznam['prijmeni'].' '.$zaznam['jmeno'],NAME_LEN,SPACE_CHAR).SPACE_CHAR;
 			$str .= $zaznam['lic'];
 			if($with_born_dates != false)
-			{	// datum narození (59-64) ve tvaru rrmmdd
+			{	// datum narozenÃ­ (59-64) ve tvaru rrmmdd
 				$str .= SPACE_CHAR.SQLDate2StringReg($zaznam['date_born']);
 			}
 			$str .= SPACE_CHAR;
@@ -183,9 +183,9 @@ class ORIS_Export
 			if ($female)
 				$month += 50;
 			$year = (int) $dat[0];
-			$result = str_pad($year % 100,2,'0',STR_PAD_LEFT);
-			$result .= str_pad($month,2,'0',STR_PAD_LEFT);
-			$result .= str_pad($day,2,'0',STR_PAD_LEFT);
+			$result = mb_str_pad($year % 100,2,'0',STR_PAD_LEFT);
+			$result .= mb_str_pad($month,2,'0',STR_PAD_LEFT);
+			$result .= mb_str_pad($day,2,'0',STR_PAD_LEFT);
 			return $result;
 		}
 		else
@@ -225,9 +225,9 @@ class CSV_Export
 	public function generate_users()
 	{
 		$text = '';
-		$text .= 'pøíjmeni;jméno;datum narození;reg;email;adresa;mesto;psc;tel.domù;tel.práce; tel.mobilní;si.èip;licence OB;licence MTBO;licence LOB;národnost;';
+		$text .= 'pÅ™Ã­jmeni;jmÃ©no;datum narozenÃ­;reg;email;adresa;mesto;psc;tel.domÅ¯;tel.prÃ¡ce; tel.mobilnÃ­;si.Äip;licence OB;licence MTBO;licence LOB;nÃ¡rodnost;';
 		if (IsLoggedSmallAdmin() || IsLoggedAdmin())
-			$text .= 'rodné èíslo;';
+			$text .= 'rodnÃ© ÄÃ­slo;';
 		$text .= "\n";
 
 		foreach($this->data as $zaznam)

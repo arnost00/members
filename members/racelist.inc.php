@@ -1,7 +1,7 @@
 <?php /* adminova stranka - rozcestnik pro admina */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('OddÌlov· termÌnovka');
+DrawPageTitle('Odd√≠lov√° term√≠novka');
 ?>
 <CENTER>
 <script language="javascript">
@@ -32,15 +32,15 @@ if ($num_rows > 0)
 	$data_tbl = new html_table_mc();
 	$col = 0;
 	$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'N·zev',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'MÌsto',ALIGN_LEFT);
-	$data_tbl->set_header_col_with_help($col++,'Po¯.',ALIGN_CENTER,"Po¯adatel");
-	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ z·vodu");
-	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web z·vodu");
-	$data_tbl->set_header_col_with_help($col++,'P¯',ALIGN_CENTER,"Zobrazit p¯ihl·öenÈ");
-	$data_tbl->set_header_col($col++,'P¯ihl·öky',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'N√°zev',ALIGN_LEFT);
+	$data_tbl->set_header_col($col++,'M√≠sto',ALIGN_LEFT);
+	$data_tbl->set_header_col_with_help($col++,'Po≈ô.',ALIGN_CENTER,"Po≈ôadatel");
+	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ z√°vodu");
+	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web z√°vodu");
+	$data_tbl->set_header_col_with_help($col++,'P≈ô',ALIGN_CENTER,"Zobrazit p≈ôihl√°≈°en√©");
+	$data_tbl->set_header_col($col++,'P≈ôihl√°≈°ky',ALIGN_CENTER);
 	if($g_enable_race_boss)
-		$data_tbl->set_header_col($col++,'VedoucÌ',ALIGN_CENTER);
+		$data_tbl->set_header_col($col++,'Vedouc√≠',ALIGN_CENTER);
 	echo $data_tbl->get_css()."\n";
 	echo $data_tbl->get_header()."\n";
 	echo $data_tbl->get_header_row()."\n";
@@ -101,7 +101,7 @@ if ($num_rows > 0)
 }
 else
 {
-	echo "TermÌnov· listina je pr·zdn·.<BR>";
+	echo "Term√≠nov√° listina je pr√°zdn√°.<BR>";
 }
 ?>
 <BR>

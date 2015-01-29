@@ -15,14 +15,14 @@ if (!IsLoggedManager() && !IsLoggedRegistrator() && !IsLoggedSmallAdmin() && !Is
 include ('./header.inc.php'); // header obsahuje uvod html a konci <BODY>
 include ('./common.inc.php');
 
-DrawPageTitle('Export adresáøe');
+DrawPageTitle('Export adresÃ¡Å™e');
 
 if ($g_enable_oris_support)
 {
 ?>
-<ul>Doèasnì:
-	<li><a href="export_directory_exc.php?oris=1">Export pro ORIS (Import èlenù klubu)</a><br>
-	<li><a href="export_directory_exc.php?oris=2">Export pro ORIS (Import kontaktních informací)</a><br>
+<ul>DoÄasnÄ›:
+	<li><a href="export_directory_exc.php?oris=1">Export pro ORIS (Import ÄlenÅ¯ klubu)</a><br>
+	<li><a href="export_directory_exc.php?oris=2">Export pro ORIS (Import kontaktnÃ­ch informacÃ­)</a><br>
 </ul>
 <?
 }
@@ -30,19 +30,19 @@ if ($g_enable_oris_support)
 
 <h3 class="LinksTitle">Parametry exportu :</h3>
 <form method="post" action="export_directory_exc.php">
-Oddìlovaè mezi sloupci :<br>
-<input type="radio" name="par1" value="1" checked id="id_p1a"><label for="id_p1a">Støedník</label><br>
-<input type="radio" name="par1" value="2" id="id_p1b"><label for="id_p1b">Tabelátor</label><br>
+OddÄ›lovaÄ mezi sloupci :<br>
+<input type="radio" name="par1" value="1" checked id="id_p1a"><label for="id_p1a">StÅ™ednÃ­k</label><br>
+<input type="radio" name="par1" value="2" id="id_p1b"><label for="id_p1b">TabelÃ¡tor</label><br>
 <br>
-Sloupce uzavøít do uvozovek :<br>
+Sloupce uzavÅ™Ã­t do uvozovek :<br>
 <input type="radio" name="par2" value="1" checked id="id_p2a"><label for="id_p2a">Ano</label><br>
 <input type="radio" name="par2" value="0" id="id_p2b"><label for="id_p2b">Ne</label><br>
 <br>
-Vloit apostrof pøed numerické sloupce :<br>
+VloÅ¾it apostrof pÅ™ed numerickÃ© sloupce :<br>
 <input type="radio" name="par3" value="1" checked id="id_p3a"><label for="id_p3a">Ano</label><br>
 <input type="radio" name="par3" value="0" id="id_p3b"><label for="id_p3b">Ne</label><br>
 <br>
-<input type="submit" value="Exportovat">&nbsp;&nbsp;<button onclick="javascript:close_popup();">Zavøít</button>
+<input type="submit" value="Exportovat">&nbsp;&nbsp;<button onclick="javascript:close_popup();">ZavÅ™Ã­t</button>
 </form>
 </body>
 </html>

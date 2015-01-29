@@ -59,9 +59,9 @@ while ($zaznamZ=MySQL_Fetch_Array($vysledek))
 			{	// del
 //				echo "DEL";
 				$result=MySQL_Query("DELETE FROM ".TBL_ZAVXUS." WHERE id_zavod = '$id' AND id_user = '$user'")
-					or die("Chyba pøi provádìní dotazu do databáze.");
+					or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 				if ($result == FALSE)
-					die ("Nepodaøilo se zmìnit pøihlášku èlena.");
+					die ("NepodaÅ™ilo se zmÄ›nit pÅ™ihlÃ¡Å¡ku Älena.");
 			}
 			else
 			{	// update
@@ -72,9 +72,9 @@ while ($zaznamZ=MySQL_Fetch_Array($vysledek))
 				$cterm=correct_sql_string($cterm);
 			
 				$result=MySQL_Query("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$poz', pozn_in='$poz2', termin='$cterm', transport='$trans' WHERE id_zavod = '$id' AND id_user = '$user'")
-					or die("Chyba pøi provádìní dotazu do databáze.");
+					or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 				if ($result == FALSE)
-					die ("Nepodaøilo se zmìnit pøihlášku èlena.");
+					die ("NepodaÅ™ilo se zmÄ›nit pÅ™ihlÃ¡Å¡ku Älena.");
 			}
 		}
 		else
@@ -88,9 +88,9 @@ while ($zaznamZ=MySQL_Fetch_Array($vysledek))
 				$cterm=correct_sql_string($cterm);
 			
 				$result=MySQL_Query("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in, termin, transport) VALUES ('$user','$id','$kat','$poz','$poz2','$cterm','$trans')")
-					or die("Chyba pøi provádìní dotazu do databáze.");
+					or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 				if ($result == FALSE)
-					die ("Nepodaøilo se zmìnit pøihlášku èlena.");
+					die ("NepodaÅ™ilo se zmÄ›nit pÅ™ihlÃ¡Å¡ku Älena.");
 			}
 			// jinak stale neprihlasen
 		}

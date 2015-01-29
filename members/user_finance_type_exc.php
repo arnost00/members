@@ -18,9 +18,9 @@ $user_id = (isset($user_id) && is_numeric($user_id)) ? (int)$user_id : 0;
 $type = (isset($type)&& is_numeric($type)) ? (int)$type : 0;
 
 $result=MySQL_Query("UPDATE ".TBL_USER." SET finance_type='$type' WHERE id='$user_id'")
-	or die("Chyba pøi provádìní dotazu do databáze.");
+	or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 if ($result == FALSE)
-	die ("Nepodaøilo se zmìnit údaje o závodì.");
+	die ("NepodaÅ™ilo se zmÄ›nit Ãºdaje o zÃ¡vodÄ›.");
 
 header('location: '.$g_baseadr.'?id=800&subid=1');
 

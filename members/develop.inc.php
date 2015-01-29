@@ -1,1 +1,1 @@
-<CENTER><H3>Tato stránka je teprve ve vıvoji.</H3></CENTER>
+<CENTER><H3>Tato strÃ¡nka je teprve ve vÃ½voji.</H3></CENTER>

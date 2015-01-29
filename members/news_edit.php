@@ -36,7 +36,7 @@ DrawPageTitle('Editace novinky');
 <CENTER>
 <? include ("news_edit.inc.php"); ?>
 <BR><hr><BR>
-<A HREF="index.php?id=0">Zpìt na seznam novinek</A><BR>
+<A HREF="index.php?id=0">ZpÄ›t na seznam novinek</A><BR>
 <BR><hr><BR>
 </CENTER>
 </TD>

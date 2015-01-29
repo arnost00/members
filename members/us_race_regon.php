@@ -23,7 +23,7 @@ db_Connect();
 $id_zav = (IsSet($id_zav) && is_numeric($id_zav)) ? (int)$id_zav : 0;
 $id_us = (IsSet($id_us) && is_numeric($id_us)) ? (int)$id_us : 0;
 
-DrawPageTitle('P¯ihl·öka na z·vod');
+DrawPageTitle('P≈ôihl√°≈°ka na z√°vod');
 
 @$vysledek=MySQL_Query("SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod=$id_zav ORDER BY id");
 
@@ -51,7 +51,7 @@ function check_reg(vstup)
 {
 	if (vstup.kat.value == "")
 	{
-		alert("MusÌö zadat kategorii pro p¯ihl·öenÌ do z·vodu.");
+		alert("Mus√≠≈° zadat kategorii pro p≈ôihl√°≈°en√≠ do z√°vodu.");
 		return false;
 	}
 	else
@@ -60,7 +60,7 @@ function check_reg(vstup)
 
 function submit_off()
 {
-	if (confirm('Opravdu se chcete odhl·sit?'))
+	if (confirm('Opravdu se chcete odhl√°sit?'))
 	{
 		window.location = 'us_race_regoff_exc.php?id_zav=<? echo($id_zav) ?>&id_us=<? echo($id_us) ?>';
 	}
@@ -70,7 +70,7 @@ function submit_off()
 </SCRIPT>
 
 <?
-DrawPageSubTitle('Vybran˝ z·vod');
+DrawPageSubTitle('Vybran√Ω z√°vod');
 
 if (!$new)
 {
@@ -82,28 +82,28 @@ else
 	RaceInfoTable($zaznam_z,'',true,false,true);
 ?>
 <BR>
-<BUTTON onclick="javascript:close_popup();">ZpÏt</BUTTON>
+<BUTTON onclick="javascript:close_popup();">Zpƒõt</BUTTON>
 <BR><BR>
 <hr><BR>
 
 <?
 if ($zaznam_u['entry_locked'] != 0)
 {
-	echo('<span class="WarningText">M·te zamknutou moûnost se p¯ihlaöovat.</span>'."<br>\n");
+	echo('<span class="WarningText">M√°te zamknutou mo≈ænost se p≈ôihla≈°ovat.</span>'."<br>\n");
 
 	if ($zaznam_rg['kat'] != '')
 	{
-		echo('<BR><BR>Vybran· kategorie:&nbsp;'.$zaznam_rg['kat']);
+		echo('<BR><BR>Vybran√° kategorie:&nbsp;'.$zaznam_rg['kat']);
 		if ($zaznam_z["transport"]==1)
 		{
 			echo "<BR><BR>";
 			$trans=$zaznam_rg["transport"]?"Ano":"Ne";
-			echo 'Chci vyuûÌt spoleËnou dopravu:&nbsp;'.$trans;
+			echo 'Chci vyu≈æ√≠t spoleƒçnou dopravu:&nbsp;'.$trans;
 		}
 		echo "<BR><BR>";
-		echo 'Pozn·mka:&nbsp;'.$zaznam_rg['pozn'].'&nbsp;(do&nbsp;p¯ihl·öky)';
+		echo 'Pozn√°mka:&nbsp;'.$zaznam_rg['pozn'].'&nbsp;(do&nbsp;p≈ôihl√°≈°ky)';
 		echo "<BR><BR>";
-		echo 'Pozn·mka:&nbsp;'.$zaznam_rg['pozn_in'].'&nbsp;(internÌ)';
+		echo 'Pozn√°mka:&nbsp;'.$zaznam_rg['pozn_in'].'&nbsp;(intern√≠)';
 		echo "<BR><BR>";
 	}
 }
@@ -112,7 +112,7 @@ else
 ?>
 <FORM METHOD=POST ACTION="us_race_regon_exc.php" name="form1" onsubmit="return check_reg(this);">
 
-Do kterÈ kategorie chcete p¯ihl·sit:&nbsp;
+Do kter√© kategorie chcete p≈ôihl√°sit:&nbsp;
 <?
 echo'<br>';
 $kategorie=explode(';',$zaznam_z['kategorie']);
@@ -121,7 +121,7 @@ for ($i=0; $i<count($kategorie)-1; $i++)
 	echo "<button onclick=\"javascript:zmen_kat('".$kategorie[$i]."');return false;\">".$kategorie[$i]."</button>";
 }
 
-echo('<BR><BR>Vybran· kategorie:&nbsp;');
+echo('<BR><BR>Vybran√° kategorie:&nbsp;');
 echo('<INPUT TYPE="text" NAME="kat" size=4 value="'.$zaznam_rg['kat'].'">');
 echo("<BR>\n");
 
@@ -129,19 +129,19 @@ if ($zaznam_z["transport"]==1)
 {
 	echo "<BR><BR>";
 	$trans=$zaznam_rg["transport"]?"CHECKED":"";
-	echo 'Chci vyuûÌt spoleËnou dopravu&nbsp;<input type="checkbox" name="transport" id="transport" '.$trans.'>';
+	echo 'Chci vyu≈æ√≠t spoleƒçnou dopravu&nbsp;<input type="checkbox" name="transport" id="transport" '.$trans.'>';
 }
 else if ($zaznam_z["transport"]==2)
 {
 	echo "<BR><BR>";
-	echo 'SpoleËn· doprava je zad·na automaticky.';
+	echo 'Spoleƒçn√° doprava je zad√°na automaticky.';
 }
 
 ?>
 <BR><BR>
-Pozn·mka&nbsp;<INPUT TYPE="text" name="pozn" size="50" maxlength="250" value="<?echo $zaznam_rg['pozn']?>">&nbsp;(do&nbsp;p¯ihl·öky)
+Pozn√°mka&nbsp;<INPUT TYPE="text" name="pozn" size="50" maxlength="250" value="<?echo $zaznam_rg['pozn']?>">&nbsp;(do&nbsp;p≈ôihl√°≈°ky)
 <BR><BR>
-Pozn·mka&nbsp;<INPUT TYPE="text" name="pozn2" size="50" maxlength="250" value="<?echo $zaznam_rg['pozn_in']?>">&nbsp;(internÌ)
+Pozn√°mka&nbsp;<INPUT TYPE="text" name="pozn2" size="50" maxlength="250" value="<?echo $zaznam_rg['pozn_in']?>">&nbsp;(intern√≠)
 <BR><BR>
 
 <INPUT TYPE="hidden" name="id_us" value="<?echo $id_us?>">
@@ -153,14 +153,14 @@ Pozn·mka&nbsp;<INPUT TYPE="text" name="pozn2" size="50" maxlength="250" value="<
 if ($new)
 {
 ?>
-<INPUT TYPE="submit" value="P¯ihl·sit na z·vod">
+<INPUT TYPE="submit" value="P≈ôihl√°sit na z√°vod">
 <?
 }
 else
 {
 ?>
-<INPUT TYPE="submit" value="ZmÏnit ˙daje">
-&nbsp;&nbsp;&nbsp;&nbsp;<BUTTON onclick="return submit_off();">Odhl·sit za z·vodu</BUTTON>
+<INPUT TYPE="submit" value="Zmƒõnit √∫daje">
+&nbsp;&nbsp;&nbsp;&nbsp;<BUTTON onclick="return submit_off();">Odhl√°sit za z√°vodu</BUTTON>
 <?
 }
 ?>
@@ -171,7 +171,7 @@ else
 if(strlen($zaznam_z['poznamka']) > 0)
 {
 ?>
-<p><b>DoplÚujÌcÌ informace o z·vodÏ (internÌ)</b> :<br>
+<p><b>Dopl≈àuj√≠c√≠ informace o z√°vodƒõ (intern√≠)</b> :<br>
 <?
 	echo('&nbsp;&nbsp;&nbsp;'.$zaznam_z['poznamka'].'</p>');
 }
@@ -179,20 +179,20 @@ if(strlen($zaznam_z['poznamka']) > 0)
 
 <BR><hr><BR>
 <?
-DrawPageSubTitle('P¯ihl·öenÌ z·vodnÌci');
+DrawPageSubTitle('P≈ôihl√°≈°en√≠ z√°vodn√≠ci');
 
 $is_spol_dopr_on = ($zaznam_z["transport"]==1);
 
 $data_tbl = new html_table_mc();
 $col = 0;
-$data_tbl->set_header_col($col++,'Po¯.',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'JmÈno',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'P¯ÌjmenÌ',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'Po≈ô.',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'Jm√©no',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'P≈ô√≠jmen√≠',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
 if($is_spol_dopr_on)
-	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,'SpoleËn· doprava');
+	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,'Spoleƒçn√° doprava');
 if($zaznam_z['prihlasky'] > 1)
-	$data_tbl->set_header_col($col++,'TermÌn',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'Term√≠n',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Pozn.',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Pozn.(i)',ALIGN_LEFT);
 
@@ -231,7 +231,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 }
 echo $data_tbl->get_footer()."\n";
 
-echo $is_spol_dopr_on?"<BR>PoËet p¯ihl·öen˝ch na dopravu: $trans":"";
+echo $is_spol_dopr_on?"<BR>Poƒçet p≈ôihl√°≈°en√Ωch na dopravu: $trans":"";
 ?>
 
 <BR>

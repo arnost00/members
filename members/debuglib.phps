@@ -1,15 +1,15 @@
 <?php
 #############################################################
 ## Name          : debuglib for PHP5
-## Author        : Thomas Schüßler <debuglib at atomar dot de>
+## Author        : Thomas SchÃ¼ÃŸler <debuglib at atomar dot de>
 ## Last changed  : 31.03.2009 10:15:13
 ## Revision      : 45
 ## Website       : http://phpdebuglib.de
 ############################################################
 
 /*
- * Copyright (C) 2004-2009 by Thomas Schüßler
- * Written by Thomas Schüßler <debuglib at atomar dot de>
+ * Copyright (C) 2004-2009 by Thomas SchÃ¼ÃŸler
+ * Written by Thomas SchÃ¼ÃŸler <debuglib at atomar dot de>
  * All Rights Reserved
  *
  * This library is free software; you can redistribute it and/or
@@ -388,7 +388,7 @@ else:
 			);
 				
 			$string = preg_replace(array('/&nbsp;$/', '/^&nbsp;/'), '<span class="DbugL_outer_space">&nbsp;</span>', $string); # mark spaces at the start/end of the string with red underscores
-			$string = str_replace("\t", '&nbsp;&nbsp;<span class="DbugL_tabs">&nbsp;</span>', $string); # replace tabulators with '  »'
+			$string = str_replace("\t", '&nbsp;&nbsp;<span class="DbugL_tabs">&nbsp;</span>', $string); # replace tabulators with '  Â»'
 			return $string;
 		}
 

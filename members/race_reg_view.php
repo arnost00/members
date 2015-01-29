@@ -18,7 +18,7 @@ $us = (int)((IsSet($us) && is_numeric($us)) ? (($us > 0) ? 1 : 0) : 0);
 $gr_id = (IsSet($gr_id) && is_numeric($gr_id)) ? (int)$gr_id : 0;
 $select = (int)((IsSet($select) && is_numeric($select)) ? (($select > 0) ? 1 : 0) : 0);
 
-DrawPageTitle('Seznam závodníkù pøihlášených na závod');
+DrawPageTitle('Seznam zÃ¡vodnÃ­kÅ¯ pÅ™ihlÃ¡Å¡enÃ½ch na zÃ¡vod');
 
 db_Connect();
 
@@ -30,34 +30,34 @@ $query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.termin, z.si_chip as t_si_chip
 $zaznam_z = MySQL_Fetch_Array($vysledek_z);
 
 
-DrawPageSubTitle('Vybraný závod');
+DrawPageSubTitle('VybranÃ½ zÃ¡vod');
 
 RaceInfoTable($zaznam_z,'',$gr_id != _REGISTRATOR_GROUP_ID_,false,true);
 ?>
 <TABLE class= "Zav" cellpadding="0" cellspacing="2" border="0">
 <BR>
-<BUTTON onclick="javascript:close_popup();">Zavøi</BUTTON>
+<BUTTON onclick="javascript:close_popup();">ZavÅ™i</BUTTON>
 <BR><BR><hr><BR>
 <?
-DrawPageSubTitle('Pøihlášení závodníci');
+DrawPageSubTitle('PÅ™ihlÃ¡Å¡enÃ­ zÃ¡vodnÃ­ci');
 
 $is_spol_dopr_on = ($zaznam_z["transport"]==1);
 
 $data_tbl = new html_table_mc();
 $col = 0;
-$data_tbl->set_header_col($col++,'Poø.',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'PoÅ™.',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'PÅ™Ã­jmenÃ­',ALIGN_LEFT);
 if ($us == 0)
 {
-	$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_CENTER,"Registraèní èíslo");
-	$data_tbl->set_header_col($col++,'SI èip',ALIGN_RIGHT);
+	$data_tbl->set_header_col_with_help($col++,'Reg.Ä.',ALIGN_CENTER,"RegistraÄnÃ­ ÄÃ­slo");
+	$data_tbl->set_header_col($col++,'SI Äip',ALIGN_RIGHT);
 }
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
 if($is_spol_dopr_on)
-	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,'Spoleèná doprava');
+	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,'SpoleÄnÃ¡ doprava');
 if($zaznam_z['prihlasky'] > 1)
-	$data_tbl->set_header_col($col++,'Termín',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'TermÃ­n',ALIGN_CENTER);
 if (IsLogged())
 {
 	$data_tbl->set_header_col($col++,'Pozn.',ALIGN_LEFT);
@@ -110,7 +110,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 }
 echo $data_tbl->get_footer()."\n";
 
-echo $is_spol_dopr_on?"<BR>Poèet pøihlášených na dopravu: $trans":"";
+echo $is_spol_dopr_on?"<BR>PoÄet pÅ™ihlÃ¡Å¡enÃ½ch na dopravu: $trans":"";
 ?>
 
 <BR>

@@ -31,9 +31,9 @@ if (mysql_num_rows($vysledek) > 0)
 			if ($si_chip != $zaznam['si_chip'])
 			{
 				$result=MySQL_Query('UPDATE '.TBL_ZAVXUS.' SET `si_chip`= '.$si_chip.' WHERE `id_zavod` = '.$id_zav.' AND `id_user` = '.$user)
-					or die("Chyba pøi provádìní dotazu do databáze.");
+					or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 				if ($result == FALSE)
-					die ("Nepodaøilo se zmìnit pøihlášku èlena.");
+					die ("NepodaÅ™ilo se zmÄ›nit pÅ™ihlÃ¡Å¡ku Älena.");
 			}
 		}
 	}

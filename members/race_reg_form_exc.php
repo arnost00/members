@@ -21,7 +21,7 @@ $creg = (IsSet($creg)&& is_numeric($creg)) ? (($creg >= 2) ? 2 : (int)$creg) : 0
 
 if($ff == 1)
 {
-	HTML_Header('Pøihláška - Náhled');
+	HTML_Header('PÅ™ihlÃ¡Å¡ka - NÃ¡hled');
 ?>
 <pre>
 <?
@@ -55,7 +55,7 @@ else
 
 if (mysql_num_rows($vysledek) == 0)
 {
-	echo "Nikdo není pøihlášen.";
+	echo "Nikdo nenÃ­ pÅ™ihlÃ¡Å¡en.";
 }
 else
 {

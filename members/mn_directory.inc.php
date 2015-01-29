@@ -1,14 +1,14 @@
 <?php /* trenerova stranka - editace clenu oddilu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Èlenská základna');
+DrawPageTitle('ÄŒlenskÃ¡ zÃ¡kladna');
 ?>
 <CENTER>
 
 <script language="JavaScript">
 <!--
 function confirm_delete(name) {
-	return confirm('Opravdu chcete smazat èlena oddílu ? \n Jméno èlena : "'+name+'" \n Èlen bude nenávratnì smazán !!');
+	return confirm('Opravdu chcete smazat Älena oddÃ­lu ? \n JmÃ©no Älena : "'+name+'" \n ÄŒlen bude nenÃ¡vratnÄ› smazÃ¡n !!');
 }
 
 -->
@@ -36,16 +36,16 @@ if (IsSet($result) && is_numeric($result) && $result != 0)
 
 $data_tbl = new html_table_mc();
 $col = 0;
-$data_tbl->set_header_col($col++,'Poø.è.',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_CENTER,"Registraèní èíslo");
-$data_tbl->set_header_col_with_help($col++,'Pøihl.',ALIGN_CENTER,"Monost pøihlašování se èlena na závody");
+$data_tbl->set_header_col($col++,'PoÅ™.Ä.',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'PÅ™Ã­jmenÃ­',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT);
+$data_tbl->set_header_col_with_help($col++,'Reg.Ä.',ALIGN_CENTER,"RegistraÄnÃ­ ÄÃ­slo");
+$data_tbl->set_header_col_with_help($col++,'PÅ™ihl.',ALIGN_CENTER,"MoÅ¾nost pÅ™ihlaÅ¡ovÃ¡nÃ­ se Älena na zÃ¡vody");
 $data_tbl->set_header_col_with_help($col++,'L.OB',ALIGN_CENTER,"Licence pro OB");
 $data_tbl->set_header_col_with_help($col++,'L.MTBO',ALIGN_CENTER,"Licence pro MTBO");
 $data_tbl->set_header_col_with_help($col++,'L.LOB',ALIGN_CENTER,"Licence pro LOB");
-$data_tbl->set_header_col_with_help($col++,'Úèet',ALIGN_CENTER,"Stav a existence úètu");
-$data_tbl->set_header_col($col++,'Monosti',ALIGN_CENTER);
+$data_tbl->set_header_col_with_help($col++,'ÃšÄet',ALIGN_CENTER,"Stav a existence ÃºÄtu");
+$data_tbl->set_header_col($col++,'MoÅ¾nosti',ALIGN_CENTER);
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
@@ -91,7 +91,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 		else
 			$acc = '-';
 		$row[] = $acc;
-		$row[] = '<A HREF="./user_edit.php?id='.$zaznam['id'].'&cb=500">Edit</A>&nbsp;/&nbsp;<A HREF="./user_login_edit.php?id='.$zaznam["id"].'&cb=500">Úèet</A>&nbsp;/&nbsp;<A HREF="./user_del_exc.php?id='.$zaznam["id"]."\" onclick=\"return confirm_delete('".$zaznam["jmeno"].' '.$zaznam["prijmeni"]."')\" class=\"Erase\">Smazat</A>";
+		$row[] = '<A HREF="./user_edit.php?id='.$zaznam['id'].'&cb=500">Edit</A>&nbsp;/&nbsp;<A HREF="./user_login_edit.php?id='.$zaznam["id"].'&cb=500">ÃšÄet</A>&nbsp;/&nbsp;<A HREF="./user_del_exc.php?id='.$zaznam["id"]."\" onclick=\"return confirm_delete('".$zaznam["jmeno"].' '.$zaznam["prijmeni"]."')\" class=\"Erase\">Smazat</A>";
 		echo $data_tbl->get_new_row_arr($row)."\n";
 	}
 }
@@ -99,7 +99,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 echo $data_tbl->get_footer()."\n";
 
 echo '<BR><BR>';
-echo '(Èervené <span class="WarningText">L</span> znaèí e úèet je zablokován správcem. Tj. nejde se na nìj pøihlásit.)<BR>';
+echo '(ÄŒervenÃ© <span class="WarningText">L</span> znaÄÃ­ Å¾e ÃºÄet je zablokovÃ¡n sprÃ¡vcem. Tj. nejde se na nÄ›j pÅ™ihlÃ¡sit.)<BR>';
 echo '<BR><hr><BR>';
 
 include "./user_new.inc.php";

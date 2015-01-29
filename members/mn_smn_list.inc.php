@@ -1,7 +1,7 @@
 <?php /* trenerova stranka - editace clenu oddilu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Pøehled malıch trenérù');
+DrawPageTitle('PÅ™ehled malÃ½ch trenÃ©rÅ¯');
 ?>
 <CENTER>
 
@@ -18,12 +18,12 @@ include "./common_user.inc.php";
 
 $data_tbl = new html_table_mc();
 $col = 0;
-$data_tbl->set_header_col($col++,'Poø.è.',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_CENTER,"Registraèní èíslo");
-$data_tbl->set_header_col($col++,'Poèet',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Monosti',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'PoÅ™.Ä.',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'PÅ™Ã­jmenÃ­',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT);
+$data_tbl->set_header_col_with_help($col++,'Reg.Ä.',ALIGN_CENTER,"RegistraÄnÃ­ ÄÃ­slo");
+$data_tbl->set_header_col($col++,'PoÄet',ALIGN_CENTER);
+$data_tbl->set_header_col($col++,'MoÅ¾nosti',ALIGN_CENTER);
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";

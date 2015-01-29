@@ -3,7 +3,7 @@
 	@$vysledek=MySQL_Query("SELECT podpis,login FROM ".TBL_ACCOUNT." WHERE id = '$usr->account_id' LIMIT 1");
 	$zaznam=MySQL_Fetch_Array($vysledek);
 	if ($zaznam["podpis"] != "")
-		echo "P�ihl�en :: ".$zaznam["podpis"];
+		echo "Přihlášen :: ".$zaznam["podpis"];
 	else
-		echo "P�ihl�en :: ".$zaznam["login"];
+		echo "Přihlášen :: ".$zaznam["login"];
 ?>

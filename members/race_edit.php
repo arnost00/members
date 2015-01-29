@@ -16,7 +16,7 @@ if (!IsLoggedRegistrator())
 	exit;
 }
 include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
-DrawPageTitle('Editace parametrù závodu');
+DrawPageTitle('Editace parametrÅ¯ zÃ¡vodu');
 
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
@@ -59,22 +59,22 @@ else
 }
 ?>
 <TR>
-	<TD width="130" align="right">Název</TD>
+	<TD width="130" align="right">NÃ¡zev</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="nazev" SIZE=60 maxlength=50 value="<?echo $zaznam["nazev"]?>"></TD>
 </TR>
 <TR>
-	<TD width="130" align="right">Místo</TD>
+	<TD width="130" align="right">MÃ­sto</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="misto" SIZE=60 maxlength=50 value="<?echo $zaznam["misto"]?>"></TD>
 </TR>
 <TR>
-	<TD width="130" align="right">Poøádající oddíl</TD>
+	<TD width="130" align="right">PoÅ™Ã¡dajÃ­cÃ­ oddÃ­l</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><INPUT TYPE="text" NAME="oddil" SIZE=9 maxlength=7 value="<?echo $zaznam["oddil"]?>">&nbsp;&nbsp;(XYZ) nebo (XYZ+ABC)</TD>
 </TR>
 <TR>
-	<TD width="130" align="right">Zrušeno</TD>
+	<TD width="130" align="right">ZruÅ¡eno</TD>
 	<TD width="5"></TD>
 	<TD><input type="checkbox" name="cancelled" id="cancelled" <?if ($zaznam["cancelled"]==1) echo " CHECKED";?>></TD>
 </TR>
@@ -95,7 +95,7 @@ else
 	</TD>
 </TR>
 <TR>
-	<TD width="130" align="right" valign="top">ebøíèek</TD>
+	<TD width="130" align="right" valign="top">Å½ebÅ™Ã­Äek</TD>
 	<TD width="5"></TD>
 	<TD>
 <?
@@ -121,12 +121,12 @@ else
 	</TD>
 </TR>
 <TR>
-	<TD width="130" align="right" valign="top">Spoleèná doprava</TD>
+	<TD width="130" align="right" valign="top">SpoleÄnÃ¡ doprava</TD>
 	<TD width="5"></TD>
 	<TD>
-		<input type="radio" name="transport" value="0" id="radio_ff0" <?if ($zaznam["transport"]==0) echo "checked=\"checked\"";?>><label for="radio_ff0">Bez spoleèné dopravy</label><br>
-		<input type="radio" name="transport" value="1" id="radio_ff1" <?if ($zaznam["transport"]==1) echo "checked=\"checked\"";?>><label for="radio_ff1">Spoleèná doprava s vıbìrem úèasti</label><br>
-		<input type="radio" name="transport" value="2" id="radio_ff2" <?if ($zaznam["transport"]==2) echo "checked=\"checked\"";?>><label for="radio_ff2">Automatická spoleèná doprava</label>
+		<input type="radio" name="transport" value="0" id="radio_ff0" <?if ($zaznam["transport"]==0) echo "checked=\"checked\"";?>><label for="radio_ff0">Bez spoleÄnÃ© dopravy</label><br>
+		<input type="radio" name="transport" value="1" id="radio_ff1" <?if ($zaznam["transport"]==1) echo "checked=\"checked\"";?>><label for="radio_ff1">SpoleÄnÃ¡ doprava s vÃ½bÄ›rem ÃºÄasti</label><br>
+		<input type="radio" name="transport" value="2" id="radio_ff2" <?if ($zaznam["transport"]==2) echo "checked=\"checked\"";?>><label for="radio_ff2">AutomatickÃ¡ spoleÄnÃ¡ doprava</label>
 	</TD>
 </TR>
 <TR>
@@ -139,7 +139,7 @@ if($zaznam['vicedenni'])
 {	// vicedenni
 ?>
 <TR>
-	<TD width="130" align="right">Poèet etap</TD>
+	<TD width="130" align="right">PoÄet etap</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="etap" SIZE=2 value="<?echo $zaznam["etap"]?>"></TD>
 </TR>
@@ -147,34 +147,34 @@ if($zaznam['vicedenni'])
 }
 ?>
 <TR>
-	<TD width="130" align="right" valign="top">Poznámka k závodu</TD>
+	<TD width="130" align="right" valign="top">PoznÃ¡mka k zÃ¡vodu</TD>
 	<TD width="5"></TD>
 	<TD>
 	<TEXTAREA name="poznamka" cols="45" rows="5"><?echo $zaznam["poznamka"];?></TEXTAREA>
 	</TD>
 </TR>
 <TR>
-	<TD width="130" align="right">1. datum pøihlášek</TD>
+	<TD width="130" align="right">1. datum pÅ™ihlÃ¡Å¡ek</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky1" SIZE=8 value=<?echo Date2String($zaznam["prihlasky1"])?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
-	<TD width="130" align="right">2. datum pøihlášek</TD>
+	<TD width="130" align="right">2. datum pÅ™ihlÃ¡Å¡ek</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky2" SIZE=8 value=<?echo Date2String($zaznam["prihlasky2"])?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
-	<TD width="130" align="right">3. datum pøihlášek</TD>
+	<TD width="130" align="right">3. datum pÅ™ihlÃ¡Å¡ek</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky3" SIZE=8 value=<?echo Date2String($zaznam["prihlasky3"])?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
-	<TD width="130" align="right">4. datum pøihlášek</TD>
+	<TD width="130" align="right">4. datum pÅ™ihlÃ¡Å¡ek</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky4" SIZE=8 value=<?echo Date2String($zaznam["prihlasky4"])?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
-	<TD width="130" align="right">5. datum pøihlášek</TD>
+	<TD width="130" align="right">5. datum pÅ™ihlÃ¡Å¡ek</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky5" SIZE=8 value=<?echo Date2String($zaznam["prihlasky5"])?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
@@ -182,7 +182,7 @@ if($zaznam['vicedenni'])
 	<TD colspan="3"></TD>
 </TR>
 <TR>
-	<TD colspan="3" align="center"><INPUT TYPE="submit" VALUE="Aktualizovat údaje">&nbsp;&nbsp;<BUTTON onclick="javascript:close_popup();">Zpìt</BUTTON></TD>
+	<TD colspan="3" align="center"><INPUT TYPE="submit" VALUE="Aktualizovat Ãºdaje">&nbsp;&nbsp;<BUTTON onclick="javascript:close_popup();">ZpÄ›t</BUTTON></TD>
 </TR>
 <TR>
 	<TD colspan="3"></TD>

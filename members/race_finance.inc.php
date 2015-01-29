@@ -40,7 +40,7 @@ $vysledek_neprihlaseni = mysql_query($query_neprihlaseni);
 @$vysledek_race=MySQL_Query("select z.nazev, from_unixtime(z.datum, '%Y-%c-%e') datum from ".TBL_RACE." z where z.id = ".$race_id);
 $zaznam_race=MySQL_Fetch_Array($vysledek_race);
 
-DrawPageSubTitle('Vybranı závod');
+DrawPageSubTitle('VybranÃ½ zÃ¡vod');
 
 @$vysledek_z=MySQL_Query('SELECT * FROM '.TBL_RACE." WHERE `id`='$race_id' LIMIT 1");
 $zaznam_z = MySQL_Fetch_Array($vysledek_z);
@@ -57,11 +57,11 @@ $enable_fin_types = IsFinanceTypeTblFilled();
 
 ?>
 <div class="update-categories">
-<div class="sub-title">Naplò pouze vybrané kategorie pro pøihlášené závodníky</div>
-Vše<input type="checkbox" id="all-ckbx"/><div id="ckbx-cat"></div>
-<label for="in-amount">Èástka&nbsp;</label><input type="number" id="in-amount"/>
-<label for="in-note">&nbsp;Poznámka&nbsp;</label><input type="text" id="in-note"/>
-<button onclick="fillInputsByCategory()">Vlo</button>
+<div class="sub-title">NaplÅˆ pouze vybranÃ© kategorie pro pÅ™ihlÃ¡Å¡enÃ© zÃ¡vodnÃ­ky</div>
+VÅ¡e<input type="checkbox" id="all-ckbx"/><div id="ckbx-cat"></div>
+<label for="in-amount">ÄŒÃ¡stka&nbsp;</label><input type="number" id="in-amount"/>
+<label for="in-note">&nbsp;PoznÃ¡mka&nbsp;</label><input type="text" id="in-note"/>
+<button onclick="fillInputsByCategory()">VloÅ¾</button>
 </div>
 
 <script>
@@ -90,16 +90,16 @@ function fillInputsByCategory() {
 
 echo "<form method=\"post\" action=\"?payment=pay&race_id=$race_id\">";
 
-DrawPageSubTitle('Závodníci v závodì');
+DrawPageSubTitle('ZÃ¡vodnÃ­ci v zÃ¡vodÄ›');
 $data_tbl = new html_table_mc();
 $col = 0;
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Èástka',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Poznámka',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'ÄŒÃ¡stka',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'PoznÃ¡mka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
 if ($enable_fin_types)
-	$data_tbl->set_header_col_with_help($col++,'Typ o.p.',ALIGN_CENTER,"Typ oddílovıch pøíspìvkù");
-$data_tbl->set_header_col($col++,'Monosti',ALIGN_CENTER);
+	$data_tbl->set_header_col_with_help($col++,'Typ o.p.',ALIGN_CENTER,"Typ oddÃ­lovÃ½ch pÅ™Ã­spÄ›vkÅ¯");
+$data_tbl->set_header_col($col++,'MoÅ¾nosti',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Doprava',ALIGN_CENTER);
 
 
@@ -111,7 +111,7 @@ $sum_plus_amount = 0;
 $sum_minus_amount = 0;
 $i = 1;
 
-echo $data_tbl->get_subheader_row("Pøihlášení")."\n";
+echo $data_tbl->get_subheader_row("PÅ™ihlÃ¡Å¡enÃ­")."\n";
 while ($zaznam=mysql_fetch_assoc($vysledek_prihlaseni))
 {
 	$id = $zaznam['id'];
@@ -146,11 +146,11 @@ while ($zaznam=mysql_fetch_assoc($vysledek_prihlaseni))
 }
 if ($i == 1)
 {	// zadny zavodnik prihlasen
-	echo $data_tbl->get_info_row('Není nikdo pøihlášen.')."\n";
+	echo $data_tbl->get_info_row('NenÃ­ nikdo pÅ™ihlÃ¡Å¡en.')."\n";
 }
 $i0 = $i;
 //---------------------------------------------------
-echo $data_tbl->get_subheader_row("Nepøihlášení s platbami")."\n";
+echo $data_tbl->get_subheader_row("NepÅ™ihlÃ¡Å¡enÃ­ s platbami")."\n";
 while ($zaznam=mysql_fetch_assoc($vysledek_platici))
 {
 	$id = $zaznam['id'];
@@ -182,28 +182,28 @@ while ($zaznam=mysql_fetch_assoc($vysledek_platici))
 }
 if (($i - $i0) == 0)
 {	// zadny zavodnik s vkladem
-	echo $data_tbl->get_info_row('Není nikdo jen s platbou.')."\n";
+	echo $data_tbl->get_info_row('NenÃ­ nikdo jen s platbou.')."\n";
 }
 
 echo $data_tbl->get_footer()."\n";
 
-echo "<div style=\"text-align:right; margin-right:3%\"><b><font>Èástka celkem: ".($sum_minus_amount+$sum_plus_amount)."</font></b> <font size=-5> | plus: ".$sum_plus_amount." | mínus: ".$sum_minus_amount."</font></div>";
+echo "<div style=\"text-align:right; margin-right:3%\"><b><font>ÄŒÃ¡stka celkem: ".($sum_minus_amount+$sum_plus_amount)."</font></b> <font size=-5> | plus: ".$sum_plus_amount." | mÃ­nus: ".$sum_minus_amount."</font></div>";
 
-echo '<br><input type="submit" value="Zmìnit platby"/>';
+echo '<br><input type="submit" value="ZmÄ›nit platby"/>';
 echo '</form>';
 
 echo "<form method=\"post\" action=\"?payment=pay&race_id=$race_id\">";
 
-DrawPageSubTitle('Ostatní závodníci');
+DrawPageSubTitle('OstatnÃ­ zÃ¡vodnÃ­ci');
 $data_tbl = new html_table_mc();
 $col = 0;
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Èástka',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Poznámka',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'ÄŒÃ¡stka',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'PoznÃ¡mka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
 if ($enable_fin_types)
-	$data_tbl->set_header_col_with_help($col++,'Typ o.p.',ALIGN_CENTER,"Typ oddílovıch pøíspìvkù");
-$data_tbl->set_header_col($col++,'Monosti',ALIGN_CENTER);
+	$data_tbl->set_header_col_with_help($col++,'Typ o.p.',ALIGN_CENTER,"Typ oddÃ­lovÃ½ch pÅ™Ã­spÄ›vkÅ¯");
+$data_tbl->set_header_col($col++,'MoÅ¾nosti',ALIGN_CENTER);
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
@@ -239,14 +239,14 @@ while ($zaznam=mysql_fetch_assoc($vysledek_neprihlaseni))
 }
 if ($i == 1)
 {	// neni nikdo neprihlasen
-	echo $data_tbl->get_info_row('Není nikdo kdo by nebyl pøihlášen.')."\n";
+	echo $data_tbl->get_info_row('NenÃ­ nikdo kdo by nebyl pÅ™ihlÃ¡Å¡en.')."\n";
 }
 
 echo $data_tbl->get_footer()."\n";
 
 ?>
 <div class="link-top"><a href="#top">Nahoru ...</a></div>
-<input type="submit" value="Vytvoøit nové platby">
+<input type="submit" value="VytvoÅ™it novÃ© platby">
 </form>
 
 <script>

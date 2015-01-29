@@ -20,7 +20,7 @@ include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
-DrawPageTitle('Pøehled pøihlášek na závody');
+DrawPageTitle('PÅ™ehled pÅ™ihlÃ¡Å¡ek na zÃ¡vody');
 ?>
 
 <TABLE width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -33,7 +33,7 @@ DrawPageTitle('Pøehled pøihlášek na závody');
 @$vysledekU=MySQL_Query("SELECT id,prijmeni,jmeno FROM ".TBL_USER." WHERE id=".$id." LIMIT 1");
 $zaznamU=MySQL_Fetch_Array($vysledekU);
 
-DrawPageSubTitle('Vybranı èlen : '.$zaznamU["jmeno"].' '.$zaznamU["prijmeni"]);
+DrawPageSubTitle('VybranÃ½ Älen : '.$zaznamU["jmeno"].' '.$zaznamU["prijmeni"]);
 ?>
 <CENTER>
 
@@ -56,10 +56,10 @@ if ($num_rows > 0)
 	$data_tbl = new html_table_mc();
 	$col = 0;
 	$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
-	$data_tbl->set_header_col_with_help($col++,'Poø.',ALIGN_CENTER,"Poøadatel");
-	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
+	$data_tbl->set_header_col($col++,'NÃ¡zev',ALIGN_LEFT);
+	$data_tbl->set_header_col($col++,'MÃ­sto',ALIGN_LEFT);
+	$data_tbl->set_header_col_with_help($col++,'PoÅ™.',ALIGN_CENTER,"PoÅ™adatel");
+	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ zÃ¡vodu");
 	$data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
 
 	echo $data_tbl->get_css()."\n";
@@ -114,12 +114,12 @@ if ($num_rows > 0)
 }
 else
 {
-	echo('Vybranı èlen není nikam pøihlášen.<br>');
+	echo('VybranÃ½ Älen nenÃ­ nikam pÅ™ihlÃ¡Å¡en.<br>');
 }
 ?>
 
 <BR>
-<BUTTON onclick="javascript:close_popup();">Zpìt</BUTTON>
+<BUTTON onclick="javascript:close_popup();">ZpÄ›t</BUTTON>
 <BR>
 <BR>
 

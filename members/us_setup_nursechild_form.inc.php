@@ -1,5 +1,5 @@
 <hr>
-<h3>Platící èlen</h3>
+<h3>PlatÃ­cÃ­ Älen</h3>
 <center>
 <form class="form" action="?<?=$return_url?>&chiefPayFor=<?=$user_id?>" method="post">
 <?
@@ -15,10 +15,10 @@ $chief_record["chief_pay"]<>null?$checked = "CHECKED":$checked="";
 
 $html_checkbox = "<input type='checkbox' name='chief_pay' id='chief_pay' value=$chief_id $checked>";
 
-echo $data_tbl->get_new_row('<label for="chief_pay">Chci, aby za mne platil trenér '.$chief_name.'</label>', $html_checkbox);
+echo $data_tbl->get_new_row('<label for="chief_pay">Chci, aby za mne platil trenÃ©r '.$chief_name.'</label>', $html_checkbox);
 
 echo $data_tbl->get_empty_row();
-echo $data_tbl->get_new_row('','<input type="submit" value="Ulo"/>');
+echo $data_tbl->get_new_row('','<input type="submit" value="UloÅ¾"/>');
 echo $data_tbl->get_footer()."\n";
 ?>
 </FORM>

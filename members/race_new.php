@@ -17,7 +17,7 @@ if (!IsLoggedRegistrator())
 }
 
 include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
-DrawPageTitle('Vytvoøení nového závodu');
+DrawPageTitle('VytvoÅ™enÃ­ novÃ©ho zÃ¡vodu');
 
 db_Connect();
 
@@ -53,17 +53,17 @@ else
 }
 ?>
 <TR>
-	<TD width="130" align="right">Název</TD>
+	<TD width="130" align="right">NÃ¡zev</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="nazev" SIZE=60 maxlength=50></TD>
 </TR>
 <TR>
-	<TD width="130" align="right">Místo</TD>
+	<TD width="130" align="right">MÃ­sto</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="misto" SIZE=60 maxlength=50></TD>
 </TR>
 <TR>
-	<TD width="130" align="right">Poøádající oddíl</TD>
+	<TD width="130" align="right">PoÅ™Ã¡dajÃ­cÃ­ oddÃ­l</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><INPUT TYPE="text" NAME="oddil" SIZE=9 maxlength=7>&nbsp;&nbsp;(XYZ) nebo (XYZ+ABC)</TD>
 </TR>
@@ -83,7 +83,7 @@ else
 	</TD>
 </TR>
 <TR>
-	<TD width="130" align="right" valign="top">ebøíèek</TD>
+	<TD width="130" align="right" valign="top">Å½ebÅ™Ã­Äek</TD>
 	<TD width="5"></TD>
 	<TD>
 <?
@@ -106,12 +106,12 @@ else
 	</TD>
 </TR>
 <TR>
-	<TD width="130" align="right" valign="top">Spoleèná doprava</TD>
+	<TD width="130" align="right" valign="top">SpoleÄnÃ¡ doprava</TD>
 	<TD width="5"></TD>
 	<TD>
-		<input type="radio" name="transport" value="0" id="radio_ff0"><label for="radio_ff0">Bez spoleèné dopravy</label><br>
-		<input type="radio" name="transport" value="1" id="radio_ff1" checked="checked"><label for="radio_ff1">Spoleèná doprava s vıbìrem úèasti</label><br>
-		<input type="radio" name="transport" value="2" id="radio_ff2"><label for="radio_ff2">Automatická spoleèná doprava</label>
+		<input type="radio" name="transport" value="0" id="radio_ff0"><label for="radio_ff0">Bez spoleÄnÃ© dopravy</label><br>
+		<input type="radio" name="transport" value="1" id="radio_ff1" checked="checked"><label for="radio_ff1">SpoleÄnÃ¡ doprava s vÃ½bÄ›rem ÃºÄasti</label><br>
+		<input type="radio" name="transport" value="2" id="radio_ff2"><label for="radio_ff2">AutomatickÃ¡ spoleÄnÃ¡ doprava</label>
 	</TD></TR>
 <TR>
 	<TD width="130" align="right">Odkaz</TD>
@@ -123,7 +123,7 @@ if($type == 1)
 {	// vicedenni
 ?>
 <TR>
-	<TD width="130" align="right">Poèet etap</TD>
+	<TD width="130" align="right">PoÄet etap</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="etap" SIZE=2></TD>
 </TR>
@@ -131,34 +131,34 @@ if($type == 1)
 }
 ?>
 <TR>
-	<TD width="130" align="right" valign="top">Poznámka k závodu</TD>
+	<TD width="130" align="right" valign="top">PoznÃ¡mka k zÃ¡vodu</TD>
 	<TD width="5"></TD>
 	<TD>
 	<TEXTAREA name="poznamka" cols="45" rows="5"></TEXTAREA>
 	</TD>
 </TR>
 <TR>
-	<TD width="130" align="right">1. datum pøihlášek</TD>
+	<TD width="130" align="right">1. datum pÅ™ihlÃ¡Å¡ek</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky1" SIZE=8>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
-	<TD width="130" align="right">2. datum pøihlášek</TD>
+	<TD width="130" align="right">2. datum pÅ™ihlÃ¡Å¡ek</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky2" SIZE=8>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
-	<TD width="130" align="right">3. datum pøihlášek</TD>
+	<TD width="130" align="right">3. datum pÅ™ihlÃ¡Å¡ek</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky3" SIZE=8>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
-	<TD width="130" align="right">4. datum pøihlášek</TD>
+	<TD width="130" align="right">4. datum pÅ™ihlÃ¡Å¡ek</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky4" SIZE=8>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
-	<TD width="130" align="right">5. datum pøihlášek</TD>
+	<TD width="130" align="right">5. datum pÅ™ihlÃ¡Å¡ek</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky5" SIZE=8>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
@@ -166,7 +166,7 @@ if($type == 1)
 	<TD colspan="3"></TD>
 </TR>
 <TR>
-	<TD colspan="3" align="center"><INPUT TYPE="submit" VALUE="Vytvoøit závod">&nbsp;&nbsp;<BUTTON onclick="javascript:close_popup();">Zpìt</BUTTON></TD>
+	<TD colspan="3" align="center"><INPUT TYPE="submit" VALUE="VytvoÅ™it zÃ¡vod">&nbsp;&nbsp;<BUTTON onclick="javascript:close_popup();">ZpÄ›t</BUTTON></TD>
 </TR>
 <TR>
 	<TD colspan="3"></TD>

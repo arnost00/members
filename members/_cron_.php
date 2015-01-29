@@ -13,7 +13,7 @@ _set_global_RT_Start();
 <?php 
 
 // define only when debug (block email send)
-// define('_DEBUG_SEND_',1);
+define('_DEBUG_SEND_',1);
 
 
 
@@ -90,9 +90,9 @@ function ClearAllModifyFlags()
 {
 	$query='UPDATE '.TBL_RACE." SET modify_flag='0'";
 	$result=MySQL_Query($query)
-		or die("Chyba pøi provádìní dotazu do databáze.");
+		or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 	if ($result == FALSE)
-		echo("Nepodaøilo se zmìnit údaje o upozoròování.\n");
+		echo("NepodaÅ™ilo se zmÄ›nit Ãºdaje o upozorÅˆovÃ¡nÃ­.\n");
 	else	
 		echo("Modify flags cleared.\n");
 }
@@ -143,7 +143,7 @@ function GetMailRaceInfoLineTf(&$zaznam,&$reg_term)
 	$nazev = $zaznam['nazev'];
 	$oddil = $zaznam['oddil'];
 
-	$cancelled = ($zaznam['cancelled'] != 0) ? ' / ZRUŠENO' : '';
+	$cancelled = ($zaznam['cancelled'] != 0) ? ' / ZRUÅ ENO' : '';
 
 	return $datum.' / '.$nazev.' / '.$oddil.' ['.$termin.']'.$cancelled;
 }
@@ -158,7 +158,7 @@ function GetMailRaceInfoLine(&$zaznam)
 	$nazev = $zaznam['nazev'];
 	$oddil = $zaznam['oddil'];
 
-	$cancelled = ($zaznam['cancelled'] != 0) ? ' / ZRUŠENO' : '';
+	$cancelled = ($zaznam['cancelled'] != 0) ? ' / ZRUÅ ENO' : '';
 
 	return $datum.' / '.$nazev.' / '.$oddil.$cancelled;
 }
@@ -168,7 +168,8 @@ function GenerateEmail(&$ToA,&$msg)
 	global $g_emailadr, $g_fullname;
 
 	$extra_headers  = 'MIME-Version: 1.0'.EMAIL_ENDL;
-	$extra_headers .= 'Content-type: text/plain; charset="Windows-1250"'.EMAIL_ENDL;
+	$extra_headers .= 'Content-type: text/plain; charset="UTF-8"'.EMAIL_ENDL;
+	$extra_headers .= 'Content-Transfer-Encoding: 8bit'.EMAIL_ENDL;
 	$extra_headers .= 'From: '.$g_fullname.' <'.$g_emailadr.'>'.EMAIL_ENDL;
 	$extra_headers .= 'Reply-To: '.$g_emailadr.EMAIL_ENDL;
 	$extra_headers .= 'X-Mailer: '.SYSTEM_NAME.'/'.GetCodeVersion();
@@ -241,14 +242,14 @@ if (mysql_num_rows($vysledek_m) > 0)
 		if (!IsValilEmail($zaznam_m['email']))
 			continue;
 		$send_email = false;
-		$full_msg = 'Vybrané informace o termínech a zmìnách v pøíhláškovém systému '.$g_shortcut.EMAIL_ENDL;
+		$full_msg = 'VybranÃ© informace o termÃ­nech a zmÄ›nÃ¡ch v pÅ™Ã­hlÃ¡Å¡kovÃ©m systÃ©mu '.$g_shortcut.EMAIL_ENDL;
 		$full_msg .= DIV_LINE.EMAIL_ENDL.EMAIL_ENDL;
 
 		if ($zaznam_m['active_tf'])
 		{
 			$active = false;
 			$lines = array();
-//			echo("Aktivní - Blíící se konec termínu pøihlášek<br>\n");
+//			echo("AktivnÃ­ - BlÃ­Å¾Ã­cÃ­ se konec termÃ­nu pÅ™ihlÃ¡Å¡ek<br>\n");
 			for($ii = 0; $ii < sizeof($races); $ii++)
 			{
 				$new_reg = _GetNewReg($races[$ii],$curr_date);
@@ -282,7 +283,7 @@ if (mysql_num_rows($vysledek_m) > 0)
 			}
 			if($active) // add to msg
 			{
-				$full_msg .= 'Blíí se jeden nebo více termínu pøihlášek: '.EMAIL_ENDL;
+				$full_msg .= 'BlÃ­Å¾Ã­ se jeden nebo vÃ­ce termÃ­nu pÅ™ihlÃ¡Å¡ek: '.EMAIL_ENDL;
 				for ($jj = 0; $jj < sizeof($lines); $jj++)
 					$full_msg .= ' * '.$lines[$jj].EMAIL_ENDL;
 				$full_msg .= EMAIL_ENDL;
@@ -306,7 +307,7 @@ if (mysql_num_rows($vysledek_m) > 0)
 				}
 				if($active) // add to msg
 				{
-					$full_msg .= 'Zmìna v termínech pøihlášek na závody: '.EMAIL_ENDL;
+					$full_msg .= 'ZmÄ›na v termÃ­nech pÅ™ihlÃ¡Å¡ek na zÃ¡vody: '.EMAIL_ENDL;
 					for ($jj = 0; $jj < sizeof($lines); $jj++)
 						$full_msg .= ' * '.$lines[$jj].EMAIL_ENDL;
 					$full_msg .= EMAIL_ENDL;
@@ -329,7 +330,7 @@ if (mysql_num_rows($vysledek_m) > 0)
 				}
 				if($active) // add to msg
 				{
-					$full_msg .= 'Pøidáno do kalendáøe závodù: '.EMAIL_ENDL;
+					$full_msg .= 'PÅ™idÃ¡no do kalendÃ¡Å™e zÃ¡vodÅ¯: '.EMAIL_ENDL;
 					for ($jj = 0; $jj < sizeof($lines); $jj++)
 						$full_msg .= ' * '.$lines[$jj].EMAIL_ENDL;
 					$full_msg .= EMAIL_ENDL;
@@ -352,7 +353,7 @@ if (mysql_num_rows($vysledek_m) > 0)
 				}
 				if($active) // add to msg
 				{
-					$full_msg .= 'Zmìna termínu závodù: '.EMAIL_ENDL;
+					$full_msg .= 'ZmÄ›na termÃ­nu zÃ¡vodÅ¯: '.EMAIL_ENDL;
 					for ($jj = 0; $jj < sizeof($lines); $jj++)
 						$full_msg .= ' * '.$lines[$jj].EMAIL_ENDL;
 					$full_msg .= EMAIL_ENDL;
@@ -363,7 +364,7 @@ if (mysql_num_rows($vysledek_m) > 0)
 		{
 			$active = false;
 			$lines = array();
-//			echo("Aktivní - Upozornit, e uplynul termín (reg)<br>\n");
+//			echo("AktivnÃ­ - Upozornit, Å¾e uplynul termÃ­n (reg)<br>\n");
 			for($ii = 0; $ii < sizeof($races); $ii++)
 			{
 				$old_reg = _GetOldReg($races[$ii],$curr_date);
@@ -382,7 +383,7 @@ if (mysql_num_rows($vysledek_m) > 0)
 			}
 			if($active) // add to msg
 			{
-				$full_msg .= 'Právì skonèil interní termín pøihlášek: '.EMAIL_ENDL;
+				$full_msg .= 'PrÃ¡vÄ› skonÄil internÃ­ termÃ­n pÅ™ihlÃ¡Å¡ek: '.EMAIL_ENDL;
 				for ($jj = 0; $jj < sizeof($lines); $jj++)
 					$full_msg .= ' * '.$lines[$jj].EMAIL_ENDL;
 				$full_msg .= EMAIL_ENDL;
@@ -399,13 +400,13 @@ if (mysql_num_rows($vysledek_m) > 0)
 				if ((($zaznam_m['fin_type'] & $g_fin_mail_flag [1]['id']) != 0) && $fin['fin'] < 0)
 				{	// stav je v minusu
 					$send_email = true;
-					$full_msg .= 'Tvùj zùstatek na oddílovém úètu poklesl do záporu, a èiní '.$fin['fin'].',-'.EMAIL_ENDL;
+					$full_msg .= 'TvÅ¯j zÅ¯statek na oddÃ­lovÃ©m ÃºÄtu poklesl do zÃ¡poru, a ÄinÃ­ '.$fin['fin'].',-'.EMAIL_ENDL;
 					$full_msg .= EMAIL_ENDL;
 				}
 				else if ((($zaznam_m['fin_type'] & $g_fin_mail_flag [0]['id']) != 0) && $fin['fin'] < $zaznam_m['fin_limit'])
 				{	// stav je pod hranici
 					$send_email = true;
-					$full_msg .= 'Tvùj zùstatek na oddílovém úètu poklesl pod definovanou hranici, a èiní '.$fin['fin'].',-'.EMAIL_ENDL;
+					$full_msg .= 'TvÅ¯j zÅ¯statek na oddÃ­lovÃ©m ÃºÄtu poklesl pod definovanou hranici, a ÄinÃ­ '.$fin['fin'].',-'.EMAIL_ENDL;
 					$full_msg .= EMAIL_ENDL;
 				}
 			}
@@ -427,7 +428,7 @@ if (mysql_num_rows($vysledek_m) > 0)
 			if ($uz > 0)
 			{	// aspon jeden clen je v minusu, posilame email
 				$send_email = true;
-				$full_msg .= 'Èlenové se zápornım zùstatkem na úètu: '.EMAIL_ENDL;
+				$full_msg .= 'ÄŒlenovÃ© se zÃ¡pornÃ½m zÅ¯statkem na ÃºÄtu: '.EMAIL_ENDL;
 				for ($jj = 0; $jj < sizeof($uz_dta); $jj++)
 					$full_msg .= ' * '.$uz_dta[$jj].EMAIL_ENDL;
 				$full_msg .= EMAIL_ENDL;
@@ -439,9 +440,9 @@ if (mysql_num_rows($vysledek_m) > 0)
 		{
 			echo('<b>Send email to user.</b><br>');
 			$full_msg .= DIV_LINE.EMAIL_ENDL;
-			$full_msg .= 'Vygenerováno dne '.Date2String($curr_date).EMAIL_ENDL;
-			$full_msg .= 'Zmìnu a pøípadné zrušení zasílanıch informací provedete pøes pøihláškovı systém oddílu '.$g_shortcut.'.'.EMAIL_ENDL;
-			$full_msg .= 'Nejlépe pøímo na adrese '.$g_baseadr.EMAIL_ENDL;
+			$full_msg .= 'VygenerovÃ¡no dne '.Date2String($curr_date).EMAIL_ENDL;
+			$full_msg .= 'ZmÄ›nu a pÅ™Ã­padnÃ© zruÅ¡enÃ­ zasÃ­lanÃ½ch informacÃ­ provedete pÅ™es pÅ™ihlÃ¡Å¡kovÃ½ systÃ©m oddÃ­lu '.$g_shortcut.'.'.EMAIL_ENDL;
+			$full_msg .= 'NejlÃ©pe pÅ™Ã­mo na adrese '.$g_baseadr.EMAIL_ENDL;
 			
 			GenerateEmail($zaznam_m['email'],$full_msg);
 			$cnt_send++;

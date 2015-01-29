@@ -1,7 +1,7 @@
 <?php /* zavody - zobrazeni zavodu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Pøihlášky na závody');
+DrawPageTitle('PÅ™ihlÃ¡Å¡ky na zÃ¡vody');
 ?>
 <CENTER>
 
@@ -46,7 +46,7 @@ if ($num_rows > 0)
 {
 	if ($entry_lock)
 	{
-		echo('<span class="WarningText">Máte zamknutou monost se pøihlašovat.</span>'."<br><br>\n");
+		echo('<span class="WarningText">MÃ¡te zamknutou moÅ¾nost se pÅ™ihlaÅ¡ovat.</span>'."<br><br>\n");
 	}
 
 	show_link_to_actual_race($num_rows);
@@ -54,15 +54,15 @@ if ($num_rows > 0)
 	$data_tbl = new html_table_mc();
 	$col = 0;
 	$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
-	$data_tbl->set_header_col_with_help($col++,'Poø.',ALIGN_CENTER,"Poøadatel");
-	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
-	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web závodu");
-	$data_tbl->set_header_col($col++,'Monosti',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Pøihlášky',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'NÃ¡zev',ALIGN_LEFT);
+	$data_tbl->set_header_col($col++,'MÃ­sto',ALIGN_LEFT);
+	$data_tbl->set_header_col_with_help($col++,'PoÅ™.',ALIGN_CENTER,"PoÅ™adatel");
+	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ zÃ¡vodu");
+	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web zÃ¡vodu");
+	$data_tbl->set_header_col($col++,'MoÅ¾nosti',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'PÅ™ihlÃ¡Å¡ky',ALIGN_CENTER);
 	if($g_enable_race_boss)
-		$data_tbl->set_header_col($col++,'Vedoucí',ALIGN_CENTER);
+		$data_tbl->set_header_col($col++,'VedoucÃ­',ALIGN_CENTER);
 
 	echo $data_tbl->get_css()."\n";
 	echo $data_tbl->get_header()."\n";
@@ -99,7 +99,7 @@ if ($num_rows > 0)
 		{	// neni prihlasen
 			if (!$prihl_finish && !$entry_lock)
 			{
-				$row[] = "<A HREF=\"javascript:open_win('./us_race_regon.php?id_zav=".$zaznam["id"]."&id_us=".$usr->user_id."','')\">Pøihl.</A> / ".$zbr;
+				$row[] = "<A HREF=\"javascript:open_win('./us_race_regon.php?id_zav=".$zaznam["id"]."&id_us=".$usr->user_id."','')\">PÅ™ihl.</A> / ".$zbr;
 			}
 			else
 			{
@@ -155,10 +155,10 @@ if ($num_rows > 0)
 	}
 	echo $data_tbl->get_footer()."\n";
 }
-echo('<a href="race_reg_form_all.php" target="_blank">Vytvoøení a export pøihlášky pro prázdnı závod</a><br>');
+echo('<a href="race_reg_form_all.php" target="_blank">VytvoÅ™enÃ­ a export pÅ™ihlÃ¡Å¡ky pro prÃ¡zdnÃ½ zÃ¡vod</a><br>');
 ?>
 <br>
-Informace o závodu lze zobrazit kliknutím na název daného závodu.<br>
+Informace o zÃ¡vodu lze zobrazit kliknutÃ­m na nÃ¡zev danÃ©ho zÃ¡vodu.<br>
 <?
 if ($g_custom_entry_list_text != '')
 {

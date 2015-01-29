@@ -40,25 +40,25 @@ function check_form()
  
  if(text.length > <?echo(GC_NEWS_MAX_TEXT_LENGTH);?>)
  {
-   errors += '\nPøíliš mnoho znakù v textu. Prosím odstraòte '+ (text.length - <?echo(GC_NEWS_MAX_TEXT_LENGTH);?>)+ ' znakù.';
+   errors += '\nPÅ™Ã­liÅ¡ mnoho znakÅ¯ v textu. ProsÃ­m odstraÅˆte '+ (text.length - <?echo(GC_NEWS_MAX_TEXT_LENGTH);?>)+ ' znakÅ¯.';
  }
  else if (text.length == 0)
  {
-   errors +='\nChybí text novinky.';
+   errors +='\nChybÃ­ text novinky.';
  }
  if (datum.length == 0)
  {
-   errors += '\nChybí datum novinky.';
+   errors += '\nChybÃ­ datum novinky.';
  }
  else if (!isValidDate(datum))
  {
-   errors += '\nNeplatné datum novinky.';
+   errors += '\nNeplatnÃ© datum novinky.';
  }
 
 
  if (errors.length > 0)
  {
-	alert ("Formuláø nelze odeslat z následujících dùvodù:\n" + errors);
+	alert ("FormulÃ¡Å™ nelze odeslat z nÃ¡sledujÃ­cÃ­ch dÅ¯vodÅ¯:\n" + errors);
 	return false;
  }
  else
@@ -71,10 +71,10 @@ function check_form()
 <br><hr><br>
 <?
 	if(IsSet($update))
-		DrawPageSubTitle('Formuláø pro editaci novinky');
+		DrawPageSubTitle('FormulÃ¡Å™ pro editaci novinky');
 	else
 	{
-		DrawPageSubTitle('Formuláø pro vloení novinky');
+		DrawPageSubTitle('FormulÃ¡Å™ pro vloÅ¾enÃ­ novinky');
 		$zaznam['datum'] = GetCurrentDate();
 		$zaznam['nadpis'] = '';
 		$zaznam['text'] = '';
@@ -90,9 +90,9 @@ echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_new_row('Datum', '<INPUT TYPE="text" NAME="datum" SIZE=10 MAXLENGTH=10 VALUE="'.Date2String($zaznam['datum']).'">&nbsp;&nbsp;(DD.MM.RRRR)');
 echo $data_tbl->get_new_row('Nadpis', '<INPUT TYPE="text" NAME="nadpis" size="50" MAXLENGTH=50 VALUE="'.$zaznam['nadpis'].'">');
 echo $data_tbl->get_new_row('Text', '<TEXTAREA name="text" cols="50" rows="10" wrap=virtual>'.$zaznam['text'].'</TEXTAREA>');
-echo $data_tbl->get_new_row_text('', '<INPUT TYPE="checkbox" NAME="t_bold" onClick="javascript:change_font(this);" value="t_bold">Tuèné písmo (<B>pøíklad</B>)<BR>
-<INPUT TYPE="checkbox" NAME="t_unli" onClick="javascript:change_font(this);" value="t_unli">Podtrené písmo (<U>pøíklad</U>)<BR>
-Upozornìní - Vdy ukonèujte zmìny písma, jinak mùe dojít k porušení formátování novinek.');
+echo $data_tbl->get_new_row_text('', '<INPUT TYPE="checkbox" NAME="t_bold" onClick="javascript:change_font(this);" value="t_bold">TuÄnÃ© pÃ­smo (<B>pÅ™Ã­klad</B>)<BR>
+<INPUT TYPE="checkbox" NAME="t_unli" onClick="javascript:change_font(this);" value="t_unli">PodtrÅ¾enÃ© pÃ­smo (<U>pÅ™Ã­klad</U>)<BR>
+UpozornÄ›nÃ­ - VÅ¾dy ukonÄujte zmÄ›ny pÃ­sma, jinak mÅ¯Å¾e dojÃ­t k poruÅ¡enÃ­ formÃ¡tovÃ¡nÃ­ novinek.');
 echo $data_tbl->get_empty_row();
 echo $data_tbl->get_new_row('','<INPUT TYPE="submit" VALUE="Odeslat">');
 echo $data_tbl->get_footer()."\n";

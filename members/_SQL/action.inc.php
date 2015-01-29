@@ -17,7 +17,7 @@ else
 	echo '- nothing -'."\n";
 
 echo '<HR>';
-echo '<a href="./zmeny.sql.php">Zpìt</a>';
+echo '<a href="./zmeny.sql.php">ZpÄ›t</a>';
 echo '<HR>';
 echo '<span class="HiddenText">--end--</span>'."\n";
 echo '</body></html>';

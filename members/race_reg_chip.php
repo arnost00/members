@@ -18,7 +18,7 @@ include ("./common_race.inc.php");
 include ("./common_user.inc.php");
 include ('./url.inc.php');
 
-DrawPageTitle('P¯i¯azenÌ SI Ëip˘ pro z·vod');
+DrawPageTitle('P≈ôi≈ôazen√≠ SI ƒçip≈Ø pro z√°vod');
 
 db_Connect();
 
@@ -32,14 +32,14 @@ $query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.si_chip as t_si_chip FROM '.TB
 @$vysledek_z=MySQL_Query("SELECT * FROM ".TBL_RACE." WHERE id=$id_zav LIMIT 1");
 $zaznam_z = MySQL_Fetch_Array($vysledek_z);
 
-DrawPageSubTitle('Vybran˝ z·vod');
+DrawPageSubTitle('Vybran√Ω z√°vod');
 
 RaceInfoTable($zaznam_z,'',false,false,true);
 ?>
 
 <BR><BR><hr><BR>
 <?
-DrawPageSubTitle('P¯ihl·öenÌ z·vodnÌci bez trval˝ch SI Ëip˘');
+DrawPageSubTitle('P≈ôihl√°≈°en√≠ z√°vodn√≠ci bez trval√Ωch SI ƒçip≈Ø');
 
 if (mysql_num_rows($vysledek) > 0)
 {
@@ -49,14 +49,14 @@ if (mysql_num_rows($vysledek) > 0)
 <?
 	$data_tbl = new html_table_mc();
 	$col = 0;
-	$data_tbl->set_header_col($col++,'Po¯.',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'JmÈno',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'P¯ÌjmenÌ',ALIGN_LEFT);
-	$data_tbl->set_header_col_with_help($col++,'Reg.',ALIGN_CENTER,"RegistraËnÌ ËÌslo");
-	$data_tbl->set_header_col($col++,'SI Ëip',ALIGN_LEFT);
+	$data_tbl->set_header_col($col++,'Po≈ô.',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'Jm√©no',ALIGN_LEFT);
+	$data_tbl->set_header_col($col++,'P≈ô√≠jmen√≠',ALIGN_LEFT);
+	$data_tbl->set_header_col_with_help($col++,'Reg.',ALIGN_CENTER,"Registraƒçn√≠ ƒç√≠slo");
+	$data_tbl->set_header_col($col++,'SI ƒçip',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Pozn·mka',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Pozn·mka (internÌ)',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'Pozn√°mka',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'Pozn√°mka (intern√≠)',ALIGN_CENTER);
 
 	echo $data_tbl->get_css()."\n";
 	echo $data_tbl->get_header()."\n";
@@ -89,17 +89,17 @@ if (mysql_num_rows($vysledek) > 0)
 	echo $data_tbl->get_footer()."\n";
 ?>
 <br>
-<INPUT TYPE="submit" value='Zapsat Ëipy pro z·vod'>
+<INPUT TYPE="submit" value='Zapsat ƒçipy pro z√°vod'>
 </FORM>
 <?
 }
 else
 {
-	echo('Nejsou p¯ihl·öenÌ û·dnÌ z·vodnÌci.<br>');
+	echo('Nejsou p≈ôihl√°≈°en√≠ ≈æ√°dn√≠ z√°vodn√≠ci.<br>');
 }
 ?>
 <BR>
-<BUTTON onclick="javascript:close_popup();">Zav¯i</BUTTON>
+<BUTTON onclick="javascript:close_popup();">Zav≈ôi</BUTTON>
 
 </body>
 </html>

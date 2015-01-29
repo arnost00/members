@@ -39,12 +39,12 @@ if (IsLoggedAdmin())
 		else
 		{
 			$result=MySQL_Query("DELETE FROM ".TBL_ZAVXUS." WHERE id='".$zaznam['id']."'")
-			or die("Chyba pøi provádìní dotazu do databáze.");
+			or die("Chyba pÅ™i provÃ¡dÄ›nÃ­ dotazu do databÃ¡ze.");
 			if ($result != FALSE)
 				$j++;
 		}
 	}
-	echo "<HTML><BODY><b>Vısledek opravy tabluky registaci v db :</b><BR>V poøádku / Celkem : ".$i."/".$cnt."<br>Smazáno / Ke smazání : ".$j."/".($cnt-$i)."<br><A href=\"".$g_baseadr."index.php?id=300&subid=1\">Návrat na stránky</A></BODY></HTML>";
+	echo "<HTML><BODY><b>VÃ½sledek opravy tabluky registaci v db :</b><BR>V poÅ™Ã¡dku / Celkem : ".$i."/".$cnt."<br>SmazÃ¡no / Ke smazÃ¡nÃ­ : ".$j."/".($cnt-$i)."<br><A href=\"".$g_baseadr."index.php?id=300&subid=1\">NÃ¡vrat na strÃ¡nky</A></BODY></HTML>";
 }
 else
 {

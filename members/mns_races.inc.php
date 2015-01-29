@@ -1,7 +1,7 @@
 <?php /* zavody - zobrazeni zavodu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Hromadné pøihlášky na závody');
+DrawPageTitle('HromadnÃ© pÅ™ihlÃ¡Å¡ky na zÃ¡vody');
 ?>
 <CENTER>
 <?
@@ -22,7 +22,7 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 	/* "status=yes,width=600,height=350" */
 
 	function confirm_delete() {
-		return confirm('Opravdu se chcete odhlásit?');
+		return confirm('Opravdu se chcete odhlÃ¡sit?');
 	}
 
 	javascript:set_default_size(800,600);
@@ -38,13 +38,13 @@ if ($num_rows > 0)
 	$data_tbl = new html_table_mc();
 	$col = 0;
 	$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
-	$data_tbl->set_header_col_with_help($col++,'Poø.',ALIGN_CENTER,"Poøadatel");
-	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
-	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web závodu");
-	$data_tbl->set_header_col($col++,'Monosti',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Pøihlášky',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'NÃ¡zev',ALIGN_LEFT);
+	$data_tbl->set_header_col($col++,'MÃ­sto',ALIGN_LEFT);
+	$data_tbl->set_header_col_with_help($col++,'PoÅ™.',ALIGN_CENTER,"PoÅ™adatel");
+	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ zÃ¡vodu");
+	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web zÃ¡vodu");
+	$data_tbl->set_header_col($col++,'MoÅ¾nosti',ALIGN_CENTER);
+	$data_tbl->set_header_col($col++,'PÅ™ihlÃ¡Å¡ky',ALIGN_CENTER);
 
 	echo $data_tbl->get_css()."\n";
 	echo $data_tbl->get_header()."\n";
@@ -82,11 +82,11 @@ if ($num_rows > 0)
 		$row[] = GetRaceLinkHTML($zaznam['odkaz']);
 		if (!$prihl_finish)
 		{
-			$row[] = "<A HREF=\"javascript:open_win('./race_regs_1.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\">Pø-1</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_all.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\">Pø-V</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."&select=1','')\"><span class=\"TextAlertExpLight\">Zè</span></A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
+			$row[] = "<A HREF=\"javascript:open_win('./race_regs_1.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\">PÅ™-1</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_all.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\">PÅ™-V</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."&select=1','')\"><span class=\"TextAlertExpLight\">ZÄ</span></A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
 		}
 		else
 		{
-			$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."&select=1','')\"><span class=\"TextAlertExpLight\">Zbr.èl.</span></A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>";
+			$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."&select=1','')\"><span class=\"TextAlertExpLight\">Zbr.Äl.</span></A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>";
 		}
 		$row[] = $prihlasky_out;
 
@@ -109,9 +109,9 @@ if ($num_rows > 0)
 }
 ?>
 <p>
-Pø-1 = pøihlašování po jednom èlenu.<BR>
-Pø-V = pøihlašování všech èlenù naráz.<BR>
-Zè = zobrazení pøiøazenıch pøihlášenıch èlenù.<BR>
-Zbr = zobrazení všech pøihlášenıch èlenù.<BR>
+PÅ™-1 = pÅ™ihlaÅ¡ovÃ¡nÃ­ po jednom Älenu.<BR>
+PÅ™-V = pÅ™ihlaÅ¡ovÃ¡nÃ­ vÅ¡ech ÄlenÅ¯ narÃ¡z.<BR>
+ZÄ = zobrazenÃ­ pÅ™iÅ™azenÃ½ch pÅ™ihlÃ¡Å¡enÃ½ch ÄlenÅ¯.<BR>
+Zbr = zobrazenÃ­ vÅ¡ech pÅ™ihlÃ¡Å¡enÃ½ch ÄlenÅ¯.<BR>
 </p>
 </CENTER>

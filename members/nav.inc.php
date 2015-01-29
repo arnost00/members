@@ -59,9 +59,9 @@ function DrawMenuGroupHeader($name)
 	<TR><TD height="5"></TD></TR>
 <?
 	DrawMenuItem('Novinky',0,0);
-	DrawMenuItem('Adresáø',1,0);
+	DrawMenuItem('AdresÃ¡Å™',1,0);
 	if(!IsLogged())
-		DrawMenuItem('Oddílová termínovka',2,0);
+		DrawMenuItem('OddÃ­lovÃ¡ termÃ­novka',2,0);
 	if(!IsLogged() || IsLoggedAdmin())
 	{
 		DrawMenuItem('Aktualitky',4,0);
@@ -69,8 +69,8 @@ function DrawMenuGroupHeader($name)
 	if(IsLogged())
 	{
 		echo '<TR><TD height="5"></TD></TR>';
-		DrawMenuItem('Pøihlášky èlenù',3,0);
-		DrawMenuItemStatic ('Pøehled pøihlášek','race_show_all.php','_blank');
+		DrawMenuItem('PÅ™ihlÃ¡Å¡ky ÄlenÅ¯',3,0);
+		DrawMenuItemStatic ('PÅ™ehled pÅ™ihlÃ¡Å¡ek','race_show_all.php','_blank');
 	}
 	if(IsLoggedUser())
 	{
@@ -78,61 +78,61 @@ function DrawMenuGroupHeader($name)
 		{
 			DrawMenuItem('Aktualitky',4,0);
 		}
-		DrawMenuGroupHeader('Èlenské&nbsp;menu');
-		DrawMenuItem('Pøihlášky na závody',_USER_GROUP_ID_,2);
+		DrawMenuGroupHeader('ÄŒlenskÃ©&nbsp;menu');
+		DrawMenuItem('PÅ™ihlÃ¡Å¡ky na zÃ¡vody',_USER_GROUP_ID_,2);
 		if ($g_enable_finances)
 			DrawMenuItem('Finance', _USER_GROUP_ID_, 10);
-		DrawMenuItem('Nastavení pøístupu',_USER_GROUP_ID_,1);
-		DrawMenuItem('Nastavení zákl.údajù',_USER_GROUP_ID_,3);
+		DrawMenuItem('NastavenÃ­ pÅ™Ã­stupu',_USER_GROUP_ID_,1);
+		DrawMenuItem('NastavenÃ­ zÃ¡kl.ÃºdajÅ¯',_USER_GROUP_ID_,3);
 		if ($g_enable_mailinfo)
-			DrawMenuItem('Upozoròování',_USER_GROUP_ID_,4);
+			DrawMenuItem('UpozorÅˆovÃ¡nÃ­',_USER_GROUP_ID_,4);
 	}
 	if(IsLoggedRegistrator())
 	{
-		DrawMenuGroupHeader('Menu&nbsp;pøihlašovatele');
-		DrawMenuItem('Pøihlášky na závody',_REGISTRATOR_GROUP_ID_,1);
-		DrawMenuItem('Editace závodù',_REGISTRATOR_GROUP_ID_,4);
+		DrawMenuGroupHeader('Menu&nbsp;pÅ™ihlaÅ¡ovatele');
+		DrawMenuItem('PÅ™ihlÃ¡Å¡ky na zÃ¡vody',_REGISTRATOR_GROUP_ID_,1);
+		DrawMenuItem('Editace zÃ¡vodÅ¯',_REGISTRATOR_GROUP_ID_,4);
 	}
 	if(IsLoggedManager())
 	{
-		DrawMenuGroupHeader('Menu&nbsp;trenéra');
-		DrawMenuItem('Pøihlášky na závody',_MANAGER_GROUP_ID_,2);
-		DrawMenuItem('Èlenská základna',_MANAGER_GROUP_ID_,1);
-		DrawMenuItem('Pøiøazení skupin èlenù',_MANAGER_GROUP_ID_,3);
-		DrawMenuItem('Pøehled m.trenérù',_MANAGER_GROUP_ID_,4);
+		DrawMenuGroupHeader('Menu&nbsp;trenÃ©ra');
+		DrawMenuItem('PÅ™ihlÃ¡Å¡ky na zÃ¡vody',_MANAGER_GROUP_ID_,2);
+		DrawMenuItem('ÄŒlenskÃ¡ zÃ¡kladna',_MANAGER_GROUP_ID_,1);
+		DrawMenuItem('PÅ™iÅ™azenÃ­ skupin ÄlenÅ¯',_MANAGER_GROUP_ID_,3);
+		DrawMenuItem('PÅ™ehled m.trenÃ©rÅ¯',_MANAGER_GROUP_ID_,4);
 		if ($g_enable_finances)
 			DrawMenuItem('Finance', _MANAGER_GROUP_ID_, 10);
 	}
 	else if (IsLoggedSmallManager())
 	{
-		DrawMenuGroupHeader('Menu&nbsp;malého&nbsp;trenéra');
-		DrawMenuItem('Pøihlášky na závody',_SMALL_MANAGER_GROUP_ID_,2);
-		DrawMenuItem('Èlenská základna',_SMALL_MANAGER_GROUP_ID_,1);
+		DrawMenuGroupHeader('Menu&nbsp;malÃ©ho&nbsp;trenÃ©ra');
+		DrawMenuItem('PÅ™ihlÃ¡Å¡ky na zÃ¡vody',_SMALL_MANAGER_GROUP_ID_,2);
+		DrawMenuItem('ÄŒlenskÃ¡ zÃ¡kladna',_SMALL_MANAGER_GROUP_ID_,1);
 		if ($g_enable_finances)
 			DrawMenuItem('Finance', _SMALL_MANAGER_GROUP_ID_, 10);
 	}
 	if(IsLoggedSmallAdmin())
 	{
-		DrawMenuGroupHeader('Menu&nbsp;správce');
-		DrawMenuItem('Èlenská základna',_SMALL_ADMIN_GROUP_ID_,1);
-		DrawMenuItem('Správa úètù',_SMALL_ADMIN_GROUP_ID_,3);
+		DrawMenuGroupHeader('Menu&nbsp;sprÃ¡vce');
+		DrawMenuItem('ÄŒlenskÃ¡ zÃ¡kladna',_SMALL_ADMIN_GROUP_ID_,1);
+		DrawMenuItem('SprÃ¡va ÃºÄtÅ¯',_SMALL_ADMIN_GROUP_ID_,3);
 	}
 	if(IsLoggedFinance() && $g_enable_finances)
 	{
-		DrawMenuGroupHeader('Menu&nbsp;finanèníka');
-		DrawMenuItem('Èlenská základna',_FINANCE_GROUP_ID_,1);
-		DrawMenuItem('Pøehled závodù',_FINANCE_GROUP_ID_,2);
-		if ($g_enable_finances_claim) DrawMenuItem('Pøehled reklamací',_FINANCE_GROUP_ID_,3);
-		DrawMenuItem('Typy pøíspìvkù',_FINANCE_GROUP_ID_,4);
+		DrawMenuGroupHeader('Menu&nbsp;finanÄnÃ­ka');
+		DrawMenuItem('ÄŒlenskÃ¡ zÃ¡kladna',_FINANCE_GROUP_ID_,1);
+		DrawMenuItem('PÅ™ehled zÃ¡vodÅ¯',_FINANCE_GROUP_ID_,2);
+		if ($g_enable_finances_claim) DrawMenuItem('PÅ™ehled reklamacÃ­',_FINANCE_GROUP_ID_,3);
+		DrawMenuItem('Typy pÅ™Ã­spÄ›vkÅ¯',_FINANCE_GROUP_ID_,4);
 	}
 	if(IsLoggedAdmin())
 	{
 		DrawMenuGroupHeader('Administrace');
-		DrawMenuItem('Servisní menu',_ADMIN_GROUP_ID_,1);
-		DrawMenuItem('Pøihlášky na závody',_ADMIN_GROUP_ID_,2);
-		DrawMenuItem('Editace závodù',_ADMIN_GROUP_ID_,5);
-		DrawMenuItem('Úèty / Náhled',_ADMIN_GROUP_ID_,4);
-		DrawMenuItem('Výpis zmìn',_ADMIN_GROUP_ID_,6);
+		DrawMenuItem('ServisnÃ­ menu',_ADMIN_GROUP_ID_,1);
+		DrawMenuItem('PÅ™ihlÃ¡Å¡ky na zÃ¡vody',_ADMIN_GROUP_ID_,2);
+		DrawMenuItem('Editace zÃ¡vodÅ¯',_ADMIN_GROUP_ID_,5);
+		DrawMenuItem('ÃšÄty / NÃ¡hled',_ADMIN_GROUP_ID_,4);
+		DrawMenuItem('VÃ½pis zmÄ›n',_ADMIN_GROUP_ID_,6);
 	}
 ?>
  	<TR><TD height="15"></TD></TR>
@@ -151,14 +151,14 @@ function check_login_form(form)
 {
 	if(form.<? echo(_VAR_USER_LOGIN);?>.value == "")
 	{
-		alert("Není vyplnìno pole 'Jméno'");
+		alert("NenÃ­ vyplnÄ›no pole 'JmÃ©no'");
 		form.<? echo(_VAR_USER_LOGIN);?>.focus();
 		return false;
 	}
 
 	if(form.<? echo(_VAR_USER_PASS);?>.value == "")
 	{
-		alert("Není vyplnìno pole 'Heslo'");
+		alert("NenÃ­ vyplnÄ›no pole 'Heslo'");
 		form.<? echo(_VAR_USER_PASS);?>.focus();
 		return false;
 	}
@@ -169,11 +169,11 @@ function check_login_form(form)
 
 	<FORM METHOD=POST ACTION="./login.php" onSubmit="return check_login_form(this);">
 	<TABLE border="0" cellpadding="0" cellspacing="2">
-	<TR><TD class="login"><label>Jméno&nbsp;</TD><TD><INPUT TYPE="text" NAME="<? echo(_VAR_USER_LOGIN);?>" SIZE="10" class="login" tabindex="1"></label></TD></TR>
+	<TR><TD class="login"><label>JmÃ©no&nbsp;</TD><TD><INPUT TYPE="text" NAME="<? echo(_VAR_USER_LOGIN);?>" SIZE="10" class="login" tabindex="1"></label></TD></TR>
 	<TR><TD class="login"><label>Heslo&nbsp;</TD><TD><INPUT TYPE="password" NAME="<? echo(_VAR_USER_PASS);?>" SIZE="10" class="login" tabindex="2"></label></TD></TR>
 	<TR><TD colspan="2" height="4"></TD></TR>
-	<TR><TD></TD><TD><INPUT TYPE="submit" VALUE="Pøihlásit" tabindex="3"></TD></TR>
-<!-- 	<TR><TD></TD><TD><INPUT TYPE="submit" class="loginsbm" VALUE="Pøihlásit" tabindex="3"></TD></TR> -->
+	<TR><TD></TD><TD><INPUT TYPE="submit" VALUE="PÅ™ihlÃ¡sit" tabindex="3"></TD></TR>
+<!-- 	<TR><TD></TD><TD><INPUT TYPE="submit" class="loginsbm" VALUE="PÅ™ihlÃ¡sit" tabindex="3"></TD></TR> -->
 </TABLE>
 	</FORM>
 <?
@@ -183,7 +183,7 @@ function check_login_form(form)
 }
 else
 {
-	echo '<a href="./logoff.php" class="NaviColSm"><b>Odhlásit</b></a>';
+	echo '<a href="./logoff.php" class="NaviColSm"><b>OdhlÃ¡sit</b></a>';
 }
 ?>
 	</TD></TR>

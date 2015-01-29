@@ -1,13 +1,13 @@
 <?php /* adresar clenu oddilu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-DrawPageTitle('Adresáø èlenù oddílu');
+DrawPageTitle('AdresÃ¡Å™ ÄlenÅ¯ oddÃ­lu');
 ?>
 <TABLE width="95%" border="0">
 <TR>
 <TD align="right">
 <? if ( IsLoggedManager() || IsLoggedRegistrator() || IsLoggedSmallAdmin() || IsLoggedAdmin()) { ?>
-<a href="javascript:open_win_ex('./export_directory.php','',600,600);">Export adresáøe</a>
+<a href="javascript:open_win_ex('./export_directory.php','',600,600);">Export adresÃ¡Å™e</a>
 <? } ?>
 </TD></TR>
 </TABLE>
@@ -34,9 +34,9 @@ if (($vysledek != FALSE) && mysql_num_rows($vysledek) > 0)
 $data_tbl = new html_table_mc();
 $col = 0;
 
-$data_tbl->set_header_col($col++,'Pøíjmení',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-$data_tbl->set_header_col_with_help($col++,'Reg.è.',ALIGN_LEFT,"Registraèní èíslo");
+$data_tbl->set_header_col($col++,'PÅ™Ã­jmenÃ­',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'JmÃ©no',ALIGN_LEFT);
+$data_tbl->set_header_col_with_help($col++,'Reg.Ä.',ALIGN_LEFT,"RegistraÄnÃ­ ÄÃ­slo");
 if (IsLogged())
 	$data_tbl->set_header_col($col++,'Email',ALIGN_LEFT);
 else if ($g_mail_in_public_directory)
@@ -73,15 +73,15 @@ if (!IsLogged() && $g_mail_in_public_directory)
 	$n = rand(0,1);
 	$char_at = ($n) ? '&#64;' : '&#x40;';
 ?>
-* E-mailové adresy se zobrazují v upravené podobì.<br>
-E-mailové adresy v neupravené podobì se zobrazují po pøihlášení se do systému.<br>
-Jiná monost jak získat správnou e-mailovou adresu je nahrazením textu "(zavináè)" znakem "<? echo($char_at);?>" a "(teèka)" znakem ".".<br>
+* E-mailovÃ© adresy se zobrazujÃ­ v upravenÃ© podobÄ›.<br>
+E-mailovÃ© adresy v neupravenÃ© podobÄ› se zobrazujÃ­ po pÅ™ihlÃ¡Å¡enÃ­ se do systÃ©mu.<br>
+JinÃ¡ moÅ¾nost jak zÃ­skat sprÃ¡vnou e-mailovou adresu je nahrazenÃ­m textu "(zavinÃ¡Ä)" znakem "<? echo($char_at);?>" a "(teÄka)" znakem ".".<br>
 <?
 }
 } // aspon jeden zaznam
 else
 {
-	echo "Seznam èlenù oddílu je prázdnı.<BR>";
+	echo "Seznam ÄlenÅ¯ oddÃ­lu je prÃ¡zdnÃ½.<BR>";
 }
 ?>
 <BR>

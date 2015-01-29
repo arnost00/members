@@ -1,7 +1,7 @@
 <?php /* finance -  show form for outgoing payment*/ 
 if (!defined("__HIDE_TEST__")) exit;
 ?>
-<h3>Platba Ëlena [-]</h3>
+<h3>Platba ƒçlena [-]</h3>
 <form class="form" action="?payment=out&user_id=<?=$user_id;?>" method="post">
 <?
 $data_tbl = new html_table_form();
@@ -17,11 +17,11 @@ while ($zaznam=MySQL_Fetch_Array($vysledek_zavody))
 {
 	$race_sel .= "<option value=".$zaznam["id"].">".$zaznam["nazev"]."&nbsp;-&nbsp;".formatDate($zaznam["datum_text"])."</option>";
 }
-$race_sel .= '</select>&nbsp;&nbsp;nepovinn· poloûka';
+$race_sel .= '</select>&nbsp;&nbsp;nepovinn√° polo≈æka';
 
-echo $data_tbl->get_new_row('<label for="id_zavod">Z·vod</label>', $race_sel);
-echo $data_tbl->get_new_row('<label for="amount">»·stka</label>', '<input name="amount" type="text" onkeyup="checkAmount(this);" size="5" maxlength="10" />');
-echo $data_tbl->get_new_row('<label for="note">Pozn·mka</label>', '<input name="note" type="text" size="40" maxlength="200" />');
+echo $data_tbl->get_new_row('<label for="id_zavod">Z√°vod</label>', $race_sel);
+echo $data_tbl->get_new_row('<label for="amount">ƒå√°stka</label>', '<input name="amount" type="text" onkeyup="checkAmount(this);" size="5" maxlength="10" />');
+echo $data_tbl->get_new_row('<label for="note">Pozn√°mka</label>', '<input name="note" type="text" size="40" maxlength="200" />');
 echo $data_tbl->get_new_row('<label for="datum">Datum platby</label>', '<input name="datum" type="text" value="'.GetCurrentDateString().'" size="8" />&nbsp;&nbsp;(DD.MM.RRRR)');
 
 echo $data_tbl->get_empty_row();
