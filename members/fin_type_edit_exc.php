@@ -18,8 +18,8 @@ if (IsLoggedFinance())
 	}
 	else
 	{
-		if (strlen($popis) > 255)
-			$popis = substr($popis,0,255);
+		if (mb_strlen($popis,'UTF-8') > 255)
+			$popis = mb_substr($popis,0,255,'UTF-8');
 		
 		$nazev=correct_sql_string($nazev);
 		$popis=correct_sql_string($popis);

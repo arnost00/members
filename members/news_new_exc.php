@@ -19,8 +19,8 @@ if (IsLoggedEditor())
 	else
 	{
 		$datum2=String2DateDMY($datum);
-		if (strlen($text) > GC_NEWS_MAX_TEXT_LENGTH)
-		  $text = substr($text,0,GC_NEWS_MAX_TEXT_LENGTH);
+		if (iconv_strlen($text,'UTF-8') > GC_NEWS_MAX_TEXT_LENGTH)
+		  $text = mb_substr($text,0,GC_NEWS_MAX_TEXT_LENGTH,'UTF-8');
 		
 		$datum2=correct_sql_string($datum2);
 		$nadpis=correct_sql_string($nadpis);
