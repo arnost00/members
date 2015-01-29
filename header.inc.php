@@ -18,7 +18,7 @@ header("Pragma: no-cache");
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <HTML>
 <HEAD>
-	<META http-equiv="Content-Type" content="text/html; UTF-8">
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<META http-equiv="Content-language" content="cs">
 	<META name="generator" content="<? echo SYSTEM_NAME.' '.GetCodeVersion(); ?>">
 	<META name="description" content="<? echo $g_www_meta_description; ?>">
