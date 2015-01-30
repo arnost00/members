@@ -349,6 +349,14 @@ function form_filter_racelist($page,&$filterA,&$filterB,&$filterC)
 			$result .= ' AND (';
 		$result .= '`datum` >= \''.GetCurrentDate()."')";
 	}
+	else if ($filterC == 2)
+	{
+		if($result == '')
+			$result = ' WHERE (';
+		else
+			$result .= ' AND (';
+		$result .= '`datum` >= \''.DecDate(GetCurrentDate(),31)."')";
+	}
 ?>
 <table><tr><td>
 <form>
@@ -376,8 +384,8 @@ Zařazení zobrazených závodů&nbsp;
 </select>
 </form>
 </td><td>&nbsp;&nbsp;</td><td valign="top">
-<INPUT TYPE="checkbox" NAME="fC" onClick="javascript:window.open(<? echo($urlC);?>+Number(this.checked),'_top')" id="fC" value="1"<? if ($filterC != 0) echo(' checked');?>><label for="fC">Zobrazit staré závody</label>
-
+<INPUT TYPE="checkbox" NAME="fC" onClick="javascript:window.open(<? echo($urlC);?>+Number(this.checked),'_top')" id="fC" value="1"<? if ($filterC == 1) echo(' checked');?>><label for="fC">Zobrazit staré závody</label>
+<INPUT TYPE="checkbox" NAME="fC2" onClick="javascript:window.open(<? echo($urlC);?>+Number(this.checked*2),'_top')" id="fC2" value="2"<? if ($filterC == 2) echo(' checked');?>><label for="fC2">jen cca měsíc zpět</label>
 </td></tr>
 </table>
 <?
