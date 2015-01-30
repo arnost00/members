@@ -8,7 +8,7 @@ $version_upd = '2.2.0.309';
 
 //#############################################################################
 
-require ('prepare.inc.php');
+require_once ('prepare.inc.php');
 
 //#############################################################################
 //	SQL dotazy pro zmenu db. na novejsi verzi
@@ -28,5 +28,5 @@ ADD `storno_note` VARCHAR(255) COLLATE cp1250_czech_cs DEFAULT NULL;';
 
 //#############################################################################
 
-require ('action.inc.php');
+require_once ('action.inc.php');
 ?>

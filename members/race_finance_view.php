@@ -3,8 +3,8 @@ define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
 @extract($_REQUEST);
 
-require ("./connect.inc.php");
-require ("./sess.inc.php");
+require_once ("./connect.inc.php");
+require_once ("./sess.inc.php");
 if (!IsLoggedFinance())
 {
 	header("location: ".$g_baseadr."error.php?code=21");
@@ -15,7 +15,7 @@ $race_id = (IsSet($race_id) && is_numeric($race_id)) ? (int)$race_id : 0;
 
 db_Connect();
 
-include_once './payment.inc.php'; // pomocne funkce a javascript pro finance
+require_once './payment.inc.php'; // pomocne funkce a javascript pro finance
 
 if (IsSet($payment))
 {
@@ -53,10 +53,10 @@ if (IsSet($payment))
 }
 
 
-include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
-include ("./common.inc.php");
-include ("./common_user.inc.php");
-include ("./ctable.inc.php");
+require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
+require_once ("./common.inc.php");
+require_once ("./common_user.inc.php");
+require_once ("./ctable.inc.php");
 DrawPageTitle('Finance závodu');
 ?>
 <CENTER>
@@ -67,12 +67,13 @@ DrawPageTitle('Finance závodu');
 </script>
 <?
 
-include ("./race_finance.inc.php");
+require_once ("./race_finance.inc.php");
 
 ?>
 <hr>
 <br>
 <BUTTON onclick="javascript:close_popup();">Zavři okno</BUTTON><BR>
 </CENTER>
-</BODY>
-</HTML>
+<?
+HTML_Footer();
+?>

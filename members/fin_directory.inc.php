@@ -29,8 +29,8 @@ function confirm_entry_unlock(name) {
 </script>
 
 <?
-include "./common_user.inc.php";
-include('./csort.inc.php');
+require_once "./common_user.inc.php";
+require_once('./csort.inc.php');
 
 $sc = new column_sort_db();
 $sc->add_column('sort_name','');
@@ -56,7 +56,7 @@ $query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,entry_locked, ifnull(f.sum_amoun
 
 @$vysledek=MySQL_Query($query);
 
-include_once ('./common_fin.inc.php');
+require_once ('./common_fin.inc.php');
 $enable_fin_types = IsFinanceTypeTblFilled();
 $i=1;
 if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
@@ -136,7 +136,7 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 <BR>
 
 <?
-include 'fin_directory_club_sum.php';
+require_once 'fin_directory_club_sum.php';
 ?>
 
 </CENTER>

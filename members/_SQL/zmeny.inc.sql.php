@@ -1,8 +1,5 @@
 <?
 
-if (!defined('_ZMENY_INCLUDED')) {
-	define('_ZMENY_INCLUDED', 1);
-
 function _print_upd_info ()
 {
 	global $version_upd, $g_dbserver, $g_dbname, $g_baseadr;
@@ -72,6 +69,4 @@ function _run_sql_queries (&$qlist)
 	echo ' Chybně vykonaných úkonů v db : <span class="ErrorText"><B>'.$db_err.'</B></span><BR>'."\n";
 }
 
-
-}	// endif
 ?>

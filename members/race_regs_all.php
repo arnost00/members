@@ -2,11 +2,11 @@
 <?
 @extract($_REQUEST);
 
-require("./cfg/_colors.php");
-require("./cfg/_globals.php");
-require ("./connect.inc.php");
-require ("./sess.inc.php");
-require ("./common.inc.php");
+require_once("./cfg/_colors.php");
+require_once("./cfg/_globals.php");
+require_once ("./connect.inc.php");
+require_once ("./sess.inc.php");
+require_once ("./common.inc.php");
 
 if (!IsLoggedRegistrator() && !IsLoggedManager()&& !IsLoggedSmallManager())
 {
@@ -14,12 +14,12 @@ if (!IsLoggedRegistrator() && !IsLoggedManager()&& !IsLoggedSmallManager())
 	exit;
 }
 
-require ("./ctable.inc.php");
-include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
-include ("./common_race.inc.php");
-include ("./common_user.inc.php");
-include ('./url.inc.php');
-include('./csort.inc.php');
+require_once ("./ctable.inc.php");
+require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
+require_once ("./common_race.inc.php");
+require_once ("./common_user.inc.php");
+require_once ('./url.inc.php');
+require_once('./csort.inc.php');
 DrawPageTitle('Hromadná přihlášky na závody');
 
 $gr_id = (IsSet($gr_id) && is_numeric($gr_id)) ? (int)$gr_id : 0;
@@ -214,5 +214,6 @@ Vyberte závodníka klepnutím do políčka kategorie u závodníka a následně
 ?>
 <BR>
 <BUTTON onclick="javascript:close_popup();">Zpět</BUTTON>
-</BODY>
-</HTML>
+<?
+HTML_Footer();
+?>

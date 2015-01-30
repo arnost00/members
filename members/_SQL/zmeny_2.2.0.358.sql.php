@@ -8,7 +8,7 @@ $version_upd = '2.2.0.358';
 
 //#############################################################################
 
-require ('prepare.inc.php');
+require_once ('prepare.inc.php');
 
 //#############################################################################
 //	SQL dotazy pro zmenu db. na novejsi verzi
@@ -18,5 +18,5 @@ require ('prepare.inc.php');
 $sql[1] = 'ALTER TABLE `'.TBL_USER.'` ADD `narodnost` VARCHAR( 2 ) NOT NULL DEFAULT \'CZ\'';
 //#############################################################################
 
-require ('action.inc.php');
+require_once ('action.inc.php');
 ?>

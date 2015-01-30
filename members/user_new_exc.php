@@ -2,15 +2,15 @@
 <?php /* adminova stranka - provedeni vlozeni clena */
 @extract($_REQUEST);
 
-require ('./connect.inc.php');
-require ('./sess.inc.php');
-require ('./modify_log.inc.php');
+require_once ('./connect.inc.php');
+require_once ('./sess.inc.php');
+require_once ('./modify_log.inc.php');
 
 if (!IsSet($fin)) $fin = 0;
 if (!IsSet($rc)) $rc = '';
 if (!IsSet($hidden)) $hidden = 0;
 
-include "./common.inc.php";
+require_once "./common.inc.php";
 
 $datum = String2SQLDateDMY($datum);
 

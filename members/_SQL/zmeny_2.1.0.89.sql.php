@@ -8,7 +8,7 @@ $version_upd = '2.1.0.89';
 
 //#############################################################################
 
-require ('prepare.inc.php');
+require_once ('prepare.inc.php');
 
 //#############################################################################
 //	SQL dotazy pro zmenu db. na novejsi verzi
@@ -20,5 +20,5 @@ $sql[2] = 'ALTER TABLE `'.TBL_FINANCE."` CHANGE `id_accounts_user` `id_users_use
 
 //#############################################################################
 
-require ('action.inc.php');
+require_once ('action.inc.php');
 ?>

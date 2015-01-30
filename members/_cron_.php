@@ -7,7 +7,7 @@ return $buffer;
 error_reporting(E_ALL);
 ob_start('savedebug');
   
-include(dirname(__FILE__) .'/timestamp.inc.php');
+require_once(dirname(__FILE__) .'/timestamp.inc.php');
 _set_global_RT_Start();
 ?>
 <?php 
@@ -34,14 +34,14 @@ header("Pragma: no-cache");
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 
 <?
-require (dirname(__FILE__) .'/cfg/_globals.php');
-require (dirname(__FILE__) .'/connect.inc.php');
-require (dirname(__FILE__) .'/common.inc.php');
-require (dirname(__FILE__) .'/common_race.inc.php');
-require (dirname(__FILE__) .'/common_fin.inc.php');
-require (dirname(__FILE__) .'/common_rg_race.inc.php');
-require (dirname(__FILE__) .'/version.inc.php');
-require (dirname(__FILE__) .'/payment.inc.php');
+require_once (dirname(__FILE__) .'/cfg/_globals.php');
+require_once (dirname(__FILE__) .'/connect.inc.php');
+require_once (dirname(__FILE__) .'/common.inc.php');
+require_once (dirname(__FILE__) .'/common_race.inc.php');
+require_once (dirname(__FILE__) .'/common_fin.inc.php');
+require_once (dirname(__FILE__) .'/common_rg_race.inc.php');
+require_once (dirname(__FILE__) .'/version.inc.php');
+require_once (dirname(__FILE__) .'/payment.inc.php');
 
 define ('EMAIL_ENDL',"\n");
 define ('DIV_LINE','-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-');

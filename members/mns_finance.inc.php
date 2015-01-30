@@ -10,8 +10,8 @@ DrawPageTitle('Finance členů');
 //-->
 </script>
 <?
-include "./common_user.inc.php";
-include('./csort.inc.php');
+require_once "./common_user.inc.php";
+require_once('./csort.inc.php');
 
 //priprava pro zobrazeni sverencu
 $sc = new column_sort_db();

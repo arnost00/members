@@ -2,14 +2,14 @@
 <?
 @extract($_REQUEST);
 
-require ("./connect.inc.php");
-require ("./sess.inc.php");
-require("./cfg/_colors.php");
+require_once ("./connect.inc.php");
+require_once ("./sess.inc.php");
+require_once("./cfg/_colors.php");
 
-require ("./ctable.inc.php");
-include ("./common.inc.php");
-include ("./common_race.inc.php");
-include ('./url.inc.php');
+require_once ("./ctable.inc.php");
+require_once ("./common.inc.php");
+require_once ("./common_race.inc.php");
+require_once ('./url.inc.php');
 
 if (!IsLoggedRegistrator())
 {
@@ -17,7 +17,7 @@ if (!IsLoggedRegistrator())
 	exit;
 }
 
-include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
+require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 DrawPageTitle('Editace kategorií v závodu');
 
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
@@ -53,7 +53,7 @@ function zmen_kat_null()
 
 <? DrawPageSubTitle('Kategorie v závodě'); ?>
 
-<?include "./race_kateg.inc.php"?>
+<?require_once "./race_kateg.inc.php"?>
 
 <BR>
 
@@ -97,5 +97,6 @@ MTBO = (<? echo $g_kategorie ['MTBO']; ?>)
 <br><br>Aktuální kategorie:<br>
 <span class="kategory_small_list"><? echo $zaznam['kategorie'];?></span><br>
 
-</BODY>
-</HTML>
+<?
+HTML_Footer();
+?>

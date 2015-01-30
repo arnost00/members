@@ -191,7 +191,7 @@ $g_kategorie ['acka'] = 'D16A;D18A;D20A;D21A;D21E;H16A;H18A;H20A;H21A;H21E;';
 $g_kategorie ['stafety'] = 'D14;D18;D21;D105;D140;H14;H18;H21;H105;H140;H165;dorost;dospělí;HD175;HD235;';
 $g_kategorie ['MTBO'] = 'W14;W17;W20;W21E;W21A;W21B;W40;W50;M14;M17;M20;M21E;M21A;M21B;M21C;M40 Long;M40 Short;M50;OPEN Short;OPEN Long;';
 
-require('./common_race2.inc.php');
+require_once('./common_race2.inc.php');
 
 function RaceInfoTable(&$zaznam,$add_row = '',$show_curr_term = false, $full_width=false, $expandable=false)
 //	$show_curr_term = 0 - nic, 1 - us,mng,smn, 2 - rg,ad

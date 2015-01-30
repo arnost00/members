@@ -2,10 +2,10 @@
 <?
 @extract($_REQUEST);
 
-require('./connect.inc.php');
-require('./sess.inc.php');
-require('./const_strings.inc.php');
-require('./modify_log.inc.php');
+require_once('./connect.inc.php');
+require_once('./sess.inc.php');
+require_once('./const_strings.inc.php');
+require_once('./modify_log.inc.php');
 
 function GenerateInfoEmail($type,$id,$login,$heslo,$email)
 {
@@ -58,8 +58,8 @@ function GenerateInfoEmail($type,$id,$login,$heslo,$email)
 	fputs($fp, $full_msg."\r\n");
 	fclose($fp);
 */
-	require ('version.inc.php');
-	require('common.inc.php');
+	require_once ('version.inc.php');
+	require_once('common.inc.php');
 	SendEmail($from_email,$email,$full_msg,$subject);
 }
 
@@ -70,7 +70,7 @@ if (IsLoggedSmallAdmin())
 	$action_type = (IsSet($action_type) && is_numeric($action_type)) ? (int)$action_type : 1;
 
 	db_Connect();
-	include "./common_user.inc.php";
+	require_once "./common_user.inc.php";
 
 	$result=0;
 
@@ -124,7 +124,7 @@ if (IsLoggedSmallAdmin())
 
 		if ($action_type == 2)
 		{
-			include ('generators.inc.php');
+			require_once ('generators.inc.php');
 			$login=correct_sql_string($login_g);
 			$podpis=correct_sql_string($podpis_g);
 			$nheslo2 = $nheslo = GeneratePassword(8);
@@ -173,7 +173,7 @@ if (IsLoggedSmallAdmin())
 	case 3: // password
 		if ($action_type == 2)
 		{
-			include ('generators.inc.php');
+			require_once ('generators.inc.php');
 			$nheslo2 = $nheslo = GeneratePassword(8);
 		}
 
@@ -212,7 +212,7 @@ else if (IsLoggedManager())
 	$action_type = (IsSet($action_type) && is_numeric($action_type)) ? (int)$action_type : 1;
 	
 	db_Connect();
-	include "./common_user.inc.php";
+	require_once "./common_user.inc.php";
 
 	$result="";
 
@@ -253,7 +253,7 @@ else if (IsLoggedManager())
 
 		if ($action_type == 2)
 		{
-			include ('generators.inc.php');
+			require_once ('generators.inc.php');
 			$login=correct_sql_string($login_g);
 			$podpis=correct_sql_string($podpis_g);
 			$nheslo2 = $nheslo = GeneratePassword(8);
@@ -302,7 +302,7 @@ else if (IsLoggedManager())
 	case 3: // password
 		if ($action_type == 2)
 		{
-			include ('generators.inc.php');
+			require_once ('generators.inc.php');
 			$nheslo2 = $nheslo = GeneratePassword(8);
 		}
 
@@ -340,7 +340,7 @@ else if (IsLoggedSmallManager())
 	$type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
 	
 	db_Connect();
-	include "./common_user.inc.php";
+	require_once "./common_user.inc.php";
 
 	$result="";
 

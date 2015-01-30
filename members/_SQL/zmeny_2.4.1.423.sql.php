@@ -8,7 +8,7 @@ $version_upd = '2.4.1.423';
 
 //#############################################################################
 
-require ('prepare.inc.php');
+require_once ('prepare.inc.php');
 
 //#############################################################################
 //	SQL dotazy pro zmenu db. na novejsi verzi
@@ -19,5 +19,5 @@ $sql[1] = 'ALTER TABLE `'.TBL_USER.'` ADD `entry_locked` tinyint(1) unsigned NOT
 
 //#############################################################################
 
-require ('action.inc.php');
+require_once ('action.inc.php');
 ?>

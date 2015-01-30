@@ -14,7 +14,7 @@ DrawPageTitle('Přiřazení členů malým trenérům');
 </script>
 
 <?
-include "./common_user.inc.php";
+require_once "./common_user.inc.php";
 
 $data_tbl = new html_table_mc();
 $col = 0;

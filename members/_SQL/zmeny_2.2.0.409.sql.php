@@ -8,7 +8,7 @@ $version_upd = '2.2.0.409';
 
 //#############################################################################
 
-require ('prepare.inc.php');
+require_once ('prepare.inc.php');
 
 //#############################################################################
 //	SQL dotazy pro zmenu db. na novejsi verzi
@@ -20,5 +20,5 @@ $sql[2] = 'ALTER TABLE `'.TBL_ZAVXUS.'` ADD `transport` TINYINT( 1 ) NULL DEFAUL
 
 //#############################################################################
 
-require ('action.inc.php');
+require_once ('action.inc.php');
 ?>

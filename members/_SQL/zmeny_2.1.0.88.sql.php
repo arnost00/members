@@ -8,7 +8,7 @@ $version_upd = '2.1.0.88';
 
 //#############################################################################
 
-require ('prepare.inc.php');
+require_once ('prepare.inc.php');
 
 //#############################################################################
 //	SQL dotazy pro zmenu db. na novejsi verzi
@@ -31,5 +31,5 @@ $sql[2] = 'ALTER TABLE `'.TBL_ACCOUNT."` ADD `policy_fin` TINYINT( 1 ) UNSIGNED 
 
 //#############################################################################
 
-require ('action.inc.php');
+require_once ('action.inc.php');
 ?>

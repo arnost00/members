@@ -2,8 +2,8 @@
 <?
 @extract($_REQUEST);
 
-require ("./connect.inc.php");
-require ("./sess.inc.php");
+require_once ("./connect.inc.php");
+require_once ("./sess.inc.php");
 
 if (IsLoggedRegistrator())
 {

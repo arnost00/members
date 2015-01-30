@@ -3,8 +3,8 @@ define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
 @extract($_REQUEST);
 
-require ("./connect.inc.php");
-require ("./sess.inc.php");
+require_once ("./connect.inc.php");
+require_once ("./sess.inc.php");
 if (!IsLoggedSmallManager() && !IsLoggedManager() && !IsLoggedFinance())
 {
 	header("location: ".$g_baseadr."error.php?code=21");
@@ -15,8 +15,8 @@ if (!IsLoggedSmallManager() && !IsLoggedManager() && !IsLoggedFinance())
 
 db_Connect();
 
-include ("./common.inc.php");
-include_once './payment.inc.php'; // pomocne funkce a javascript pro finance
+require_once ("./common.inc.php");
+require_once './payment.inc.php'; // pomocne funkce a javascript pro finance
 
 // vytvorit platbu - out nebo in
 if (IsSet($payment) && IsLogged())
@@ -48,9 +48,9 @@ if (IsSet($payment) && IsLogged())
 }
 
 
-include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
-include ("./common_user.inc.php");
-include ("./ctable.inc.php");
+require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
+require_once ("./common_user.inc.php");
+require_once ("./ctable.inc.php");
 DrawPageTitle('Finance člena');
 ?>
 
@@ -68,28 +68,28 @@ function refreshParent() {
 if (IsSet($change) && $change == "change" && IsLoggedFinance())
 {
 	$set_back_button = true;
-	include ("./user_finance_update.inc.php");
+	require_once ("./user_finance_update.inc.php");
 } else if (IsSet($storno) && $storno == "storno" && IsLoggedFinance())
 {
 	$set_back_button = true;
-	include ("./user_finance_storno.inc.php");
+	require_once ("./user_finance_storno.inc.php");
 } else
 {
 	$set_back_button = false;
 	$user_id = (IsSet($user_id) && is_numeric($user_id)) ? (int)$user_id : 0;
 	
-	include ("./user_finance.inc.php");
+	require_once ("./user_finance.inc.php");
 	
 	if (IsLoggedFinance())
 	{
 	?>
 <hr>
 	<?
-		include ("./user_finance_out.inc.php");
+		require_once ("./user_finance_out.inc.php");
 	?>
 <hr>
 	<?
-		include ("./user_finance_in.inc.php");
+		require_once ("./user_finance_in.inc.php");
 	}
 }
 ?>
@@ -103,5 +103,6 @@ if ($set_back_button && $user_id != 0)
 ?>
 <BUTTON onclick="javascript:close_popup();">Zavři okno</BUTTON><BR>
 </CENTER>
-</BODY>
-</HTML>
+<?
+HTML_Footer();
+?>

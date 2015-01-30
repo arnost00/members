@@ -1,11 +1,10 @@
 <?php
 define('__HIDE_TEST__', '_KeAr_PHP_WEB_');
 
-require('./cfg/_colors.php');
-require('./cfg/_cfg.php');
-require('./header.inc.php'); // header obsahuje uvod html a konci <BODY>
-include ("./common.inc.php");
-include('./calendar.inc.php');
+require_once('./cfg/_colors.php');
+require_once('./cfg/_cfg.php');
+require_once('./header.inc.php'); // header obsahuje uvod html a konci <BODY>
+require_once('./calendar.inc.php');
 ?>
 
 
@@ -42,6 +41,6 @@ DrawPageTitle('Kalendář');
 <TD width="2%"></TD>
 </TR>
 </TABLE>
-
-</BODY>
-</HTML>
+<?
+HTML_Footer();
+?>

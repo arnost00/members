@@ -2,19 +2,19 @@
 <?php
 @extract($_REQUEST);
 
-require('./cfg/_colors.php');
-require ('./connect.inc.php');
-require ('./sess.inc.php');
+require_once('./cfg/_colors.php');
+require_once ('./connect.inc.php');
+require_once ('./sess.inc.php');
 
 if (!IsLoggedManager())
 {
 	header('location: '.$g_baseadr.'error.php?code=21');
 	exit;
 }
-require ('./ctable.inc.php');
-include ('./header.inc.php'); // header obsahuje uvod html a konci <BODY>
-include ('./common.inc.php');
-include ('./common_user.inc.php');
+require_once ('./ctable.inc.php');
+require_once ('./header.inc.php'); // header obsahuje uvod html a konci <BODY>
+require_once ('./common.inc.php');
+require_once ('./common_user.inc.php');
 
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
@@ -83,5 +83,6 @@ while ($zazn=MySQL_Fetch_Array($vysl))
 <BUTTON onclick="javascript:close_popup();">Zpět</BUTTON>
 </TD></TR></TABLE>
 
-</body>
-</html>
+<?
+HTML_Footer();
+?>

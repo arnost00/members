@@ -50,7 +50,7 @@ $data_tbl = new html_table_form();
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 
-include ('country_list_array.inc.php');
+require_once ('country_list_array.inc.php');
 
 $country_sel = '<SELECT NAME="narodnost">';
 $country_sel .= generate_combobox_data($zaznam['narodnost']);

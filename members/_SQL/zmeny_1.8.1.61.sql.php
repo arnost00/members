@@ -8,7 +8,7 @@ $version_upd = '1.8.1.61';
 
 //#############################################################################
 
-require ('prepare.inc.php');
+require_once ('prepare.inc.php');
 
 //#############################################################################
 //	SQL dotazy pro zmenu db. na novejsi verzi
@@ -24,5 +24,5 @@ $sql[2] = 'ALTER TABLE `'.TBL_RACE.'` ADD `poslano` TINYINT UNSIGNED NOT NULL';
 
 //#############################################################################
 
-require ('action.inc.php');
+require_once ('action.inc.php');
 ?>

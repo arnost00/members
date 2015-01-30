@@ -11,7 +11,7 @@ $user_id = $usr->user_id;
 $finance_readonly = "readonly";
 
 //---------- BLOK KODU PRO FINANCE ----------//
-include_once './payment.inc.php'; // pomocne funkce a javascript pro finance
+require_once './payment.inc.php'; // pomocne funkce a javascript pro finance
 
 if (IsSet($payment) && IsSet($id_from) && IsSet($id_to) && IsSet($amount))
 {
@@ -22,7 +22,7 @@ if (IsSet($payment) && IsSet($id_from) && IsSet($id_to) && IsSet($amount))
 }
 //---------- KONEC BLOK KODU PRO FINANCE ----------//
 
-include ('./user_finance.inc.php');
+require_once ('./user_finance.inc.php');
 ?>
 <BR>
 </CENTER>

@@ -395,18 +395,41 @@ function DrawPageSubTitle($title)
 
 
 
-function HTML_Header($title)
+function HTML_Header($title,$style_file = '', $body_addons = '',$head_addons = '')
 {
+	global $g_www_meta_description, $g_www_meta_keyword;
+
+	require_once ('./version.inc.php');
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta http-equiv="Content-language" content="cs">
-<title><? echo($title); ?></title>
-</head>
-<body>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="Content-language" content="cs">
+	<link rel="alternate" type="application/rss+xml" title="RSS export" href="rss.php" />
+	<link rel="icon" href="favicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+	<title><? echo($title); ?></title>
 <?
+echo("\t".'<meta name="generator" content="'.SYSTEM_NAME.' '.GetCodeVersion().'">'."\n");
+echo("\t".'<meta name="description" content="'.$g_www_meta_description.'">'."\n");
+echo("\t".'<meta name="keywords" content="ČSOB, Orientacni beh, Orientační běh, Orienteering, beh, běh, run, running, IOF, orientační, OB, '.$g_www_meta_keyword.'">'."\n");
+echo("\t".'<meta name="copyright" content="(C) '.GetDevelopYears().' '.SYSTEM_AUTORS.', All rights&nbsp;reserved.">'."\n");
+echo("\t".'<meta name="authors" content="'.SYSTEM_AUTORS.'">'."\n");
+
+if ($style_file  != '')
+{
+	echo("\t".'<link href="'.$style_file.'" rel="StyleSheet" type="text/css" />'."\n");
+}
+echo($head_addons);
+?>
+</head>
+<?
+if ($body_addons != '')
+	echo('<body '.$body_addons.">\n");
+else
+	echo('<body>'."\n");
 }
 
 function HTML_Footer()

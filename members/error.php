@@ -2,11 +2,10 @@
 <?
 @extract($_REQUEST);
 
-require("./cfg/_cfg.php");
-require ("./sess.inc.php");
-require ("./common.inc.php");
+require_once("./cfg/_cfg.php");
+require_once ("./sess.inc.php");
 
-include "./header.inc.php"; // header obsahuje uvod html a konci <BODY>
+require_once "./header.inc.php"; // header obsahuje uvod html a konci <BODY>
 DrawPageTitle('Chybový stav :');
 ?>
 <TABLE width="80%" cellpadding="0" cellspacing="0" border="0">
@@ -62,7 +61,7 @@ else
 <hr><BR>
 </TD></TR>
 <TR><TD ALIGN=CENTER>
-<?include "./footer.inc.php"?>
+<?require_once "./footer.inc.php"?>
 </TD></TR>
 </TABLE>
 
@@ -81,7 +80,7 @@ echo 'URL opened = ['.$_SERVER['PHP_SELF']."]<BR>\n";
 echo 'Referer URL  = ['.(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '')."]<BR>\n";
 echo 'header = ["Last-Modified: '. gmdate("D, d M Y H:i:s") .' GMT"]'."<BR>\n";
 echo '<HR>';
-} ?>
+} 
 
-</BODY>
-</HTML>
+HTML_Footer();
+?>

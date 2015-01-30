@@ -12,9 +12,6 @@
 //==================================================================
 // Copyright (c) 2002-2003 by Arnost & Kenia
 //==================================================================
-if (!defined('PHP_GLOBAL_CFG_INCLUDED'))
-{
-	define('PHP_GLOBAL_CFG_INCLUDED', 1);
 
 //==================================================================
 // db server
@@ -82,5 +79,4 @@ $g_enable_oris_support = true;
 
 $g_custom_entry_list_text = '';
 
-}	// define (PHP_GLOBAL_CFG_INCLUDED)
 ?>

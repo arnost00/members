@@ -4,11 +4,8 @@
 // but is still in development :(
 // and not finished :(
 
-if (!defined('_DB_INCLUDED')) {
-	define('_DB_INCLUDED', 1);
-
-	require('cfg/_cfg.php');
-	require('cfg/_tables.php');
+require_once('cfg/_cfg.php');
+require_once('cfg/_tables.php');
 
 ///////////////////////////////////////////////////////////////////////////////
 function error_db($err=12)
@@ -71,6 +68,4 @@ function query_db($sql_query)
 		or error_db();
 	return $result;
 }
-
-}	// endif
 ?>

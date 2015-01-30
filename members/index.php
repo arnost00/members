@@ -5,20 +5,20 @@
 $id = (IsSet($_GET['id']) && is_numeric($_GET['id'])) ? (int)$_GET['id'] : 0;
 $subid = (IsSet($_GET['subid']) && is_numeric($_GET['subid'])) ? (int)$_GET['subid'] : 0;
 
-require ("./timestamp.inc.php");
+require_once ("./timestamp.inc.php");
 _set_global_RT_Start();
-require('./cfg/_uc.php');
-require("./cfg/_colors.php");
-require("./cfg/_globals.php");
-require ("./connect.inc.php");
+require_once('./cfg/_uc.php');
+require_once("./cfg/_colors.php");
+require_once("./cfg/_globals.php");
+require_once ("./connect.inc.php");
 if (!$g_is_release)
-	include ('debuglib.phps');
-require ("./sess.inc.php");
-require ("./common.inc.php");
-require ("./ctable.inc.php");
+	require_once ('debuglib.phps');
+require_once ("./sess.inc.php");
+require_once ("./common.inc.php");
+require_once ("./ctable.inc.php");
 define('IS_INDEX',true);
-include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
-include ("./version.inc.php");
+require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
+require_once ("./version.inc.php");
 db_Connect();
 ?>
 <TABLE width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -34,7 +34,7 @@ if (IsLoggedAdmin())
 <TR>
 <TD rowspan=2 width="180" bgcolor="<? echo $g_colors['body_bgcolor']; ?>" valign=top align=left>
 <!-- navigace -->
-<?include "./nav.inc.php"?>
+<?require_once "./nav.inc.php"?>
 <!-- navigace -->
 <CENTER><span class="VersionText"><? echo GetCodeVersion(); ?></span></CENTER><BR>
 </TD>
@@ -55,39 +55,39 @@ if($g_is_system_running || IsLoggedAdmin())
 	switch ($id)
 	{
 		case 0:  // novinky
-			include "./news.inc.php";
+			require_once "./news.inc.php";
 			break;
 		case 1: //adresar
-			include "./directory.inc.php";
+			require_once "./directory.inc.php";
 			break;
 		case 2: //terminovka
 			if (!IsLogged())
-				include './racelist.inc.php';
+				require_once './racelist.inc.php';
 			else
-				include "./news.inc.php";
+				require_once "./news.inc.php";
 			break;
 		case 3: //prihlasky clena
 			if (IsLogged())
-				include './users_races.inc.php';
+				require_once './users_races.inc.php';
 			else
-				include "./news.inc.php";
+				require_once "./news.inc.php";
 			break;
 		case 4: //aktualitky
 			if (IsLogged() && !IsLoggedAdmin())
 			{
 				define('SHOW_USER',true);
-				include "./us_news.inc.php";
+				require_once "./us_news.inc.php";
 			}
 			else if (!IsLogged() || IsLoggedAdmin())
 			{
 				define('SHOW_USER',false);
-				include "./us_news.inc.php";
+				require_once "./us_news.inc.php";
 			}
 			else
-				include "./news.inc.php";
+				require_once "./news.inc.php";
 			break;
 		case 21:  // ...
-//			include "./news.inc.php";
+//			require_once "./news.inc.php";
 			break;
 		case _USER_GROUP_ID_: //clenske podmenu
 			if (IsLoggedUser())
@@ -95,32 +95,32 @@ if($g_is_system_running || IsLoggedAdmin())
 				switch($subid)
 				{
 					case 1:
-						include "./us_setup.inc.php";
+						require_once "./us_setup.inc.php";
 						break;
 					case 2:
-						include "./us_races.inc.php";
+						require_once "./us_races.inc.php";
 						break;
 					case 3:
-						include "./us_user_edit.inc.php";
+						require_once "./us_user_edit.inc.php";
 						break;
 					case 4:
 						if ($g_enable_mailinfo)
-							include "./us_mailinfo.inc.php";
+							require_once "./us_mailinfo.inc.php";
 						else
-							include "./news.inc.php";
+							require_once "./news.inc.php";
 						break;
 					case 10: //finance
 						if ($g_enable_finances)
-							include "./us_finance.inc.php";
+							require_once "./us_finance.inc.php";
 						else
-							include "./news.inc.php";
+							require_once "./news.inc.php";
 						break;
 					default:
-						include "./news.inc.php";
+						require_once "./news.inc.php";
 				}
 			}
 			else
-				include "./news.inc.php";
+				require_once "./news.inc.php";
 			break;
 		case _ADMIN_GROUP_ID_: //administratorske podmenu
 			if ( IsLoggedAdmin() )
@@ -128,27 +128,27 @@ if($g_is_system_running || IsLoggedAdmin())
 				switch($subid)
 				{
 					case 1:
-						include "./ad_main.inc.php";
+						require_once "./ad_main.inc.php";
 						break;
 					case 2:
-						include "./rg_ad_races.inc.php";
+						require_once "./rg_ad_races.inc.php";
 						break;
 					case 4:
-						include "./ad_accview.inc.php";
+						require_once "./ad_accview.inc.php";
 						break;
 					case 5:
-						include "./rg_ad_races_edit.inc.php";
+						require_once "./rg_ad_races_edit.inc.php";
 						break;
 					case 6:
-						include "./ad_modify_log.inc.php";
+						require_once "./ad_modify_log.inc.php";
 						break;
 					case 3:
 					default:
-						include "./news.inc.php";
+						require_once "./news.inc.php";
 				}
 			}
 			else
-				include "./news.inc.php";
+				require_once "./news.inc.php";
 			break;
 		case _SMALL_ADMIN_GROUP_ID_: // small-administratorske podmenu
 			if ( IsLoggedSmallAdmin() )
@@ -156,17 +156,17 @@ if($g_is_system_running || IsLoggedAdmin())
 				switch($subid)
 				{
 					case 1:
-						include "./ads_directory.inc.php";
+						require_once "./ads_directory.inc.php";
 						break;
 					case 3:
-						include "./ads_mod_users.inc.php";
+						require_once "./ads_mod_users.inc.php";
 						break;
 					default:
-						include "./news.inc.php";
+						require_once "./news.inc.php";
 				}
 			}
 			else
-				include "./news.inc.php";
+				require_once "./news.inc.php";
 			break;
 		case _REGISTRATOR_GROUP_ID_: // prihlasovaci clen - podmenu
 			if ( IsLoggedRegistrator() )
@@ -174,17 +174,17 @@ if($g_is_system_running || IsLoggedAdmin())
 				switch($subid)
 				{
 					case 1:
-						include "./rg_ad_races.inc.php";
+						require_once "./rg_ad_races.inc.php";
 						break;
 					case 4:
-						include "./rg_ad_races_edit.inc.php";
+						require_once "./rg_ad_races_edit.inc.php";
 						break;
 					default:
-						include "./news.inc.php";
+						require_once "./news.inc.php";
 				}
 			}
 			else
-				include "./news.inc.php";
+				require_once "./news.inc.php";
 			break;
 		case _MANAGER_GROUP_ID_: // trener clen - podmenu
 			if ( IsLoggedManager() )
@@ -192,29 +192,29 @@ if($g_is_system_running || IsLoggedAdmin())
 				switch($subid)
 				{
 					case 1:
-						include "./mn_directory.inc.php";
+						require_once "./mn_directory.inc.php";
 						break;
 					case 2:
-						include "./mn_races.inc.php";
+						require_once "./mn_races.inc.php";
 						break;
 					case 3:
-						include "./mn_groups.inc.php";
+						require_once "./mn_groups.inc.php";
 						break;
 					case 4:
-						include "./mn_smn_list.inc.php";
+						require_once "./mn_smn_list.inc.php";
 						break;
 					case 10: //finance
 						if ($g_enable_finances)
-							include "./mn_finance.inc.php";
+							require_once "./mn_finance.inc.php";
 						else
-							include "./news.inc.php";
+							require_once "./news.inc.php";
 						break;
 					default:
-						include "./news.inc.php";
+						require_once "./news.inc.php";
 				}
 			}
 			else
-				include "./news.inc.php";
+				require_once "./news.inc.php";
 			break;
 		case _SMALL_MANAGER_GROUP_ID_: // maly trener clen - podmenu
 			if ( IsLoggedSmallManager() )
@@ -222,23 +222,23 @@ if($g_is_system_running || IsLoggedAdmin())
 				switch($subid)
 				{
 					case 1:
-						include "./mns_directory.inc.php";
+						require_once "./mns_directory.inc.php";
 						break;
 					case 2:
-						include "./mns_races.inc.php";
+						require_once "./mns_races.inc.php";
 						break;
 					case 10: // finance
 						if ($g_enable_finances)
-							include "./mns_finance.inc.php";
+							require_once "./mns_finance.inc.php";
 						else
-							include "./news.inc.php";
+							require_once "./news.inc.php";
 						break;
 					default:
-						include "./news.inc.php";
+						require_once "./news.inc.php";
 				}
 			}
 			else
-				include "./news.inc.php";
+				require_once "./news.inc.php";
 			break;
 		case _FINANCE_GROUP_ID_: // financnik - podmenu
 			if ( IsLoggedFinance() && $g_enable_finances)
@@ -246,38 +246,38 @@ if($g_is_system_running || IsLoggedAdmin())
 				switch($subid)
 				{
 					case 1:
-						include "fin_directory.inc.php";
+						require_once "fin_directory.inc.php";
 						break;
 					case 2:
-						include "fin_races.inc.php";
+						require_once "fin_races.inc.php";
 						break;
 					case 3:
 						if ($g_enable_finances_claim) 
-							include "fin_claims.inc.php";
+							require_once "fin_claims.inc.php";
 						else
-							include "./news.inc.php";
+							require_once "./news.inc.php";
 						break;
 					case 4:
-						include "fin_types.inc.php";
+						require_once "fin_types.inc.php";
 						break;
 					default:
-						include "./news.inc.php";
+						require_once "./news.inc.php";
 				}
 			}
 			else
-				include "./news.inc.php";
+				require_once "./news.inc.php";
 			break;
 		case 99: // ve vyvoji
-			include "./develop.inc.php";
+			require_once "./develop.inc.php";
 			break;
 		default:
-			include "./news.inc.php";
+			require_once "./news.inc.php";
 			break;
 	}
 }
 else
 {
-	include './uc.inc.php';
+	require_once './uc.inc.php';
 }
 ?>
 </TD>
@@ -288,7 +288,7 @@ else
 </TD></TR>
 <TR><TD COLSPAN=4 ALIGN=CENTER>
 <!-- Footer Begin -->
-<?include "./footer.inc.php"?>
+<?require_once "./footer.inc.php"?>
 <!-- Footer End -->
 </TD></TR>
 </TABLE>
@@ -320,6 +320,6 @@ if (!$g_is_release || IsLoggedAdmin())
 }
 if (!$g_is_release)
 	show_vars(false,true,0);
+
+HTML_Footer();
 ?>
-</BODY>
-</HTML>

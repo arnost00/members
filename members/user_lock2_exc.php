@@ -2,15 +2,15 @@
 <?
 @extract($_REQUEST);
 
-require('./connect.inc.php');
-require('./sess.inc.php');
-require('./const_strings.inc.php');
-require('./modify_log.inc.php');
+require_once('./connect.inc.php');
+require_once('./sess.inc.php');
+require_once('./const_strings.inc.php');
+require_once('./modify_log.inc.php');
 
 if (IsLoggedSmallAdmin() || IsLoggedFinance())
 {
 	db_Connect();
-	include './common_user.inc.php';
+	require_once './common_user.inc.php';
 
 	$gr_id = (isset($gr_id) && is_numeric($gr_id)) ? (int)$gr_id : 0;
 	$id = (isset($id) && is_numeric($id)) ? (int)$id : 0;

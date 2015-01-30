@@ -2,7 +2,7 @@
 
 if (!isset($g_color_profile) && !isset($g_shortcut))
 {
-	require('_cfg.php');
+	require_once('_cfg.php');
 }
 
-require ($g_color_profile);
+require_once ($g_color_profile);

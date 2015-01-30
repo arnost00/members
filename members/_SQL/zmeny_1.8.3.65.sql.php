@@ -8,7 +8,7 @@ $version_upd = '1.8.3.65';
 
 //#############################################################################
 
-require ('prepare.inc.php');
+require_once ('prepare.inc.php');
 
 //#############################################################################
 //	SQL dotazy pro zmenu db. na novejsi verzi
@@ -47,5 +47,5 @@ $sql[10] = 'ALTER TABLE `'.TBL_USER.'` ADD INDEX ( `chief_id` )';
 
 //#############################################################################
 
-require ('action.inc.php');
+require_once ('action.inc.php');
 ?>

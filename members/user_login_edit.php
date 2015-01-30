@@ -2,15 +2,15 @@
 <?
 @extract($_REQUEST);
 
-require ("./connect.inc.php");
-require ("./sess.inc.php");
+require_once ("./connect.inc.php");
+require_once ("./sess.inc.php");
 if (!IsLoggedSmallAdmin() && !IsLoggedManager())
 {
 	header("location: ".$g_baseadr."error.php?code=21");
 	exit;
 }
-include ("./common_user.inc.php");
-include ("./common.inc.php");
+require_once ("./common_user.inc.php");
+require_once ("./common.inc.php");
 
 db_Connect();
 $id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
@@ -22,7 +22,7 @@ if (!$zaznam)
 	header("location: ".$g_baseadr."error.php?code=201");
 	exit;
 }
-include "./header.inc.php"; // header obsahuje uvod html a konci <BODY>
+require_once "./header.inc.php"; // header obsahuje uvod html a konci <BODY>
 DrawPageTitle('Členská základna - Administrace uživatelských účtů');
 
 	$id_acc = GetUserAccountId_Users($id);
@@ -176,7 +176,7 @@ function checkAllVisibilities()
 }
 if($zaznam2 == FALSE)
 { // novy ucet
-include ('generators.inc.php');
+require_once ('generators.inc.php');
 ?>
 <TR name="acc_manual_hide" id="acc_manual_hide">
 	<TD colspan="3"></TD>
@@ -314,12 +314,13 @@ if($zaznam2 != FALSE)
 </TR>
 <TR><TD COLSPAN=4 ALIGN=CENTER>
 <!-- Footer Begin -->
-<?include "./footer.inc.php"?>
+<?require_once "./footer.inc.php"?>
 <!-- Footer End -->
 </TD></TR>
 </TABLE>
 
 <!-- pro aktualizaci zobrazeni/schovani casti, ktere nema uzivatel pouzity -->
 <style onload="checkAllVisibilities()"/>
-</BODY>
-</HTML>
+<?
+HTML_Footer();
+?>

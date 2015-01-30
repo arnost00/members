@@ -3,9 +3,9 @@ define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
 @extract($_REQUEST);
 
-require ("./connect.inc.php");
-require ("./sess.inc.php");
-include ("./common.inc.php");
+require_once ("./connect.inc.php");
+require_once ("./sess.inc.php");
+require_once ("./common.inc.php");
 require_once 'payment.inc.php';
 
 db_Connect();
@@ -34,9 +34,9 @@ if (IsSet($submit) or IsSet($close))
  	}
 }
 
-include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
-include ("./common_user.inc.php");
-include ("./ctable.inc.php");
+require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
+require_once ("./common_user.inc.php");
+require_once ("./ctable.inc.php");
 DrawPageTitle('Reklamace platby');
 
 @$result_claims = MySQL_Query("select c.id, user_id, payment_id, text, date_format(date, '%e.%c.%Y %k:%i') date, u.sort_name user_name from ".TBL_CLAIM." c inner join

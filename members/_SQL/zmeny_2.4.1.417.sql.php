@@ -8,7 +8,7 @@ $version_upd = '2.4.1.417';
 
 //#############################################################################
 
-require ('prepare.inc.php');
+require_once ('prepare.inc.php');
 
 //#############################################################################
 //	SQL dotazy pro zmenu db. na novejsi verzi
@@ -18,5 +18,5 @@ require ('prepare.inc.php');
 $sql[1] = 'ALTER TABLE `'.TBL_RACE.'` ADD `cancelled` TINYINT( 1 ) NOT NULL DEFAULT \'0\'';
 //#############################################################################
 
-require ('action.inc.php');
+require_once ('action.inc.php');
 ?>

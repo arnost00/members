@@ -15,99 +15,16 @@ header("Pragma: no-cache");
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
 
-require ('timestamp.inc.php');
+require_once ('timestamp.inc.php');
 _set_global_RT_Start();
-require('cfg/_globals.php');
-require ('connect.inc.php');
-require ('common.inc.php');
-require ('common_rg_race.inc.php')
+require_once('cfg/_globals.php');
+require_once ('connect.inc.php');
+require_once ('./version.inc.php');
+require_once ('common.inc.php');
+require_once ('common_rg_race.inc.php');
 
-?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta http-equiv="Content-language" content="cs">
-</head>
-<style type="text/css">
+HTML_Header($g_www_title,'view.css');
 
-body,html {
-	font-family : Verdana, sans-serif;
-	font-size : 12px;
-	color: #000;
-	background-color : #fff;
-}
-table {
-	font-family : Verdana, sans-serif;
-	font-size : 12px;
-	color: #000;
-	background-color : #fff;
-	border-collapse: collapse;
-}
-
-table tr:hover {
-	background: #eff;
-}
-
-table td {
-	border:1px solid #999;
-	padding: 1pt 4pt;
-	margin: 0px;
-/*	background-color cannot be set, blocks tr:hover */
-}
-
-table td.center {
-	text-align: center;
-}
-
-table td.center_gray {
-	text-align: center;
-	color : #999;
-}
-
-table td.center_alert2 {
-	text-align: center;
-	background-color : #fcc;
-}
-
-table td.center_alert7 {
-	text-align: center;
-	background-color : #ffc;
-}
-
-table td.center_alert21 {
-	text-align: center;
-	background-color : #cfc;
-}
-
-table th {
-	background-color : #eee;
-	border:1px solid #999;
-	padding: 1pt 4pt;
-	margin: 0px;
-}
-
-table td.termlist {
-	color: #999;
-}
-
-hr {
-	width : 100%;
-	height : 1px;
-	border: 0;
-	border-top:1px dotted #ccc;
-}
-
-#footer_time {
-	font-family : Verdana, sans-serif;
-	font-size: 9px;
-	color: #ccc;
-	text-align: right;
-}
-
-</style>
-<body>
-<?
 db_Connect();
 
 ?>
@@ -116,8 +33,8 @@ db_Connect();
 <h1>Přehled přihlášek pro přihlašovatele</h1>
 <hr><br>
 <?
-include ('common_race.inc.php');
-include ('url.inc.php');
+require_once ('common_race.inc.php');
+require_once ('url.inc.php');
 
 $curr_date = GetCurrentDate();
 //$curr_date = mktime (0,0,0,6,1,2010);
@@ -209,5 +126,6 @@ _print_global_RT_difference_TS();
 echo("</p><br>\n");
 ?>
 </center>
-</body>
-</html>
+<?
+HTML_Footer();
+?>

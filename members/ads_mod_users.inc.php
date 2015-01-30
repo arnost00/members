@@ -27,7 +27,7 @@ function confirm_unlock(name) {
 </script>
 
 <?
-include "./common_user.inc.php";
+require_once "./common_user.inc.php";
 
 @$vysledek=MySQL_Query("SELECT id,prijmeni,jmeno,reg,hidden FROM ".TBL_USER." ORDER BY sort_name ASC");
 

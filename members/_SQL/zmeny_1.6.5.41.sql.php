@@ -8,7 +8,7 @@ $version_upd = '1.6.5.41';
 
 //#############################################################################
 
-require ('prepare.inc.php');
+require_once ('prepare.inc.php');
 
 //#############################################################################
 //	SQL dotazy pro zmenu db. na novejsi verzi
@@ -25,5 +25,5 @@ $sql[2] = 'UPDATE `'.TBL_ACCOUNT.'` SET `policy_mng` = 4 WHERE `policy_mng` = 1'
 
 //#############################################################################
 
-require ('action.inc.php');
+require_once ('action.inc.php');
 ?>

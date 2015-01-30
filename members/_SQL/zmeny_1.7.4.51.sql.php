@@ -8,7 +8,7 @@ $version_upd = '1.7.4.51';
 
 //#############################################################################
 
-require ('prepare.inc.php');
+require_once ('prepare.inc.php');
 
 //#############################################################################
 //	SQL dotazy pro zmenu db. na novejsi verzi
@@ -24,5 +24,5 @@ $sql[2] = 'ALTER TABLE `'.TBL_ZAVXUS.'` ADD `pozn_in` VARCHAR(255) DEFAULT NULL'
 
 //#############################################################################
 
-require ('action.inc.php');
+require_once ('action.inc.php');
 ?>

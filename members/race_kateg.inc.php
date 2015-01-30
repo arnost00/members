@@ -1,6 +1,6 @@
 <?php if (!defined('__HIDE_TEST__')) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-include('./race_kateg_list.inc.php');
+require_once('./race_kateg_list.inc.php');
 
 
 $kk = $zaznam['kategorie'];

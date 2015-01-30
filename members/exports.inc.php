@@ -1,7 +1,4 @@
 <?
-if (!defined('EXPORT_CLASSES_INCLUDED'))
-{
-	define('EXPORT_CLASSES_INCLUDED', 1);
 //==================================================================
 // CSOB entry export class
 //==================================================================
@@ -316,5 +313,4 @@ class CSV_Export
 
 
 //==================================================================
-}	// define (EXPORT_CLASSES_INCLUDED)
 ?>
