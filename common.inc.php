@@ -221,6 +221,15 @@ function IncDate($t_b,$t_i)
 	return $suma;
 }
 
+function DecDate($t_b,$t_i)
+//	Parameters:
+//		t_b - zakladni datum
+//		t_i - kolik odecist ve dnech
+{
+	$suma = $t_b - ($t_i * 86400);
+	return $suma;
+}
+
 function CountManAge($sqldate)
 {	// $date = sql date
 	global $g_curr_year;
