@@ -3,12 +3,12 @@ define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
 @extract($_REQUEST);
 
-require("./cfg/_colors.php");
-require("./cfg/_globals.php");
-require ("./connect.inc.php");
-require ("./sess.inc.php");
-require ("./common.inc.php");
-require ("./ctable.inc.php");
+require_once("./cfg/_colors.php");
+require_once("./cfg/_globals.php");
+require_once ("./connect.inc.php");
+require_once ("./sess.inc.php");
+require_once ("./common.inc.php");
+require_once ("./ctable.inc.php");
 
 if (!IsLogged())
 {
@@ -16,7 +16,7 @@ if (!IsLogged())
 	exit;
 }
 db_Connect();
-include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
+require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
@@ -38,7 +38,7 @@ DrawPageSubTitle('Vybraný člen : '.$zaznamU["jmeno"].' '.$zaznamU["prijmeni"])
 <CENTER>
 
 <?
-include ("./common_race.inc.php");
+require_once ("./common_race.inc.php");
 
 // show all races
 //$query = 'SELECT r.id, datum, datum2, nazev, oddil, typ, vicedenni, misto, kat FROM '.TBL_RACE.' as r LEFT JOIN '.TBL_ZAVXUS.' as z ON r.id = z.id_zavod AND z.id_user='.$id.' ORDER BY r.datum, r.datum2, r.id';
@@ -129,10 +129,11 @@ else
 </TR>
 <TR><TD COLSPAN=4 ALIGN=CENTER>
 <!-- Footer Begin -->
-<?include "./footer.inc.php"?>
+<?require_once "./footer.inc.php"?>
 <!-- Footer End -->
 </TD></TR>
 </TABLE>
 
-</BODY>
-</HTML>
+<?
+HTML_Footer();
+?>

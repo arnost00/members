@@ -3,9 +3,9 @@ define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
 @extract($_REQUEST);
 
-require ("connect.inc.php");
-require ("sess.inc.php");
-require ("ctable.inc.php");
+require_once ("connect.inc.php");
+require_once ("sess.inc.php");
+require_once ("ctable.inc.php");
 if (!IsLoggedSmallAdmin() && !IsLoggedManager())
 {
 	header("location: ".$g_baseadr."error.php?code=21");
@@ -18,9 +18,9 @@ $id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
 @$vysledek=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
 @$zaznam=MySQL_Fetch_Array($vysledek);
 $update=$id;
-include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
-include ("./common.inc.php");
-include ("./common_user.inc.php");
+require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
+require_once ("./common.inc.php");
+require_once ("./common_user.inc.php");
 
 DrawPageTitle('Členská základna - Editace uživatele');
 ?>
@@ -30,7 +30,7 @@ DrawPageTitle('Členská základna - Editace uživatele');
 <TD width="90%" ALIGN=left>
 <CENTER>
 <BR><hr><BR>
-<? include ("user_new.inc.php"); ?>
+<? require_once ("user_new.inc.php"); ?>
 <BR><hr><BR>
 <?
 	if (!IsSet($cb)) $cb = 0;
@@ -53,10 +53,11 @@ DrawPageTitle('Členská základna - Editace uživatele');
 </TR>
 <TR><TD COLSPAN=4 ALIGN=CENTER>
 <!-- Footer Begin -->
-<?include ("footer.inc.php");?>
+<?require_once ("footer.inc.php");?>
 <!-- Footer End -->
 </TD></TR>
 </TABLE>
 
-</BODY>
-</HTML>
+<?
+HTML_Footer();
+?>

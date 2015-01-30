@@ -2,16 +2,16 @@
 <?php
 @extract($_REQUEST);
 
-require("./cfg/_colors.php");
-require ("./connect.inc.php");
-require ("./sess.inc.php");
+require_once("./cfg/_colors.php");
+require_once ("./connect.inc.php");
+require_once ("./sess.inc.php");
 
-require ("./ctable.inc.php");
-include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
-include ("./common.inc.php");
-include ("./common_race.inc.php");
-include ("./common_user.inc.php");
-include ('./url.inc.php');
+require_once ("./ctable.inc.php");
+require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
+require_once ("./common.inc.php");
+require_once ("./common_race.inc.php");
+require_once ("./common_user.inc.php");
+require_once ('./url.inc.php');
 
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 $us = (int)((IsSet($us) && is_numeric($us)) ? (($us > 0) ? 1 : 0) : 0);
@@ -115,5 +115,6 @@ echo $is_spol_dopr_on?"<BR>Počet přihlášených na dopravu: $trans":"";
 
 <BR>
 
-</body>
-</html>
+<?
+HTML_Footer();
+?>

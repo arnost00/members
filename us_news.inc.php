@@ -16,8 +16,8 @@ DrawPageTitle('Aktuální informace (Aktualitky)');
 <?
 DrawPageSubTitle('Nejbližší závody (do '.GC_SHOW_RACE_DAYS.' dní)');
 
-include ('./common_race.inc.php');
-include ('./url.inc.php');
+require_once ('./common_race.inc.php');
+require_once ('./url.inc.php');
 
 if(SHOW_USER)
 {

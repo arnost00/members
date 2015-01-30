@@ -13,7 +13,7 @@ $curr_usr=MySQL_Fetch_Array($vysledek);
 
 if (IsSet($result) && is_numeric($result) && $result != 0)
 {
-	require('./const_strings.inc.php');
+	require_once('./const_strings.inc.php');
 	$res_text = GetResultString($result);
 	Print_Action_Result($res_text);
 }

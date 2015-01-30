@@ -3,14 +3,16 @@
 
 @extract($_REQUEST);
 
-require ("./connect.inc.php");
-require ("./sess.inc.php");
+require_once ("./connect.inc.php");
+require_once ("./sess.inc.php");
 
 if (IsLoggedAdmin())
 {
 	db_Connect();
 
-	include "./common.inc.php";
+	require_once ('./common.inc.php');
+	require_once ('./version.inc.php');
+	
 	$races = Array();
 	$users = Array();
 
@@ -44,7 +46,9 @@ if (IsLoggedAdmin())
 				$j++;
 		}
 	}
-	echo "<HTML><BODY><b>Výsledek opravy tabluky registaci v db :</b><BR>V pořádku / Celkem : ".$i."/".$cnt."<br>Smazáno / Ke smazání : ".$j."/".($cnt-$i)."<br><A href=\"".$g_baseadr."index.php?id=300&subid=1\">Návrat na stránky</A></BODY></HTML>";
+	HTML_Header($g_www_title);
+	echo "<b>Výsledek opravy tabluky registaci v db :</b><BR>V pořádku / Celkem : ".$i."/".$cnt."<br>Smazáno / Ke smazání : ".$j."/".($cnt-$i)."<br><A href=\"".$g_baseadr."index.php?id=300&subid=1\">Návrat na stránky</A>";
+	HTML_Footer();
 }
 else
 {

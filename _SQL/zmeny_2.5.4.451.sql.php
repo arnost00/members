@@ -8,7 +8,7 @@ $version_upd = '2.5.4.451';
 
 //#############################################################################
 
-require ('prepare.inc.php');
+require_once ('prepare.inc.php');
 
 //#############################################################################
 //	SQL dotazy pro zmenu db. na novejsi verzi
@@ -25,5 +25,5 @@ $sql[2] = 'ALTER TABLE `'.TBL_USER.'` ADD `finance_type` int unsigned NOT NULL D
 
 //#############################################################################
 
-require ('action.inc.php');
+require_once ('action.inc.php');
 ?>

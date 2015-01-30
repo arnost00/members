@@ -1,7 +1,7 @@
 <?
 	header('Content-Type: text/css; charset=UTF-8');
-	require('cfg/_colors.php');
-	require('cfg/_cfg.php');
+	require_once('cfg/_colors.php');
+	require_once('cfg/_cfg.php');
 ?>
 /*	members - online prihlaskovy system */
 

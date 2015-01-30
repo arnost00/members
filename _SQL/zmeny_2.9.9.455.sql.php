@@ -8,7 +8,7 @@ $version_upd = '2.9.9.455';
 
 //#############################################################################
 
-require ('prepare.inc.php');
+require_once ('prepare.inc.php');
 
 //#############################################################################
 //	SQL dotazy pro zmenu db. na novejsi verzi
@@ -29,9 +29,8 @@ $sql[9] = 'ALTER TABLE `'.TBL_MAILINFO.'` CONVERT TO CHARACTER SET utf8 COLLATE 
 $sql[10] = 'ALTER TABLE `'.TBL_FINANCE.'` CONVERT TO CHARACTER SET utf8 COLLATE utf8_czech_ci';
 $sql[11] = 'ALTER TABLE `'.TBL_CLAIM.'` CONVERT TO CHARACTER SET utf8 COLLATE utf8_czech_ci';
 $sql[12] = 'ALTER TABLE `'.TBL_FINANCE_TYPES.'` CONVERT TO CHARACTER SET utf8 COLLATE utf8_czech_ci';
-$sql[13] = 'ALTER TABLE `'..'` CONVERT TO CHARACTER SET utf8 COLLATE utf8_czech_ci';
 
 //#############################################################################
 
-require ('action.inc.php');
+require_once ('action.inc.php');
 ?>

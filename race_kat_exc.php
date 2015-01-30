@@ -2,11 +2,11 @@
 <?
 @extract($_REQUEST);
 
-require ("./connect.inc.php");
-require ("./sess.inc.php");
-include ("./common.inc.php");
+require_once ("./connect.inc.php");
+require_once ("./sess.inc.php");
+require_once ("./common.inc.php");
 
-include "./race_kateg_list.inc.php";
+require_once "./race_kateg_list.inc.php";
 
 if (!IsLoggedRegistrator())
 {

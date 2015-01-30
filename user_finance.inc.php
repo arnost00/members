@@ -23,8 +23,8 @@ if ($zaznam_user_name['ft_nazev'] != null)
 	DrawPageSubTitle('Typ oddílového příspěvku člena: '.$zaznam_user_name['ft_nazev']);
 }
 
-include_once ("./common_race.inc.php");
-include_once ('./url.inc.php');
+require_once ("./common_race.inc.php");
+require_once ('./url.inc.php');
 
 $data_tbl = new html_table_mc();
 $col = 0;
@@ -110,7 +110,7 @@ echo $data_tbl->get_footer()."\n";
 //------------ formular pro prevod financi mezi cleny
 $return_url = 'http://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]; 
 $return_url = parse_url($return_url, PHP_URL_QUERY);
-include 'user_finance_transfer_form.inc.php';
+require_once 'user_finance_transfer_form.inc.php';
 
 
 //priprava pro pouziti ajaxu a jquery

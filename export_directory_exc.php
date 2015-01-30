@@ -2,10 +2,10 @@
 <?
 @extract($_REQUEST);
 
-require ('./connect.inc.php');
-require ('./sess.inc.php');
-require ('./common.inc.php');
-require ('./common_user.inc.php');
+require_once ('./connect.inc.php');
+require_once ('./sess.inc.php');
+require_once ('./common.inc.php');
+require_once ('./common_user.inc.php');
 
 if (!IsLoggedManager() && !IsLoggedRegistrator() && !IsLoggedSmallAdmin() && !IsLoggedAdmin())
 {
@@ -34,7 +34,7 @@ db_Connect();
 @$vysledek=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE hidden = 0 ORDER BY sort_name ASC")
 	or die("Chyba při provádění dotazu do databáze.");
 
-include ('exports.inc.php');
+require_once ('exports.inc.php');
 
 if ($oris == 2)
 {

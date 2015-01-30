@@ -40,14 +40,14 @@ AddZmenyFile('2.5.4.451');
 AddZmenyFile('2.9.9.455');
 //#############################################################################
 
-require ('connect.inc.php');
-require ('../sess.inc.php');
+require_once ('connect.inc.php');
+require_once ('../sess.inc.php');
 if (!IsLoggedAdmin())
 {
 	header("location: ".$g_baseadr."error.php?code=21");
 	exit;
 }
-require ('common.inc.php');
+require_once ('common.inc.php');
 
 if (!IsSet($action)) $action = 0;
 if ($action == 0)

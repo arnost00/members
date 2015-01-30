@@ -2,11 +2,11 @@
 <?
 @extract($_REQUEST);
 
-require ('./connect.inc.php');
-require ('./sess.inc.php');
-require ('./common_user.inc.php');
-require ('./common_race.inc.php');
-require ('./common.inc.php');
+require_once ('./connect.inc.php');
+require_once ('./sess.inc.php');
+require_once ('./common_user.inc.php');
+require_once ('./common_race.inc.php');
+require_once ('./common.inc.php');
 
 if (!IsLoggedRegistrator())
 {
@@ -59,7 +59,7 @@ if (mysql_num_rows($vysledek) == 0)
 }
 else
 {
-	include ('exports.inc.php');
+	require_once ('exports.inc.php');
 	if ($creg == 2)
 	{ // ORIS
 		$registration = new ORIS_Export($g_shortcut);

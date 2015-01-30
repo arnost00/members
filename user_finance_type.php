@@ -3,15 +3,15 @@ define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
 @extract($_REQUEST);
 
-require ("connect.inc.php");
-require ("sess.inc.php");
-require ("ctable.inc.php");
+require_once ("connect.inc.php");
+require_once ("sess.inc.php");
+require_once ("ctable.inc.php");
 if (!IsLoggedFinance())
 {
 	header("location: ".$g_baseadr."error.php?code=21");
 	exit;
 }
-require("cfg/_globals.php");
+require_once("cfg/_globals.php");
 
 db_Connect();
 $user_id = (isset($user_id) && is_numeric($user_id)) ? (int)$user_id : 0;
@@ -25,8 +25,8 @@ $sql_query2 = 'SELECT * FROM '.TBL_FINANCE_TYPES.' ORDER BY id';
 @$vysledek=MySQL_Query($sql_query);
 @$zaznam=MySQL_Fetch_Array($vysledek);
 @$vysledek2=MySQL_Query($sql_query2);
-include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
-include ("./common.inc.php");
+require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
+require_once ("./common.inc.php");
 
 DrawPageTitle('Výběr typu oddílového příspěvku pro člena');
 
@@ -100,10 +100,11 @@ echo $data_tbl->get_footer()."\n";
 </TR>
 <TR><TD COLSPAN=4 ALIGN=CENTER>
 <!-- Footer Begin -->
-<?include ("footer.inc.php");?>
+<?require_once ("footer.inc.php");?>
 <!-- Footer End -->
 </TD></TR>
 </TABLE>
 
-</BODY>
-</HTML>
+<?
+HTML_Footer();
+?>

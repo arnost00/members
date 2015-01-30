@@ -43,8 +43,8 @@ DrawPageTitle('Upozorňování o termínech na email');
 if (IsLogged() && $g_enable_mailinfo)
 {
 
-require ('common_race.inc.php');
-require ('common_fin.inc.php');
+require_once ('common_race.inc.php');
+require_once ('common_fin.inc.php');
 
 $vysledek=MySQL_Query("SELECT * FROM ".TBL_MAILINFO." WHERE id_user = '$usr->user_id' LIMIT 1");
 $zaznam=MySQL_Fetch_Array($vysledek);

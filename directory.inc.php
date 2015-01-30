@@ -24,7 +24,7 @@ DrawPageTitle('Adresář členů oddílu');
 
 <CENTER>
 <?
-include ("./common_user.inc.php");
+require_once ("./common_user.inc.php");
 
 $columns = 'id, prijmeni,jmeno,email,hidden,reg';
 @$vysledek=MySQL_Query("SELECT ".$columns." FROM ".TBL_USER." ORDER BY sort_name ASC");

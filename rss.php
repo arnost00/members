@@ -1,9 +1,9 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?php
-require('./rss_generator.inc.php');
-require('./connect.inc.php');
-require('./cfg/_globals.php');
-require('./common.inc.php');
+require_once('./rss_generator.inc.php');
+require_once('./connect.inc.php');
+require_once('./cfg/_globals.php');
+require_once('./common.inc.php');
 
 $curr_xml_datetime = date('r');
 $curr_xml_date = date('r',mktime(0,0,0,date('m'),date('d'),date('Y')));

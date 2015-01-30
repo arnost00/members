@@ -45,14 +45,14 @@ DrawPageSubTitle('Vybraný závod');
 @$vysledek_z=MySQL_Query('SELECT * FROM '.TBL_RACE." WHERE `id`='$race_id' LIMIT 1");
 $zaznam_z = MySQL_Fetch_Array($vysledek_z);
 
-include_once ("./url.inc.php");
-include_once ("./common_race.inc.php");
+require_once ("./url.inc.php");
+require_once ("./common_race.inc.php");
 
 RaceInfoTable($zaznam_z,'',false,false,true);
 
-include_once ('./url.inc.php');
+require_once ('./url.inc.php');
 
-include_once ('./common_fin.inc.php');
+require_once ('./common_fin.inc.php');
 $enable_fin_types = IsFinanceTypeTblFilled();
 
 ?>

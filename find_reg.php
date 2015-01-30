@@ -3,9 +3,9 @@ define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
 @extract($_REQUEST);
 
-require("./cfg/_colors.php");
-require ("./connect.inc.php");
-require ("./sess.inc.php");
+require_once("./cfg/_colors.php");
+require_once ("./connect.inc.php");
+require_once ("./sess.inc.php");
 
 if (!IsLoggedManager())
 {
@@ -16,11 +16,11 @@ if (!IsLoggedManager())
 $reg = (isset($reg) && is_numeric($reg)) ? (int)$reg : 0;
 $year = (isset($year) && is_numeric($year)) ? (int)$year : 0;
 
-require ("./ctable.inc.php");
+require_once ("./ctable.inc.php");
 
-include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
-include ("./common.inc.php");
-include ("./common_user.inc.php");
+require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
+require_once ("./common.inc.php");
+require_once ("./common_user.inc.php");
 
 DrawPageTitle('Hledání volných registračních čísel');
 ?>
@@ -123,5 +123,6 @@ if($reg != 0 || $year != 0)
 </TR>
 </TABLE>
 
-</BODY>
-</HTML>
+<?
+HTML_Footer();
+?>

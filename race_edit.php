@@ -2,20 +2,20 @@
 <?
 @extract($_REQUEST);
 
-require ("./connect.inc.php");
-require ("./sess.inc.php");
-require("./cfg/_colors.php");
+require_once ("./connect.inc.php");
+require_once ("./sess.inc.php");
+require_once("./cfg/_colors.php");
 
-include ("./common.inc.php");
-include ("./common_race.inc.php");
-include ('./url.inc.php');
+require_once ("./common.inc.php");
+require_once ("./common_race.inc.php");
+require_once ('./url.inc.php');
 
 if (!IsLoggedRegistrator())
 {
 	header("location: ".$g_baseadr."error.php?code=21");
 	exit;
 }
-include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
+require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 DrawPageTitle('Editace parametrů závodu');
 
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
@@ -189,5 +189,6 @@ if($zaznam['vicedenni'])
 </TR>
 </TABLE>
 </FORM>
-</BODY>
-</HTML>
+<?
+HTML_Footer();
+?>

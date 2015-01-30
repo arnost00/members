@@ -48,7 +48,7 @@ else
 		echo $data_tbl->get_footer()."\n";
 	}
 }
-include ('fin_type_edit.inc.php');
+require_once ('fin_type_edit.inc.php');
 ?>
 
 

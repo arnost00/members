@@ -11,7 +11,7 @@ DrawPageTitle('Přehled reklamací členů');
 </script>
 <?
 
-include "./common_user.inc.php";
+require_once "./common_user.inc.php";
 
 $query = 'select *, f.id as fin_id from `'.TBL_FINANCE.'` as f inner join
 `'.TBL_CLAIM.'` as c on f.id = c.payment_id inner join

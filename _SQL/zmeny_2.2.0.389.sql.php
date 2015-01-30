@@ -8,7 +8,7 @@ $version_upd = '2.2.0.389';
 
 //#############################################################################
 
-require ('prepare.inc.php');
+require_once ('prepare.inc.php');
 
 //#############################################################################
 //	SQL dotazy pro zmenu db. na novejsi verzi
@@ -23,5 +23,5 @@ $sql[1] = 'CREATE TABLE `'.TBL_CLAIM."` (`id` int(10) unsigned NOT NULL AUTO_INC
   PRIMARY KEY (`id`) )";
 //#############################################################################
 
-require ('action.inc.php');
+require_once ('action.inc.php');
 ?>

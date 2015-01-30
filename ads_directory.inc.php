@@ -23,8 +23,8 @@ function confirm_entry_unlock(name) {
 </script>
 
 <?
-include "./common_user.inc.php";
-include('./csort.inc.php');
+require_once "./common_user.inc.php";
+require_once('./csort.inc.php');
 
 $sc = new column_sort_db();
 $sc->add_column('sort_name','');
@@ -37,7 +37,7 @@ $query = "SELECT id,prijmeni,jmeno,reg,hidden,entry_locked FROM ".TBL_USER.$sub_
 
 if (IsSet($result) && is_numeric($result) && $result != 0)
 {
-	require('./const_strings.inc.php');
+	require_once('./const_strings.inc.php');
 	$res_text = GetResultString($result);
 	Print_Action_Result($res_text);
 }
@@ -127,7 +127,7 @@ echo '(Červené <span class="WarningText">H</span> značí skrytého člena. Tj
 echo '(Červené <span class="WarningText">L</span> značí že účet je zablokován. Tj. nejde se na něj přihlásit.)<BR>';
 echo '<BR><hr><BR>';
 
-include "./user_new.inc.php";
+require_once "./user_new.inc.php";
 ?>
 <BR>
 </CENTER>

@@ -2,10 +2,10 @@
 <?php /* clenova stranka - provedeni zmeny informaci a nastaveni */
 @extract($_REQUEST);
 
-require('./connect.inc.php');
-require('./sess.inc.php');
-require('./const_strings.inc.php');
-require('./modify_log.inc.php');
+require_once('./connect.inc.php');
+require_once('./sess.inc.php');
+require_once('./const_strings.inc.php');
+require_once('./modify_log.inc.php');
 
 if (IsLogged())
 {
@@ -13,7 +13,7 @@ if (IsLogged())
 	$type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
 	
 	db_Connect();
-	include "./common_user.inc.php";
+	require_once "./common_user.inc.php";
 
 	$result=0;
 	switch ($type)

@@ -18,8 +18,8 @@ DrawPageTitle('Kalendář závodů - Editace závodů');
 </script>
 <?
 
-include ('./common_race.inc.php');
-include ('./url.inc.php');
+require_once ('./common_race.inc.php');
+require_once ('./url.inc.php');
 
 $fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
 $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;

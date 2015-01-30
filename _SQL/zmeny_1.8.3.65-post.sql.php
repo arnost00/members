@@ -8,7 +8,7 @@ $version_upd = '1.8.3.65-post';
 
 //#############################################################################
 
-require ('prepare.inc.php');
+require_once ('prepare.inc.php');
 
 //#############################################################################
 //	SQL dotazy pro zmenu db. na novejsi verzi
@@ -25,5 +25,5 @@ $sql[2] = 'ALTER TABLE `'.TBL_RACE."` DROP `kat_n`";
 
 //#############################################################################
 
-require ('action.inc.php');
+require_once ('action.inc.php');
 ?>

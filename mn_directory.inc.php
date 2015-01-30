@@ -15,8 +15,8 @@ function confirm_delete(name) {
 </script>
 
 <?
-include "./common_user.inc.php";
-include('./csort.inc.php');
+require_once "./common_user.inc.php";
+require_once('./csort.inc.php');
 
 $sc = new column_sort_db();
 $sc->add_column('sort_name','');
@@ -29,7 +29,7 @@ $query = "SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob,entry_locked 
 
 if (IsSet($result) && is_numeric($result) && $result != 0)
 {
-	require('./const_strings.inc.php');
+	require_once('./const_strings.inc.php');
 	$res_text = GetResultString($result);
 	Print_Action_Result($res_text);
 }
@@ -102,7 +102,7 @@ echo '<BR><BR>';
 echo '(Červené <span class="WarningText">L</span> značí že účet je zablokován správcem. Tj. nejde se na něj přihlásit.)<BR>';
 echo '<BR><hr><BR>';
 
-include "./user_new.inc.php";
+require_once "./user_new.inc.php";
 ?>
 <BR>
 </CENTER>

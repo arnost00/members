@@ -1,6 +1,6 @@
 <?php if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-include_once './modify_log.inc.php';
+require_once './modify_log.inc.php';
 
 /**
  * library for payments

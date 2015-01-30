@@ -1,7 +1,10 @@
 <?php /* hlavicka - pocatecni definice stranky */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
-<? include ('version.inc.php'); ?>
 <?php 
+
+require_once ('./version.inc.php');
+require_once ('./common.inc.php');
+
 // Date in the past 
 header("Expires: " . gmdate("D, d M Y H:i:s") . " GMT"); 
 
@@ -14,38 +17,23 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 
 // HTTP/1.0 
 header("Pragma: no-cache"); 
+
+$head_addons = '';
+$head_addons .="\t".'<script src="functions.js" type="text/javascript"></script>'."\n";
+$head_addons .="\t".'<script src="jquery-1.9.1.min.js"></script>'."\n";
+$head_addons .="\t".'<script language="javascript">'."\n";
+$head_addons .="\t".'<!-- '."\n";
+$head_addons .="\t\t".'javascript:set_default_race_url(\''.$g_baseadr.'race_info_show.php?id_zav=\');'."\n";
+$head_addons .="\t".'//-->'."\n";
+$head_addons .="\t".'</script>'."\n";
+
+require_once('./cfg/_colors.php');
+
+$body_addons = 'text="'.$g_colors['body_text'].'" bgcolor="'.$g_colors['body_bgcolor'].'"';
+
+HTML_Header($g_www_title, 'main.css.php', $body_addons, $head_addons);
+
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<HTML>
-<HEAD>
-	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<META http-equiv="Content-language" content="cs">
-	<META name="generator" content="<? echo SYSTEM_NAME.' '.GetCodeVersion(); ?>">
-	<META name="description" content="<? echo $g_www_meta_description; ?>">
-	<META name="keywords" content="ÈSOB, Orientacni beh, Orientaèní bìh, Orienteering, beh, bìh, run, running, IOF, orientaèní, OB, <? echo $g_www_meta_keyword; ?>">
-	<META name="copyright" content="(C) <? echo GetDevelopYears().' '.SYSTEM_AUTORS; ?>, All rights&nbsp;reserved.">
-	<META name="authors" content="<? echo SYSTEM_AUTORS; ?>">
-	<TITLE><? echo $g_www_title; ?></TITLE>
-	<LINK href="main.css.php" rel="StyleSheet" type="text/css" >
-	<script src="functions.js" type="text/javascript"></script>
-	<script src="jquery-1.9.1.min.js"></script>
-	<link rel="alternate" type="application/rss+xml" title="RSS export" href="rss.php" />
-
-	<script language="javascript">
-	<!-- 
-		javascript:set_default_race_url('<? echo $g_baseadr.'race_info_show.php?id_zav=';?>');
-	//-->
-
-	</script>
-</HEAD>
-
-<?
-if (!isset($g_colors))
-{
-require("./cfg/_colors.php");
-}
-?>
-<BODY text="<? echo $g_colors['body_text'];?>" bgcolor="<? echo $g_colors['body_bgcolor'];?>">
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 <tr>
@@ -62,7 +50,7 @@ if(defined('IS_INDEX'))
 else
 {
 ?>
-<td class="HdrAppName">oddílovı pøihláškovı systém</td>
+<td class="HdrAppName">oddÃ­lovÃ½ pÅ™ihlÃ¡Å¡kovÃ½ systÃ©m</td>
 <td class="HdrClubName"><?echo $g_www_name;?></td>
 </tr>
 <tr>

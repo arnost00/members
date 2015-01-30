@@ -2,9 +2,9 @@
 <?php /* adminova stranka - provedeni smazani clena */
 @extract($_REQUEST);
 
-require ('./connect.inc.php');
-require ('./sess.inc.php');
-require ('./modify_log.inc.php');
+require_once ('./connect.inc.php');
+require_once ('./sess.inc.php');
+require_once ('./modify_log.inc.php');
 
 if (IsLoggedSmallAdmin())
 {
@@ -17,7 +17,7 @@ if (IsLoggedSmallAdmin())
 	}
 
 	db_Connect();
-	include "./common_user.inc.php";
+	require_once "./common_user.inc.php";
 
 	@$vysledek=MySQL_Query("DELETE FROM ".TBL_USER." WHERE id = '$id'");
 	$id2 = GetUserAccountId_Users($id);
@@ -40,7 +40,7 @@ else if (IsLoggedManager())
 		exit;
 	}
 	db_Connect();
-	include "./common_user.inc.php";
+	require_once "./common_user.inc.php";
 
 	@$vysledek=MySQL_Query("DELETE FROM ".TBL_USER." WHERE id = '$id'");
 	$id2 = GetUserAccountId_Users($id);

@@ -8,7 +8,7 @@ $version_upd = '2.0.6.85';
 
 //#############################################################################
 
-require ('prepare.inc.php');
+require_once ('prepare.inc.php');
 
 //#############################################################################
 //	SQL dotazy pro zmenu db. na novejsi verzi
@@ -37,5 +37,5 @@ $sql[3] = 'ALTER TABLE `'.TBL_RACE."` CHANGE `typ` `typ` ENUM( 'ob', 'mtbo', 'lo
 
 //#############################################################################
 
-require ('action.inc.php');
+require_once ('action.inc.php');
 ?>

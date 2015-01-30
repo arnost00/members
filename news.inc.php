@@ -70,7 +70,7 @@ else
 }
 //	news_sh
 
-include ('news_edit.inc.php');
+require_once ('news_edit.inc.php');
 
 ?>
 <BR>

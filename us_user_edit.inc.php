@@ -19,10 +19,10 @@ if (IsSet($chiefPayFor))
 @$vysledek=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE id = '$usr->user_id' LIMIT 1");
 @$zaznam=MySQL_Fetch_Array($vysledek);
 $update=$usr->user_id;
-include ("./common_user.inc.php");
+require_once ("./common_user.inc.php");
 ?>
 <BR><hr><BR>
-<? include "./user_new.inc.php"; ?>
+<? require_once "./user_new.inc.php"; ?>
 
 <?
 //pridani formulare pro moznost zaskrtnuti placeni trenerem
@@ -36,7 +36,7 @@ $chief_result = mysql_query($chief_query);
 $chief_record = mysql_fetch_array($chief_result);
 $chief_id = $chief_record["chief_id"]; 
 
-if ($chief_id > 0) include 'us_setup_nursechild_form.inc.php';
+if ($chief_id > 0) require_once 'us_setup_nursechild_form.inc.php';
 ?>
 
 </CENTER>

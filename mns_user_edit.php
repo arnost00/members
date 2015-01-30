@@ -3,9 +3,9 @@ define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
 @extract($_REQUEST);
 
-require ("./connect.inc.php");
-require ("./sess.inc.php");
-require ("ctable.inc.php");
+require_once ("./connect.inc.php");
+require_once ("./sess.inc.php");
+require_once ("ctable.inc.php");
 if (!IsLoggedSmallManager())
 {
 	header("location: ".$g_baseadr."error.php?code=21");
@@ -29,9 +29,9 @@ if (IsSet($chiefPayFor))
 @$vysledek=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
 @$zaznam=MySQL_Fetch_Array($vysledek);
 $update=$id;
-include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
-include ("./common.inc.php");
-include ("./common_user.inc.php");
+require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
+require_once ("./common.inc.php");
+require_once ("./common_user.inc.php");
 
 DrawPageTitle('Členská základna - Editace uživatele');
 ?>
@@ -41,7 +41,7 @@ DrawPageTitle('Členská základna - Editace uživatele');
 <TD width="90%" ALIGN=left>
 <CENTER>
 <BR><hr><BR>
-<? include "./user_new.inc.php"; ?>
+<? require_once "./user_new.inc.php"; ?>
 <BR>
 
 <?
@@ -56,7 +56,7 @@ $chief_result = mysql_query($chief_query);
 $chief_record = mysql_fetch_array($chief_result);
 $chief_id = $chief_record["chief_id"]; 
 
-if ($chief_id > 0) include 'us_setup_nursechild_form.inc.php';
+if ($chief_id > 0) require_once 'us_setup_nursechild_form.inc.php';
 ?>
 
 
@@ -68,10 +68,10 @@ if ($chief_id > 0) include 'us_setup_nursechild_form.inc.php';
 </TR>
 <TR><TD COLSPAN=4 ALIGN=CENTER>
 <!-- Footer Begin -->
-<?include "./footer.inc.php"?>
+<?require_once "./footer.inc.php"?>
 <!-- Footer End -->
 </TD></TR>
 </TABLE>
-
-</BODY>
-</HTML>
+<?
+HTML_Footer();
+?>

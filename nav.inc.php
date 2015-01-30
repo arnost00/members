@@ -202,7 +202,7 @@ if (IsLogged())
 </TD></TR>
 <TR><TD rowspan="1" colspan="1" width="172" height="25" bgcolor="<? echo $g_colors['nav_bgcolor_in'];?>" class="MemberText">
 <?
-include "./logged.inc.php";
+require_once "./logged.inc.php";
 ?>
 </TD></TR>
 <?

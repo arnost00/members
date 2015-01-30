@@ -8,7 +8,7 @@ $version_upd = '1.7.7.57';
 
 //#############################################################################
 
-require ('prepare.inc.php');
+require_once ('prepare.inc.php');
 
 //#############################################################################
 //	SQL dotazy pro zmenu db. na novejsi verzi
@@ -68,5 +68,5 @@ $sql[13] = 'ALTER TABLE `'.TBL_RACE."` ADD `vedouci` INT( 10 ) UNSIGNED NOT NULL
 
 //#############################################################################
 
-require ('action.inc.php');
+require_once ('action.inc.php');
 ?>

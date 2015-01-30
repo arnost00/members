@@ -8,7 +8,7 @@ $version_upd = '2.0.1.75';
 
 //#############################################################################
 
-require ('prepare.inc.php');
+require_once ('prepare.inc.php');
 
 //#############################################################################
 //	SQL dotazy pro zmenu db. na novejsi verzi
@@ -25,5 +25,5 @@ $sql[3] = 'ALTER TABLE `'.TBL_USER."` CHANGE `si_chip` `si_chip` INT( 9 ) UNSIGN
 
 //#############################################################################
 
-require ('action.inc.php');
+require_once ('action.inc.php');
 ?>

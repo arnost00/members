@@ -2,12 +2,12 @@
 <?php
 @extract($_REQUEST);
 
-require('./cfg/_uc.php');
-require("./cfg/_colors.php");
-require("./cfg/_globals.php");
-require ("./connect.inc.php");
-require ("./sess.inc.php");
-include ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
+require_once('./cfg/_uc.php');
+require_once("./cfg/_colors.php");
+require_once("./cfg/_globals.php");
+require_once ("./connect.inc.php");
+require_once ("./sess.inc.php");
+require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 
 DrawPageTitle('Přihlášení do přihláškového systému');
 ?>
@@ -23,5 +23,6 @@ DrawPageTitle('Přihlášení do přihláškového systému');
 
 <BR>
 
-</body>
-</html>
+<?
+HTML_Footer();
+?>

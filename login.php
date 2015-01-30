@@ -1,8 +1,8 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
-require ("./connect.inc.php");
-require ("./sess.inc.php");
-require ("./common.inc.php");
+require_once ("./connect.inc.php");
+require_once ("./sess.inc.php");
+require_once ("./common.inc.php");
 if (!IsLogged())
 {
 	$login = (isset($_POST[_VAR_USER_LOGIN])) ? $_POST[_VAR_USER_LOGIN] : '';
@@ -91,7 +91,7 @@ if (!IsLogged())
 	MySQL_Query("UPDATE ".TBL_ACCOUNT." SET last_visit='$sqldate' WHERE id='$id'")
 		or die("Chyba při provádění dotazu do databáze.");
 	//<--
-	include ("log_browser.php");
+	require_once ("log_browser.php");
 }
 if (!IsLogged())
 	header("location: ".$g_baseadr);

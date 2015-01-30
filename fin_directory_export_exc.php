@@ -2,10 +2,10 @@
 <?
 @extract($_REQUEST);
 
-require ('./connect.inc.php');
-require ('./sess.inc.php');
-require ('./common.inc.php');
-require ('./common_user.inc.php');
+require_once ('./connect.inc.php');
+require_once ('./sess.inc.php');
+require_once ('./common.inc.php');
+require_once ('./common_user.inc.php');
 
 if (!IsLoggedFinance())
 {
@@ -27,7 +27,7 @@ db_Connect();
 @$vysledek=MySQL_Query("SELECT f.date, concat('".$g_shortcut."',u.reg) as reg, u.sort_name as name, f.amount, f.note FROM `".TBL_FINANCE."` f join `".TBL_USER."` u on u.id = f.id_users_user where f.storno is null ORDER BY f.date desc")
 	or die("Chyba při provádění dotazu do databáze.");
 
-include ('exports.inc.php');
+require_once ('exports.inc.php');
 
 $users = new CSV_Export($g_shortcut,$delim,$par2,$par3);
 while ($zaznam=MySQL_Fetch_Array($vysledek))
