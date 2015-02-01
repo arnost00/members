@@ -103,7 +103,7 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 			{
 				if ($zaznam['nazev'] != null)
 				{
-					$rowt;
+					$rowt = '';
 					if ($zaznam['popis'] != '')
 						$rowt ='<span style="cursor:help" title="'.$zaznam['popis'].'">';
 					$rowt .= $zaznam['nazev'];
