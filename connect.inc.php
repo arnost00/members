@@ -21,7 +21,7 @@ function db_Connect ($silent = false)
 		}
 	}
 	MySQL_Select_DB($g_dbname);
-	MySQL_Query("SET CHARACTER SET UTF-8");
+	MySQL_Query("SET CHARACTER SET UTF8");
 	return true;
 }
 
