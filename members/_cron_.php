@@ -12,11 +12,6 @@ _set_global_RT_Start();
 ?>
 <?php 
 
-// define only when debug (block email send)
-define('_DEBUG_SEND_',1);
-
-
-
 // Date in the past 
 header("Expires: " . gmdate("D, d M Y H:i:s") . " GMT"); 
 
@@ -174,7 +169,7 @@ function GenerateEmail(&$ToA,&$msg)
 	$extra_headers .= 'Reply-To: '.$g_emailadr.EMAIL_ENDL;
 	$extra_headers .= 'X-Mailer: '.SYSTEM_NAME.'/'.GetCodeVersion();
 
-	if (!defined('_DEBUG_SEND_'))
+	if (!defined('_CRON_DEBUG_SEND_'))
 	{
 		if (mail ($ToA,'informace o oddilovych prihlaskach',$msg,$extra_headers))
 			echo('Email send<br>');
@@ -457,7 +452,7 @@ if (mysql_num_rows($vysledek_m) > 0)
 	// test
 }
 
-if (!defined('_DEBUG_SEND_'))
+if (!defined('_CRON_DEBUG_SEND_'))
 {
 	ClearAllModifyFlags();
 }

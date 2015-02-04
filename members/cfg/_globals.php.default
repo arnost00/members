@@ -30,4 +30,9 @@ define ('GC_SHOW_AGE_LIMIT',21);
 
 // minimalni pocet zavodu pro zobrazeni odkazu na aktualni zavody
 define ('GC_MIN_RACES_2_SHOW_LINK',25)
+
+// cron - define only when debug (block email send)
+// define('_CRON_DEBUG_SEND_',1);
+
+
 ?>
