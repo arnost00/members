@@ -50,6 +50,7 @@ function createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod)
 		$datum=date("Y-m-d");
 	else
 		$datum = String2SQLDateDMY($datum);
+	$note = correct_sql_string($note);
 	$query = "insert into ".TBL_FINANCE." (id_users_editor, id_users_user, amount, note, date, id_zavod) values 
 			(".$editor_id.", ".$user_id.", ".$amount.", '".$note."', '".$datum."', '".$id_zavod."')";
 	mysql_query($query);
@@ -63,6 +64,7 @@ function createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod)
 function stornoPayment($editor_id, $trn_id, $storno_note)
 {
 	$datum=date("Y-m-d");
+	$storno_note = correct_sql_string($storno_note);
 	$query = "update ".TBL_FINANCE." set storno='1', storno_by=".$editor_id.", storno_note='".$storno_note."', storno_date = '".$datum."' where id = $trn_id";
 	mysql_query($query);
 	SaveItemToModifyLog_Add(TBL_FINANCE, "id=$trn_id|note=$storno_note");
@@ -70,6 +72,7 @@ function stornoPayment($editor_id, $trn_id, $storno_note)
 
 function updatePayment($editor_id, $trn_id, $id_zavod, $amount, $note)
 {
+	$note = correct_sql_string($note);
 	$query = "update ".TBL_FINANCE." set id_zavod=".$id_zavod.", amount=".$amount.", note='".$note."' where id = $trn_id";
 	mysql_query($query);
 	SaveItemToModifyLog_Edit(TBL_FINANCE, "id=$trn_id|user_id=$editor_id|amount=$amount|note=$note");
