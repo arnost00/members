@@ -23,9 +23,15 @@ $users_query = "select id, reg, sort_name  from `".TBL_USER."` where hidden=fals
 $users_result=mysql_query($users_query);
 $from_options = array();
 $to_options = array();
+
+$opt = array();
+$opt['value'] = -1;
+$opt['label'] = ' - - - ';
+$to_options[] = $opt;
+
 while ($record=MySQL_Fetch_Array($users_result))
 {
-	$opt[] = array();
+	$opt = array();
 	$opt['value'] = $record['id'];
 	$opt['label'] = $record["sort_name"]." :: ".$record["reg"];
 	($record['id'] == $user_id)?$from_options[] = $opt:$to_options[] = $opt; 

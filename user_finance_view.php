@@ -24,7 +24,7 @@ if (IsSet($payment) && IsLogged())
 
  	$editor_id = $usr->user_id;
  	
- 	if ($payment == "both")
+ 	if ($payment == "both" && $id_to != -1)
  	{
  		//odecist penize z uctu ODKUD
  		createPayment($id_from, $id_from, -$amount, $note, null, null);
