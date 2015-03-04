@@ -1,3 +1,4 @@
+<? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?php
 function savedebug($buffer) {
 file_put_contents(dirname(__FILE__) . '/logs/debug_'.md5(date('d.m.Y - H:i:s')).'.log', $buffer);
@@ -9,8 +10,7 @@ ob_start('savedebug');
   
 require_once(dirname(__FILE__) .'/timestamp.inc.php');
 _set_global_RT_Start();
-?>
-<?php 
+
 
 // Date in the past 
 header("Expires: " . gmdate("D, d M Y H:i:s") . " GMT"); 
@@ -25,10 +25,6 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 // HTTP/1.0 
 header("Pragma: no-cache"); 
 
-?>
-<? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
-
-<?
 require_once (dirname(__FILE__) .'/cfg/_globals.php');
 require_once (dirname(__FILE__) .'/connect.inc.php');
 require_once (dirname(__FILE__) .'/common.inc.php');
@@ -162,16 +158,20 @@ function GenerateEmail(&$ToA,&$msg)
 {	// send info mail
 	global $g_emailadr, $g_fullname;
 
+	$name_from = email_format_name($g_fullname, $g_emailadr);
+
 	$extra_headers  = 'MIME-Version: 1.0'.EMAIL_ENDL;
 	$extra_headers .= 'Content-type: text/plain; charset="UTF-8"'.EMAIL_ENDL;
 	$extra_headers .= 'Content-Transfer-Encoding: 8bit'.EMAIL_ENDL;
-	$extra_headers .= 'From: '.$g_fullname.' <'.$g_emailadr.'>'.EMAIL_ENDL;
-	$extra_headers .= 'Reply-To: '.$g_emailadr.EMAIL_ENDL;
+	$extra_headers .= 'From: '.$name_from.EMAIL_ENDL;
+	$extra_headers .= 'Reply-To: '.$name_from.EMAIL_ENDL;
 	$extra_headers .= 'X-Mailer: '.SYSTEM_NAME.'/'.GetCodeVersion();
+
+	$subject = 'Informace o oddílových přihláškách';
 
 	if (!defined('_CRON_DEBUG_SEND_'))
 	{
-		if (mail ($ToA,'informace o oddilovych prihlaskach',$msg,$extra_headers))
+		if (mail ($ToA,email_mime_header_encode($subject),$msg,$extra_headers))
 			echo('Email send<br>');
 		else
 			echo('Email not send<br>');

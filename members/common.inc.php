@@ -471,19 +471,37 @@ function repair_html_text($html)
 }
 
 //--------------------------------------------------------
+function email_mime_header_encode($text)
+{
+	if ($text != '')
+		return  '=?utf-8?B?'.base64_encode($text).'?=';
+	else
+		return '';
+}
 
-function SendEmail(&$FromA,&$ToA,&$msg,&$subject)
+function email_format_name($name, $email)
+{
+	if ($name != '')
+		return email_mime_header_encode($name).' <'.$email.'>';
+	else
+		return $email;
+}
+
+function SendEmail($FromName, $FromA,$ToName,$ToA,$msg,$subject)
 {	// send info mail
 	global $g_emailadr, $g_fullname;
 
+	$name_from = email_format_name($FromName, $FromA);
+	$name_to = email_format_name($ToName,$ToA);
+	
 	$extra_headers  = 'MIME-Version: 1.0'.EMAIL_ENDL;
 	$extra_headers .= 'Content-type: text/plain; charset="UTF-8"'.EMAIL_ENDL;
 	$extra_headers .= 'Content-Transfer-Encoding: 8bit'.EMAIL_ENDL;
-	$extra_headers .= 'From: '.$FromA.EMAIL_ENDL;
-	$extra_headers .= 'Reply-To: '.$FromA.EMAIL_ENDL;
+	$extra_headers .= 'From: '.$name_from.EMAIL_ENDL;
+	$extra_headers .= 'Reply-To: '.$name_from.EMAIL_ENDL;
 	$extra_headers .= 'X-Mailer: '.SYSTEM_NAME.'/'.GetCodeVersion();
 
-	$send = (bool) mail($ToA,$subject,$msg,$extra_headers);
+	$send = (bool) mail($name_to,email_mime_header_encode($subject),$msg,$extra_headers);
 	
 	// debug output to file
 	$fp = fopen(dirname(__FILE__) .'/logs/email_log.txt', 'a');

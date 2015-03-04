@@ -47,12 +47,11 @@ function GenerateInfoEmail($type,$id,$login,$heslo,$email)
 	$full_msg .= 'Na tento email prosím neodpovídejte, byl vytvořen přihláškovým systémem oddílu '.$g_shortcut.'.'.EMAIL_ENDL;
 	
 	$subject = 'přihláškový systém - informace o účtu';
-	$from_email = $g_fullname.' <'.$g_emailadr.'>';
 /*
 	// DEV - output
 	$fp = fopen(dirname(__FILE__) .'/logs/dbg_login_mail_'.md5(date('d.m.Y - H:i:s')).'.txt', 'a');
 	fputs($fp, 'To: '.$email."\r\n");
-	fputs($fp, 'From: '.$from_email."\r\n");
+	fputs($fp, 'From: '.$g_emailadr."\r\n");
 	fputs($fp, 'Subject: '.$subject."\r\n");
 	fputs($fp, DIV_LINE."\r\n");
 	fputs($fp, $full_msg."\r\n");
@@ -60,7 +59,7 @@ function GenerateInfoEmail($type,$id,$login,$heslo,$email)
 */
 	require_once ('version.inc.php');
 	require_once('common.inc.php');
-	SendEmail($from_email,$email,$full_msg,$subject);
+	SendEmail($g_fullname, $g_emailadr,'',$email,$full_msg,$subject);
 }
 
 if (IsLoggedSmallAdmin())
