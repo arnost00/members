@@ -53,7 +53,12 @@ function cp2ascii($text)
 
 function GenerateLogin(&$zaznam)
 {
-	$login = $zaznam['jmeno']{0}.$zaznam['prijmeni']{0}.RegNumToStr($zaznam['reg']);
+//	$login = $zaznam['jmeno']{0}.$zaznam['prijmeni']{0}.RegNumToStr($zaznam['reg']);
+	
+	mb_internal_encoding("UTF-8");
+	$login = mb_substr($zaznam['jmeno'],0,1);
+	$login .= mb_substr($zaznam['prijmeni'],0,1);
+	$login .= RegNumToStr($zaznam['reg']);
 	$login = cp2ascii($login);
 	return $login;
 }
