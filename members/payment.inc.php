@@ -151,7 +151,11 @@ function recalculateHistory($user_id)
 */
 function getAllUsersCurrentBalance()
 {	// priprava ... vraci sloupec fin z user ... prepsat na opravdovy zustatek !!!
-	$vysl=MySQL_Query("SELECT id, fin, prijmeni, jmeno FROM ".TBL_USER);
+
+	$query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob, ifnull(sum(f.amount),0) sum_amount FROM '.TBL_USER.' u 
+		left join '.TBL_FINANCE.' f on u.id=f.id_users_user where f.storno is null group by u.id ';
+		
+	$vysl=MySQL_Query($query);
 	$data = array();
 	if ($vysl != FALSE)
 	{
