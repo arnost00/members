@@ -19,6 +19,9 @@ define ('GC_SHOW_RACE_DAYS',60);
 // pocet dni pro zobrazeni prihlasek ve vyhledu
 define ('GC_SHOW_REG_DAYS',60);
 
+// pocet dni pro zobrazeni zavodu a prihlasek ve vyhledu
+define ('GC_SHOW_RACE_AND_REG_DAYS',60);
+
 // pocet zobrazenych novinek
 define ('GC_NEWS_LIMIT',20);
 
