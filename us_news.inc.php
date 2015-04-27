@@ -12,9 +12,8 @@ DrawPageTitle('Aktuální informace (Aktualitky)');
 //-->
 </script>
 
-<A name="races"></A>
 <?
-DrawPageSubTitle('Nejbližší závody (do '.GC_SHOW_RACE_DAYS.' dní)');
+DrawPageSubTitle('Nejbližší závody a přihlášky (do '.GC_SHOW_RACE_AND_REG_DAYS.' dní)');
 
 require_once ('./common_race.inc.php');
 require_once ('./url.inc.php');
@@ -53,80 +52,10 @@ if(SHOW_USER)
 
 $curr_date = GetCurrentDate();
 
-@$vysledek=MySQL_Query("SELECT id,datum,datum2,nazev,typ,ranking,odkaz,prihlasky, prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, vicedenni,misto,oddil, vedouci, cancelled FROM ".TBL_RACE." WHERE datum >= ".$curr_date." AND datum <= ".IncDate($curr_date,GC_SHOW_RACE_DAYS)." ORDER BY datum, datum2, id");
-
-if (mysql_num_rows($vysledek) > 0)
-{
-	$data_tbl = new html_table_mc();
-	$col = 0;
-	$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
-	$data_tbl->set_header_col_with_help($col++,'Poř.',ALIGN_CENTER,"Pořadatel");
-	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
-	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web závodu");
-	if(SHOW_USER)
-		$data_tbl->set_header_col($col++,'Přihlášen',ALIGN_CENTER);
-	else
-		$data_tbl->set_header_col_with_help($col++,'Př',ALIGN_CENTER,"Zobrazit přihlášené");
-	if($g_enable_race_boss)
-		$data_tbl->set_header_col($col++,'Vedoucí',ALIGN_CENTER);
-	echo $data_tbl->get_css()."\n";
-	echo $data_tbl->get_header()."\n";
-	echo $data_tbl->get_header_row()."\n";
-	while ($zaznam=MySQL_Fetch_Array($vysledek))
-	{
-		if($zaznam['vicedenni'])
-			$datum=Date2StringFT($zaznam['datum'],$zaznam['datum2']);
-		else
-			$datum=Date2String($zaznam['datum']);
-
-		$nazev = '<A href="javascript:open_race_info('.$zaznam['id'].')" class="adr_name">'.GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']).'</A>';
-		$misto = GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']);
-		$oddil = $zaznam['oddil'];
-		$typ = GetRaceTypeImg($zaznam['typ']);
-		$odkaz = GetRaceLinkHTML($zaznam['odkaz']);
-		$prihl = "<A HREF=\"javascript:open_win('./race_reg_view.php?id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
-		if(SHOW_USER)
-		{
-			if (IsSet($zaz) && count($zaz) > 0 && in_array($zaznam['id'],$zaz))
-			{
-				$z=$zaznam['id'];
-				$prihl = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._USER_GROUP_ID_.'&id='.$z."&us=1','')\"><span class=\"Highlight\">".$zav[$z].'</span></A>';
-			}
-		}
-
-		if($g_enable_race_boss)
-		{
-			$boss = '-';
-			if($zaznam['vedouci'] != 0)
-			{
-				@$vysledekU=MySQL_Query("SELECT jmeno,prijmeni FROM ".TBL_USER." WHERE id = '".$zaznam['vedouci']."' LIMIT 1");
-				@$zaznamU=MySQL_Fetch_Array($vysledekU);
-				if($zaznamU != FALSE)
-					$boss = $zaznamU['jmeno'].' '.$zaznamU['prijmeni'];
-			}
-			echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ,$odkaz,$prihl,$boss);
-		}
-		else
-			echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ,$odkaz,$prihl);
-	}
-	echo $data_tbl->get_footer()."\n";
-}
-else
-{
-	echo "V nejbližších ".GC_SHOW_RACE_DAYS." dnech není žádný závod.<BR>";
-}
-?>
-<BR>
-
-<A name="regs"></A>
-<?
-DrawPageSubTitle('Nejbližší přihlášky (do '.GC_SHOW_REG_DAYS.' dní)');
-
 $d1 = $curr_date;
 $d2 = IncDate($curr_date,GC_SHOW_REG_DAYS);
-$query = 'SELECT id, datum, datum2, nazev, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, vedouci, cancelled FROM '.TBL_RACE.' WHERE ((prihlasky1 >= '.$d1.' && prihlasky1 <= '.$d2.') || (prihlasky2 >= '.$d1.' && prihlasky2 <= '.$d2.') || (prihlasky3 >= '.$d1.' && prihlasky3 <= '.$d2.') || (prihlasky4 >= '.$d1.' && prihlasky4 <= '.$d2.') || (prihlasky5 >= '.$d1.' && prihlasky5 <= '.$d2.')) ORDER BY datum';
+$query = 'SELECT id, datum, datum2, nazev, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, vedouci, cancelled FROM '.TBL_RACE.' WHERE (((prihlasky1 >= '.$d1.' && prihlasky1 <= '.$d2.') || (prihlasky2 >= '.$d1.' && prihlasky2 <= '.$d2.') || (prihlasky3 >= '.$d1.' && prihlasky3 <= '.$d2.') || (prihlasky4 >= '.$d1.' && prihlasky4 <= '.$d2.') || (prihlasky5 >= '.$d1.' && prihlasky5 <= '.$d2.')) || ( datum >= '.$d1.' AND datum <= '.$d2.')) ORDER BY datum, datum2, id';
+
 @$vysledek=MySQL_Query($query);
 
 if (mysql_num_rows($vysledek) > 0)
