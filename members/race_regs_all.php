@@ -199,9 +199,10 @@ Možnosti (kategorie)<BR>
 <?
 	echo "<button onclick=\"javascript:zmen_kat('');return false;\">Vyprázdnit</button>&nbsp;";
 	$kategorie=explode(';',$zaznam_z['kategorie']);
-	for ($i=0; $i<count($kategorie)-1; $i++)
+	for ($i=0; $i<count($kategorie); $i++)
 	{
-		echo "<button onclick=\"javascript:zmen_kat('".$kategorie[$i]."');return false;\">".$kategorie[$i]."</button>";
+		if ($kategorie[$i] != '')
+			echo "<button onclick=\"javascript:zmen_kat('".$kategorie[$i]."');return false;\">".$kategorie[$i]."</button>";
 	}
 ?>
 <BR>

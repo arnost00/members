@@ -183,9 +183,10 @@ if($is_termin_show_on)
 ?>
 <TR><TD align="right" width="100">Možnosti<BR>(kategorie)</TD><TD width="5"></TD><TD width="400">
 <?
-		for ($i=0; $i<count($kategorie)-1; $i++)
+		for ($i=0; $i<count($kategorie); $i++)
 		{
-			echo "<button onclick=\"javascript:zmen_kat('".$kategorie[$i]."');return false;\">".$kategorie[$i]."</button>";
+			if ($kategorie[$i] != '')
+				echo "<button onclick=\"javascript:zmen_kat('".$kategorie[$i]."');return false;\">".$kategorie[$i]."</button>";
 		}
 		echo "\n".'</TD></TR>';
 	}
