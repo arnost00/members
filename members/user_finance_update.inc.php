@@ -31,7 +31,11 @@ else
 	$race_text = $zaznam_platba["zavod_nazev"]."&nbsp;-&nbsp;".formatDate($zaznam_platba["zavod_datum"]);
 	$race_id = $zaznam_platba["zavod_id"];
 }
-$race_sel = '<select name="id_zavod">';
+
+$race_sel = '';
+$race_sel .= '<select name="id_zavod">';
+$race_sel .= '<option value=null>---</option>';
+
 @$vysledek_zavody=mysql_query("select id, nazev, from_unixtime(datum,'%Y-%c-%e') datum_text from ".TBL_RACE." order by datum desc");
 while ($zaznam=MySQL_Fetch_Array($vysledek_zavody))
 {
