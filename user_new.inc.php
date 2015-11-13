@@ -83,6 +83,9 @@ echo $data_tbl->get_new_row('Licence LOB', GetLicenceComboBox('lic_lob',$zaznam[
 if (IsLoggedSmallAdmin())
 {
 	echo $data_tbl->get_new_row_text('', '<INPUT TYPE="checkbox" NAME="hidden" SIZE=15 VALUE="1"'.(($zaznam["hidden"] == 1) ? ' checked' : '').'> Skrytý člen (vidí ho jen admin)');
+}
+if (IsLoggedSmallAdmin() || !IsSet($update))
+{
 	echo $data_tbl->get_new_row('Rodné číslo', '<INPUT TYPE="text" NAME="rc" SIZE=30 MAXLENGTH=10 VALUE="'.$zaznam["rc"].'"> (9999999999)');
 }
 /*
