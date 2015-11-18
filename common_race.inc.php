@@ -196,7 +196,7 @@ require_once('./common_race2.inc.php');
 function RaceInfoTable(&$zaznam,$add_row = '',$show_curr_term = false, $full_width=false, $expandable=false)
 //	$show_curr_term = 0 - nic, 1 - us,mng,smn, 2 - rg,ad
 {
-	global $g_enable_race_boss;
+	global $g_enable_race_boss, $g_enable_race_accommodation, $g_enable_race_transport;
 
 	if ($expandable)
 	{
@@ -297,20 +297,39 @@ function RIT_SH(divId1, divId2)
 		echo $data_tbl->get_new_row('Vedoucí',$vedouci);
 	if(is_array($add_row))
 		echo $data_tbl->get_new_row($add_row[0],$add_row[1]);
-	switch($zaznam['transport'])
+	if ($g_enable_race_transport)
 	{
-	case 0: 
-		$transport = 'Ne';
-		break;
-	case 1: 
-		$transport = 'Ano';
-		break;
-	case 2: 
-		$transport = 'Ano - automaticky';
-		break;
+		switch($zaznam['transport'])
+		{
+		case 0: 
+			$transport = 'Ne';
+			break;
+		case 1: 
+			$transport = 'Ano';
+			break;
+		case 2: 
+			$transport = 'Ano - automaticky';
+			break;
+		}
+		echo $data_tbl->get_new_row('Společná doprava',$transport);
+	}
+	if ($g_enable_race_accommodation)
+	{
+		switch($zaznam['ubytovani'])
+		{
+		case 0: 
+			$ubytovaní = 'Ne';
+			break;
+		case 1: 
+			$ubytovaní = 'Ano';
+			break;
+		case 2: 
+			$ubytovaní = 'Ano - automaticky';
+			break;
+		}
+		echo $data_tbl->get_new_row('Společné ubytování',$ubytovaní);
 	}
 
-	echo $data_tbl->get_new_row('Společná doprava',$transport);
 	echo $data_tbl->get_footer()."\n";
 	if ($expandable)
 	{

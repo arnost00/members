@@ -74,6 +74,12 @@ $g_color_profile = '_colors_black_blue.php';
 $g_enable_finances = true;
 $g_enable_finances_claim = true;
 
+// doprava & ubytovani 
+$g_enable_race_transport = true;
+$g_race_transport_default = 1;
+$g_enable_race_accommodation = true;
+$g_race_accommodation_default = 1;
+
 // enable ORIS support
 $g_enable_oris_support = true;
 
