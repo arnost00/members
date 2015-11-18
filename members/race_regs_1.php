@@ -71,7 +71,7 @@ Změna kategorie - se provede změnou textového pole s kategorií pro vybranéh
 $sub_query = (IsLoggedRegistrator() || IsLoggedManager()) ? '' : ' AND '.TBL_USER.'.chief_id = '.$usr->user_id.' OR '.TBL_USER.'.id = '.$usr->user_id;
 $sub_query2 = '';//(IsLoggedSmallManager() || IsLoggedManager()) ? ' AND '.TBL_USER.'.entry_locked = 0' : '';
 
-$query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, kat, pozn, pozn_in, termin, entry_locked, '.TBL_ZAVXUS.'.transport FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query.$sub_query2.' ORDER BY reg ASC';
+$query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, kat, pozn, pozn_in, termin, entry_locked, '.TBL_ZAVXUS.'.transport, '.TBL_ZAVXUS.'.ubytovani FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query.$sub_query2.' ORDER BY reg ASC';
 
 @$vysledek=MySQL_Query($query);
 
@@ -83,11 +83,14 @@ echo '<TD><SELECT name="user_id" size=1 onchange="javascript:aktu_line();">'."\n
 
 $is_registrator_on = IsCalledByRegistrator($gr_id);
 $is_termin_show_on = $is_registrator_on && ($zaznam_z['prihlasky'] > 1);
-$is_spol_dopr_on = ($zaznam_z["transport"]==1);
-$is_spol_dopr_auto = ($zaznam_z["transport"]==2);
+$is_spol_dopr_on = ($zaznam_z["transport"]==1) && $g_enable_race_transport;
+$is_spol_dopr_auto = ($zaznam_z["transport"]==2) && $g_enable_race_transport;
 $spol_dopr_idx = 3;
+$is_spol_ubyt_on = ($zaznam_z["ubytovani"]==1) && $g_enable_race_accommodation;
+$is_spol_ubyt_auto = ($zaznam_z["ubytovani"]==2) && $g_enable_race_accommodation;
+$spol_ubyt_idx = 4;
 if($is_termin_show_on)
-	$spol_dopr_idx++;
+	$spol_ubyt_idx++;
 
 $i=0;
 //$prihl_cl=0;
@@ -102,6 +105,8 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 			$us_rows[$i][2] = '';
 			if($is_spol_dopr_on)
 				$us_rows[$i][$spol_dopr_idx] = false;
+			if($is_spol_ubyt_on)
+				$us_rows[$i][$spol_ubyt_idx] = false;
 			if($is_termin_show_on)
 				$us_rows[$i][3] = (($termin != 0) ? $termin : $zaznam_z['prihlasky']);
 		}
@@ -115,6 +120,8 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 				$us_rows[$i][2] = $zaznam['pozn_in'];
 				if($is_spol_dopr_on)
 					$us_rows[$i][$spol_dopr_idx] = $zaznam['transport'] == 1;
+				if($is_spol_ubyt_on)
+					$us_rows[$i][$spol_ubyt_idx] = $zaznam['ubytovani'] == 1;
 				if($is_termin_show_on)
 					$us_rows[$i][3] = $zaznam['termin'];
 			}
@@ -134,7 +141,7 @@ echo'//<!--'."\n";
 echo 'us_rows = new Array('.sizeof($us_rows).');'."\n";
 for ($i=0; $i < sizeof($us_rows); $i++)
 {
-	echo'us_rows['.$i.'] = new Array("'.$us_rows[$i][0].'","'.$us_rows[$i][1].'","'.$us_rows[$i][2].(($is_termin_show_on) ? '","'.$us_rows[$i][3] : '').'"'.(($is_spol_dopr_on) ? ','.($us_rows[$i][$spol_dopr_idx] ? 'true' : 'false') : '').');'."\n";
+	echo'us_rows['.$i.'] = new Array("'.$us_rows[$i][0].'","'.$us_rows[$i][1].'","'.$us_rows[$i][2].(($is_termin_show_on) ? '","'.$us_rows[$i][3] : '').'"'.(($is_spol_dopr_on) ? ','.($us_rows[$i][$spol_dopr_idx] ? 'true' : 'false') : '').(($is_spol_ubyt_on) ? ','.($us_rows[$i][$spol_ubyt_idx] ? 'true' : 'false') : '').');'."\n";
 }
 echo'//-->'."\n";
 echo'</SCRIPT>'."\n";
@@ -156,6 +163,22 @@ else if ($is_spol_dopr_auto)
 {
 	echo '<TR>';
 	echo '<TD align="right">Společná doprava</TD>';
+	echo '<TD width="5"></TD>';
+	echo '<TD>Automaticky</TD>';
+	echo '</TR>';
+}
+if($is_spol_ubyt_on)
+{
+	echo '<TR>';
+	echo '<TD align="right">Společné ubytování</TD>';
+	echo '<TD width="5"></TD>';
+	echo '<TD><INPUT TYPE="checkbox" NAME="ubytovani"></TD>';
+	echo '</TR>';
+}
+else if ($is_spol_ubyt_auto)
+{
+	echo '<TR>';
+	echo '<TD align="right">Společné ubytování</TD>';
 	echo '<TD width="5"></TD>';
 	echo '<TD>Automaticky</TD>';
 	echo '</TR>';
@@ -217,6 +240,12 @@ function aktu_line()
 	document.form1.transport.checked=us_rows[idx][<? echo $spol_dopr_idx?>];
 <?
 	}
+	if($is_spol_ubyt_on)
+	{
+?>
+	document.form1.ubytovani.checked=us_rows[idx][<? echo $spol_ubyt_idx?>];
+<?
+	}
 ?>
 	document.form1.pozn.value=us_rows[idx][1];
 	document.form1.pozn2.value=us_rows[idx][2];
@@ -258,6 +287,8 @@ $data_tbl->set_header_col($col++,'Příjmení',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
 if($is_spol_dopr_on)
 	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,'Společná doprava');
+if($is_spol_ubyt_on)
+	$data_tbl->set_header_col_with_help($col++,'SU',ALIGN_CENTER,'Společné ubytování');
 if($zaznam_z['prihlasky'] > 1)
 	$data_tbl->set_header_col($col++,'Termín',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Pozn.',ALIGN_LEFT);
@@ -271,6 +302,7 @@ echo $data_tbl->get_header_row()."\n";
 
 $i=0;
 $trans=0;
+$ubyt=0;
 while ($zaznam=MySQL_Fetch_Array($vysledek))
 {
 	@$vysledek1=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE id=$zaznam[id_user] LIMIT 1");
@@ -292,6 +324,16 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 		else
 			$row[] = '';
 	}
+	if($is_spol_ubyt_on)
+	{
+		if ($zaznam["ubytovani"])
+		{
+			$row[] = '<B>X</B>';
+			$ubyt++;
+		}
+		else
+			$row[] = '';
+	}
 	if($zaznam_z['prihlasky'] > 1)
 		$row[] = $zaznam['termin'];
 	$row[] = $zaznam['pozn'];
@@ -301,6 +343,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 echo $data_tbl->get_footer()."\n";
 
 echo $is_spol_dopr_on?"<BR>Počet přihlášených na dopravu: $trans":"";
+echo $is_spol_ubyt_on?"<BR>Počet přihlášených na ubytování: $ubyt":"";
 ?>
 
 <BR>

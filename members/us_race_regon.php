@@ -94,13 +94,22 @@ if ($zaznam_u['entry_locked'] != 0)
 	if ($zaznam_rg['kat'] != '')
 	{
 		echo('<BR><BR>Vybraná kategorie:&nbsp;'.$zaznam_rg['kat']);
-		if ($zaznam_z["transport"]==1)
+		echo "<BR>";
+		if ($zaznam_z["transport"]==1 && $g_enable_race_transport)
 		{
-			echo "<BR><BR>";
+			echo "<BR>";
 			$trans=$zaznam_rg["transport"]?"Ano":"Ne";
 			echo 'Chci využít společnou dopravu:&nbsp;'.$trans;
+			echo "<BR>";
 		}
-		echo "<BR><BR>";
+		if ($zaznam_z["ubytovani"]==1 && $g_enable_race_accommodation)
+		{
+			echo "<BR>";
+			$ubyt=$zaznam_rg["ubytovani"]?"Ano":"Ne";
+			echo 'Chci využít společné ubytování:&nbsp;'.$ubyt;
+			echo "<BR>";
+		}
+		echo "<BR>";
 		echo 'Poznámka:&nbsp;'.$zaznam_rg['pozn'].'&nbsp;(do&nbsp;přihlášky)';
 		echo "<BR><BR>";
 		echo 'Poznámka:&nbsp;'.$zaznam_rg['pozn_in'].'&nbsp;(interní)';
@@ -126,18 +135,34 @@ echo('<BR><BR>Vybraná kategorie:&nbsp;');
 echo('<INPUT TYPE="text" NAME="kat" size=4 value="'.$zaznam_rg['kat'].'">');
 echo("<BR>\n");
 
-if ($zaznam_z["transport"]==1)
-{
-	echo "<BR><BR>";
-	$trans=$zaznam_rg["transport"]?"CHECKED":"";
-	echo 'Chci využít společnou dopravu&nbsp;<input type="checkbox" name="transport" id="transport" '.$trans.'>';
-}
-else if ($zaznam_z["transport"]==2)
-{
-	echo "<BR><BR>";
-	echo 'Společná doprava je zadána automaticky.';
-}
+if ($g_enable_race_transport || $g_enable_race_accommodation)
+	echo "<BR>\n";
 
+if ($g_enable_race_transport)
+{
+	if ($zaznam_z["transport"]==1)
+	{
+		$trans=$zaznam_rg["transport"]?"CHECKED":"";
+		echo '<label for="transport">Chci využít společnou dopravu</label>&nbsp;<input type="checkbox" name="transport" id="transport" '.$trans.'>';
+	}
+	else if ($zaznam_z["transport"]==2)
+	{
+		echo 'Společná doprava je zadána automaticky.';
+	}
+	echo("<BR>\n");
+}
+if ($g_enable_race_accommodation)
+{
+	if ($zaznam_z["ubytovani"]==1)
+	{
+		$trans=$zaznam_rg["ubytovani"]?"CHECKED":"";
+		echo '<label for="ubytovani">Chci využít společné ubytování</label>&nbsp;<input type="checkbox" name="ubytovani" id="ubytovani" '.$trans.'>';
+	}
+	else if ($zaznam_z["ubytovani"]==2)
+	{
+		echo 'Společné ubytování je zadáno automaticky.';
+	}
+}
 ?>
 <BR><BR>
 Poznámka&nbsp;<INPUT TYPE="text" name="pozn" size="50" maxlength="250" value="<?echo $zaznam_rg['pozn']?>">&nbsp;(do&nbsp;přihlášky)
@@ -182,7 +207,8 @@ if(strlen($zaznam_z['poznamka']) > 0)
 <?
 DrawPageSubTitle('Přihlášení závodníci');
 
-$is_spol_dopr_on = ($zaznam_z["transport"]==1);
+$is_spol_dopr_on = ($zaznam_z["transport"]==1) && $g_enable_race_transport;
+$is_spol_ubyt_on = ($zaznam_z["ubytovani"]==1) && $g_enable_race_accommodation;
 
 $data_tbl = new html_table_mc();
 $col = 0;
@@ -192,6 +218,8 @@ $data_tbl->set_header_col($col++,'Příjmení',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
 if($is_spol_dopr_on)
 	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,'Společná doprava');
+if($is_spol_ubyt_on)
+	$data_tbl->set_header_col_with_help($col++,'SU',ALIGN_CENTER,'Společné ubytování');
 if($zaznam_z['prihlasky'] > 1)
 	$data_tbl->set_header_col($col++,'Termín',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Pozn.',ALIGN_LEFT);
@@ -203,6 +231,7 @@ echo $data_tbl->get_header_row()."\n";
 
 $i=0;
 $trans=0;
+$ubyt=0;
 while ($zaznam=MySQL_Fetch_Array($vysledek))
 {
 	@$vysledek1=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE id=$zaznam[id_user] LIMIT 1");
@@ -224,6 +253,16 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 		else
 			$row[] = '';
 	}
+	if($is_spol_ubyt_on)
+	{
+		if ($zaznam["ubytovani"])
+		{
+			$row[] = '<B>X</B>';
+			$ubyt++;
+		}
+		else
+			$row[] = '';
+	}
 	if($zaznam_z['prihlasky'] > 1)
 		$row[] = $zaznam['termin'];
 	$row[] = $zaznam['pozn'];
@@ -233,6 +272,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 echo $data_tbl->get_footer()."\n";
 
 echo $is_spol_dopr_on?"<BR>Počet přihlášených na dopravu: $trans":"";
+echo $is_spol_ubyt_on?"<BR>Počet přihlášených na ubytování: $ubyt":"";
 ?>
 
 <BR>

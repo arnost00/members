@@ -120,6 +120,10 @@ else
 		</select>
 	</TD>
 </TR>
+<?
+if ($g_enable_race_transport)
+{
+?>
 <TR>
 	<TD width="130" align="right" valign="top">Společná doprava</TD>
 	<TD width="5"></TD>
@@ -129,6 +133,23 @@ else
 		<input type="radio" name="transport" value="2" id="radio_ff2" <?if ($zaznam["transport"]==2) echo "checked=\"checked\"";?>><label for="radio_ff2">Automatická společná doprava</label>
 	</TD>
 </TR>
+<?
+}
+if ($g_enable_race_accommodation)
+{
+?>
+<TR>
+	<TD width="130" align="right" valign="top">Společné ubytování</TD>
+	<TD width="5"></TD>
+	<TD>
+		<input type="radio" name="accommodation" value="0" id="radio_acc0" <?if ($zaznam["ubytovani"]==0) echo "checked=\"checked\"";?>><label for="radio_acc0">Bez společného ubytování</label><br>
+		<input type="radio" name="accommodation" value="1" id="radio_acc1" <?if ($zaznam["ubytovani"]==1) echo "checked=\"checked\"";?>><label for="radio_acc1">Společné ubytování s výběrem účasti</label><br>
+		<input type="radio" name="accommodation" value="2" id="radio_acc2" <?if ($zaznam["ubytovani"]==2) echo "checked=\"checked\"";?>><label for="radio_acc2">Automatické společné ubytování</label>
+	</TD>
+</TR>
+<?
+}
+?>
 <TR>
 	<TD width="130" align="right">Odkaz</TD>
 	<TD width="5"></TD>
