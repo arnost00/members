@@ -12,9 +12,14 @@ $finance_readonly = "readonly";
 
 //---------- BLOK KODU PRO FINANCE ----------//
 require_once './payment.inc.php'; // pomocne funkce a javascript pro finance
-
-if (IsSet($payment) && IsSet($id_from) && IsSet($id_to) && IsSet($amount) && $id_to != -1)
+if (IsSet($payment) && IsSet($user_id) && IsSet($id_to) && IsSet($amount) && $id_to != -1)
 {
+	// set, clean & check values
+	$id_from = $user_id;
+	$amount = abs((int)$amount); // only positive numbers
+	$id_to = (int)$id_to;
+	$note = (IsSet($note)) ? correct_sql_string($note) : '';
+
 	//odecist penize z uctu ODKUD
 	createPayment($id_from, $id_from, -$amount, $note, null, null);
 	//pripsat penize na ucet KOMU
