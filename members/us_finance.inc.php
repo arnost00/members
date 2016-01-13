@@ -16,14 +16,22 @@ if (IsSet($payment) && IsSet($user_id) && IsSet($id_to) && IsSet($amount) && $id
 {
 	// set, clean & check values
 	$id_from = $user_id;
-	$amount = abs((int)$amount); // only positive numbers
+	$amount = (int)$amount; // only positive numbers
 	$id_to = (int)$id_to;
 	$note = (IsSet($note)) ? correct_sql_string($note) : '';
 
-	//odecist penize z uctu ODKUD
-	createPayment($id_from, $id_from, -$amount, $note, null, null);
-	//pripsat penize na ucet KOMU
-	createPayment($id_from, $id_to, $amount, $note, null, null);
+	if ($amount > 0)
+	{
+		//odecist penize z uctu ODKUD
+		createPayment($id_from, $id_from, -$amount, $note, null, null);
+		//pripsat penize na ucet KOMU
+		createPayment($id_from, $id_to, $amount, $note, null, null);
+	}
+	else
+	{
+		$result = 'Nelze převést zápornou částku.';
+		Print_Action_Result($result);
+	}
 }
 //---------- KONEC BLOK KODU PRO FINANCE ----------//
 
