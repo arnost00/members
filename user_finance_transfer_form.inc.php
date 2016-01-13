@@ -15,6 +15,13 @@ function createHTMLSelect($select_name, $options)
 <h3>Transfer mezi členy</h3>
 <form class="form" action="?<?=$return_url?>&payment=both" method="post" onsubmit="return isPositiveNumber(amount)">
 <?
+if ($sum_amount < 0 )
+{
+	echo('Nelze posíllat peníze členům, váš zůstatek není kladný.');
+}
+else
+{
+	
 $data_tbl = new html_table_form();
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
@@ -46,5 +53,7 @@ echo $data_tbl->get_new_row('<label for="note">Poznámka</label>', '<input name=
 echo $data_tbl->get_empty_row();
 echo $data_tbl->get_new_row('','<input type="submit" value="Provést transfer"/>');
 echo $data_tbl->get_footer()."\n";
+
+}// else sum_amount
 ?>
 </FORM>
