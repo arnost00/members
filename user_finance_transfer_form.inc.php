@@ -13,7 +13,7 @@ function createHTMLSelect($select_name, $options)
 
 <hr>
 <h3>Transfer mezi členy</h3>
-<form class="form" action="?<?=$return_url?>&payment=both" method="post" onsubmit="return isPositiveNumber(amount)">
+<form class="form" action="?<?=$return_url?>&payment=both" method="post" onsubmit="return (isPositiveNumber(amount) && isPositiveNumber(amount-sum_amount))">
 <?
 if ($sum_amount < 0 )
 {
@@ -21,7 +21,7 @@ if ($sum_amount < 0 )
 }
 else
 {
-	
+echo('<input name="sum_amount" hidden value="'.$sum_amount.'" />');
 $data_tbl = new html_table_form();
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
