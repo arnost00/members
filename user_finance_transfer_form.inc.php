@@ -9,11 +9,13 @@ function createHTMLSelect($select_name, $options)
 	$select .= '</select>';
 	return $select;
 }
+
+$new_url = str_replace ('&payment=both','', $return_url);
 ?>
 
 <hr>
 <h3>Transfer mezi členy</h3>
-<form class="form" action="?<?=$return_url?>&payment=both" method="post" onsubmit="return (isPositiveNumber(amount) && isPositiveNumber(amount-sum_amount))">
+<form class="form" action="?<?=$new_url?>&payment=both" method="post" onsubmit="return (isPositiveNumber(amount) && haveMoney(amount,sum_amount))">
 <?
 if ($sum_amount < 0 )
 {
@@ -35,11 +37,13 @@ $opt['value'] = -1;
 $opt['label'] = ' - - - ';
 $to_options[] = $opt;
 
+include ('common_user.inc.php');
+
 while ($record=MySQL_Fetch_Array($users_result))
 {
 	$opt = array();
 	$opt['value'] = $record['id'];
-	$opt['label'] = $record["sort_name"]." :: ".$record["reg"];
+	$opt['label'] = $record["sort_name"]." :: ".$g_shortcut.RegNumToStr($record["reg"]);
 	if ($record['id'] != $user_id)
 		$to_options[] = $opt; 
 }
