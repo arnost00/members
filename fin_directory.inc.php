@@ -133,6 +133,12 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 }
 ?>
 
+<? if ( IsLoggedAdmin() && ($enable_fin_types))
+{
+echo('<br><a href="javascript:open_win_ex(\'./adm_reset_ft.php\',\'\',600,600);">Reset typu oddílových příspěvků u všech členů</a><br>');
+}
+ ?>
+
 <BR>
 
 <?
