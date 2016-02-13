@@ -19,19 +19,45 @@ if (IsSet($payment) && IsSet($user_id) && IsSet($id_to) && IsSet($amount) && $id
 	$amount = (int)$amount; // only positive numbers
 	$id_to = (int)$id_to;
 	$note = (IsSet($note)) ? correct_sql_string($note) : '';
+	$can_send = true;
+	@$vysledek=MySQL_Query('SELECT id FROM '.TBL_USER.' WHERE `id` = \''.$id_to.'\' AND `hidden` = \'0\' LIMIT 1');
+	if (!$vysledek)
+	{
+		$result = 'Nelze převést neexistujícímu členu.';
+		$can_send = false;
+	}
 
-	if ($amount > 0)
+	@$vysledek2=MySQL_Query('SELECT SUM(fin.amount) AS amount  from '.TBL_FINANCE.' fin 
+		where fin.id_users_user = '.$user_id.' and fin.storno is null');
+	$db_sum_amount = 0;
+	if ($vysledek2)
+	{
+		if ($zaznam2=MySQL_Fetch_Array($vysledek2))
+		{
+			$db_sum_amount = $zaznam2['amount'];
+		}
+	}
+	if ($amount > $db_sum_amount)
+	{
+		$result = 'Nemáte dostatek pěnez pro převod .';
+		$can_send = false;
+	}
+
+	if ($amount < 0)
+	{
+		$result = 'Nelze převést zápornou částku.';
+		$can_send = false;
+	}
+	
+	if ($can_send)
 	{
 		//odecist penize z uctu ODKUD
 		createPayment($id_from, $id_from, -$amount, $note, null, null);
 		//pripsat penize na ucet KOMU
 		createPayment($id_from, $id_to, $amount, $note, null, null);
+		$result = 'Byla převedena částka : '.$amount;
 	}
-	else
-	{
-		$result = 'Nelze převést zápornou částku.';
-		Print_Action_Result($result);
-	}
+	Print_Action_Result($result);
 }
 //---------- KONEC BLOK KODU PRO FINANCE ----------//
 

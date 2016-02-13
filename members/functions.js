@@ -123,4 +123,13 @@ function isPositiveNumber(subject)
 	return false;
 }
 
+function haveMoney(subject, subject_sum)
+{
+	num = parseInt(subject.value);
+	sum = parseInt(subject_sum.value);
+	if (num < sum) return true;
+	alert("Nemáte dostatek pěnez pro převod");
+	return false;
+}
+
 //-->
