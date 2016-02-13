@@ -49,7 +49,7 @@ if (IsSet($payment) && IsLogged())
 
 
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
-require_once ("./common_user.inc.php");
+//require_once ("./common_user.inc.php");
 require_once ("./ctable.inc.php");
 DrawPageTitle('Finance člena');
 ?>
