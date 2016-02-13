@@ -81,12 +81,12 @@ if($reg != 0 || $year != 0)
 	else if($year != 0)
 	{
 		DrawPageSubTitle('Dle roku narození - '.$year);
-		
-		if($year > 100)
-			$year = $year % 100;
-		$year *= 100;
-		$y1 = $year;
-		$y2 = $year + 99;
+		$year0 = $year;
+		if($year0 > 100)
+			$year0 = $year0 % 100;
+		$year0 *= 100;
+		$y1 = $year0;
+		$y2 = $year0 + 99;
 
 		@$vysledek=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE reg >= ".$y1." AND reg <= ".$y2." ORDER BY reg ASC");
 		$cnt= ($vysledek != FALSE) ? mysql_num_rows($vysledek) : 0;
