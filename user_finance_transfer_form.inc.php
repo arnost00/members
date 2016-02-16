@@ -50,6 +50,12 @@ while ($record=MySQL_Fetch_Array($users_result))
 
 $to_select = createHTMLSelect("id_to", $to_options);
 
+if (IsLoggedFinance() && is_array($zaznam_user_name))
+{
+	echo $data_tbl->get_new_row('<label for="id_from">Převést od</label>', $zaznam_user_name['name']);
+	echo('<input name="id_from" hidden value="'.$user_id.'" />');
+
+}
 echo $data_tbl->get_new_row('<label for="id_to">Převést komu</label>', $to_select);
 echo $data_tbl->get_new_row('<label for="amount">Částka</label>', '<input name="amount" id="amount" type="text" size="5" maxlength="10" />');
 echo $data_tbl->get_new_row('<label for="note">Poznámka</label>', '<input name="note" type="text" size="40" maxlength="200" />');
