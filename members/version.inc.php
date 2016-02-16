@@ -14,7 +14,7 @@ function GetCodeVersion()
 
 function GetDevelopYears()
 {
-	return "2002-2015";
+	return "2002-2016";
 }
 
 ?>
