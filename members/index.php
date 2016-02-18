@@ -142,6 +142,9 @@ if($g_is_system_running || IsLoggedAdmin())
 					case 6:
 						require_once "./ad_modify_log.inc.php";
 						break;
+					case 7:
+						require_once "./ad_fin_history.inc.php";
+						break;
 					case 3:
 					default:
 						require_once "./news.inc.php";
