@@ -133,6 +133,7 @@ function DrawMenuGroupHeader($name)
 		DrawMenuItem('Editace závodů',_ADMIN_GROUP_ID_,5);
 		DrawMenuItem('Účty / Náhled',_ADMIN_GROUP_ID_,4);
 		DrawMenuItem('Výpis změn',_ADMIN_GROUP_ID_,6);
+		DrawMenuItem('Historie plateb',_ADMIN_GROUP_ID_,7);
 	}
 ?>
  	<TR><TD height="15"></TD></TR>
