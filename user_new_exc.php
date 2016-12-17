@@ -79,7 +79,7 @@ else if (IsLoggedManager() || IsLoggedSmallManager())
 	}
 	else
 	{
-		$result=MySQL_Query("INSERT INTO ".TBL_USER." (prijmeni,jmeno,datum,adresa,mesto,psc,tel_domu,tel_zam,tel_mobil,email,reg,si_chip,hidden,sort_name,poh,lic,lic_mtbo,lic_lob,fin,narodnost) VALUES ('$prijmeni','$jmeno','$datum','$adresa','$mesto','$psc','$domu','$zam','$mobil','$email','$reg','$si','$hidden','$name2','$poh','$lic','$lic_mtbo','$lic_lob','$fin','$narodnost')")
+		$result=MySQL_Query("INSERT INTO ".TBL_USER." (prijmeni,jmeno,datum,adresa,mesto,psc,tel_domu,tel_zam,tel_mobil,email,reg,si_chip,hidden,sort_name,poh,lic,lic_mtbo,lic_lob,fin,rc,narodnost) VALUES ('$prijmeni','$jmeno','$datum','$adresa','$mesto','$psc','$domu','$zam','$mobil','$email','$reg','$si','$hidden','$name2','$poh','$lic','$lic_mtbo','$lic_lob','$fin','$rc','$narodnost')")
 			or die("Chyba při provádění dotazu do databáze.");
 		if ($result == FALSE)
 			die ("Nepodařilo se vložit člena.");
