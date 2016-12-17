@@ -23,6 +23,8 @@ $data_tbl->set_header_col($col++,'Příjmení',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col_with_help($col++,'Reg.č.',ALIGN_CENTER,"Registrační číslo");
 $data_tbl->set_header_col($col++,'Trenér',ALIGN_CENTER);
+if (IsLoggedSmallAdmin())
+	$data_tbl->set_header_col($col++,'Platící trenér',ALIGN_CENTER);
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
@@ -49,6 +51,11 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 		else
 		{
 			$row[] = $zaznam['ch_jmeno'].' '.$zaznam['ch_prijmeni'].'&nbsp;/&nbsp;'. "<A HREF=\"javascript:open_win('./mng_edit.php?id=".$zaznam['id']."','')\">Edit</A>";
+		}
+		if (IsLoggedSmallAdmin())
+		{
+			if ($zaznam['chief_pay'] != null)
+				$row[] = $zaznam['chief_id'].' '.$zaznam['chief_pay'];
 		}
 		echo $data_tbl->get_new_row_arr($row)."\n";
 	}
