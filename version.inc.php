@@ -7,9 +7,9 @@ define('SYSTEM_AUTORS','Arnošt, Kenia a LuF');
 function GetCodeVersion()
 {
 	//pro zmenu podverze staci tento soubor komitnout ;)
-	$actualVersion = '$LastChangedRevision: 497 $';
+	$actualVersion = '$LastChangedRevision: 502 $';
 	$actualVersion = explode(' ', $actualVersion);
-	return "v3.0.8.$actualVersion[1] dbg";
+	return "v3.0.9.$actualVersion[1] dbg";
 }
 
 function GetDevelopYears()
