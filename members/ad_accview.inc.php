@@ -19,7 +19,7 @@ $data_tbl->set_header_col($col++,'locked',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'last visit',ALIGN_CENTER,60);
 if ($g_enable_mailinfo)
 {
-	$data_tbl->set_header_col($col++,'ei',ALIGN_CENTER,40);
+	$data_tbl->set_header_col_with_help($col++,'ei',ALIGN_CENTER,'Email info',40);
 	$data_tbl->set_header_col($col++,'ei - settings',ALIGN_CENTER,120);
 }
 

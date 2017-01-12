@@ -54,8 +54,12 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 		}
 		if (IsLoggedSmallAdmin())
 		{
+			$val = '';
+			if ($zaznam['chief_id'] != null)
+				$val .= $zaznam['chief_id'].' ';
 			if ($zaznam['chief_pay'] != null)
-				$row[] = $zaznam['chief_id'].' '.$zaznam['chief_pay'];
+				$val.=$zaznam['chief_pay'];
+			$row[] = $val;
 		}
 		echo $data_tbl->get_new_row_arr($row)."\n";
 	}

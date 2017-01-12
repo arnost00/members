@@ -20,7 +20,7 @@ $data_tbl = new html_table_mc();
 $col = 0;
 $data_tbl->set_header_col($col++,'datum',ALIGN_CENTER,80);
 $data_tbl->set_header_col($col++,'reg',ALIGN_LEFT,80);
-$data_tbl->set_header_col($col++,'jmáno',ALIGN_CENTER,100);
+$data_tbl->set_header_col($col++,'jméno',ALIGN_CENTER,100);
 $data_tbl->set_header_col($col++,'částka',ALIGN_LEFT,100);
 $data_tbl->set_header_col($col++,'závod d.',ALIGN_CENTER,80);
 $data_tbl->set_header_col($col++,'závod n.',ALIGN_CENTER,160);
