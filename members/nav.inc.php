@@ -134,6 +134,8 @@ function DrawMenuGroupHeader($name)
 		DrawMenuItem('Účty / Náhled',_ADMIN_GROUP_ID_,4);
 		DrawMenuItem('Výpis změn',_ADMIN_GROUP_ID_,6);
 		DrawMenuItem('Historie plateb',_ADMIN_GROUP_ID_,7);
+		DrawMenuItem('Email info',_ADMIN_GROUP_ID_,8);
+//		DrawMenuItem('Malý trenéři',_ADMIN_GROUP_ID_,9);
 	}
 ?>
  	<TR><TD height="15"></TD></TR>
