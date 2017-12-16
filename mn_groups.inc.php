@@ -10,6 +10,14 @@ DrawPageTitle('Přiřazení členů malým trenérům');
 	/*	"status=yes,width=600,height=460"	*/
 
 	javascript:set_default_size(600,520);
+	
+function confirm_add() {
+	return confirm('Opravdu chcete povolit platícího trenéra?');
+}
+function confirm_reset() {
+	return confirm('Opravdu chcete resetovat trenéra?');
+}
+
 //-->
 </script>
 
@@ -46,19 +54,42 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 		$row[] = $zaznam['prijmeni'];
 		$row[] = $zaznam['jmeno'];
 		$row[] = RegNumToStr($zaznam['reg']);
-		if ($zaznam['ch_hidden'] || $zaznam['ch_jmeno'] == NULL || $zaznam['ch_prijmeni'] == NULL)
+		if ($zaznam['ch_jmeno'] == NULL || $zaznam['ch_prijmeni'] == NULL)
 			$row[] = "<A HREF=\"javascript:open_win('./mng_edit.php?id=".$zaznam['id']."','')\">Edit</A>";
 		else
 		{
-			$row[] = $zaznam['ch_jmeno'].' '.$zaznam['ch_prijmeni'].'&nbsp;/&nbsp;'. "<A HREF=\"javascript:open_win('./mng_edit.php?id=".$zaznam['id']."','')\">Edit</A>";
+			if ($zaznam['ch_hidden'])
+				$row[] = '<span class="TextAlert2">'.$zaznam['ch_jmeno'].' '.$zaznam['ch_prijmeni'].'</span>&nbsp;/&nbsp;<a HREF="./mn_groups_exc.php?type=1&id='.$zaznam["id"].'" onclick="return confirm_reset()" class="Erase">Reset</A>';
+			else
+				$row[] = $zaznam['ch_jmeno'].' '.$zaznam['ch_prijmeni'].'&nbsp;/&nbsp;'. "<A HREF=\"javascript:open_win('./mng_edit.php?id=".$zaznam['id']."','')\">Edit</A>";
 		}
 		if (IsLoggedSmallAdmin())
 		{
 			$val = '';
-			if ($zaznam['chief_id'] != null)
-				$val .= $zaznam['chief_id'].' ';
-			if ($zaznam['chief_pay'] != null)
-				$val.=$zaznam['chief_pay'];
+			if ($zaznam['chief_id'] != null && $zaznam['chief_id'] != 0)
+			{
+				if ($zaznam['chief_pay'] != null)
+				{
+					$query2='SELECT * FROM '.TBL_USER.' WHERE id = '.$zaznam['chief_pay'].' LIMIT 1';
+					@$vysledek2=MySQL_Query($query2);
+					if ($zaznam2=MySQL_Fetch_Array($vysledek2))
+					{
+						if ($zaznam['chief_pay'] != $zaznam['chief_id'] || $zaznam2['hidden']) 
+							$val.='<span class="TextAlert2">';
+						$val.=$zaznam2['jmeno'].' '.$zaznam2['prijmeni'];
+						if ($zaznam['chief_pay'] != $zaznam['chief_id'] || $zaznam2['hidden']) 
+							$val.='</span>';
+						$val.='&nbsp;/&nbsp;';
+						$val.= '<a HREF="./mn_groups_exc.php?type=2&id='.$zaznam["id"].'" onclick="return confirm_reset()" class="Erase">Reset</A>';
+					}
+					else
+						$val.=$zaznam['chief_pay'];
+				}
+				else
+					$val.= '<a HREF="./mn_groups_exc.php?type=3&id='.$zaznam["id"].'" onclick="return confirm_add()">Povol</A>';
+			}
+			else
+				$val.='-';
 			$row[] = $val;
 		}
 		echo $data_tbl->get_new_row_arr($row)."\n";
