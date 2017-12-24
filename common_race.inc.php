@@ -50,14 +50,14 @@ $g_modify_flag [2]['nm'] = 'Termin závodu';
 
 $g_modify_flag_cnt = 3;
 
-$g_racetype0 = [
+$g_racetype0 = array(
 	'Z' => 'Závod',
 	'T' => 'Trénink',
 	'S' => 'Soustředění',
 	'V' => 'Sportovní vyšetření',
 	'N' => 'Nákup oblečení',
 	'J' => 'Jiné'
-];
+);
 
 $g_racetype0_idx[0] = 'Z';
 $g_racetype0_idx[1] = 'T';
