@@ -68,7 +68,22 @@ else
 	<TD class="DataValue"><INPUT TYPE="text" NAME="oddil" SIZE=9 maxlength=7>&nbsp;&nbsp;(XYZ) nebo (XYZ+ABC)</TD>
 </TR>
 <TR>
-	<TD width="130" align="right">Typ</TD>
+	<TD width="130" align="right">Typ akce</TD>
+	<TD width="5"></TD>
+	<TD>
+		<select name='typ0'>
+<?
+		$tmp_typ = 'Z';
+		foreach ( $g_racetype0 as $key => &$value )
+		{
+			echo("\t\t\t<option value='".$key."'".(($tmp_typ==$key)?' SELECTED':'').">".$value."</option>\n");
+		}
+?>
+		</select>
+	</TD>
+</TR>
+<TR>
+	<TD width="130" align="right">Sport</TD>
 	<TD width="5"></TD>
 	<TD>
 		<select name='typ'>

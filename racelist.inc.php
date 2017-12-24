@@ -19,7 +19,8 @@ $curr_date = GetCurrentDate();
 $fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
 $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
 $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 0;  // old races
-$sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC);
+$fD = (IsSet($fD) && is_numeric($fD)) ? (int)$fD : 0;  // type 0
+$sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD);
 
 @$vysledek=MySQL_Query('SELECT * FROM '.TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
 
@@ -35,7 +36,8 @@ if ($num_rows > 0)
 	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
 	$data_tbl->set_header_col_with_help($col++,'Poř.',ALIGN_CENTER,"Pořadatel");
-	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
+	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ akce");
+	$data_tbl->set_header_col_with_help($col++,'S',ALIGN_CENTER,"Sport");
 	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web závodu");
 	$data_tbl->set_header_col_with_help($col++,'Př',ALIGN_CENTER,"Zobrazit přihlášené");
 	$data_tbl->set_header_col($col++,'Přihlášky',ALIGN_CENTER);
@@ -65,6 +67,7 @@ if ($num_rows > 0)
 		$nazev = '<A href="javascript:open_race_info('.$zaznam['id'].')" class="adr_name">'.GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']).'</A>';
 		$misto = GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']);
 		$oddil = $zaznam['oddil'];
+		$typ0 = GetRaceType0($zaznam['typ0']);
 		$typ = GetRaceTypeImg($zaznam['typ']);
 		$odkaz = GetRaceLinkHTML($zaznam['odkaz']);
 		$prihl2 = "<A HREF=\"javascript:open_win('./race_reg_view.php?id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
@@ -90,10 +93,10 @@ if ($num_rows > 0)
 				if($zaznamU != FALSE)
 					$boss = $zaznamU['jmeno'].' '.$zaznamU['prijmeni'];
 			}
-			echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ,$odkaz,$prihl2,$termin,$boss);
+			echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ0,$typ,$odkaz,$prihl2,$termin,$boss);
 		}
 		else
-			echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ,$odkaz,$prihl2,$termin);
+			echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ0,$typ,$odkaz,$prihl2,$termin);
 		$i++;
 		$old_year = Date2Year($zaznam['datum']);
 	}

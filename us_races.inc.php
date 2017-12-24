@@ -12,9 +12,10 @@ require_once ('./url.inc.php');
 $fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
 $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
 $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 0;  // old races
-$sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC);
+$fD = (IsSet($fD) && is_numeric($fD)) ? (int)$fD : 0;  // type 0
+$sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD);
 
-$query = 'SELECT '.TBL_RACE.'.id, datum, datum2, nazev, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, kat, termin, vedouci, cancelled FROM '.TBL_RACE.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_RACE.'.id = '.TBL_ZAVXUS.'.id_zavod AND '.TBL_ZAVXUS.'.id_user='.$usr->user_id.$sql_sub_query.' ORDER BY datum, datum2, '.TBL_RACE.'.id';
+$query = 'SELECT '.TBL_RACE.'.id, datum, datum2, nazev, typ0, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, kat, termin, vedouci, cancelled FROM '.TBL_RACE.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_RACE.'.id = '.TBL_ZAVXUS.'.id_zavod AND '.TBL_ZAVXUS.'.id_user='.$usr->user_id.$sql_sub_query.' ORDER BY datum, datum2, '.TBL_RACE.'.id';
 @$vysledek=MySQL_Query($query);
 
 @$vysledek2=MySQL_Query("SELECT * FROM ".TBL_USER." where id=$usr->user_id");
@@ -57,7 +58,8 @@ if ($num_rows > 0)
 	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
 	$data_tbl->set_header_col_with_help($col++,'Poř.',ALIGN_CENTER,"Pořadatel");
-	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
+	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ akce");
+	$data_tbl->set_header_col_with_help($col++,'S',ALIGN_CENTER,"Sport");
 	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web závodu");
 	$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Přihlášky',ALIGN_CENTER);
@@ -82,6 +84,7 @@ if ($num_rows > 0)
 		$row[] = '<A href="javascript:open_race_info('.$zaznam['id'].')" class="adr_name">'.GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']).'</A>';
 		$row[] = GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']);
 		$row[] = $zaznam['oddil'];
+		$row[] = GetRaceType0($zaznam['typ0']);
 		$row[] = GetRaceTypeImg($zaznam['typ']);
 		$row[] = GetRaceLinkHTML($zaznam['odkaz']);
 		

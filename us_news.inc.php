@@ -54,7 +54,7 @@ $curr_date = GetCurrentDate();
 
 $d1 = $curr_date;
 $d2 = IncDate($curr_date,GC_SHOW_REG_DAYS);
-$query = 'SELECT id, datum, datum2, nazev, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, vedouci, cancelled FROM '.TBL_RACE.' WHERE (((prihlasky1 >= '.$d1.' && prihlasky1 <= '.$d2.') || (prihlasky2 >= '.$d1.' && prihlasky2 <= '.$d2.') || (prihlasky3 >= '.$d1.' && prihlasky3 <= '.$d2.') || (prihlasky4 >= '.$d1.' && prihlasky4 <= '.$d2.') || (prihlasky5 >= '.$d1.' && prihlasky5 <= '.$d2.')) || ( datum >= '.$d1.' AND datum <= '.$d2.')) ORDER BY datum, datum2, id';
+$query = 'SELECT id, datum, datum2, nazev, typ0, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, vedouci, cancelled FROM '.TBL_RACE.' WHERE (((prihlasky1 >= '.$d1.' && prihlasky1 <= '.$d2.') || (prihlasky2 >= '.$d1.' && prihlasky2 <= '.$d2.') || (prihlasky3 >= '.$d1.' && prihlasky3 <= '.$d2.') || (prihlasky4 >= '.$d1.' && prihlasky4 <= '.$d2.') || (prihlasky5 >= '.$d1.' && prihlasky5 <= '.$d2.')) || ( datum >= '.$d1.' AND datum <= '.$d2.')) ORDER BY datum, datum2, id';
 
 @$vysledek=MySQL_Query($query);
 
@@ -70,7 +70,8 @@ if (mysql_num_rows($vysledek) > 0)
 	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
 	$data_tbl->set_header_col_with_help($col++,'Poř.',ALIGN_CENTER,"Pořadatel");
-	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
+	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ akce");
+	$data_tbl->set_header_col_with_help($col++,'S',ALIGN_CENTER,"Sport");
 	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web závodu");
 	if(SHOW_USER)
 		$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
@@ -100,6 +101,7 @@ if (mysql_num_rows($vysledek) > 0)
 		$misto = GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']);
 		
 		$oddil = $zaznam['oddil'];
+		$typ0 = GetRaceType0($zaznam['typ0']);
 		$typ = GetRaceTypeImg($zaznam['typ']);
 		$odkaz = GetRaceLinkHTML($zaznam['odkaz']);
 		$prihl2 = "<A HREF=\"javascript:open_win('./race_reg_view.php?id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
@@ -154,14 +156,14 @@ if (mysql_num_rows($vysledek) > 0)
 					$boss = $zaznamU['jmeno'].' '.$zaznamU['prijmeni'];
 			}
 			if(SHOW_USER)
-				echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ,$odkaz,$prihl,$termin,$boss);
+				echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ0,$typ,$odkaz,$prihl,$termin,$boss);
 			else
-				echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ,$odkaz,$prihl2,$termin,$boss);
+				echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ0,$typ,$odkaz,$prihl2,$termin,$boss);
 		}
 		else if(SHOW_USER)
-			echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ,$odkaz,$prihl,$termin);
+			echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ0,$typ,$odkaz,$prihl,$termin);
 		else
-			echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ,$odkaz,$prihl2,$termin);
+			echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ0,$typ,$odkaz,$prihl2,$termin);
 	}
 	echo $data_tbl->get_footer()."\n";
 }

@@ -44,7 +44,7 @@ require_once ("./common_race.inc.php");
 //$query = 'SELECT r.id, datum, datum2, nazev, oddil, typ, vicedenni, misto, kat FROM '.TBL_RACE.' as r LEFT JOIN '.TBL_ZAVXUS.' as z ON r.id = z.id_zavod AND z.id_user='.$id.' ORDER BY r.datum, r.datum2, r.id';
 
 // show only races with registration
-$query = 'SELECT r.id, datum, datum2, nazev, oddil, typ, vicedenni, misto, kat FROM '.TBL_RACE.' as r JOIN '.TBL_ZAVXUS.' as z ON r.id = z.id_zavod AND z.id_user='.$id.' ORDER BY r.datum, r.datum2, r.id';
+$query = 'SELECT r.id, datum, datum2, nazev, oddil, typ0, typ, vicedenni, misto, kat FROM '.TBL_RACE.' as r JOIN '.TBL_ZAVXUS.' as z ON r.id = z.id_zavod AND z.id_user='.$id.' ORDER BY r.datum, r.datum2, r.id';
 
 @$vysledek=MySQL_Query($query);
 
@@ -59,7 +59,8 @@ if ($num_rows > 0)
 	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
 	$data_tbl->set_header_col_with_help($col++,'Poř.',ALIGN_CENTER,"Pořadatel");
-	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
+	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ akce");
+	$data_tbl->set_header_col_with_help($col++,'S',ALIGN_CENTER,"Sport");
 	$data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
 
 	echo $data_tbl->get_css()."\n";
@@ -89,6 +90,7 @@ if ($num_rows > 0)
 			$row[] = $prefix.$zaznam['nazev'].$suffix;
 			$row[] = $prefix.$zaznam['misto'].$suffix;
 			$row[] = $prefix.$zaznam['oddil'].$suffix;
+			$row[] = GetRaceType0($zaznam['typ0']);
 			$row[] = GetRaceTypeImg($zaznam['typ']);
 			if($zaznam['kat'] != NULL)
 				$row[] = '<span class="Highlight">'.$zaznam['kat'].'</span>';

@@ -78,9 +78,23 @@ else
 	<TD width="5"></TD>
 	<TD><input type="checkbox" name="cancelled" id="cancelled" <?if ($zaznam["cancelled"]==1) echo " CHECKED";?>></TD>
 </TR>
-
 <TR>
-	<TD width="130" align="right">Typ</TD>
+	<TD width="130" align="right">Typ akce</TD>
+	<TD width="5"></TD>
+	<TD>
+		<select name='typ0'>
+<?
+		$tmp_typ = $zaznam['typ0'];
+		foreach ( $g_racetype0 as $key => &$value )
+		{
+			echo("\t\t\t<option value='".$key."'".(($tmp_typ==$key)?' SELECTED':'').">".$value."</option>\n");
+		}
+?>
+		</select>
+	</TD>
+</TR>
+<TR>
+	<TD width="130" align="right">Sport</TD>
 	<TD width="5"></TD>
 	<TD>
 		<select name='typ'>

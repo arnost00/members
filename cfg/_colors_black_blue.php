@@ -91,5 +91,16 @@ if (!defined('PHP_GLOBAL_COLORS_INCLUDED'))
 	$g_colors['table_cal_today_text'] = '#000000';
 	$g_colors['table_cal_empty'] = '#333333';
 
+//==================================================================
+// race type colors 
+//==================================================================
+
+	$g_colors['r_type0_Z'] = '#CFC';
+	$g_colors['r_type0_T'] = '#fCC';
+	$g_colors['r_type0_S'] = '#CFF';
+	$g_colors['r_type0_V'] = '#CCF';
+	$g_colors['r_type0_N'] = '#FFC';
+	$g_colors['r_type0_J'] = '#FCF';
+
 }	// define (PHP_GLOBAL_COLORS_INCLUDED)
 ?>

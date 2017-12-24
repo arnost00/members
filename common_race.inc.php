@@ -50,6 +50,24 @@ $g_modify_flag [2]['nm'] = 'Termin závodu';
 
 $g_modify_flag_cnt = 3;
 
+$g_racetype0 = [
+	'Z' => 'Závod',
+	'T' => 'Trénink',
+	'S' => 'Soustředění',
+	'V' => 'Sportovní vyšetření',
+	'N' => 'Nákup oblečení',
+	'J' => 'Jiné'
+];
+
+$g_racetype0_idx[0] = 'Z';
+$g_racetype0_idx[1] = 'T';
+$g_racetype0_idx[2] = 'S';
+$g_racetype0_idx[3] = 'V';
+$g_racetype0_idx[4] = 'N';
+$g_racetype0_idx[5] = 'J';
+
+$g_racetype0_cnt = 6; 
+
 function GetRaceTypeName($value)
 {
 	global $g_racetype_cnt;
@@ -93,6 +111,28 @@ function GetRaceTypeImg(&$value)
 		}
 	}
 	return '?';
+}
+
+
+function GetRaceType0($value)
+{
+	global $g_racetype0;
+	$v2 = $g_racetype0[$value];
+	if ($v2 == NULL)
+		$v2 = $value;
+
+//	return '<span class="type0" style="cursor:help" title="'.$v2.'">'.$value.'</span>';
+	return '<span class="type0_'.$value.'" style="cursor:help" title="'.$v2.'">'.$value.'</span>';
+}
+
+function GetRaceType0Name($value)
+{
+	global $g_racetype0;
+	$v2 = $g_racetype0[$value];
+	if ($v2 == NULL)
+		$v2 = $value;
+
+	return $v2;
 }
 
 function GetZebricekName2($value)
@@ -258,7 +298,8 @@ function RIT_SH(divId1, divId2)
 	echo $data_tbl->get_new_row('Jméno',GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']));
 	echo $data_tbl->get_new_row('Místo',GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']));
 	echo $data_tbl->get_new_row('Pořádající oddíl',$zaznam['oddil']);
-	echo $data_tbl->get_new_row('Typ',GetRaceTypeName($zaznam['typ']));
+	echo $data_tbl->get_new_row('Typ akce',GetRaceType0Name($zaznam['typ0']));
+	echo $data_tbl->get_new_row('Sport',GetRaceTypeName($zaznam['typ']));
 	echo $data_tbl->get_new_row('Žebříček',GetZebricekName2($zaznam['zebricek']));
 	echo $data_tbl->get_new_row('Ranking',($zaznam['ranking'] == 1) ? 'Ano' : 'Ne');
 	echo $data_tbl->get_new_row('WWW stránky',GetRaceLinkHTML($zaznam['odkaz'],false));
@@ -337,14 +378,18 @@ function RIT_SH(divId1, divId2)
 	}
 }
 
-function form_filter_racelist($page,&$filterA,&$filterB,&$filterC)
+function form_filter_racelist($page,&$filterA,&$filterB,&$filterC,&$filterD)
 {
 	global $g_zebricek_cnt;
 	global $g_zebricek;
+	global $g_racetype0_cnt;
+	global $g_racetype0;
+	global $g_racetype0_idx;
 
-	$urlA = "'./".$page.'&fB='.$filterB.'&fC='.$filterC.'&fA=\'';
-	$urlB = "'./".$page.'&fA='.$filterA.'&fC='.$filterC.'&fB=\'';
-	$urlC = "'./".$page.'&fA='.$filterA.'&fB='.$filterB.'&fC=\'';
+	$urlA = "'./".$page.'&fB='.$filterB.'&fC='.$filterC.'&fD='.$filterD.'&fA=\'';
+	$urlB = "'./".$page.'&fA='.$filterA.'&fC='.$filterC.'&fD='.$filterD.'&fB=\'';
+	$urlC = "'./".$page.'&fA='.$filterA.'&fB='.$filterB.'&fD='.$filterD.'&fC=\'';
+	$urlD = "'./".$page.'&fA='.$filterA.'&fB='.$filterB.'&fC='.$filterC.'&fD=\'';
 	$filter_arr_niceA = array(0=>'všechny',1=>'jen OB',2=>'jen MTBO',3=>'jen LOB',4=>'jen nezařazené');
 	$filter_arr_sqlA = array(1=>'ob',2=>'mtbo',3=>'lob',4=>'jine');
 	if($filterA > 0 && $filterA < 5)
@@ -376,10 +421,34 @@ function form_filter_racelist($page,&$filterA,&$filterB,&$filterC)
 			$result .= ' AND (';
 		$result .= '`datum` >= \''.DecDate(GetCurrentDate(),31)."')";
 	}
+	if($filterD > 0 && $filterD <= $g_racetype0_cnt)
+	{
+		if($result == '')
+			$result = ' WHERE (';
+		else
+			$result .= ' AND (';
+		$code = $g_racetype0_idx[$filterD-1];
+		$result .= '`typ0` = \''.$code."')";
+	}
 ?>
 <table><tr><td>
 <form>
-Typ zobrazených závodů&nbsp;
+Typ akcí&nbsp;
+<?
+	echo('<select name="fD" onchange="javascript:window.open('.$urlD.'+this.options[this.selectedIndex].value,\'_top\')">'."\n");
+	echo('<option value="0"'.(($filterD == 0)? ' selected' : '').'>všechny</option>'."\n");
+	$ii = 0;
+	foreach ( $g_racetype0 as $key => &$value )
+	{
+		$ii++; 
+		echo("<option value='".$ii."'".(($filterD==$ii)?' selected':'').">".$value."</option>\n");
+	}
+?>
+</select>
+</form>
+</td><td>&nbsp;&nbsp;</td><td>
+<form>
+Typ sportů&nbsp;
 <?
 	echo('<select name="fA" onchange="javascript:window.open('.$urlA.'+this.options[this.selectedIndex].value,\'_top\')">'."\n");
 	for($ii=0; $ii<count($filter_arr_niceA); $ii++)
@@ -391,7 +460,7 @@ Typ zobrazených závodů&nbsp;
 </form>
 </td><td>&nbsp;&nbsp;</td><td>
 <form>
-Zařazení zobrazených závodů&nbsp;
+Zařazení závodů&nbsp;
 <?
 	echo('<select name="fB" onchange="javascript:window.open('.$urlB.'+this.options[this.selectedIndex].value,\'_top\')">'."\n");
 	echo('<option value="0"'.(($filterB == 0)? ' selected' : '').'>všechny</option>'."\n");

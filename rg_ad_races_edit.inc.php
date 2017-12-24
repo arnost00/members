@@ -24,15 +24,16 @@ require_once ('./url.inc.php');
 $fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
 $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
 $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 1;  // old races - default is ON 
-$sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC);
+$fD = (IsSet($fD) && is_numeric($fD)) ? (int)$fD : 0;  // type 0
+$sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD);
 
 if (!$g_is_release)
 {	// pri debug zobrazit
-	@$vysledek=MySQL_Query("SELECT id,datum,typ,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto,modify_flag,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum , datum2, id');
+	@$vysledek=MySQL_Query("SELECT id,datum,typ,typ0,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto,modify_flag,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum , datum2, id');
 }
 else
 {
-	@$vysledek=MySQL_Query("SELECT id,datum,typ,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
+	@$vysledek=MySQL_Query("SELECT id,datum,typ,typ0,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
 }
 
 $data_tbl = new html_table_mc();
@@ -41,7 +42,8 @@ $data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
 $data_tbl->set_header_col_with_help($col++,'Poř.',ALIGN_CENTER,"Pořadatel");
-$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
+$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ akce");
+$data_tbl->set_header_col_with_help($col++,'S',ALIGN_CENTER,"Sport");
 $data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web závodu");
 $data_tbl->set_header_col_with_help($col++,'Kat',ALIGN_CENTER,"Zadané kategorie");
 $data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
@@ -78,6 +80,7 @@ if($vysledek && ($num_rows = mysql_num_rows($vysledek)) > 0)
 		$row[] = "<A href=\"javascript:open_race_info(".$zaznam['id'].")\" class=\"adr_name\">".$prefix.GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']).$suffix."</A>";
 		$row[] = $prefix.GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']).$suffix;
 		$row[] = $prefix.$zaznam['oddil'].$suffix;
+		$row[] = GetRaceType0($zaznam['typ0']);
 		$row[] = GetRaceTypeImg($zaznam['typ']);
 		$row[] = GetRaceLinkHTML($zaznam['odkaz']);
 		$row[] = (strlen($zaznam['kategorie']) > 0) ? 'A' :'<span class="TextAlertBold">N</span>';

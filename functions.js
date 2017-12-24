@@ -36,7 +36,7 @@ function open_win2(url,win_name)
 
 function open_race_info(id)
 {
-	nwin = window.open(def_race_url+id, '', 'toolbars=0, scrollbars=1, location=0, status=0, menubar=0, resizable=1, left=0, top=0, width=500, height=450');
+	nwin = window.open(def_race_url+id, '', 'toolbars=0, scrollbars=1, location=0, status=0, menubar=0, resizable=1, left=0, top=0, width=500, height=480');
 	nwin.focus();
 }
 

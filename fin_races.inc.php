@@ -11,9 +11,10 @@ require_once ('./url.inc.php');
 $fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
 $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
 $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 1;  // old races
-$sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC);
+$fD = (IsSet($fD) && is_numeric($fD)) ? (int)$fD : 0;  // type 0
+$sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD);
 
-@$vysledek=MySQL_Query("SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,nazev,oddil,ranking,typ,vicedenni,odkaz,misto,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
+@$vysledek=MySQL_Query("SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,nazev,oddil,ranking,typ0,typ,vicedenni,odkaz,misto,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
 
 @$result_amount=MySQL_Query("select id_zavod, sum(amount) amount from ".TBL_FINANCE." where storno is null group by id_zavod;");
 while ($rec=mysql_fetch_array($result_amount)) $race_amount[$rec["id_zavod"]]=$rec["amount"];
@@ -38,7 +39,8 @@ if ($num_rows > 0)
 	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
 	$data_tbl->set_header_col_with_help($col++,'Poř.',ALIGN_CENTER,"Pořadatel");
-	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ závodu");
+	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ akce");
+	$data_tbl->set_header_col_with_help($col++,'S',ALIGN_CENTER,"Sport");
 	$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Platba',ALIGN_CENTER);
 	
@@ -64,6 +66,7 @@ if ($num_rows > 0)
 		$row[] = "<A href=\"javascript:open_race_info(".$zaznam['id'].")\" class=\"adr_name\">".$prefix.GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']).$suffix."</A>";
 		$row[] = $prefix.GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']).$suffix;
 		$row[] = $prefix.$zaznam['oddil'].$suffix;
+		$row[] = GetRaceType0($zaznam['typ0']);
 		$row[] = GetRaceTypeImg($zaznam['typ']).'</A>';
 		$row[] = '<A HREF="javascript:open_win(\'./race_finance_view.php?race_id='.$zaznam['id'].'\',\'\')">Přehled</A>';
 		$row[] = isset($race_amount[$zaznam['id']])?$race_amount[$zaznam['id']]:"";
