@@ -60,6 +60,7 @@ else
 	$datum2=correct_sql_string($datum2);
 	$nazev=correct_sql_string($nazev);
 	$misto=correct_sql_string($misto);
+	$typ0=correct_sql_string($typ0);
 	$typ=correct_sql_string($typ);
 	$zebricek2=correct_sql_string($zebricek2);
 	$ranking=correct_sql_string($ranking);
@@ -78,7 +79,7 @@ else
 	if (!isset($accommodation))
 		$accommodation=0;
 	
-	$result=MySQL_Query("INSERT INTO ".TBL_RACE." (datum, datum2, nazev, misto, typ, zebricek, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, etap, poznamka, vicedenni, oddil, modify_flag, transport, ubytovani) VALUES ('$datum', '$datum2', '$nazev', '$misto', '$typ', '$zebricek2', '$ranking', '$odkaz', '$prihlasky', '$prihlasky1', '$prihlasky2', '$prihlasky3', '$prihlasky4', '$prihlasky5', '$etap', '$poznamka', '$vicedenni', '$oddil', '$modify_flag', '$transport', '$accommodation')")
+	$result=MySQL_Query("INSERT INTO ".TBL_RACE." (datum, datum2, nazev, misto, typ0, typ, zebricek, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, etap, poznamka, vicedenni, oddil, modify_flag, transport, ubytovani) VALUES ('$datum', '$datum2', '$nazev', '$misto', '$typ0', '$typ', '$zebricek2', '$ranking', '$odkaz', '$prihlasky', '$prihlasky1', '$prihlasky2', '$prihlasky3', '$prihlasky4', '$prihlasky5', '$etap', '$poznamka', '$vicedenni', '$oddil', '$modify_flag', '$transport', '$accommodation')")
 		or die("Chyba při provádění dotazu do databáze.");
 	if ($result == FALSE)
 		die ("Nepodařilo se vložit údaje o závodě.");

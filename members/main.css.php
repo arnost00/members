@@ -439,6 +439,37 @@ TABLE.calendar TD.today
 .amount {
 }
 
+.type0_Z {
+	color : <? echo $g_colors['r_type0_Z']; ?>;
+	font-weight : bold;
+}
+
+.type0_V {
+	color : <? echo $g_colors['r_type0_V']; ?>;
+	font-weight : bold;
+}
+
+.type0_S {
+	color : <? echo $g_colors['r_type0_S']; ?>;
+	font-weight : bold;
+}
+
+.type0_T {
+	color : <? echo $g_colors['r_type0_T']; ?>;
+	font-weight : bold;
+}
+
+.type0_N {
+	color : <? echo $g_colors['r_type0_N']; ?>;
+	font-weight : bold;
+}
+
+.type0_J {
+	color : <? echo $g_colors['r_type0_J']; ?>;
+	font-weight : bold;
+}
+
+
 <?
 if (!$g_is_release)
 {

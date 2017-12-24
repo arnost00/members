@@ -101,6 +101,7 @@ else
 	$datum2=correct_sql_string($datum2);
 	$nazev=correct_sql_string($nazev);
 	$misto=correct_sql_string($misto);
+	$typ0=correct_sql_string($typ0);
 	$typ=correct_sql_string($typ);
 	$zebricek2=correct_sql_string($zebricek2);
 	$ranking=correct_sql_string($ranking);
@@ -120,7 +121,7 @@ else
 	
 	$cancelled = !isset($cancelled)? 0: 1;
 
-	$result=MySQL_Query("UPDATE ".TBL_RACE." SET datum='$datum', datum2='$datum2', nazev='$nazev', misto='$misto', typ='$typ', zebricek='$zebricek2', ranking='$ranking', prihlasky='$prihlasky', odkaz='$odkaz', prihlasky1='$prihlasky1', prihlasky2='$prihlasky2', prihlasky3='$prihlasky3', prihlasky4='$prihlasky4', prihlasky5='$prihlasky5', etap='$etap', poznamka='$poznamka', oddil='$oddil', modify_flag='$modify_flag', transport='$transport',  ubytovani='$accommodation', cancelled='$cancelled' WHERE id='$id'")
+	$result=MySQL_Query("UPDATE ".TBL_RACE." SET datum='$datum', datum2='$datum2', nazev='$nazev', misto='$misto', typ0='$typ0', typ='$typ', zebricek='$zebricek2', ranking='$ranking', prihlasky='$prihlasky', odkaz='$odkaz', prihlasky1='$prihlasky1', prihlasky2='$prihlasky2', prihlasky3='$prihlasky3', prihlasky4='$prihlasky4', prihlasky5='$prihlasky5', etap='$etap', poznamka='$poznamka', oddil='$oddil', modify_flag='$modify_flag', transport='$transport',  ubytovani='$accommodation', cancelled='$cancelled' WHERE id='$id'")
 		or die("Chyba při provádění dotazu do databáze.");
 	if ($result == FALSE)
 		die ("Nepodařilo se změnit údaje o závodě.");
