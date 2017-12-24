@@ -433,7 +433,7 @@ if (mysql_num_rows($vysledek_m) > 0)
 		// generuje zasilani emailu kdyz je potreba
 		if ($send_email)
 		{
-			echo('<b>Send email to user.</b><br>');
+			echo('<b>Send email to user ('.$zaznam_m['email'].').</b><br>');
 			$full_msg .= DIV_LINE.EMAIL_ENDL;
 			$full_msg .= 'Vygenerováno dne '.Date2String($curr_date).EMAIL_ENDL;
 			$full_msg .= 'Změnu a případné zrušení zasílaných informací provedete přes přihláškový systém oddílu '.$g_shortcut.'.'.EMAIL_ENDL;
