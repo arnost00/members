@@ -392,16 +392,16 @@ if (mysql_num_rows($vysledek_m) > 0)
 			$fin = (isset($finance[$zaznam_m['id_user']])) ? $finance[$zaznam_m['id_user']] : FALSE;
 			if ($fin != FALSE && is_array($fin))
 			{
-				if ((($zaznam_m['fin_type'] & $g_fin_mail_flag [1]['id']) != 0) && $fin['sum_amount'] < 0)
+				if ((($zaznam_m['fin_type'] & $g_fin_mail_flag [1]['id']) != 0) && $fin['fin_total'] < 0)
 				{	// stav je v minusu
 					$send_email = true;
-					$full_msg .= 'Tvůj zůstatek na oddílovém účtu poklesl do záporu, a činí '.$fin['sum_amount'].',-'.EMAIL_ENDL;
+					$full_msg .= 'Tvůj zůstatek na oddílovém účtu poklesl do záporu, a činí '.$fin['fin_total'].',-'.EMAIL_ENDL;
 					$full_msg .= EMAIL_ENDL;
 				}
-				else if ((($zaznam_m['fin_type'] & $g_fin_mail_flag [0]['id']) != 0) && $fin['sum_amount'] < $zaznam_m['fin_limit'])
+				else if ((($zaznam_m['fin_type'] & $g_fin_mail_flag [0]['id']) != 0) && $fin['fin_total'] < $zaznam_m['fin_limit'])
 				{	// stav je pod hranici
 					$send_email = true;
-					$full_msg .= 'Tvůj zůstatek na oddílovém účtu poklesl pod definovanou hranici, a činí '.$fin['sum_amount'].',-'.EMAIL_ENDL;
+					$full_msg .= 'Tvůj zůstatek na oddílovém účtu poklesl pod definovanou hranici, a činí '.$fin['fin_total'].',-'.EMAIL_ENDL;
 					$full_msg .= EMAIL_ENDL;
 				}
 			}
@@ -413,9 +413,9 @@ if (mysql_num_rows($vysledek_m) > 0)
 			$uz = 0;
 			foreach($finance as $fin)
 			{
-				if ($fin['fin'] < 0)
+				if ($fin['fin_total'] < 0)
 				{	// pridej clena jez je v zapornem zustatku
-					$uz_dta[] = $fin['prijmeni'].' '.$fin['jmeno'].' ('.$fin['fin'].')';
+					$uz_dta[] = $fin['prijmeni'].' '.$fin['jmeno'].' ('.$fin['fin_total'].')';
 					$uz++;
 				}
 			}

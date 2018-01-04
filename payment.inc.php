@@ -147,13 +147,16 @@ function recalculateHistory($user_id)
 
 /*
  * vrati pole zustatku pro vsechny uzivatele
- * sloupce ve vracenem poli : id, fin, prijmeni, jmeno
+ * sloupce ve vracenem poli : id, fin_total, prijmeni, jmeno
 */
 function getAllUsersCurrentBalance()
-{	// priprava ... vraci sloupec fin z user ... prepsat na opravdovy zustatek !!!
-
-	$query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob, ifnull(sum(f.amount),0) sum_amount FROM '.TBL_USER.' u 
-		left join '.TBL_FINANCE.' f on u.id=f.id_users_user where f.storno is null group by u.id ';
+{
+	$query = 'SELECT u.id, hidden, prijmeni,jmeno, ifnull(f.sum_amount,0) sum_amount, (n.amount+f.sum_amount) total_amount, u.chief_pay FROM '.TBL_USER.' u 
+		left join (select sum(fin.amount) sum_amount, id_users_user from '.TBL_FINANCE.' fin where (fin.storno is null) group by fin.id_users_user) f on u.id=f.id_users_user 
+		left join (select ui.chief_pay payer_id, ifnull(sum(fi.amount),0) amount from '.TBL_USER.' ui 
+		left join '.TBL_FINANCE.' fi on fi.id_users_user = ui.id where ui.chief_pay is not null and (fi.storno is null or fi.storno != 1) group by ui.chief_pay) n on u.id=n.payer_id 
+		left join '.TBL_FINANCE_TYPES.' ft on ft.id = u.finance_type
+		group by u.id ORDER BY u.`sort_name` ASC;';
 		
 	$vysl=MySQL_Query($query);
 	$data = array();
@@ -161,12 +164,24 @@ function getAllUsersCurrentBalance()
 	{
 		while ($zazn=MySQL_Fetch_Array($vysl))
 		{
-			$data[$zazn['id']] = $zazn;
+			if (($zazn['chief_pay']>0 && $zazn['chief_pay']<>$zazn['id']) || $zazn['hidden'])
+			{
+				// pokud za nej plati nekdo jiny, vubec nebrat v potaz !
+				// nebo pokud je skryt
+			}
+			else
+			{
+				$data[$zazn['id']] = $zazn;
+				$data[$zazn['id']]['fin_total'] = $zazn['sum_amount'];
+				
+				if ($zazn['total_amount'] != null )
+					$data[$zazn['id']]['fin_total'] = $zazn['total_amount'];
+			}
 		}
 	}
 	else
 		return array();
-
+	
 	return $data;
 }
 
