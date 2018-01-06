@@ -120,14 +120,7 @@ function GetCurrentDate()
 		return $date;
 	}
 }
-/*
-::	not used
-function GetCurrentDateTime()
-{
-	$date=date("U");
-	return $date;
-}
-*/
+
 function SQLDate2String($date)
 {
 	$dat=explode("-",$date);
@@ -164,18 +157,6 @@ function _todays($value)
 	return round($value / 86400);
 }
 
-/*
-::	obsolete
-function GetTimeDiff($t_z,$t_p)
-//	Parameters:
-//		t_z - datum zavodu
-//		t_p - datum prihlasek
-//		180 - cca pul roku
-{
-	return (($t_p > $t_z) || (_todays($t_z - $t_p) > 180)) ? false : true;
-}
-*/
-
 function GetTimeToRace($t_z)
 //	Parameters:
 //		t_z - datum zavodu
@@ -186,12 +167,6 @@ function GetTimeToRace($t_z)
 	else if ($diff < 0)
 		$diff = -1;
 	return $diff;
-/*
-::	old code
-	$diff = _todays($t_z - GetCurrentDate());
-	if ($diff < -1) $diff = -1;
-	return $diff;
-*/
 }
 
 function GetTimeToReg($t_p)
@@ -206,12 +181,6 @@ function GetTimeToReg($t_p)
 	else if ($diff < 0)
 		$diff = -1;
 	return $diff;
-/*
-::	old code
-	$diff = _todays($t_p - GetCurrentDate());
-	if ($diff < -1) $diff = -1;
-	return $diff;
-*/
 }
 
 function IncDate($t_b,$t_i)
@@ -354,14 +323,6 @@ function GetRaceLinkHTML($link,$img=true)
 	else
 		$odkaz = ($img) ? '' : '-';
 	return $odkaz;
-/*
-::	old code
-		if ($link != '' && $link != 'www..cz')
-			$odkaz = '<A href="'.cononize_url($link,1).'" target="_blank"><img src="imgs/web.gif" border="0" align="middle"></A>';
-		else
-			$odkaz = "";
-	return $odkaz;
-*/
 }
 
 function GetPhpVersion()
