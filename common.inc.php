@@ -154,7 +154,7 @@ function SQLDate2StringReg($date)
 
 function _todays($value)
 {	// 86400 = 60 * 60 *24
-	return round($value / 86400);
+	return floor($value / 86400);
 }
 
 function GetTimeToRace($t_z)
@@ -176,12 +176,27 @@ function GetTimeToReg($t_p)
 	$t_p += (25*60*60); //+(25*60*60) - posun terminu prihlasek o 2 hodiny navic, kvuli time() ktery vraci UTC je tam +25 hodin
 //	$diff = (int)(($t_p) - GetCurrentDate());  // puvodni pred pridanim 2 hodin navic
 	$diff = (int)(($t_p) - time());
+//	echo('['.$diff.']');
 	if ($diff > 0)
 		$diff = _todays($diff);
 	else if ($diff < 0)
 		$diff = -1;
 	return $diff;
 }
+
+function GetTimeToReg_old($t_p)
+//	Parameters:
+//		t_p - datum prihlasek
+{
+	$diff = (int)(($t_p) - GetCurrentDate());
+//	echo('['.$diff.']');
+	if ($diff > 0)
+		$diff = _todays($diff);
+	else if ($diff < 0)
+		$diff = -1;
+	return $diff;
+}
+
 
 function IncDate($t_b,$t_i)
 //	Parameters:
