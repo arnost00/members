@@ -69,14 +69,6 @@ class CLogMe
 	}
 }
 
-function IsValilEmail($email)
-{
-	if ($email != '')
-	{
-		return true;
-	}
-	return false;
-}
 function ClearAllModifyFlags()
 {
 	$query='UPDATE '.TBL_RACE." SET modify_flag='0'";
@@ -225,7 +217,7 @@ if (mysql_num_rows($vysledek_m) > 0)
 	while ($zaznam_m=MySQL_Fetch_Array($vysledek_m))
 	{
 		$cnt_tested++;
-/*		
+/*
 		echo('Email - '.$zaznam_m['email'].'<br>');
 //		print_r($zaznam_m);
 		echo(' | ');
@@ -234,8 +226,6 @@ if (mysql_num_rows($vysledek_m) > 0)
 		echo GetZebricekName2($zaznam_m['sub_type']);
 		echo("<br>\n");
 */		
-		if (!IsValilEmail($zaznam_m['email']))
-			continue;
 		$send_email = false;
 		$full_msg = 'Vybrané informace o termínech a změnách v příhláškovém systému '.$g_shortcut.EMAIL_ENDL;
 		$full_msg .= DIV_LINE.EMAIL_ENDL.EMAIL_ENDL;
@@ -439,8 +429,13 @@ if (mysql_num_rows($vysledek_m) > 0)
 			$full_msg .= 'Změnu a případné zrušení zasílaných informací provedete přes přihláškový systém oddílu '.$g_shortcut.'.'.EMAIL_ENDL;
 			$full_msg .= 'Nejlépe přímo na adrese '.$g_baseadr.EMAIL_ENDL;
 			
-			GenerateEmail($zaznam_m['email'],$full_msg);
-			$cnt_send++;
+			$emails = GetAllEmails($zaznam_m['email']);
+
+			foreach ($emails as $item)
+			{
+				GenerateEmail($item,$full_msg);
+				$cnt_send++;
+			}
 		}
 	}
 	

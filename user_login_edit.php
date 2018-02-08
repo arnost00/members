@@ -210,7 +210,7 @@ require_once ('generators.inc.php');
 <TR name="acc_email_hide" id="acc_email_hide">
 	<TD width="30%" align="right">Email pro zaslání údajů:</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="email" VALUE="<?echo $zaznam["email"]?>" SIZE="40"></TD>
+	<TD><INPUT TYPE="text" NAME="email" VALUE="<?echo GetFirstEmail($zaznam["email"]);?>" SIZE="40"></TD>
 </TR>
 <TR name="acc_email_hide" id="acc_email_hide">
 	<TD colspan="3">&nbsp;</TD>
@@ -270,7 +270,7 @@ if($zaznam2 != FALSE)
 <TR name="pass_email_hide" id="pass_email_hide">
 	<TD width="30%" align="right">Email pro zaslání údajů:</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="email" VALUE="<?echo $zaznam["email"]?>" SIZE="40"></TD>
+	<TD><INPUT TYPE="text" NAME="email" VALUE="<?echo GetFirstEmail($zaznam["email"]);?>" SIZE="40"></TD>
 </TR>
 <TR name="pass_email_hide" id="pass_email_hide">
 	<TD colspan="3">&nbsp;</TD>
