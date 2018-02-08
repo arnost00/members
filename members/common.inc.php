@@ -491,6 +491,44 @@ function SendEmail($FromName, $FromA,$ToName,$ToA,$msg,$subject)
 }
 //--------------------------------------------------------
 
+function IsValidEmail($email)
+{
+	if ($email != '')
+	{
+		return filter_var($email, FILTER_VALIDATE_EMAIL);
+	}
+	return false;
+}
+//--------------------------------------------------------
+function __prepare_email($email)
+{
+	$email = str_replace("(at)","@",$email);
+	$data = preg_split('/[;, ]/',$email, -1, PREG_SPLIT_NO_EMPTY);
+	$data1 = array();
+	foreach( $data as $item )
+	{
+		if (IsValidEmail($item))
+			$data1[] = $item;
+	}
+	return $data1;
+}
+
+//--------------------------------------------------------
+function GetFirstEmail($email)
+{
+	$data = __prepare_email($email);
+	if (sizeof($data) > 0)
+		return $data[0];
+	else
+		return '';
+}
+//--------------------------------------------------------
+function GetAllEmails($email)
+{
+	return __prepare_email($email);
+}
+//--------------------------------------------------------
+
 function GetFormatedTextDel(&$text, $cancelled = false)
 {
 	$result = '';
