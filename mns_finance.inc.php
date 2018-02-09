@@ -74,7 +74,7 @@ function showNursechildAndFamilyTables($vysledek, $sc, $showTotal)
 			$zaznam['sum_amount']<0?$class="red":$class="";
 			$row[] = "<span class='amount$class'>".$zaznam['sum_amount']."</span>";
 			$row[] = ($zaznam['nazev'] != null)? $zaznam['nazev'] : '-';
-			$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['id'].'\',\'\')">Přehled</A>';
+			$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['id'].'&id_from='.$zaznam['id'].'\',\'\')">Přehled</A>';
 			$row[] = $row_text;
 			echo $data_tbl->get_new_row_arr($row)."\n";
 		}
