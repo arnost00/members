@@ -397,6 +397,9 @@ function HTML_Header($title,$style_file = '', $body_addons = '',$head_addons = '
 	<link rel="alternate" type="application/rss+xml" title="RSS export" href="rss.php" />
 	<link rel="icon" href="favicon.ico" type="image/x-icon" />
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+	
+	<link rel="StyleSheet" href="tiny-date-picker.css" type="text/css">
+	
 	<title><? echo($title); ?></title>
 <?
 echo("\t".'<meta name="generator" content="'.SYSTEM_NAME.' '.GetCodeVersion().'">'."\n");

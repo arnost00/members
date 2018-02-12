@@ -28,6 +28,20 @@ function confirm_entry_unlock(name) {
 //-->
 </script>
 
+<form action="">
+<input type="hidden" name="id" value="800"/>
+<input type="hidden" name="subid" value="1"/>
+<input type="text" class="tiny-date-picker" name="dateTo" id="dateTo" value="<?=isset($_GET['dateTo'])?$_GET['dateTo']:""?>"/>
+<input type="submit" value="Zobraz zustatky k datu"/>
+</form>
+<script src="tiny-date-picker.js"></script>
+<script>
+      TinyDatePicker('.tiny-date-picker', {
+        mode: 'dp-below',
+      });
+</script>
+
+
 <?
 require_once "./common_user.inc.php";
 require_once('./csort.inc.php');
@@ -38,8 +52,10 @@ $sc->add_column('reg','');
 $sc->set_url('index.php?id=800&subid=1',true);
 $sub_query = $sc->get_sql_string();
 
+$finance_dateTo_condition = isset($_GET["dateTo"])?' and date <= "'.$_GET["dateTo"].'"':"";
+
 $query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,entry_locked, ifnull(f.sum_amount,0) sum_amount, (n.amount+f.sum_amount) total_amount, u.chief_pay, ft.nazev, ft.popis FROM '.TBL_USER.' u 
-		left join (select sum(fin.amount) sum_amount, id_users_user from '.TBL_FINANCE.' fin where (fin.storno is null) group by fin.id_users_user) f on u.id=f.id_users_user 
+		left join (select sum(fin.amount) sum_amount, id_users_user from '.TBL_FINANCE.' fin where (fin.storno is null '.$finance_dateTo_condition.') group by fin.id_users_user) f on u.id=f.id_users_user 
 		left join (select ui.chief_pay payer_id, ifnull(sum(fi.amount),0) amount from '.TBL_USER.' ui 
 		left join '.TBL_FINANCE.' fi on fi.id_users_user = ui.id where ui.chief_pay is not null and (fi.storno is null or fi.storno != 1) group by ui.chief_pay) n on u.id=n.payer_id 
 		left join '.TBL_FINANCE_TYPES.' ft on ft.id = u.finance_type
