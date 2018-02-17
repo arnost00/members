@@ -23,7 +23,7 @@ require_once ('./url.inc.php');
 
 $fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
 $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
-$fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 1;  // old races - default is ON 
+$fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 0;  // old races - default is OFF
 $fD = (IsSet($fD) && is_numeric($fD)) ? (int)$fD : 0;  // type 0
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD);
 
