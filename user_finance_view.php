@@ -11,8 +11,6 @@ if (!IsLoggedSmallManager() && !IsLoggedManager() && !IsLoggedFinance())
 	exit;
 }
 
-//$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
-
 db_Connect();
 
 require_once ("./common.inc.php");
@@ -26,10 +24,17 @@ if (IsSet($payment) && IsLogged())
  	
  	if ($payment == "both" && $id_to != -1)
  	{
+		//pridani informace, kdo komu penize poslal, pridava se do poznamky
+		$select = "select sort_name name from ".TBL_USER." where id in (".$id_from.", ".$id_to.")";
+		$vysledek_name_from_name_to = MySQL_Query($select);
+		$zaznam_from = MySQL_Fetch_Array($vysledek_name_from_name_to);
+		$zaznam_to = MySQL_Fetch_Array($vysledek_name_from_name_to);
+		$note_from_to = " <i>[".$zaznam_from['name']."->".$zaznam_to['name']."]</i> ";
+		
  		//odecist penize z uctu ODKUD
- 		createPayment($id_from, $id_from, -$amount, $note, null, null);
+ 		createPayment($id_from, $id_from, -$amount, $note_from_to.$note, null, null);
  		//pripsat penize na ucet KOMU
- 		createPayment($id_from, $id_to, $amount, $note, null, null);
+ 		createPayment($id_from, $id_to, $amount, $note_from_to.$note, null, null);
  	}
 	if ($payment == "out" or $payment == "in")
 	{
