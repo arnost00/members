@@ -68,7 +68,7 @@ if (!defined('PHP_GLOBAL_COLORS_INCLUDED'))
 	$g_colors['warning_text'] = '#FF0000';
 
 	$g_colors['footer_text'] = '#C0C0C0';
-	$g_colors['version_text'] = '#663300';
+	$g_colors['version_text'] = '#FFCC99';
 
 	$g_colors['result_text'] = '#FFCCFF';
 
@@ -76,13 +76,13 @@ if (!defined('PHP_GLOBAL_COLORS_INCLUDED'))
 // table colors
 //==================================================================
 
-	$g_colors['table_header'] = '#333300';
-	$g_colors['table_row1'] = '#DDDDFF';
-	$g_colors['table_row2'] = '#EEEEFF';
+	$g_colors['table_header'] = '#DDDD33';//'#333300';
+	$g_colors['table_row1'] = '#EEEEFF';//'#DDDDFF';
+	$g_colors['table_row2'] = '#F9F9FF';//'#EEEEFF';
 	$g_colors['table_row_highlight'] = '#441100';
-	$g_colors['table_row_select'] = '#AAAACC';
-	$g_colors['table_text'] = '#000066';
-	$g_colors['table_text_header'] = '#CCCC33';
+	$g_colors['table_row_select'] = '#aaaaff'; //'#AAAACC';
+	$g_colors['table_text'] = '#000033';
+	$g_colors['table_text_header'] = '#330000';//'#CCCC33';
 	$g_colors['table_text_highlight'] = '#FF66FF';
 
 	$g_colors['table_cal_border'] = '#AAAA33';
