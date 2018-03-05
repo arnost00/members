@@ -36,7 +36,7 @@ require_once ('url.inc.php');
 
 $curr_date = GetCurrentDate();
 
-$query="SELECT id,datum,typ,datum2,nazev,vicedenni,odkaz,oddil,misto,modify_flag,cancelled FROM ".TBL_RACE.' ORDER BY datum, datum2, id';
+$query="SELECT id,datum,typ,datum2,nazev,vicedenni,odkaz,oddil,misto,modify_flag,cancelled FROM ".TBL_RACE.' WHERE datum >= '.$curr_date.' ORDER BY datum, datum2, id';
 
 @$vysledek=MySQL_Query($query);
 

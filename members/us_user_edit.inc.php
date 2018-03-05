@@ -26,7 +26,7 @@ require_once ("./common_user.inc.php");
 
 <?
 //pridani formulare pro moznost zaskrtnuti placeni trenerem
-$return_url = 'http://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+$return_url = $_SERVER["REQUEST_SCHEME"].'://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
 $return_url = parse_url($return_url, PHP_URL_QUERY);
 
 $user_id = $usr->user_id;

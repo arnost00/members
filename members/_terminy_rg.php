@@ -41,7 +41,7 @@ $curr_date = GetCurrentDate();
 
 $d1 = $curr_date;
 
-$query="SELECT id,datum,typ,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,nazev,vicedenni,odkaz,vedouci, oddil,send,misto, cancelled FROM ".TBL_RACE.' WHERE datum >= '.$d1.' || datum2 >= '.$d1.' ORDER BY datum, datum2, id';
+$query="SELECT id,datum,typ,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,nazev,vicedenni,odkaz,vedouci, oddil,send,misto,cancelled,typ0 FROM ".TBL_RACE.' WHERE datum >= '.$d1.' || datum2 >= '.$d1.' ORDER BY datum, datum2, id';
 
 @$vysledek=MySQL_Query($query);
 
@@ -52,6 +52,8 @@ if (mysql_num_rows($vysledek) > 0)
 	echo('<th rowspan=2>Datum</th>');
 	echo('<th rowspan=2>Název</th>');
 	echo('<th rowspan=2>Poř.</th>');
+	echo('<th rowspan=2>T</th>');
+	echo('<th rowspan=2>S</th>');
 	echo('<th rowspan=2>W</th>');
 	echo('<th colspan=2>Termín přihlášek</th>');
 	echo('<th rowspan=2>OP</th>');
@@ -103,6 +105,8 @@ if (mysql_num_rows($vysledek) > 0)
 		echo('<td class="center">'.$datum.'</td>');
 		echo('<td>'.$nazev.'</td>');
 		echo('<td class="center">'.$oddil.'</td>');
+		echo('<td class="center">'.GetRaceType0($zaznam['typ0']).'</td>');
+		echo('<td class="center">'.GetRaceTypeImg($zaznam['typ']).'</td>');
 		echo('<td class="center">'.$odkaz.'</td>');
 		echo('<td class="'.$termin_class.'">'.$termin.'</td>');
 		echo('<td class="'.$termin2_class.'">'.$termin2.'</td>');
