@@ -51,6 +51,8 @@ if (IsSet($payment) && IsSet($user_id) && IsSet($id_to) && IsSet($amount) && $id
 	
 	if ($can_send)
 	{
+		//pridani informace, kdo komu penize poslal, pridava se do poznamky
+		$note = createFinanceNoteFromTo($id_from, $id_to).$note;
 		//odecist penize z uctu ODKUD
 		createPayment($id_from, $id_from, -$amount, $note, null, null);
 		//pripsat penize na ucet KOMU

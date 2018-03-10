@@ -9,12 +9,6 @@
 //vytazeni jmena uzivatele a typu prispevku
 $vysledek_user_name=MySQL_Query("select us.sort_name name, ft.nazev ft_nazev from ".TBL_USER." us LEFT JOIN ".TBL_FINANCE_TYPES." ft ON us.finance_type = ft.id where us.id = ".$user_id);
 $zaznam_user_name=MySQL_Fetch_Array($vysledek_user_name);
-/*
-select us.sort_name name, ft.nazev ft_nazev from users us 
-LEFT JOIN  finance_types ft 
-ON us.finance_type = ft.id
-where us.id = '1'
-*/
 
 DrawPageSubTitle('Historie účtu pro člena: '.$zaznam_user_name['name']);
 
