@@ -185,4 +185,16 @@ function getAllUsersCurrentBalance()
 	return $data;
 }
 
+/*
+ * pridani informace, kdo komu penize poslal, pridava se do poznamky
+*/
+function createFinanceNoteFromTo($lid_from, $lid_to)
+{
+		$select = "select sort_name name from ".TBL_USER." where id in (".$lid_from.", ".$lid_to.")";
+		$vysledek_name_from_name_to = MySQL_Query($select);
+		$zaznam_from = MySQL_Fetch_Array($vysledek_name_from_name_to);
+		$zaznam_to = MySQL_Fetch_Array($vysledek_name_from_name_to);
+		return " <i>[".$zaznam_from['name']."->".$zaznam_to['name']."]</i> ";
+}
+
 ?>
