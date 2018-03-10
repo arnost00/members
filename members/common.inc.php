@@ -557,5 +557,11 @@ function mb_str_pad(
       $pad_string,
       $pad_style);
 }
+//--------------------------------------------------------
+
+function full_url()
+{
+	return 'http'.(isset($_SERVER["HTTPS"]) ? 's' : '').'://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+}
 
 ?>

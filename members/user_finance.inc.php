@@ -108,7 +108,7 @@ echo $data_tbl->get_footer()."\n";
 
 
 //------------ formular pro prevod financi mezi cleny
-$return_url = $_SERVER["REQUEST_SCHEME"].'://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]; 
+$return_url = full_url();
 $return_url = parse_url($return_url, PHP_URL_QUERY);
 require_once 'user_finance_transfer_form.inc.php';
 

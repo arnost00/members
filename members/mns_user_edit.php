@@ -46,7 +46,7 @@ DrawPageTitle('Členská základna - Editace uživatele');
 
 <?
 //pridani formulare pro moznost zaskrtnuti placeni trenerem
-$return_url = $_SERVER["REQUEST_SCHEME"].'://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+$return_url = full_url();
 $return_url = parse_url($return_url, PHP_URL_QUERY);
 
 $user_id = $id;
