@@ -190,7 +190,8 @@ function getAllUsersCurrentBalance()
 */
 function createFinanceNoteFromTo($lid_from, $lid_to)
 {
-		$select = "select sort_name name from ".TBL_USER." where id in (".$lid_from.", ".$lid_to.")";
+		//nutno delat spojenim 2 selectu, aby bylo zachovano poradi na vystupu nejdrive from a pote to
+		$select = "SELECT sort_name name FROM ".TBL_USER." WHERE id = $lid_from UNION SELECT sort_name name FROM ".TBL_USER." WHERE id = $lid_to";
 		$vysledek_name_from_name_to = MySQL_Query($select);
 		$zaznam_from = MySQL_Fetch_Array($vysledek_name_from_name_to);
 		$zaznam_to = MySQL_Fetch_Array($vysledek_name_from_name_to);
