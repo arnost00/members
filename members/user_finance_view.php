@@ -29,9 +29,9 @@ if (IsSet($payment) && IsLogged())
 		$note = createFinanceNoteFromTo($id_from, $id_to).$note;
 		
  		//odecist penize z uctu ODKUD
- 		createPayment($id_from, $id_from, -$amount, $note, null, null);
+ 		createPayment($editor_id, $id_from, -$amount, $note, null, null);
  		//pripsat penize na ucet KOMU
- 		createPayment($id_from, $id_to, $amount, $note, null, null);
+ 		createPayment($editor_id, $id_to, $amount, $note, null, null);
  	}
 	if ($payment == "out" or $payment == "in")
 	{
