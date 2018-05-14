@@ -186,7 +186,7 @@ else
 {
 ?>
 <INPUT TYPE="submit" value="Změnit údaje">
-&nbsp;&nbsp;&nbsp;&nbsp;<BUTTON onclick="return submit_off();">Odhlásit za závodu</BUTTON>
+&nbsp;&nbsp;&nbsp;&nbsp;<BUTTON onclick="return submit_off();">Odhlásit ze závodu</BUTTON>
 <?
 }
 ?>
