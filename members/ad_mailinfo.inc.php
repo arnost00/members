@@ -52,7 +52,8 @@ while ($zaznam=MySQL_Fetch_Array($vysl))
 		$err = true;
 	}
 	$email_info = '<code>';
-	$email_info .= ($zaznam['active_tf'])? 't' : '.';
+	$email_info .= ($zaznam['active_news'])? 'N' : '.';
+	$email_info .= ($zaznam['active_tf'])? ' t' : ' .';
 	$email_info .= ($zaznam['active_ch'])? ' Z' : ' .';
 	$email_info .= ($zaznam['active_rg'])? ' T' : ' .';
 	if ($g_enable_finances)

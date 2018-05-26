@@ -67,6 +67,7 @@ if ($zaznam == FALSE)
 	$zaznam['active_finf'] = 0;
 	$zaznam['fin_type'] = 0;
 	$zaznam['fin_limit'] = 0;
+	$zaznam['active_news'] = 0;
 }
 ?>
 
@@ -76,6 +77,12 @@ if ($zaznam == FALSE)
 	<TD width="40%" align="right">Email</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="email" SIZE=20 VALUE="<? echo $zaznam["email"]; ?>"></TD>
+</TR>
+<TR>
+	<TD colspan="3"><br><hr></TD>
+</TR>
+<TR>
+	<TD colspan="3" style="padding-left:20px;"><input type="checkbox" name="active_news" value="1" id="anews" <? echo(($zaznam['active_news'])?' checked':'')?>><label for="active_news">Přidané novinky</label></TD>
 </TR>
 <TR>
 	<TD colspan="3"><br><hr></TD>

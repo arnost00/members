@@ -33,6 +33,9 @@ if($cnt > 0)
 ?>
 <TABLE width="100%">
 <?
+
+include ('common_news.inc.php');
+
 	if ( IsLoggedAdmin() )
 	{
 		echo '<TR><TD></TD><TD class="LastDate">';
@@ -45,17 +48,7 @@ if($cnt > 0)
 
 	while ($zaznam=MySQL_Fetch_Array($vysledek))
 	{
-		$datum = Date2String($zaznam['datum']);
-		echo '<TR><TD class="NewsItemDate">'.$datum.'&nbsp;&nbsp;</TD>';
-		if ($zaznam['nadpis']!='') echo '<TD class="NewsItemTitle">'.$zaznam['nadpis'].' </TD></TR><TR><TD></TD>';
-		$name_id = $zaznam['id_user'];
-
-		echo '<TD class="NewsItem">'.$zaznam['text'];
-		if ($name_id && $zaznam['podpis'] != '' && $name_id != $g_www_admin_id)
-			echo '&nbsp;<span class="NewsAutor">[&nbsp;'.$zaznam['podpis'].'&nbsp;]</span>';
-		if ( ($usr->account_id == $name_id) || IsLoggedAdmin() )
-			echo '<span class="DisableText">&nbsp;&nbsp;(&nbsp;<A HREF="./news_edit.php?id='.$zaznam['id'].'" class="NewsEdit">Editovat</A>&nbsp;/&nbsp;<A HREF="./news_del_exc.php?id='.$zaznam['id'].'" onclick="return confirm_delete(\''.$datum.'\')" class="NewsErase">Smazat</A>&nbsp;)</span>';
-		echo '</TD></TR>';
+		PrintNewsItem($zaznam,IsLoggedAdmin(),$usr,false);
 	}
 //	news_sh
 ?>

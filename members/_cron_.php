@@ -71,13 +71,27 @@ class CLogMe
 
 function ClearAllModifyFlags()
 {
+	$done = 0;
 	$query='UPDATE '.TBL_RACE." SET modify_flag='0'";
 	$result=MySQL_Query($query)
 		or die("Chyba při provádění dotazu do databáze.");
 	if ($result == FALSE)
 		echo("Nepodařilo se změnit údaje o upozorňování.\n");
-	else	
+	else
+		$done++;
+	
+	$query='UPDATE '.TBL_NEWS." SET modify_flag='0'";
+	$result=MySQL_Query($query)
+		or die("Chyba při provádění dotazu do databáze.");
+	if ($result == FALSE)
+		echo("Nepodařilo se změnit údaje o upozorňování.\n");
+	else
+		$done++;
+
+	if (done == 2)
 		echo("Modify flags cleared.\n");
+	else
+		echo("Modify flags partially cleared.\n");
 }
 
 function MatchRaceType($race_val,$notify_val)
@@ -146,6 +160,19 @@ function GetMailRaceInfoLine(&$zaznam)
 	return $datum.' / '.$nazev.' / '.$oddil.$cancelled;
 }
 
+function GetMailNewsLine(&$zaznam)
+{
+	$item=Date2String($zaznam['datum']);
+	if ($zaznam['nadpis'] != '')
+		$item.= ' / '.$zaznam['nadpis'];
+	$item.= ' / ';
+	if ($zaznam['internal'])
+		$item.='- interní novinka -';
+	else
+		$item.= EMAIL_ENDL.$zaznam['text'];
+	return $item;
+}
+
 function GenerateEmail(&$ToA,&$msg)
 {	// send info mail
 	global $g_emailadr, $g_fullname;
@@ -195,9 +222,11 @@ $logme->writeline('Processing date: '.Date2String($curr_date));
 $d1 = $curr_date;
 $query_m='SELECT * FROM '.TBL_MAILINFO.' ORDER BY `id`';
 $query_r='SELECT * FROM '.TBL_RACE.' WHERE datum >= '.$curr_date.' AND (prihlasky > 0 OR modify_flag > 0) ORDER BY datum';
+$query_n='SELECT * FROM '.TBL_NEWS.' WHERE modify_flag > 0 ORDER BY datum';
 
 $vysledek_m=MySQL_Query($query_m);
 $vysledek_r=MySQL_Query($query_r);
+$vysledek_n=MySQL_Query($query_n);
 
 $cnt_send = $cnt_tested = 0;
 if (mysql_num_rows($vysledek_m) > 0)
@@ -208,6 +237,15 @@ if (mysql_num_rows($vysledek_m) > 0)
 		while ($zaznam_r=MySQL_Fetch_Array($vysledek_r))
 		{
 			$races[] = $zaznam_r;
+		}
+	}
+
+	$news = array();
+	if (mysql_num_rows($vysledek_n) > 0)
+	{
+		while ($zaznam_n=MySQL_Fetch_Array($vysledek_n))
+		{
+			$news[] = $zaznam_n;
 		}
 	}
 
@@ -230,6 +268,28 @@ if (mysql_num_rows($vysledek_m) > 0)
 		$full_msg = 'Vybrané informace o termínech a změnách v příhláškovém systému '.$g_shortcut.EMAIL_ENDL;
 		$full_msg .= DIV_LINE.EMAIL_ENDL.EMAIL_ENDL;
 
+		if ($zaznam_m['active_news'])
+		{
+			// zmena novinek
+			$active = false;
+			$lines = array();
+			for($ii = 0; $ii < sizeof($news); $ii++)
+			{
+					if ($news[$ii]['modify_flag'] > 0) 
+					{
+						$active = $send_email = true;
+						$lines[] = GetMailNewsLine($news[$ii]);
+					}
+				}
+				if($active) // add to msg
+				{
+					$full_msg .= 'Přidána nebo změněna novinka: '.EMAIL_ENDL;
+					for ($jj = 0; $jj < sizeof($lines); $jj++)
+						$full_msg .= ' * '.$lines[$jj].EMAIL_ENDL;
+					$full_msg .= EMAIL_ENDL;
+				}
+			
+		}
 		if ($zaznam_m['active_tf'])
 		{
 			$active = false;
