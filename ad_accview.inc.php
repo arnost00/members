@@ -45,7 +45,7 @@ while ($list_z=MySQL_Fetch_Array($list_v))
 		if ($zaznam == FALSE)
 		{
 			$ei = 'Ne';
-			$email_info = '<code>. . .';
+			$email_info = '<code>. . . .';
 			if ($g_enable_finances)
 				$email_info .= ' . .';
 			$email_info .= '</code>';
@@ -54,7 +54,8 @@ while ($list_z=MySQL_Fetch_Array($list_v))
 		{
 			$ei = 'Ano';
 			$email_info = '<code>';
-			$email_info .= ($zaznam['active_tf'])? 't' : '.';
+			$email_info .= ($zaznam['active_news'])? 'N' : '.';
+			$email_info .= ($zaznam['active_tf'])? ' t' : ' .';
 			$email_info .= ($zaznam['active_ch'])? ' Z' : ' .';
 			$email_info .= ($zaznam['active_rg'])? ' T' : ' .';
 			if ($g_enable_finances)

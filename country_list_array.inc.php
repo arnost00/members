@@ -29,5 +29,21 @@ function generate_combobox_data($selected)
 	}
 	return $text;
 }
+
+function get_country_string($code)
+{
+	$myFile = "country-list-iso-codes_cz.txt";
+	$fh = fopen($myFile, 'r');
+	$theData = fread($fh, filesize($myFile));
+	fclose($fh);
+	$data = explode("\n",$theData);
+	foreach($data as $row)
+	{
+		$data2 = explode(':',$row);
+		if ($data2[0] == $code)
+			return $data2[1];
+	}
+	return '';
+}
 ?>
 

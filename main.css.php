@@ -76,7 +76,7 @@ H3 {
 	text-align : left;
 }
 
-TD.NewsItemDate {
+TD.NewsItemDate, TD.NewsItemDateInt {
 	width : 100px;
 	vertical-align : top;
 	text-align : right;
@@ -84,17 +84,22 @@ TD.NewsItemDate {
 	font-weight : bold;
 }
 
-TD.NewsItemTitle {
+TD.NewsItemTitle, TD.NewsItemTitleInt {
 	text-align : left;
 	vertical-align : top;
 	color : <? echo $g_colors['news_item_title']; ?>;
 	font-weight : bold;
 }
 
-TD.NewsItem {
+TD.NewsItem, TD.NewsItemInt {
 	color : <? echo $g_colors['news_item_text']; ?>;
 	vertical-align : top;
 	text-align : left;
+}
+
+TD.NewsItemInt {
+	border-left:9px solid <? echo $g_colors['news_item_date']; ?>;
+	padding-left : 6px;
 }
 
 TD.LastDate {

@@ -29,6 +29,8 @@ if (IsLogged())
 		$zaznam['rc'] = '';
 		$zaznam['narodnost'] = 'CZ';
 	}
+	$self_edit = IsSet($self_edit) ? (bool)$self_edit : false;
+
 ?>
 <FORM METHOD=POST ACTION="./user_new_exc.php<?if (IsSet($update)) echo "?update=".$update?>">
 <?
@@ -52,18 +54,33 @@ echo $data_tbl->get_header()."\n";
 
 require_once ('country_list_array.inc.php');
 
-$country_sel = '<SELECT NAME="narodnost">';
-$country_sel .= generate_combobox_data($zaznam['narodnost']);
-$country_sel .= '</SELECT>';
-
-
-echo $data_tbl->get_new_row('Příjmení', '<INPUT TYPE="text" NAME="prijmeni" SIZE=30 MAXLENGTH=30 VALUE="'.$zaznam["prijmeni"].'">');
-echo $data_tbl->get_new_row('Jméno', '<INPUT TYPE="text" NAME="jmeno" SIZE=30 MAXLENGTH=20 VALUE="'.$zaznam["jmeno"].'">');
-$find_reg_text = (!IsSet($update)) ? ' <a href="javascript:open_win_ex(\'./find_reg.php\',\'\',600,400)">Hledání volných reg.č.</a>': '';
-echo $data_tbl->get_new_row('Registrační číslo', $g_shortcut.'&nbsp;&nbsp;<INPUT TYPE="text" NAME="reg" SIZE=4 MAXLENGTH=4 VALUE="'.RegNumToStr($zaznam['reg']).'">'.$find_reg_text);
+if ($self_edit)
+{
+	echo $data_tbl->get_new_row('Příjmení', $zaznam["prijmeni"]);
+	echo $data_tbl->get_new_row('Jméno', $zaznam["jmeno"]);
+	echo $data_tbl->get_new_row('Registrační číslo', $g_shortcut.RegNumToStr($zaznam['reg']));
+}
+else
+{
+	echo $data_tbl->get_new_row('Příjmení', '<INPUT TYPE="text" NAME="prijmeni" SIZE=30 MAXLENGTH=30 VALUE="'.$zaznam["prijmeni"].'">');
+	echo $data_tbl->get_new_row('Jméno', '<INPUT TYPE="text" NAME="jmeno" SIZE=30 MAXLENGTH=20 VALUE="'.$zaznam["jmeno"].'">');
+	$find_reg_text = (!IsSet($update)) ? ' <a href="javascript:open_win_ex(\'./find_reg.php\',\'\',600,400)">Hledání volných reg.č.</a>': '';
+	echo $data_tbl->get_new_row('Registrační číslo', $g_shortcut.'&nbsp;&nbsp;<INPUT TYPE="text" NAME="reg" SIZE=4 MAXLENGTH=4 VALUE="'.RegNumToStr($zaznam['reg']).'">'.$find_reg_text);
+}
 echo $data_tbl->get_new_row('Číslo SI čipu', '<INPUT TYPE="text" NAME="si" SIZE=10 MAXLENGTH=9 VALUE="'.$zaznam["si_chip"].'">');
-echo $data_tbl->get_new_row('Datum narození', '<INPUT TYPE="text" NAME="datum" SIZE=10 VALUE="'.SQLDate2String($zaznam["datum"]).'">&nbsp;&nbsp;(DD.MM.RRRR)');
-echo $data_tbl->get_new_row('Národnost', $country_sel);
+if ($self_edit)
+{
+	echo $data_tbl->get_new_row('Datum narození', SQLDate2String($zaznam["datum"]));
+	echo $data_tbl->get_new_row('Národnost', get_country_string($zaznam['narodnost']));
+}
+else
+{
+	echo $data_tbl->get_new_row('Datum narození', '<INPUT TYPE="text" NAME="datum" SIZE=10 VALUE="'.SQLDate2String($zaznam["datum"]).'">&nbsp;&nbsp;(DD.MM.RRRR)');
+	$country_sel = '<SELECT NAME="narodnost">';
+	$country_sel .= generate_combobox_data($zaznam['narodnost']);
+	$country_sel .= '</SELECT>';
+	echo $data_tbl->get_new_row('Národnost', $country_sel);
+}
 echo $data_tbl->get_new_row('Adresa', '<INPUT TYPE="text" NAME="adresa" SIZE=60 MAXLENGTH=50 VALUE="'.$zaznam["adresa"].'">');
 echo $data_tbl->get_new_row('Město', '<INPUT TYPE="text" NAME="mesto" SIZE=30 MAXLENGTH=25 VALUE="'.$zaznam["mesto"].'">');
 echo $data_tbl->get_new_row('PSČ', '<INPUT TYPE="text" NAME="psc" SIZE=10 MAXLENGTH=6 VALUE="'.$zaznam["psc"].'">');
@@ -71,11 +88,18 @@ echo $data_tbl->get_new_row('Email', '<INPUT TYPE="text" NAME="email" SIZE=60 MA
 echo $data_tbl->get_new_row('Tel. domů', '<INPUT TYPE="text" NAME="domu" SIZE=20 MAXLENGTH=25 VALUE="'.$zaznam["tel_domu"].'">');
 echo $data_tbl->get_new_row('Tel. zaměstnání', '<INPUT TYPE="text" NAME="zam" SIZE=20 MAXLENGTH=25 VALUE="'.$zaznam["tel_zam"].'">');
 echo $data_tbl->get_new_row('Mobil', '<INPUT TYPE="text" NAME="mobil" SIZE=20 MAXLENGTH=25 VALUE="'.$zaznam["tel_mobil"].'">');
-$value = '<select name=\'poh\'>';
-$value .= '<option value=\'H\''.(($zaznam["poh"]=='H') ? ' SELECTED' : '').'>H</option>';
-$value .= '<option value=\'D\''.(($zaznam["poh"]=='D') ? ' SELECTED' : '').'>D</option>';
-$value .= '</select>';
-echo $data_tbl->get_new_row('Pohlavi', $value);
+if ($self_edit)
+{
+	echo $data_tbl->get_new_row('Pohlavi', $zaznam["poh"]);
+}
+else
+{
+	$value = '<select name=\'poh\'>';
+	$value .= '<option value=\'H\''.(($zaznam["poh"]=='H') ? ' SELECTED' : '').'>H</option>';
+	$value .= '<option value=\'D\''.(($zaznam["poh"]=='D') ? ' SELECTED' : '').'>D</option>';
+	$value .= '</select>';
+	echo $data_tbl->get_new_row('Pohlavi', $value);
+}
 echo $data_tbl->get_new_row('Licence OB', GetLicenceComboBox('lic',$zaznam["lic"]));
 echo $data_tbl->get_new_row('Licence MTBO', GetLicenceComboBox('lic_mtbo',$zaznam["lic_mtbo"]));
 echo $data_tbl->get_new_row('Licence LOB', GetLicenceComboBox('lic_lob',$zaznam["lic_lob"]));

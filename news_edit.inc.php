@@ -78,6 +78,7 @@ function check_form()
 		$zaznam['datum'] = GetCurrentDate();
 		$zaznam['nadpis'] = '';
 		$zaznam['text'] = '';
+		$zaznam['internal'] = 0;
 	}
 ?>
 <FORM METHOD=POST ACTION="news_new_exc.php<?if (IsSet($update)) echo "?update=".$update?>" name="form_news" id="form_news" onsubmit="return check_form();">
@@ -87,6 +88,7 @@ $data_tbl = new html_table_form('news');
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 
+echo $data_tbl->get_new_row('Interní novinka', '<INPUT TYPE="checkbox" NAME="internal" value="1" '.(($zaznam['internal'] != 0) ? 'checked' :'').'> vidí ji pouze přihlášení<BR>');
 echo $data_tbl->get_new_row('Datum', '<INPUT TYPE="text" NAME="datum" SIZE=10 MAXLENGTH=10 VALUE="'.Date2String($zaznam['datum']).'">&nbsp;&nbsp;(DD.MM.RRRR)');
 echo $data_tbl->get_new_row('Nadpis', '<INPUT TYPE="text" NAME="nadpis" size="50" MAXLENGTH=50 VALUE="'.$zaznam['nadpis'].'">');
 echo $data_tbl->get_new_row('Text', '<TEXTAREA name="text" cols="50" rows="10" wrap=virtual>'.$zaznam['text'].'</TEXTAREA>');

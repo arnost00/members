@@ -17,6 +17,8 @@ $datum = String2SQLDateDMY($datum);
 // filling of czech sort helping column
 $name2 = $prijmeni." ".$jmeno;
 
+$self_edit = IsSet($update) && $update == $usr->user_id;
+
 db_Connect();
 
 $prijmeni=correct_sql_string($prijmeni);
@@ -63,7 +65,7 @@ if (IsLoggedSmallAdmin())
 	}
 	header("location: ".$g_baseadr."index.php?id=700&subid=1");
 }
-else if (IsLoggedManager() || IsLoggedSmallManager())
+else if ((IsLoggedManager() || IsLoggedSmallManager()) && !$self_edit)
 {
 	$hidden = 0;	// unhidden users only
 
@@ -100,7 +102,7 @@ else if (IsLoggedUser())
 
 		$hidden = 0;	// unhidden users only
 
-		$result=MySQL_Query("UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin', narodnost='$narodnost' WHERE id='$update'")
+		$result=MySQL_Query("UPDATE ".TBL_USER." SET adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', si_chip='$si' , hidden='$hidden', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin' WHERE id='$update'")
 			or die("Chyba při provádění dotazu do databáze.");
 		if ($result == FALSE)
 			die ("Nepodařilo se změnit údaje člena.");

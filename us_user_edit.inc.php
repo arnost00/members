@@ -19,6 +19,7 @@ if (IsSet($chiefPayFor))
 @$vysledek=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE id = '$usr->user_id' LIMIT 1");
 @$zaznam=MySQL_Fetch_Array($vysledek);
 $update=$usr->user_id;
+$self_edit = (IsLoggedSmallAdmin() || IsLoggedAdmin()) ? false : true;
 require_once ("./common_user.inc.php");
 ?>
 <BR><hr><BR>

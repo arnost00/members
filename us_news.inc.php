@@ -13,6 +13,27 @@ DrawPageTitle('Aktuální informace (Aktualitky)');
 </script>
 
 <?
+if(SHOW_USER)
+{
+	$date_limit = GetCurrentDate();
+	$date_limit -= CG_INTERNAL_NEWS_DAYS_LIMIT *60 * 60 *24;
+	
+	$sql_query = 'SELECT '.TBL_NEWS.'.*, '.TBL_ACCOUNT.'.podpis FROM '.TBL_NEWS.' LEFT JOIN '.TBL_ACCOUNT.' ON '.TBL_NEWS.'.id_user = '.TBL_ACCOUNT.'.id WHERE '.TBL_NEWS.'.internal = 1 ORDER BY datum > '.$date_limit.' DESC,id DESC LIMIT '.GC_INTERNAL_NEWS_CNT_LIMIT;
+
+	@$vysledek=MySQL_Query($sql_query);
+	$cnt= ($vysledek != FALSE) ? mysql_num_rows($vysledek) : 0;
+	if($cnt > 0)
+	{
+		DrawPageSubTitle('Poslední interní novinky');
+		include ('common_news.inc.php');
+		echo('<TABLE width="100%">');
+		while ($zaznam=MySQL_Fetch_Array($vysledek))
+		{
+			PrintNewsItem($zaznam,IsLoggedAdmin(),$usr,true);
+		}
+		echo('</TABLE>');
+	}
+}
 DrawPageSubTitle('Nejbližší závody a přihlášky (do '.GC_SHOW_RACE_AND_REG_DAYS.' dní)');
 
 require_once ('./common_race.inc.php');

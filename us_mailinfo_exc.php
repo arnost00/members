@@ -30,6 +30,7 @@ $active_ch = isset($active_ch) ? (int)$active_ch : 0;
 $active_rg = isset($active_rg) ? (int)$active_rg : 0;
 $active_fin = isset($active_fin) ? (int)$active_fin : 0;
 $active_finf = isset($active_finf) ? (int)$active_finf : 0;
+$active_news = isset($active_news) ? (int)$active_news : 0;
 
 $fin_limit = isset($fin_limit) ? (int)$fin_limit : 0;
 $fin_type2 = CreateFinMailFlag($fin_type);
@@ -49,7 +50,7 @@ else
 		$dbid = $zaznam['id'];
 //		echo('update');
 //		echo("UPDATE ".TBL_MAILINFO." SET email='$email', daysbefore='$daysbefore', type='$racetype2', sub_type='$zebricek2', active_tf='$active_tf', active_ch='$active_ch', active_rg='$active_rg', ch_data='$ch_data2' WHERE id='$dbid'");
-		$result=MySQL_Query("UPDATE ".TBL_MAILINFO." SET email='$email', daysbefore='$daysbefore', type='$racetype2', sub_type='$zebricek2', active_tf='$active_tf', active_ch='$active_ch', active_rg='$active_rg', ch_data='$ch_data2', active_fin='$active_fin', active_finf='$active_finf', fin_type='$fin_type2', fin_limit='$fin_limit' WHERE id='$dbid'")
+		$result=MySQL_Query("UPDATE ".TBL_MAILINFO." SET email='$email', daysbefore='$daysbefore', type='$racetype2', sub_type='$zebricek2', active_tf='$active_tf', active_ch='$active_ch', active_rg='$active_rg', ch_data='$ch_data2', active_fin='$active_fin', active_finf='$active_finf', fin_type='$fin_type2', fin_limit='$fin_limit', active_news='$active_news' WHERE id='$dbid'")
 			or die("Chyba při provádění dotazu do databáze.");
 		if ($result == FALSE)
 			die ("Nepodařilo se změnit údaje o upozorňování.");
@@ -58,7 +59,7 @@ else
 	{	// insert
 //		echo('insert');
 //		echo("INSERT INTO ".TBL_MAILINFO." (email, daysbefore, type, sub_type, id_user, active_tf, active_ch, active_rg, ch_data) VALUES ('$email', '$daysbefore', '$racetype2', '$zebricek2', '$id', '$active_tf', '$active_ch', '$active_rg', '$ch_data2')");
-		$result=MySQL_Query("INSERT INTO ".TBL_MAILINFO." (email, daysbefore, type, sub_type, id_user, active_tf, active_ch, active_rg, ch_data, active_fin, active_finf, fin_type, fin_limit) VALUES ('$email', '$daysbefore', '$racetype2', '$zebricek2', '$id', '$active_tf', '$active_ch', '$active_rg', '$ch_data2', '$active_fin', '$active_finf', '$fin_type2', '$fin_limit')")
+		$result=MySQL_Query("INSERT INTO ".TBL_MAILINFO." (email, daysbefore, type, sub_type, id_user, active_tf, active_ch, active_rg, ch_data, active_fin, active_finf, fin_type, fin_limit, active_news) VALUES ('$email', '$daysbefore', '$racetype2', '$zebricek2', '$id', '$active_tf', '$active_ch', '$active_rg', '$ch_data2', '$active_fin', '$active_finf', '$fin_type2', '$fin_limit', '$active_news')")
 			or die("Chyba při provádění dotazu do databáze.");
 		if ($result == FALSE)
 			die ("Nepodařilo se vytvořit údaje o upozorňování.");
