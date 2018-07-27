@@ -564,4 +564,10 @@ function full_url()
 	return 'http'.((isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == 'on') ? 's' : '').'://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
 }
 
+function Date2ISO($date)
+{
+	$text = @date(("Y-m-d"),$date);
+	return $text;
+}
+
 ?>
