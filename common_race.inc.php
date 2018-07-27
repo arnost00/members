@@ -359,16 +359,16 @@ function RIT_SH(divId1, divId2)
 		switch($zaznam['ubytovani'])
 		{
 		case 0: 
-			$ubytovaní = 'Ne';
+			$ubytovani = 'Ne';
 			break;
 		case 1: 
-			$ubytovaní = 'Ano';
+			$ubytovani = 'Ano';
 			break;
 		case 2: 
-			$ubytovaní = 'Ano - automaticky';
+			$ubytovani = 'Ano - automaticky';
 			break;
 		}
-		echo $data_tbl->get_new_row('Společné ubytování',$ubytovaní);
+		echo $data_tbl->get_new_row('Společné ubytování',$ubytovani);
 	}
 
 	echo $data_tbl->get_footer()."\n";
