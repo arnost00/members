@@ -32,7 +32,7 @@ $curr_date = GetCurrentDate();
 
 $d1 = $curr_date;
 
-$query="SELECT id,datum,typ,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,nazev,vicedenni,odkaz,vedouci, oddil,send,misto,cancelled,typ0, ubytovani, transport, zebricek, ranking,etap FROM ".TBL_RACE.' WHERE datum >= '.$d1.' || datum2 >= '.$d1.' ORDER BY datum, datum2, id';
+$query="SELECT id,datum,typ,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,nazev,vicedenni,odkaz,vedouci, oddil,send,misto,cancelled,typ0, ubytovani, transport, zebricek, ranking, etap, poznamka FROM ".TBL_RACE.' WHERE datum >= '.$d1.' || datum2 >= '.$d1.' ORDER BY datum, datum2, id';
 
 @$vysledek=MySQL_Query($query);
 
@@ -74,8 +74,9 @@ if (mysql_num_rows($vysledek) > 0)
 		$data['Data'][$race_key]['Place'] = $zaznam['misto'];
 		$data['Data'][$race_key]['Type'] = $zaznam['typ0'];
 		$data['Data'][$race_key]['Sport'] = $zaznam['typ'];
-//		$data['Data'][$race_key]['Rankings'] = $zaznam['zebricek'];
-//		$data['Data'][$race_key]['Ranking'] = $zaznam['ranking'];
+		$data['Data'][$race_key]['Rankings'] = $zaznam['zebricek'];
+		$data['Data'][$race_key]['Rank21'] = $zaznam['ranking'];
+		$data['Data'][$race_key]['Note'] = $zaznam['poznamka'];
 		
 		
 		if($zaznam['vicedenni'])
@@ -113,6 +114,26 @@ if (mysql_num_rows($vysledek) > 0)
 			$data['Data'][$race_key]['Accomodation'] = $ubytovani;
 		}
 	}
+	
+	// enums
+	
+	foreach ( $g_racetype0 as $key => &$value )
+	{
+		$data['Enums']['Type'][$key] = $value;
+	}
+
+	for($ii=0; $ii<$g_zebricek_cnt; $ii++)
+	{
+//		$data['Enums']['Rankings'][$ii]['Value'] = $g_zebricek [$ii]['id'];
+//		$data['Enums']['Rankings'][$ii]['Name'] = $g_zebricek [$ii]['nm'];
+		$data['Enums']['Rankings'][$g_zebricek [$ii]['id']] = $g_zebricek [$ii]['nm'];
+	}
+
+	for($ii=0; $ii<$g_racetype_cnt; $ii++)
+	{
+		$data['Enums']['Rankings'][$g_racetype[$ii]['enum']] = $g_racetype [$ii]['nm'];
+	}
+	
 	$data['Status'] = 'OK';
 }
 else
