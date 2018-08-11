@@ -236,38 +236,41 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 {
 	@$vysledek1=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE id=$zaznam[id_user] LIMIT 1");
 	$zaznam1=MySQL_Fetch_Array($vysledek1);
-	$i++;
+	if ($zaznam1)
+	{
+		$i++;
 
-	$row = array();
-	$row[] = $i.'<!-- '.$zaznam['id'].' -->';
-	$row[] = $zaznam1['jmeno'];
-	$row[] = $zaznam1['prijmeni'];
-	$row[] = '<B>'.$zaznam['kat'].'</B>';
-	if($is_spol_dopr_on)
-	{
-		if ($zaznam["transport"])
+		$row = array();
+		$row[] = $i.'<!-- '.$zaznam['id'].' -->';
+		$row[] = $zaznam1['jmeno'];
+		$row[] = $zaznam1['prijmeni'];
+		$row[] = '<B>'.$zaznam['kat'].'</B>';
+		if($is_spol_dopr_on)
 		{
-			$row[] = '<B>X</B>';
-			$trans++;
+			if ($zaznam["transport"])
+			{
+				$row[] = '<B>X</B>';
+				$trans++;
+			}
+			else
+				$row[] = '';
 		}
-		else
-			$row[] = '';
-	}
-	if($is_spol_ubyt_on)
-	{
-		if ($zaznam["ubytovani"])
+		if($is_spol_ubyt_on)
 		{
-			$row[] = '<B>X</B>';
-			$ubyt++;
+			if ($zaznam["ubytovani"])
+			{
+				$row[] = '<B>X</B>';
+				$ubyt++;
+			}
+			else
+				$row[] = '';
 		}
-		else
-			$row[] = '';
+		if($zaznam_z['prihlasky'] > 1)
+			$row[] = $zaznam['termin'];
+		$row[] = $zaznam['pozn'];
+		$row[] = $zaznam['pozn_in'];
+		echo $data_tbl->get_new_row_arr($row)."\n";
 	}
-	if($zaznam_z['prihlasky'] > 1)
-		$row[] = $zaznam['termin'];
-	$row[] = $zaznam['pozn'];
-	$row[] = $zaznam['pozn_in'];
-	echo $data_tbl->get_new_row_arr($row)."\n";
 }
 echo $data_tbl->get_footer()."\n";
 
