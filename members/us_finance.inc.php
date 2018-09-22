@@ -27,19 +27,20 @@ if (IsSet($payment) && IsSet($user_id) && IsSet($id_to) && IsSet($amount) && $id
 		$can_send = false;
 	}
 
-	@$vysledek2=MySQL_Query('SELECT SUM(fin.amount) AS amount  from '.TBL_FINANCE.' fin 
+	@$vysledek2=MySQL_Query('SELECT fin.amount AS amount  from '.TBL_FINANCE.' fin 
 		where fin.id_users_user = '.$user_id.' and fin.storno is null');
+
 	$db_sum_amount = 0;
 	if ($vysledek2)
 	{
-		if ($zaznam2=MySQL_Fetch_Array($vysledek2))
+		while ($zaznam2=MySQL_Fetch_Array($vysledek2))
 		{
-			$db_sum_amount = $zaznam2['amount'];
+			$db_sum_amount += $zaznam2['amount'];
 		}
 	}
 	if ($amount > $db_sum_amount)
 	{
-		$result = 'Nemáte dostatek pěnez pro převod .';
+		$result = 'Nemáte dostatek peněz pro převod.';
 		$can_send = false;
 	}
 

@@ -13,7 +13,7 @@ DrawPageSubTitle('Historie financí');
 
 // zvyraznovani ?
 
-@$vysl=MySQL_Query("SELECT f.date, concat('".$g_shortcut."',u.reg) as reg, u.sort_name as name, f.amount, f.note, rc.nazev zavod_nazev, from_unixtime(rc.datum,'%Y-%m-%d') zavod_datum FROM `".TBL_FINANCE."` f join `".TBL_USER."` u on u.id = f.id_users_user left join `".TBL_RACE."` rc on f.id_zavod = rc.id where f.storno is null ORDER BY f.date desc")
+@$vysl=MySQL_Query("SELECT f.date, concat('".$g_shortcut."',u.reg) as reg, u.sort_name as name, f.id_users_editor, f.amount, f.note, rc.nazev zavod_nazev, from_unixtime(rc.datum,'%Y-%m-%d') zavod_datum FROM `".TBL_FINANCE."` f join `".TBL_USER."` u on u.id = f.id_users_user left join `".TBL_RACE."` rc on f.id_zavod = rc.id where f.storno is null ORDER BY f.date desc")
 	or die("Chyba při provádění dotazu do databáze.");
 
 $data_tbl = new html_table_mc();
@@ -21,6 +21,7 @@ $col = 0;
 $data_tbl->set_header_col($col++,'datum',ALIGN_CENTER,80);
 $data_tbl->set_header_col($col++,'reg',ALIGN_LEFT,80);
 $data_tbl->set_header_col($col++,'jméno',ALIGN_CENTER,100);
+$data_tbl->set_header_col($col++,'zapsal',ALIGN_CENTER,60);
 $data_tbl->set_header_col($col++,'částka',ALIGN_LEFT,100);
 $data_tbl->set_header_col($col++,'závod d.',ALIGN_CENTER,80);
 $data_tbl->set_header_col($col++,'závod n.',ALIGN_CENTER,160);
@@ -37,6 +38,9 @@ while ($zaznam=MySQL_Fetch_Array($vysl))
 	$row[] = $zaznam['date'];
 	$row[] = $zaznam['reg'];
 	$row[] = $zaznam['name'];
+	
+	$c = $zaznam['id_users_editor'] == 0 ? 'red': '';
+	$row[] = "<span class='amount$c'>".$zaznam['id_users_editor']."</span>";
 	$row[] = $zaznam['amount'];
 	$row[] = $zaznam['zavod_datum'];
 	$row[] = $zaznam['zavod_nazev'];

@@ -127,8 +127,8 @@ function haveMoney(subject, subject_sum)
 {
 	num = parseInt(subject.value);
 	sum = parseInt(subject_sum.value);
-	if (num < sum) return true;
-	alert("Nemáte dostatek pěnez pro převod");
+	if (num <= sum) return true;
+	alert("Nemáte dostatek peněz pro převod.");
 	return false;
 }
 
