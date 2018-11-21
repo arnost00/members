@@ -69,9 +69,8 @@ Změna kategorie - se provede změnou textového pole s kategorií pro vybranéh
 <?
 
 $sub_query = (IsLoggedRegistrator() || IsLoggedManager()) ? '' : ' AND '.TBL_USER.'.chief_id = '.$usr->user_id.' OR '.TBL_USER.'.id = '.$usr->user_id;
-$sub_query2 = '';//(IsLoggedSmallManager() || IsLoggedManager()) ? ' AND '.TBL_USER.'.entry_locked = 0' : '';
 
-$query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, kat, pozn, pozn_in, termin, entry_locked, '.TBL_ZAVXUS.'.transport, '.TBL_ZAVXUS.'.ubytovani FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query.$sub_query2.' ORDER BY sort_name ASC';
+$query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, kat, pozn, pozn_in, termin, entry_locked, '.TBL_ZAVXUS.'.transport, '.TBL_ZAVXUS.'.ubytovani FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query.' ORDER BY sort_name ASC';
 
 @$vysledek=MySQL_Query($query);
 
@@ -85,45 +84,25 @@ $is_registrator_on = IsCalledByRegistrator($gr_id);
 $is_termin_show_on = $is_registrator_on && ($zaznam_z['prihlasky'] > 1);
 $is_spol_dopr_on = ($zaznam_z["transport"]==1) && $g_enable_race_transport;
 $is_spol_dopr_auto = ($zaznam_z["transport"]==2) && $g_enable_race_transport;
-$spol_dopr_idx = 3;
 $is_spol_ubyt_on = ($zaznam_z["ubytovani"]==1) && $g_enable_race_accommodation;
 $is_spol_ubyt_auto = ($zaznam_z["ubytovani"]==2) && $g_enable_race_accommodation;
-$spol_ubyt_idx = 4;
-if($is_termin_show_on)
-	$spol_ubyt_idx++;
 
 $i=0;
-//$prihl_cl=0;
+$us_rows = array();
 while ($zaznam=MySQL_Fetch_Array($vysledek))
 {
 	if ($zaznam['entry_locked'] == 0)
 	{
-		if($zaznam['kat'] == NULL)
-		{	// neni prihlasen
-			$us_rows[$i][0] = '';
-			$us_rows[$i][1] = '';
-			$us_rows[$i][2] = '';
-			if($is_spol_dopr_on)
-				$us_rows[$i][$spol_dopr_idx] = false;
-			if($is_spol_ubyt_on)
-				$us_rows[$i][$spol_ubyt_idx] = false;
-			if($is_termin_show_on)
-				$us_rows[$i][3] = (($termin != 0) ? $termin : $zaznam_z['prihlasky']);
-		}
-		else
+		if($zaznam['kat'] != NULL)
 		{
-			//$prihl_cl++;
 			if($zaznam['termin'] == $termin || $is_termin_show_on)
 			{
 				$us_rows[$i][0] = $zaznam['kat'];
 				$us_rows[$i][1] = $zaznam['pozn'];
 				$us_rows[$i][2] = $zaznam['pozn_in'];
-				if($is_spol_dopr_on)
-					$us_rows[$i][$spol_dopr_idx] = $zaznam['transport'] == 1;
-				if($is_spol_ubyt_on)
-					$us_rows[$i][$spol_ubyt_idx] = $zaznam['ubytovani'] == 1;
-				if($is_termin_show_on)
-					$us_rows[$i][3] = $zaznam['termin'];
+				$us_rows[$i][3] = ($is_termin_show_on) ? $zaznam['termin'] : 0;
+				$us_rows[$i][4] = ($is_spol_dopr_on) ? $zaznam['transport'] == 1 : 0;
+				$us_rows[$i][5] = ($is_spol_ubyt_on) ? $zaznam['ubytovani'] == 1 : 0;
 			}
 			else
 			{
@@ -139,10 +118,11 @@ echo'<SCRIPT LANGUAGE="JavaScript">'."\n";
 echo'//<!--'."\n";
 
 echo 'us_rows = new Array('.sizeof($us_rows).');'."\n";
-for ($i=0; $i < sizeof($us_rows); $i++)
+foreach ($us_rows as $i => $value)
 {
-	echo'us_rows['.$i.'] = new Array("'.$us_rows[$i][0].'","'.$us_rows[$i][1].'","'.$us_rows[$i][2].(($is_termin_show_on) ? '","'.$us_rows[$i][3] : '').'"'.(($is_spol_dopr_on) ? ','.($us_rows[$i][$spol_dopr_idx] ? 'true' : 'false') : '').(($is_spol_ubyt_on) ? ','.($us_rows[$i][$spol_ubyt_idx] ? 'true' : 'false') : '').');'."\n";
+	echo 'us_rows['.$i.'] = ["'.$value[0].'","'.$value[1].'","'.$value[2].'","'.$value[3].'","'.($value[4] ? 'true' : 'false').'","'.($value[5] ? 'true' : 'false').'"];'."\n";
 }
+
 echo'//-->'."\n";
 echo'</SCRIPT>'."\n";
 
@@ -224,39 +204,68 @@ if($is_termin_show_on)
 	<TD colspan="3"></TD>
 </TR>
 </TABLE>
-<?
-//echo "Počet již přihlášených členů je ".$prihl_cl.".<BR><BR>";
-?>
+
 <SCRIPT LANGUAGE="JavaScript">
 //<!--
 function aktu_line()
 {
 	var idx = document.form1.user_id.selectedIndex;
-	document.form1.kateg.value=us_rows[idx][0];
+	if (us_rows[idx] != null)
+	{
+		document.form1.kateg.value=us_rows[idx][0];
 <?
 	if($is_spol_dopr_on)
 	{
 ?>
-	document.form1.transport.checked=us_rows[idx][<? echo $spol_dopr_idx?>];
+		document.form1.transport.checked=us_rows[idx][4];
 <?
 	}
 	if($is_spol_ubyt_on)
 	{
 ?>
-	document.form1.ubytovani.checked=us_rows[idx][<? echo $spol_ubyt_idx?>];
+		document.form1.ubytovani.checked=us_rows[idx][5];
 <?
 	}
 ?>
-	document.form1.pozn.value=us_rows[idx][1];
-	document.form1.pozn2.value=us_rows[idx][2];
+		document.form1.pozn.value=us_rows[idx][1];
+		document.form1.pozn2.value=us_rows[idx][2];
 <?
 	if($is_termin_show_on)
 	{
 ?>
-	document.form1.new_termin.value=us_rows[idx][3];
+		document.form1.new_termin.value=us_rows[idx][3];
 <?
 	}
 ?>
+	}
+	else
+	{
+		document.form1.kateg.value="";
+<?
+	if($is_spol_dopr_on)
+	{
+?>
+		document.form1.transport.checked=false;
+<?
+	}
+	if($is_spol_ubyt_on)
+	{
+?>
+		document.form1.ubytovani.checked=false;
+<?
+	}
+?>
+		document.form1.pozn.value="";
+		document.form1.pozn2.value="";
+<?
+	if($is_termin_show_on)
+	{
+?>
+		document.form1.new_termin.value= <? echo(($termin != 0) ? $termin : $zaznam_z['prihlasky']); ?>;
+<?
+	}
+?>
+	}
 }
 window.onload = aktu_line();
 //-->
