@@ -1,4 +1,4 @@
-<?
+﻿<?
 @extract($_REQUEST);
 
 $zmeny_list = array();
@@ -41,6 +41,7 @@ AddZmenyFile('2.9.9.455');
 AddZmenyFile('3.0.5.482');
 AddZmenyFile('3.0.9.502');
 AddZmenyFile('3.0.14.526');
+AddZmenyFile('3.0.16.538');
 //#############################################################################
 
 require_once ('connect.inc.php');
