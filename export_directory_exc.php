@@ -41,7 +41,7 @@ if ($oris == 2)
 	$users = new ORIS_Export($g_shortcut);
 	while ($zaznam=MySQL_Fetch_Array($vysledek))
 	{
-		$users->add_line_contact($zaznam['reg'],$zaznam['email'], $zaznam['tel_mobil']);
+		$users->add_line_contact($zaznam['reg'],$zaznam['email'], $zaznam['tel_mobil'], $zaznam['adresa'], $zaznam['mesto'], $zaznam['psc'],$zaznam['narodnost']);
 	}
 	echo($users->generate_contacts());
 }
@@ -54,7 +54,15 @@ else if ($oris == 1)
 	}
 	echo($users->generate_users());
 }
-else
+else if ($oris == 3)
+{
+	$users = new ORIS_Export($g_shortcut);
+	while ($zaznam=MySQL_Fetch_Array($vysledek))
+	{
+		$users->add_line_registration($zaznam['prijmeni'], $zaznam['jmeno'], $zaznam['reg']);
+	}
+	echo($users->generate_registration());
+}else
 {
 	$users = new CSV_Export($g_shortcut,$delim,$par2,$par3);
 	while ($zaznam=MySQL_Fetch_Array($vysledek))
