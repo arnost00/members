@@ -144,25 +144,36 @@ class ORIS_Export
 	}
 
 	//__________________________________________________________________
-	public function add_line_contact($reg, $email, $mobil)
+	public function add_line_contact($reg, $email, $mobil, $adresa, $mesto, $psc,$narodnost)
 	{
+	
 		$line = array();
 		
 		$line['email'] = $email;
 		$line['mobil'] = $mobil;
 		$line['reg'] = $reg;
+		$line['adresa'] = $adresa;
+		$line['mesto'] = $mesto;
+		$line['psc'] = $psc;
+		$line['narodnost'] = $narodnost;
 		$this->data[] = $line;
 	}
 
 	//__________________________________________________________________
 	public function generate_contacts()
 	{
+	// LPU9901;jan.novak@seznam.cz;777112233;Zelená 5;Praha;11150;CZ
+
 		$text = '';
 		foreach($this->data as $zaznam)
 		{
 			$str = RegNumToStr($zaznam['reg']).SEMICOLON_CHAR;
 			$str .= $zaznam['email'].SEMICOLON_CHAR;
-			$str .= $zaznam['mobil'];
+			$str .= $zaznam['mobil'].SEMICOLON_CHAR;
+			$str .= $zaznam['adresa'].SEMICOLON_CHAR;
+			$str .= $zaznam['mesto'].SEMICOLON_CHAR;
+			$str .= $zaznam['psc'].SEMICOLON_CHAR;
+			$str .= $zaznam['narodnost'];
 			$text .= $this->shortcut.$str;
 			$text .= "\n";
 		}
