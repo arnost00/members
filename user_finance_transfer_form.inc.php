@@ -1,4 +1,4 @@
-<?
+﻿<?
 function createHTMLSelect($select_name, $options)
 {	
 	$select = "<select name=\"$select_name\">";
@@ -50,7 +50,7 @@ while ($record=MySQL_Fetch_Array($users_result))
 
 $to_select = createHTMLSelect("id_to", $to_options);
 
-if (IsLoggedFinance() && is_array($zaznam_user_name))
+if (is_array($zaznam_user_name))
 {
 	echo $data_tbl->get_new_row('<label for="id_from">Převést od</label>', $zaznam_user_name['name']);
 	echo('<input name="id_from" hidden value="'.$user_id.'" />');
