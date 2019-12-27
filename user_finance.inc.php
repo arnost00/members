@@ -1,8 +1,8 @@
 <?php /* finance -  show exact user finance */ ?>
 
 <?
-@$vysledek_historie=MySQL_Query("select fin.id fin_id, rc.nazev zavod_nazev, rc.cancelled zavod_cancelled, from_unixtime(rc.datum,'%Y-%c-%e') zavod_datum, fin.amount amount, fin.note note, us.sort_name name, fin.date `date` from ".TBL_FINANCE." fin 
-		inner join ".TBL_USER." us on fin.id_users_editor = us.id
+@$vysledek_historie=MySQL_Query("select fin.id fin_id, fin.id_users_editor id_editor, rc.nazev zavod_nazev, rc.cancelled zavod_cancelled, from_unixtime(rc.datum,'%Y-%c-%e') zavod_datum, fin.amount amount, fin.note note, us.sort_name name, fin.date `date` from ".TBL_FINANCE." fin 
+		left join ".TBL_USER." us on fin.id_users_editor = us.id
 		left join ".TBL_RACE." rc on fin.id_zavod = rc.id
 		where fin.id_users_user = ".$user_id." and fin.storno is null  order by fin.date asc, fin.id asc");
 
@@ -48,7 +48,7 @@ while ($zaznam=MySQL_Fetch_Array($vysledek_historie))
 	$row[] = ($zaznam['zavod_nazev'] == null) ? '-':formatDate($zaznam['zavod_datum']);
 	$row[] = $zaznam['amount'];
 	$row[] = $zaznam['note'];
-	$row[] = $zaznam['name'];
+	$row[] = ($zaznam['name'] == null) ? "<<<".$zaznam['id_editor'].">>>":$zaznam['name'];
 //priprava pro pouziti ajaxu a jquery
 // 	$row[] = "<div class=\"div-claim\" claim=\"".$zaznam['fin_id']."\" id=\"claim-".$zaznam['fin_id']."\">Problém?</div>";
 	if ($g_enable_finances_claim)
