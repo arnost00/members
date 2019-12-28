@@ -30,7 +30,7 @@ if($regsend >= 0 && $regsend <= 5)
 	$regsendnow = (isset($regsendnow) && is_numeric($regsendnow)) ? (int)$regsendnow : 0;
 	if($regsendnow > 0)
 	{	// save new regsend...
-		$result=MySQL_Query("UPDATE ".TBL_RACE." SET `send`='$regsend' WHERE `id`='$id_zav'")
+		$result=mysqli_query($db_conn, "UPDATE ".TBL_RACE." SET `send`='$regsend' WHERE `id`='$id_zav'")
 				or die('Chyba při provádění dotazu do databáze.');
 		if ($result == FALSE)
 			die ('Nepodařilo se změnit údaje o závodě.');
@@ -40,8 +40,8 @@ else	// kontrola rozsahu
 	$regsend = -1;
 //------------------------------
 
-@$vysledek_z=MySQL_Query("SELECT * FROM ".TBL_RACE." WHERE id=$id_zav LIMIT 1");
-$zaznam_z = MySQL_Fetch_Array($vysledek_z);
+@$vysledek_z=mysqli_query($db_conn, "SELECT * FROM ".TBL_RACE." WHERE id=$id_zav LIMIT 1");
+$zaznam_z = mysqli_fetch_array($vysledek_z);
 
 $regsend = $zaznam_z['send'];
 
@@ -176,13 +176,13 @@ echo $data_tbl->get_header_row()."\n";
 
 $query = 'SELECT u.jmeno, u.prijmeni, u.reg, u.si_chip, z.kat, z.pozn, z.pozn_in, z.termin, z.si_chip as t_si_chip FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' AND u.hidden = 0 ORDER BY z.termin ASC, z.id ASC';
 
-@$vysledek=MySQL_Query($query);
+@$vysledek=mysqli_query($db_conn, $query);
 
 $i=0;
 $err_cnt = 0;
 $old_term = 1;
 
-while ($zaznam=MySQL_Fetch_Array($vysledek))
+while ($zaznam=mysqli_fetch_array($vysledek))
 {
 	$i++;
 

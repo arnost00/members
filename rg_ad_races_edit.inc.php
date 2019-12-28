@@ -29,11 +29,11 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 
 if (!$g_is_release)
 {	// pri debug zobrazit
-	@$vysledek=MySQL_Query("SELECT id,datum,typ,typ0,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto,modify_flag,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum , datum2, id');
+	@$vysledek=mysqli_query($db_conn, "SELECT id,datum,typ,typ0,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto,modify_flag,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum , datum2, id');
 }
 else
 {
-	@$vysledek=MySQL_Query("SELECT id,datum,typ,typ0,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
+	@$vysledek=mysqli_query($db_conn, "SELECT id,datum,typ,typ0,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
 }
 
 $data_tbl = new html_table_mc();
@@ -58,11 +58,11 @@ echo $data_tbl->get_header_row()."\n";
 $i = 1;
 $brk_tbl = false;
 $old_year = 0;
-if($vysledek && ($num_rows = mysql_num_rows($vysledek)) > 0)
+if($vysledek && ($num_rows = mysqli_num_rows($vysledek)) > 0)
 {
 	show_link_to_actual_race($num_rows);
 
-	while ($zaznam=MySQL_Fetch_Array($vysledek))
+	while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		$row = array();
 		

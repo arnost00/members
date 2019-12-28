@@ -22,9 +22,9 @@ $sql_query = 'SELECT * FROM '.TBL_USER." WHERE id = '$user_id' LIMIT 1";
 $sql_query2 = 'SELECT * FROM '.TBL_FINANCE_TYPES.' ORDER BY id';
 
 
-@$vysledek=MySQL_Query($sql_query);
-@$zaznam=MySQL_Fetch_Array($vysledek);
-@$vysledek2=MySQL_Query($sql_query2);
+@$vysledek=mysqli_query($db_conn, $sql_query);
+@$zaznam=mysqli_fetch_array($vysledek);
+@$vysledek2=mysqli_query($db_conn, $sql_query2);
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 require_once ("./common.inc.php");
 
@@ -65,11 +65,11 @@ else
 	//row 0
 	$rows = get_row(0,'Není definováno','',$zaznam["finance_type"])."\n";
 
-	$num_rows = mysql_num_rows($vysledek2);
+	$num_rows = mysqli_num_rows($vysledek2);
 	if ($num_rows > 0)
 	{
 	
-		while ($zaznam2=MySQL_Fetch_Array($vysledek2))
+		while ($zaznam2=mysqli_fetch_array($vysledek2))
 		{
 		    $rows .= get_row($zaznam2['id'],$zaznam2['nazev'],$zaznam2['popis'],$zaznam["finance_type"]);
 			$rows .= "\n";

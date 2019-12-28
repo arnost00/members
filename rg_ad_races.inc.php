@@ -21,9 +21,9 @@ $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 0;  // old races
 $fD = (IsSet($fD) && is_numeric($fD)) ? (int)$fD : 0;  // type 0
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD);
 
-@$vysledek=MySQL_Query("SELECT id, datum, typ0, typ, datum2, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, nazev, vicedenni, odkaz, vedouci, oddil, send, misto, cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
+@$vysledek=mysqli_query($db_conn, "SELECT id, datum, typ0, typ, datum2, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, nazev, vicedenni, odkaz, vedouci, oddil, send, misto, cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
 
-$num_rows = mysql_num_rows($vysledek);
+$num_rows = mysqli_num_rows($vysledek);
 if ($num_rows > 0)
 {
 	show_link_to_actual_race($num_rows);
@@ -50,7 +50,7 @@ if ($num_rows > 0)
 	$i = 1;
 	$brk_tbl = false;
 	$old_year = 0;
-	while ($zaznam=MySQL_Fetch_Array($vysledek))
+	while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		$row = array();
 		

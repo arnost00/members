@@ -56,7 +56,7 @@ foreach ($kat_arr_n as $kat_n1)
 $kategorie = implode(';',$kat_arr);
 $kategorie=correct_sql_string($kategorie);
 
-$result=MySQL_Query('UPDATE '.TBL_RACE." SET `kategorie`='$kategorie' WHERE `id`='$id'")
+$result=mysqli_query($db_conn, 'UPDATE '.TBL_RACE." SET `kategorie`='$kategorie' WHERE `id`='$id'")
 	or die('Chyba při provádění dotazu do databáze.');
 if ($result == FALSE)
 	die ('Nepodařilo se změnit údaje o závodě.');

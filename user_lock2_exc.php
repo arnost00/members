@@ -15,13 +15,13 @@ if (IsLoggedSmallAdmin() || IsLoggedFinance())
 	$gr_id = (isset($gr_id) && is_numeric($gr_id)) ? (int)$gr_id : 0;
 	$id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
 
-	$vysl2=MySQL_Query('SELECT * FROM '.TBL_USER.' WHERE `id`=\''.$id."'");
-	$zaznam2=MySQL_Fetch_Array($vysl2);
+	$vysl2=mysqli_query($db_conn, 'SELECT * FROM '.TBL_USER.' WHERE `id`=\''.$id."'");
+	$zaznam2=mysqli_fetch_array($vysl2);
 	if ($zaznam2 != FALSE)
 	{
 		$lock = (bool)($zaznam2['entry_locked']);
 		$lock = !$lock;
-		$result=MySQL_Query('UPDATE '.TBL_USER.' SET entry_locked=\''.$lock.'\' WHERE `id`=\''.$id."'")
+		$result=mysqli_query($db_conn, 'UPDATE '.TBL_USER.' SET entry_locked=\''.$lock.'\' WHERE `id`=\''.$id."'")
 			or die('Chyba při provádění dotazu do databáze.');
 		if ($result == FALSE)
 			die ('Nepodařilo se zamčít/odemčít přihlášky člena.');

@@ -17,13 +17,13 @@ if (IsLoggedSmallAdmin())
 	if ($id)
 	{
 		$hidden_result = false;
-		$vysl=MySQL_Query('SELECT * FROM '.TBL_USER.' WHERE `id`=\''.$id."'");
-		$zaznam=MySQL_Fetch_Array($vysl);
+		$vysl=mysqli_query($db_conn, 'SELECT * FROM '.TBL_USER.' WHERE `id`=\''.$id."'");
+		$zaznam=mysqli_fetch_array($vysl);
 		if ($zaznam != FALSE)
 		{
 			$hidden = (bool)($zaznam['hidden']);
 			$hidden = !$hidden;
-			$result=MySQL_Query('UPDATE '.TBL_USER.' SET hidden=\''.$hidden.'\' WHERE `id`=\''.$id."'")
+			$result=mysqli_query($db_conn, 'UPDATE '.TBL_USER.' SET hidden=\''.$hidden.'\' WHERE `id`=\''.$id."'")
 				or die('Chyba při provádění dotazu do databáze.');
 			if ($result == FALSE)
 				die ('Nepodařilo se skrýt/zpřístupnit člena.');
@@ -34,12 +34,12 @@ if (IsLoggedSmallAdmin())
 		$id2 = GetUserAccountId_Users($id);
 		if ($id2 && $hidden_result)
 		{
-			$vysl2=MySQL_Query('SELECT * FROM '.TBL_ACCOUNT.' WHERE `id`=\''.$id2."'");
-			$zaznam2=MySQL_Fetch_Array($vysl2);
+			$vysl2=mysqli_query($db_conn, 'SELECT * FROM '.TBL_ACCOUNT.' WHERE `id`=\''.$id2."'");
+			$zaznam2=mysqli_fetch_array($vysl2);
 			if ($zaznam2 != FALSE)
 			{
 				$lock = $hidden;
-				$result=MySQL_Query('UPDATE '.TBL_ACCOUNT.' SET locked=\''.$lock.'\' WHERE `id`=\''.$id2."'")
+				$result=mysqli_query($db_conn, 'UPDATE '.TBL_ACCOUNT.' SET locked=\''.$lock.'\' WHERE `id`=\''.$id2."'")
 					or die('Chyba při provádění dotazu do databáze.');
 				if ($result == FALSE)
 					die ('Nepodařilo se zamčít/odemčít účet člena.');

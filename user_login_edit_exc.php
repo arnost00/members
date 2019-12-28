@@ -14,8 +14,8 @@ function GenerateInfoEmail($type,$id,$login,$heslo,$email)
 	define ('EMAIL_ENDL',"\n");
 
 	$name = '';
-	@$vysledek=MySQL_Query("SELECT jmeno,prijmeni FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
-	if ($zaznam=MySQL_Fetch_Array($vysledek))
+	@$vysledek=mysqli_query($db_conn, "SELECT jmeno,prijmeni FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
+	if ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		$name = $zaznam['jmeno'].' '.$zaznam['prijmeni'];
 	}
@@ -23,8 +23,8 @@ function GenerateInfoEmail($type,$id,$login,$heslo,$email)
 	if ($login == '')
 	{
 		$id_acc=GetUserAccountId_Users($id);
-		@$vysledek=MySQL_Query("SELECT login FROM ".TBL_ACCOUNT." WHERE id = '$id_acc' LIMIT 1");
-		if ($zaznam=MySQL_Fetch_Array($vysledek))
+		@$vysledek=mysqli_query($db_conn, "SELECT login FROM ".TBL_ACCOUNT." WHERE id = '$id_acc' LIMIT 1");
+		if ($zaznam=mysqli_fetch_array($vysledek))
 		{
 			$login = $zaznam['login'];
 		}
@@ -103,7 +103,7 @@ if (IsLoggedSmallAdmin())
 			$result=CS_LOGIN_EXIST;
 		else
 		{
-			$vysledek=MySQL_Query("UPDATE ".TBL_ACCOUNT." SET login='$login', podpis='$podpis', policy_news='$news', policy_regs='$regs', policy_mng='$mng', policy_adm='$adm', policy_fin='$fin' WHERE id='$id2'")
+			$vysledek=mysqli_query($db_conn, "UPDATE ".TBL_ACCOUNT." SET login='$login', podpis='$podpis', policy_news='$news', policy_regs='$regs', policy_mng='$mng', policy_adm='$adm', policy_fin='$fin' WHERE id='$id2'")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($vysledek == FALSE)
 				die ("Nepodařilo se upravit účet členu.");
@@ -143,8 +143,8 @@ if (IsLoggedSmallAdmin())
 			$id2 = 9; // min. value
 			// find max idx in table "usxus" -->
 			{
-				@$vysledek=MySQL_Query("SELECT id_accounts FROM ".TBL_USXUS);
-				while ($zaznam=MySQL_Fetch_Array($vysledek))
+				@$vysledek=mysqli_query($db_conn, "SELECT id_accounts FROM ".TBL_USXUS);
+				while ($zaznam=mysqli_fetch_array($vysledek))
 				{
 					if ($zaznam["id_accounts"] > $id2)
 						$id2 = $zaznam["id_accounts"];
@@ -152,13 +152,13 @@ if (IsLoggedSmallAdmin())
 				$id2++;	// = maximum + 1
 			}
 			// <--
-			$vysledek=MySQL_Query("INSERT INTO ".TBL_ACCOUNT." (id,login,heslo,policy_news,policy_regs,policy_mng,policy_adm,policy_fin,podpis) VALUES ('$id2','$login','$hheslo','$news','$regs','$mng','$adm','$fin','$podpis')")
+			$vysledek=mysqli_query($db_conn, "INSERT INTO ".TBL_ACCOUNT." (id,login,heslo,policy_news,policy_regs,policy_mng,policy_adm,policy_fin,podpis) VALUES ('$id2','$login','$hheslo','$news','$regs','$mng','$adm','$fin','$podpis')")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($vysledek == FALSE)
 				die ("Nepodařilo se založit účet členu.");
 			else
 			{
-				$vysledek=MySQL_Query("INSERT INTO ".TBL_USXUS." (id_accounts,id_users) VALUES ('$id2','$id')")
+				$vysledek=mysqli_query($db_conn, "INSERT INTO ".TBL_USXUS." (id_accounts,id_users) VALUES ('$id2','$id')")
 					or die("Chyba při provádění dotazu do databáze.");
 				$result = CS_ACC_CREATED;
 			}
@@ -186,7 +186,7 @@ if (IsLoggedSmallAdmin())
 		{
 			$id2 = GetUserAccountId_Users($id);
 			$hheslo = md5($nheslo);
-			$vysledek=MySQL_Query("UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id2'")
+			$vysledek=mysqli_query($db_conn, "UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id2'")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($vysledek == FALSE)
 				die ("Nepodařilo se upravit heslo člena.");
@@ -235,7 +235,7 @@ else if (IsLoggedManager())
 			$result=CS_LOGIN_EXIST;
 		else
 		{
-			$result=MySQL_Query("UPDATE ".TBL_ACCOUNT." SET login='$login', podpis='$podpis', policy_news='$news', policy_mng='$mng2' WHERE id='$id2'")
+			$result=mysqli_query($db_conn, "UPDATE ".TBL_ACCOUNT." SET login='$login', podpis='$podpis', policy_news='$news', policy_mng='$mng2' WHERE id='$id2'")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se upravit účet členu.");
@@ -272,8 +272,8 @@ else if (IsLoggedManager())
 			$id2 = 9; // min. value
 			// find max idx in table "usxus" -->
 			{
-				@$vysledek=MySQL_Query("SELECT * FROM ".TBL_USXUS);
-				while ($zaznam=MySQL_Fetch_Array($vysledek))
+				@$vysledek=mysqli_query($db_conn, "SELECT * FROM ".TBL_USXUS);
+				while ($zaznam=mysqli_fetch_array($vysledek))
 				{
 					if ($zaznam["id_accounts"] > $id2)
 						$id2 = $zaznam["id_accounts"];
@@ -281,13 +281,13 @@ else if (IsLoggedManager())
 				$id2++;	// = maximum + 1
 			}
 			// <--
-			$result=MySQL_Query("INSERT INTO ".TBL_ACCOUNT." (id,login,heslo,policy_news,policy_regs,policy_mng,podpis) VALUES ('$id2','$login','$hheslo','$news',0,'$mng2','$podpis')")
+			$result=mysqli_query($db_conn, "INSERT INTO ".TBL_ACCOUNT." (id,login,heslo,policy_news,policy_regs,policy_mng,podpis) VALUES ('$id2','$login','$hheslo','$news',0,'$mng2','$podpis')")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se založit účet členu.");
 			else
 			{
-				$result=MySQL_Query("INSERT INTO ".TBL_USXUS." (id_accounts,id_users) VALUES ('$id2','$id')")
+				$result=mysqli_query($db_conn, "INSERT INTO ".TBL_USXUS." (id_accounts,id_users) VALUES ('$id2','$id')")
 					or die("Chyba při provádění dotazu do databáze.");
 				$result = CS_ACC_CREATED;
 			}
@@ -315,7 +315,7 @@ else if (IsLoggedManager())
 		{
 			$id2 = GetUserAccountId_Users($id);
 			$hheslo = md5($nheslo);
-			$result=MySQL_Query("UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id2'")
+			$result=mysqli_query($db_conn, "UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id2'")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se upravit heslo člena.");
@@ -356,7 +356,7 @@ else if (IsLoggedSmallManager())
 		{
 			$id2 = GetUserAccountId_Users($id);
 			$hheslo = md5($nheslo);
-			$result=MySQL_Query("UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id2'")
+			$result=mysqli_query($db_conn, "UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id2'")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se upravit heslo člena.");

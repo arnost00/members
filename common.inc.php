@@ -242,7 +242,7 @@ function ParseEmails($emails)
 {
 	if ($emails != '')
 	{
-		$mail_row = '';
+		$mail_row = array();
 		$line = trim($emails);
 		$cnt = substr_count($line,'@');	// one @ per email
 		if ($cnt > 1)

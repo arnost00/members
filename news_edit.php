@@ -20,8 +20,8 @@ $id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
 $sql_query = 'SELECT * FROM '.TBL_NEWS." WHERE id = '$id' LIMIT 1";
 
 
-@$vysledek=MySQL_Query($sql_query);
-@$zaznam=MySQL_Fetch_Array($vysledek);
+@$vysledek=mysqli_query($db_conn, $sql_query);
+@$zaznam=mysqli_fetch_array($vysledek);
 $update=$id;
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 require_once ("./common.inc.php");

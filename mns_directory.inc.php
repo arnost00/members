@@ -17,7 +17,7 @@ $sub_query = $sc->get_sql_string();
 
 $query = 'SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob,entry_locked FROM '.TBL_USER.' WHERE chief_id = '.$usr->user_id.' OR id = '.$usr->user_id.$sub_query;
 //$query = 'SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob FROM '.TBL_USER.' WHERE chief_id = '.$usr->user_id.' OR id = '.$usr->user_id.' ORDER BY sort_name ASC '
-@$vysledek=MySQL_Query($query);
+@$vysledek=mysqli_query($db_conn, $query);
 
 if (IsSet($result) && is_numeric($result) && $result != 0)
 {
@@ -27,7 +27,7 @@ if (IsSet($result) && is_numeric($result) && $result != 0)
 }
 
 $i=1;
-if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
+if ($vysledek != FALSE && mysqli_num_rows($vysledek) > 0)
 {
 	$data_tbl = new html_table_mc();
 	$col = 0;
@@ -50,7 +50,7 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 //	echo $data_tbl->get_sort_row()."\n";
 	echo $data_tbl->get_header_row_with_sort()."\n";
 
-	while ($zaznam=MySQL_Fetch_Array($vysledek))
+	while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		if (!$zaznam['hidden'])
 		{

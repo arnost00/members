@@ -24,8 +24,8 @@ $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
 db_Connect();
 
-@$vysledek0=MySQL_Query("SELECT jmeno,prijmeni,reg FROM ".TBL_USER." WHERE id = $id LIMIT 1");
-@$zaznam0=MySQL_Fetch_Array($vysledek0);
+@$vysledek0=mysqli_query($db_conn, "SELECT jmeno,prijmeni,reg FROM ".TBL_USER." WHERE id = $id LIMIT 1");
+@$zaznam0=mysqli_fetch_array($vysledek0);
 
 $data_tbl = new html_table_nfo;
 echo $data_tbl->get_css()."\n";
@@ -51,9 +51,9 @@ echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
-@$vysledek=MySQL_Query('SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob FROM '.TBL_USER.' WHERE chief_id = '.$id.' ORDER BY sort_name ASC ');
+@$vysledek=mysqli_query($db_conn, 'SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob FROM '.TBL_USER.' WHERE chief_id = '.$id.' ORDER BY sort_name ASC ');
 
-while ($zaznam=MySQL_Fetch_Array($vysledek))
+while ($zaznam=mysqli_fetch_array($vysledek))
 {
 	if (!$zaznam['hidden'])
 	{

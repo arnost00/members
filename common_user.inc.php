@@ -2,8 +2,10 @@
 <?
 function GetUserAccountId_Users($users_id)	// get id_accounts from "usxus" for id_users == x
 {
-	$vysl=MySQL_Query("SELECT id_accounts FROM ".TBL_USXUS." WHERE id_users = '$users_id' LIMIT 1");
-	$zazn=MySQL_Fetch_Array($vysl);
+	global $db_conn;
+	
+	$vysl=mysqli_query($db_conn,"SELECT id_accounts FROM ".TBL_USXUS." WHERE id_users = '$users_id' LIMIT 1");
+	$zazn=mysqli_fetch_array($vysl);
 	if ($zazn != FALSE)
 		return $zazn['id_accounts'];
 	else
@@ -12,8 +14,8 @@ function GetUserAccountId_Users($users_id)	// get id_accounts from "usxus" for i
 /*
 function GetUserAccountId_Id($id)	// get id_accounts from "usxus" for id == x
 {
-	$vysl=MySQL_Query("SELECT id_accounts FROM ".TBL_USXUS." WHERE id = '$id' LIMIT 1");
-	$zazn=MySQL_Fetch_Array($vysl);
+	$vysl=mysqli_query($db_conn,"SELECT id_accounts FROM ".TBL_USXUS." WHERE id = '$id' LIMIT 1");
+	$zazn=mysqli_fetch_array($vysl);
 	if ($zazn != FALSE)
 	{
 		return $zazn['id_accounts'];
@@ -24,8 +26,8 @@ function GetUserAccountId_Id($id)	// get id_accounts from "usxus" for id == x
 
 function GetUserId_Account($id)	// get id_users from "usxus" for id_accounts == x
 {
-	$vysl=MySQL_Query("SELECT id_users FROM ".TBL_USXUS." WHERE id_accounts = '$id' LIMIT 1");
-	$zazn=MySQL_Fetch_Array($vysl);
+	$vysl=mysqli_query($db_conn,"SELECT id_users FROM ".TBL_USXUS." WHERE id_accounts = '$id' LIMIT 1");
+	$zazn=mysqli_fetch_array($vysl);
 	if ($zazn != FALSE)
 	{
 		return $zazn['id_users'];
@@ -37,14 +39,16 @@ function GetUserId_Account($id)	// get id_users from "usxus" for id_accounts == 
 
 function CheckIfLoginIsValid($new_login,$curr_id)
 {
-	@$vysl=MySQL_Query("SELECT id,login FROM ".TBL_ACCOUNT." WHERE login = '$new_login' LIMIT 1");
-	if (mysql_num_rows ($vysl) == 0)
+	global $db_conn;
+
+	@$vysl=mysqli_query($db_conn,"SELECT id,login FROM ".TBL_ACCOUNT." WHERE login = '$new_login' LIMIT 1");
+	if (mysqli_num_rows ($vysl) == 0)
 	{
 		return true;
 	}
 	else
 	{
-		$zazn=MySQL_Fetch_Array($vysl);
+		$zazn=mysqli_fetch_array($vysl);
 		if ($zazn["id"] == $curr_id)
 			return true;
 		else

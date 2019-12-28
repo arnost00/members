@@ -12,7 +12,7 @@ class CSOB_Export_Entry
 	public $data;
 	public $shortcut;
 
-	function CSOB_Export_Entry($shortcut)
+	function __construct($shortcut)
 	{
 		$this->shortcut = $shortcut;
 		$this->data = array();
@@ -71,7 +71,7 @@ class ORIS_Export
 	public $data;
 	public $shortcut;
 
-	function ORIS_Export($shortcut)
+	function __construct($shortcut)
 	{
 		$this->shortcut = $shortcut;
 		$this->data = array();
@@ -214,7 +214,7 @@ class CSV_Export
 	protected $quotes;
 	protected $apostrophe;
 
-	function CSV_Export($shortcut, $delim, $quotes, $apostrophe)
+	function __construct($shortcut, $delim, $quotes, $apostrophe)
 	{
 		$this->shortcut = $shortcut;
 		$this->delim = $delim;

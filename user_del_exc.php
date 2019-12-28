@@ -19,13 +19,13 @@ if (IsLoggedSmallAdmin())
 	db_Connect();
 	require_once "./common_user.inc.php";
 
-	@$vysledek=MySQL_Query("DELETE FROM ".TBL_USER." WHERE id = '$id'");
+	@$vysledek=mysqli_query($db_conn, "DELETE FROM ".TBL_USER." WHERE id = '$id'");
 	$id2 = GetUserAccountId_Users($id);
 	SaveItemToModifyLog_Delete(TBL_USER,'id = '.$id);
 	if ($id2)
 	{	// has account
-		@$vysledek=MySQL_Query("DELETE FROM ".TBL_ACCOUNT." WHERE id = '$id2'");
-		@$vysledek=MySQL_Query("DELETE FROM ".TBL_USXUS." WHERE id_accounts = '$id2'");
+		@$vysledek=mysqli_query($db_conn, "DELETE FROM ".TBL_ACCOUNT." WHERE id = '$id2'");
+		@$vysledek=mysqli_query($db_conn, "DELETE FROM ".TBL_USXUS." WHERE id_accounts = '$id2'");
 		SaveItemToModifyLog_Delete(TBL_ACCOUNT,'user.id = '.$id.' acc.id = '.$id2);
 	}
 	header("location: ".$g_baseadr."index.php?id=700&subid=1");
@@ -42,13 +42,13 @@ else if (IsLoggedManager())
 	db_Connect();
 	require_once "./common_user.inc.php";
 
-	@$vysledek=MySQL_Query("DELETE FROM ".TBL_USER." WHERE id = '$id'");
+	@$vysledek=mysqli_query($db_conn, "DELETE FROM ".TBL_USER." WHERE id = '$id'");
 	$id2 = GetUserAccountId_Users($id);
 	SaveItemToModifyLog_Delete(TBL_USER,'id = '.$id);
 	if ($id2)
 	{	// has account
-		@$vysledek=MySQL_Query("DELETE FROM ".TBL_ACCOUNT." WHERE id = '$id2'");
-		@$vysledek=MySQL_Query("DELETE FROM ".TBL_USXUS." WHERE id_accounts = '$id2'");
+		@$vysledek=mysqli_query($db_conn, "DELETE FROM ".TBL_ACCOUNT." WHERE id = '$id2'");
+		@$vysledek=mysqli_query($db_conn, "DELETE FROM ".TBL_USXUS." WHERE id_accounts = '$id2'");
 		SaveItemToModifyLog_Delete(TBL_ACCOUNT,'user.id = '.$id.' acc.id = '.$id2);
 	}
 	header("location: ".$g_baseadr."index.php?id=500&subid=1");

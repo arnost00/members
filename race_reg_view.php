@@ -24,10 +24,10 @@ db_Connect();
 
 $query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.termin, z.si_chip as t_si_chip, z.id_user, z.transport transport, z.ubytovani ubytovani FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id.' ORDER BY z.termin ASC, z.id ASC';
 
-@$vysledek=MySQL_Query($query);
+@$vysledek=mysqli_query($db_conn, $query);
 
-@$vysledek_z=MySQL_Query('SELECT * FROM '.TBL_RACE." WHERE `id`='$id' LIMIT 1");
-$zaznam_z = MySQL_Fetch_Array($vysledek_z);
+@$vysledek_z=mysqli_query($db_conn, 'SELECT * FROM '.TBL_RACE." WHERE `id`='$id' LIMIT 1");
+$zaznam_z = mysqli_fetch_array($vysledek_z);
 
 
 DrawPageSubTitle('Vybraný závod');
@@ -73,7 +73,7 @@ echo $data_tbl->get_header_row()."\n";
 $i=0;
 $trans=0;
 $ubyt=0;
-while ($zaznam=MySQL_Fetch_Array($vysledek))
+while ($zaznam=mysqli_fetch_array($vysledek))
 {
 	if(($select == 0 || $zaznam['chief_id'] == $usr->user_id || $zaznam['id_user'] == $usr->user_id) && $zaznam['hidden'] == 0)
 	{

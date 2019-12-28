@@ -3,7 +3,7 @@
 // new version for connect.inc.php
 // but is still in development :(
 // and not finished :(
-
+/* 
 require_once('cfg/_cfg.php');
 require_once('cfg/_tables.php');
 
@@ -64,8 +64,8 @@ function query_db($sql_query)
 {
 	global $db_query_cnt;
 	$db_query_cnt++;
-	$result=mysql_query($sql_query)
+	$result=mysqli_query($sql_query)
 		or error_db();
 	return $result;
-}
+}*/
 ?>

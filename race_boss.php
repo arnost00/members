@@ -25,10 +25,10 @@ DrawPageTitle('Editace vedoucí na závod');
 
 db_Connect();
 
-@$vysledek=MySQL_Query("SELECT * FROM ".TBL_RACE." where `id`='$id' LIMIT 1");
-$zaznam=MySQL_Fetch_Array($vysledek);
+@$vysledek=mysqli_query($db_conn, "SELECT * FROM ".TBL_RACE." where `id`='$id' LIMIT 1");
+$zaznam=mysqli_fetch_array($vysledek);
 
-@$vysledekU=MySQL_Query("SELECT id,prijmeni,jmeno,hidden FROM ".TBL_USER." ORDER BY sort_name ASC");
+@$vysledekU=mysqli_query($db_conn, "SELECT id,prijmeni,jmeno,hidden FROM ".TBL_USER." ORDER BY sort_name ASC");
 
 DrawPageSubTitle('Vybraný závod');
 
@@ -47,7 +47,7 @@ DrawPageSubTitle('Úprava');
 		<select name='boss'>
 <?
 	echo("<option value='0'".(($zaznam['vedouci'] == 0)? ' SELECTED' : '').">- - - -</option>");
-	while ($zaznamU=MySQL_Fetch_Array($vysledekU))
+	while ($zaznamU=mysqli_fetch_array($vysledekU))
 	{
 		if ($zaznamU['hidden'] == 0)
 		{

@@ -23,7 +23,7 @@ $query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob, ifnull(sum
 		left join '.TBL_FINANCE_TYPES.' ft on ft.id = u.finance_type
 		left join '.TBL_FINANCE.' f on u.id=f.id_users_user where f.storno is null AND ((u.chief_id = '.$usr->user_id.' and u.chief_pay is null) or u.id = '.$usr->user_id.') group by u.id '.$sub_query;
 // echo "|$query|";
-@$vysledek=MySQL_Query($query);
+@$vysledek=mysqli_query($db_conn, $query);
 //--------------------------------
 
 //priprava pro zobrazeni rodiny = sverenci, za ktere platim
@@ -35,7 +35,7 @@ $sub_query_family = $sc_family->get_sql_string();
 $query_family = 'SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob, ifnull(sum(f.amount),0) sum_amount, ft.nazev FROM '.TBL_USER.' u
 		left join '.TBL_FINANCE_TYPES.' ft on ft.id = u.finance_type
 		left join '.TBL_FINANCE.' f on u.id=f.id_users_user where f.storno is null AND ((u.chief_id = '.$usr->user_id.' and u.chief_pay = '.$usr->user_id.') or u.id = '.$usr->user_id.') group by u.id '.$sub_query;
-@$vysledek_family=MySQL_Query($query_family);
+@$vysledek_family=mysqli_query($db_conn, $query_family);
 //---------------------------------------------------------
 
 //funkce pro zobrazeni tabulky se sverenci nebo rodinou
@@ -61,7 +61,7 @@ function showNursechildAndFamilyTables($vysledek, $sc, $showTotal)
 	
 	$total = 0;
 	
-	while ($zaznam=MySQL_Fetch_Array($vysledek))
+	while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		if (!$zaznam['hidden'])
 		{
@@ -99,7 +99,7 @@ function showNursechildAndFamilyTables($vysledek, $sc, $showTotal)
 
 $no_result = true;
 
-if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
+if ($vysledek != FALSE && mysqli_num_rows($vysledek) > 0)
 {
 	$no_result = false;
 	echo "<hr>";
@@ -107,7 +107,7 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 	showNursechildAndFamilyTables($vysledek, $sc, false);
 }
 
-if ($vysledek_family != FALSE && mysql_num_rows($vysledek_family) > 0)
+if ($vysledek_family != FALSE && mysqli_num_rows($vysledek_family) > 0)
 {
 	$no_result = false;
 	echo "<hr>";

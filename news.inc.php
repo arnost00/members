@@ -26,8 +26,8 @@ $sql_query = 'SELECT '.TBL_NEWS.'.*, '.TBL_ACCOUNT.'.podpis FROM '.TBL_NEWS.' LE
 if ($news != 1)
 	$sql_query .= " LIMIT ".GC_NEWS_LIMIT;
 
-@$vysledek=MySQL_Query($sql_query);
-$cnt= ($vysledek != FALSE) ? mysql_num_rows($vysledek) : 0;
+@$vysledek=mysqli_query($db_conn, $sql_query);
+$cnt= ($vysledek != FALSE) ? mysqli_num_rows($vysledek) : 0;
 if($cnt > 0)
 {
 ?>
@@ -46,7 +46,7 @@ include ('common_news.inc.php');
 		echo '</TD></TR>';
 	}
 
-	while ($zaznam=MySQL_Fetch_Array($vysledek))
+	while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		PrintNewsItem($zaznam,IsLoggedAdmin(),$usr,false);
 	}

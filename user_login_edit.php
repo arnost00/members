@@ -15,8 +15,8 @@ require_once ("./common.inc.php");
 db_Connect();
 $id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
 
-@$vysledek=MySQL_Query("SELECT jmeno,prijmeni,datum,hidden,email,reg FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
-@$zaznam=MySQL_Fetch_Array($vysledek);
+@$vysledek=mysqli_query($db_conn, "SELECT jmeno,prijmeni,datum,hidden,email,reg FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
+@$zaznam=mysqli_fetch_array($vysledek);
 if (!$zaznam)
 {	// error not exist
 	header("location: ".$g_baseadr."error.php?code=201");
@@ -26,8 +26,8 @@ require_once "./header.inc.php"; // header obsahuje uvod html a konci <BODY>
 DrawPageTitle('Členská základna - Administrace uživatelských účtů');
 
 	$id_acc = GetUserAccountId_Users($id);
-	$vysledek2=MySQL_Query("SELECT login,podpis,policy_news,policy_regs,policy_mng,policy_adm,policy_fin,locked FROM ".TBL_ACCOUNT." WHERE id = '$id_acc' LIMIT 1");
-	$zaznam2=MySQL_Fetch_Array($vysledek2);
+	$vysledek2=mysqli_query($db_conn, "SELECT login,podpis,policy_news,policy_regs,policy_mng,policy_adm,policy_fin,locked FROM ".TBL_ACCOUNT." WHERE id = '$id_acc' LIMIT 1");
+	$zaznam2=mysqli_fetch_array($vysledek2);
 ?>
 <script>
 function changeVisibility(name, atr_id)
@@ -102,7 +102,21 @@ function checkAllVisibilities()
 </TABLE>
 <BR><hr><BR>
 <?
-	if($zaznam2 != FALSE)
+$new_account = ($zaznam2 == FALSE);
+if ($new_account)
+{
+	$zaznam2["login"] = '';
+	$zaznam2["podpis"] = '';
+	$zaznam2["policy_news"] = 0;
+	$zaznam2["policy_regs"] = 0;
+	$zaznam2["policy_mng"] = 0;
+	$zaznam2["policy_adm"] = 0;
+	$zaznam2["policy_fin"] = 0;
+	$zaznam2["locked"] = 0;
+	
+}
+
+	if(!$new_account)
 		DrawPageSubTitle('Editace účtu vybraného člena oddílu');
 	else
 		DrawPageSubTitle('Založení nového účtu vybranému členu oddílu');
@@ -110,7 +124,7 @@ function checkAllVisibilities()
 <FORM METHOD=POST ACTION="./user_login_edit_exc.php?type=<? echo ($zaznam2 != FALSE) ? "1" : "2"; echo "&id=".$id;?>">
 <TABLE width="90%">
 <?
-	if($zaznam2 == FALSE)
+	if($new_account)
 	{
 ?>
 <TR>
@@ -174,7 +188,7 @@ function checkAllVisibilities()
 
 <?
 }
-if($zaznam2 == FALSE)
+if($new_account)
 { // novy ucet
 require_once ('generators.inc.php');
 ?>
@@ -237,7 +251,7 @@ require_once ('generators.inc.php');
 	<TD colspan="3"><B>Podpis</B> je použit při zobrazování novinek jako informace kdo novinku napsal. Také se zobrazuje při přihlášení v navigační liště vlevo dole.<BR></TD>
 </TR>
 <?
-if($zaznam2 != FALSE)
+if(!$new_account)
 { // zmena uctu
 ?>
 </TABLE>

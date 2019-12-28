@@ -43,9 +43,9 @@ $d1 = $curr_date;
 
 $query="SELECT id,datum,typ,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,nazev,vicedenni,odkaz,vedouci, oddil,send,misto,cancelled,typ0 FROM ".TBL_RACE.' WHERE datum >= '.$d1.' || datum2 >= '.$d1.' ORDER BY datum, datum2, id';
 
-@$vysledek=MySQL_Query($query);
+@$vysledek=mysqli_query($db_conn, $query);
 
-if (mysql_num_rows($vysledek) > 0)
+if (mysqli_num_rows($vysledek) > 0)
 {
 	echo('<table>'."\n");
 	echo('<tr>');
@@ -63,7 +63,7 @@ if (mysql_num_rows($vysledek) > 0)
 	echo('<th>byl</th>');
 	echo('<th>bude</th>');
 	echo('</tr>'."\n");
-		while ($zaznam=MySQL_Fetch_Array($vysledek))
+		while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		$termin_class = 'center';
 		$termin2_class = 'center';

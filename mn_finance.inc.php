@@ -31,12 +31,12 @@ $query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,entry_locked, ifnull(f.sum_amoun
 		left join '.TBL_FINANCE_TYPES.' ft on ft.id = u.finance_type
 		group by u.id '.$sub_query;
 
-@$vysledek=MySQL_Query($query);
+@$vysledek=mysqli_query($db_conn, $query);
 
 require_once ('./common_fin.inc.php');
 $enable_fin_types = IsFinanceTypeTblFilled();
 $i=1;
-if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
+if ($vysledek != FALSE && mysqli_num_rows($vysledek) > 0)
 {
 	$data_tbl = new html_table_mc();
 	$col = 0;
@@ -56,7 +56,7 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 	$data_tbl->set_sort_col(3,$sc->get_col_content(1));
 	echo $data_tbl->get_header_row_with_sort()."\n";
 	
-	while ($zaznam=MySQL_Fetch_Array($vysledek))
+	while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		if (!$zaznam['hidden'])
 		{

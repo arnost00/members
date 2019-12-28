@@ -11,8 +11,6 @@ require_once('./cfg/_uc.php');
 require_once("./cfg/_colors.php");
 require_once("./cfg/_globals.php");
 require_once ("./connect.inc.php");
-if (!$g_is_release)
-	require_once ('debuglib.phps');
 require_once ("./sess.inc.php");
 require_once ("./common.inc.php");
 require_once ("./ctable.inc.php");
@@ -327,8 +325,6 @@ if (!$g_is_release || IsLoggedAdmin())
 	_print_global_RT_difference_TS();
 	echo "</span><BR>\n";
 }
-if (!$g_is_release)
-	show_vars(false,true,0);
 
 HTML_Footer();
 ?>

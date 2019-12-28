@@ -27,9 +27,9 @@ DrawPageTitle('Adresář členů oddílu');
 require_once ("./common_user.inc.php");
 
 $columns = 'id, prijmeni,jmeno,email,hidden,reg';
-@$vysledek=MySQL_Query("SELECT ".$columns." FROM ".TBL_USER." ORDER BY sort_name ASC");
+@$vysledek=mysqli_query($db_conn, "SELECT ".$columns." FROM ".TBL_USER." ORDER BY sort_name ASC");
 
-if (($vysledek != FALSE) && mysql_num_rows($vysledek) > 0)
+if (($vysledek != FALSE) && mysqli_num_rows($vysledek) > 0)
 { // aspon jeden zaznam
 $data_tbl = new html_table_mc();
 $col = 0;
@@ -45,7 +45,7 @@ echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
-while ($zaznam=MySQL_Fetch_Array($vysledek))
+while ($zaznam=mysqli_fetch_array($vysledek))
 {
 	if ($zaznam["hidden"] == 0)
 	{

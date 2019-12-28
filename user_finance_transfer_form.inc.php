@@ -29,7 +29,7 @@ echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 
 $users_query = "select id, reg, sort_name  from `".TBL_USER."` where hidden=false order by sort_name asc;";
-$users_result=mysql_query($users_query);
+$users_result=mysqli_query($db_conn, $users_query);
 $to_options = array();
 
 $opt = array();
@@ -39,7 +39,7 @@ $to_options[] = $opt;
 
 include ('common_user.inc.php');
 
-while ($record=MySQL_Fetch_Array($users_result))
+while ($record=mysqli_fetch_array($users_result))
 {
 	$opt = array();
 	$opt['value'] = $record['id'];

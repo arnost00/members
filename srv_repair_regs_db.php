@@ -16,23 +16,23 @@ if (IsLoggedAdmin())
 	$races = Array();
 	$users = Array();
 
-	$vysledekR=MySQL_Query("SELECT id FROM ".TBL_RACE);
-	while ($zaznamR=MySQL_Fetch_Array($vysledekR))
+	$vysledekR=mysqli_query($db_conn, "SELECT id FROM ".TBL_RACE);
+	while ($zaznamR=mysqli_fetch_array($vysledekR))
 	{
 		$races[] = $zaznamR['id'];
 	}
 
-	$vysledekU=MySQL_Query("SELECT id FROM ".TBL_USER);
-	while ($zaznamU=MySQL_Fetch_Array($vysledekU))
+	$vysledekU=mysqli_query($db_conn, "SELECT id FROM ".TBL_USER);
+	while ($zaznamU=mysqli_fetch_array($vysledekU))
 	{
 		$users[] = $zaznamU['id'];
 	}
 
 	$i = 0;
 	$j = 0;
-	$vysledek=MySQL_Query("SELECT id,id_zavod,id_user FROM ".TBL_ZAVXUS);
-	$cnt = mysql_num_rows($vysledek);
-	while ($zaznam=MySQL_Fetch_Array($vysledek))
+	$vysledek=mysqli_query($db_conn, "SELECT id,id_zavod,id_user FROM ".TBL_ZAVXUS);
+	$cnt = mysqli_num_rows($vysledek);
+	while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		if(in_array($zaznam['id_zavod'],$races) && in_array($zaznam['id_user'],$users))
 		{
@@ -40,7 +40,7 @@ if (IsLoggedAdmin())
 		}
 		else
 		{
-			$result=MySQL_Query("DELETE FROM ".TBL_ZAVXUS." WHERE id='".$zaznam['id']."'")
+			$result=mysqli_query($db_conn, "DELETE FROM ".TBL_ZAVXUS." WHERE id='".$zaznam['id']."'")
 			or die("Chyba při provádění dotazu do databáze.");
 			if ($result != FALSE)
 				$j++;

@@ -42,10 +42,10 @@ echo $data_tbl->get_header_row()."\n";
 // u.*
 
 $query='SELECT u.*, u2.jmeno as ch_jmeno, u2.prijmeni as ch_prijmeni, u2.hidden as ch_hidden FROM '.TBL_USER.' as u LEFT JOIN '.TBL_USER.' as u2 ON u.chief_id = u2.id ORDER BY sort_name ASC';
-@$vysledek=MySQL_Query($query);
+@$vysledek=mysqli_query($db_conn, $query);
 
 $i=1;
-while ($zaznam=MySQL_Fetch_Array($vysledek))
+while ($zaznam=mysqli_fetch_array($vysledek))
 {
 	if (!$zaznam['hidden'])
 	{
@@ -71,8 +71,8 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 				if ($zaznam['chief_pay'] != null)
 				{
 					$query2='SELECT * FROM '.TBL_USER.' WHERE id = '.$zaznam['chief_pay'].' LIMIT 1';
-					@$vysledek2=MySQL_Query($query2);
-					if ($zaznam2=MySQL_Fetch_Array($vysledek2))
+					@$vysledek2=mysqli_query($db_conn, $query2);
+					if ($zaznam2=mysqli_fetch_array($vysledek2))
 					{
 						if ($zaznam['chief_pay'] != $zaznam['chief_id'] || $zaznam2['hidden']) 
 							$val.='<span class="TextAlert2">';

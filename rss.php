@@ -28,12 +28,12 @@ if(db_Connect(true))
 
 	$curr_date = GetCurrentDate();
 
-	@$vysledek=MySQL_Query("SELECT id,datum,datum2,nazev,typ,ranking,odkaz,prihlasky, prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, vicedenni,misto,oddil, vedouci,cancelled FROM ".TBL_RACE." WHERE datum >= ".$curr_date." AND datum <= ".IncDate($curr_date,GC_SHOW_RACE_DAYS)." ORDER BY datum, datum2, id");
-	if (mysql_num_rows($vysledek) > 0)
+	@$vysledek=mysqli_query($db_conn, "SELECT id,datum,datum2,nazev,typ,ranking,odkaz,prihlasky, prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, vicedenni,misto,oddil, vedouci,cancelled FROM ".TBL_RACE." WHERE datum >= ".$curr_date." AND datum <= ".IncDate($curr_date,GC_SHOW_RACE_DAYS)." ORDER BY datum, datum2, id");
+	if (mysqli_num_rows($vysledek) > 0)
 	{
 		$item->link = $g_baseadr.'?id=4';
 		$item->description = 'Jsou to:';
-		while ($zaznam=MySQL_Fetch_Array($vysledek))
+		while ($zaznam=mysqli_fetch_array($vysledek))
 		{
 			if($zaznam['vicedenni'])
 				$datum=Date2StringFT($zaznam['datum'],$zaznam['datum2']);
@@ -62,13 +62,13 @@ if(db_Connect(true))
 	$d1 = $curr_date;
 	$d2 = IncDate($curr_date,GC_SHOW_REG_DAYS);
 	$query = 'SELECT id, datum, datum2, nazev, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, vedouci, cancelled FROM '.TBL_RACE.' WHERE ((prihlasky1 >= '.$d1.' && prihlasky1 <= '.$d2.') || (prihlasky2 >= '.$d1.' && prihlasky2 <= '.$d2.') || (prihlasky3 >= '.$d1.' && prihlasky3 <= '.$d2.') || (prihlasky4 >= '.$d1.' && prihlasky4 <= '.$d2.') || (prihlasky5 >= '.$d1.' && prihlasky5 <= '.$d2.')) ORDER BY datum';
-	@$vysledek=MySQL_Query($query);
+	@$vysledek=mysqli_query($db_conn, $query);
 
-	if (mysql_num_rows($vysledek) > 0)
+	if (mysqli_num_rows($vysledek) > 0)
 	{
 		$item->link = $g_baseadr.'?id=4';
 		$item->description = 'Jsou to:';
-		while ($zaznam=MySQL_Fetch_Array($vysledek))
+		while ($zaznam=mysqli_fetch_array($vysledek))
 		{
 			if($zaznam['vicedenni'])
 				$datum=Date2StringFT($zaznam['datum'],$zaznam['datum2']);
@@ -96,13 +96,13 @@ if(db_Connect(true))
 	$item->pubDate = $curr_xml_date;
 
 	$sql_query = "SELECT * FROM ".TBL_NEWS." ORDER BY datum DESC,id DESC LIMIT 5";
-	@$vysledek=MySQL_Query($sql_query);
+	@$vysledek=mysqli_query($db_conn, $sql_query);
 	$NewsLastDate = 0;
 	$j=0;
-	if (mysql_num_rows($vysledek) > 0)
+	if (mysqli_num_rows($vysledek) > 0)
 	{
 		$item->description = 'Jsou to:';
-		while ($zaznam=MySQL_Fetch_Array($vysledek))
+		while ($zaznam=mysqli_fetch_array($vysledek))
 		{
 			$datum = Date2String($zaznam["datum"]);
 			if ($NewsLastDate < $zaznam["datum"])

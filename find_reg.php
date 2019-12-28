@@ -51,8 +51,8 @@ if($reg != 0 || $year != 0)
 	if($reg != 0)
 	{
 		DrawPageSubTitle('Dle registračního čísla - '.$g_shortcut.RegNumToStr($reg));
-		@$vysledek=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE reg = ".$reg." ORDER BY reg ASC");
-		$cnt= ($vysledek != FALSE) ? mysql_num_rows($vysledek) : 0;
+		@$vysledek=mysqli_query($db_conn, "SELECT * FROM ".TBL_USER." WHERE reg = ".$reg." ORDER BY reg ASC");
+		$cnt= ($vysledek != FALSE) ? mysqli_num_rows($vysledek) : 0;
 		if($cnt > 0)
 		{
 			$data_tbl = new html_table_mc();
@@ -65,7 +65,7 @@ if($reg != 0 || $year != 0)
 			echo $data_tbl->get_header()."\n";
 			echo $data_tbl->get_header_row()."\n";
 		
-			while ($zaznam=MySQL_Fetch_Array($vysledek))
+			while ($zaznam=mysqli_fetch_array($vysledek))
 			{
 				$row = array();
 				$row[] = $g_shortcut.RegNumToStr($zaznam['reg']);
@@ -88,8 +88,8 @@ if($reg != 0 || $year != 0)
 		$y1 = $year0;
 		$y2 = $year0 + 99;
 
-		@$vysledek=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE reg >= ".$y1." AND reg <= ".$y2." ORDER BY reg ASC");
-		$cnt= ($vysledek != FALSE) ? mysql_num_rows($vysledek) : 0;
+		@$vysledek=mysqli_query("SELECT * FROM ".TBL_USER." WHERE reg >= ".$y1." AND reg <= ".$y2." ORDER BY reg ASC");
+		$cnt= ($vysledek != FALSE) ? mysqli_num_rows($vysledek) : 0;
 		if($cnt > 0)
 		{
 			$data_tbl = new html_table_mc();
@@ -102,7 +102,7 @@ if($reg != 0 || $year != 0)
 			echo $data_tbl->get_header()."\n";
 			echo $data_tbl->get_header_row()."\n";
 		
-			while ($zaznam=MySQL_Fetch_Array($vysledek))
+			while ($zaznam=mysqli_fetch_array($vysledek))
 			{
 				$row = array();
 				$row[] = $g_shortcut.RegNumToStr($zaznam['reg']);

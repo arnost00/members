@@ -35,8 +35,8 @@ db_Connect();
 
 if($id_zav > 0)
 {
-	@$vysledek_z=MySQL_Query("SELECT typ FROM ".TBL_RACE." WHERE id=$id_zav");
-	$zaznam_z = MySQL_Fetch_Array($vysledek_z);
+	@$vysledek_z=mysqli_query($db_conn, "SELECT typ FROM ".TBL_RACE." WHERE id=$id_zav");
+	$zaznam_z = mysqli_fetch_array($vysledek_z);
 
 	$sub_query = ($termin != 0) ? ' AND z.termin='.$termin : '';
 		
@@ -51,9 +51,9 @@ else
 //	$creg = 1; // central reg.
 }
 
-@$vysledek=MySQL_Query($query);
+@$vysledek=mysqli_query($db_conn, $query);
 
-if (mysql_num_rows($vysledek) == 0)
+if (mysqli_num_rows($vysledek) == 0)
 {
 	echo "Nikdo není přihlášen.";
 }
@@ -64,7 +64,7 @@ else
 	{ // ORIS
 		$registration = new ORIS_Export($g_shortcut);
 		
-		while ($zaznam=MySQL_Fetch_Array($vysledek))
+		while ($zaznam=mysqli_fetch_array($vysledek))
 		{
 			$registration->add_line_registration($zaznam['prijmeni'], $zaznam['jmeno'], $zaznam['reg']);
 		}
@@ -75,7 +75,7 @@ else
 	{
 		$entry = new CSOB_Export_Entry($g_shortcut);
 
-		while ($zaznam=MySQL_Fetch_Array($vysledek))
+		while ($zaznam=mysqli_fetch_array($vysledek))
 		{
 			$lic = GetLicence($zaznam['lic'],$zaznam['lic_mtbo'],$zaznam['lic_lob'],$race_type);
 			$kat = ($id_zav > 0) ? $zaznam['kat'] : '';

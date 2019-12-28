@@ -7,7 +7,7 @@ DrawPageTitle('Náhled na účty - Administrace');
 <?
 // specialni vypis user z accounts -->
 
-@$list_v=MySQL_Query("SELECT id,login,podpis,policy_news,policy_regs,policy_mng,policy_fin,locked,last_visit, policy_adm FROM ".TBL_ACCOUNT." ORDER BY id");
+@$list_v=mysqli_query($db_conn, "SELECT id,login,podpis,policy_news,policy_regs,policy_mng,policy_fin,locked,last_visit, policy_adm FROM ".TBL_ACCOUNT." ORDER BY id");
 
 $data_tbl = new html_table_mc();
 $col = 0;
@@ -27,7 +27,7 @@ echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
-while ($list_z=MySQL_Fetch_Array($list_v))
+while ($list_z=mysqli_fetch_array($list_v))
 {
 	$acc_r = '<code>';
 	$acc_r .= ($list_z['policy_news'] == 1) ? 'N ' : '. ';
@@ -40,8 +40,8 @@ while ($list_z=MySQL_Fetch_Array($list_v))
 	
 	if ($g_enable_mailinfo)
 	{
-		$vysledek=MySQL_Query("SELECT m.* FROM ".TBL_MAILINFO." m, ".TBL_USXUS." u WHERE m.id_user = u.id_users AND u.id_accounts = '".$list_z["id"]."'  LIMIT 1");
-		$zaznam=MySQL_Fetch_Array($vysledek);
+		$vysledek=mysqli_query($db_conn, "SELECT m.* FROM ".TBL_MAILINFO." m, ".TBL_USXUS." u WHERE m.id_user = u.id_users AND u.id_accounts = '".$list_z["id"]."'  LIMIT 1");
+		$zaznam=mysqli_fetch_array($vysledek);
 		if ($zaznam == FALSE)
 		{
 			$ei = 'Ne';

@@ -7,6 +7,7 @@ if (!IsLogged())
 {
 	$login = (isset($_POST[_VAR_USER_LOGIN])) ? $_POST[_VAR_USER_LOGIN] : '';
 	$password = (isset($_POST[_VAR_USER_PASS])) ? $_POST[_VAR_USER_PASS] : '';
+	
 	if($login == '')
 	{
 		header('location: '.$g_baseadr);
@@ -14,13 +15,13 @@ if (!IsLogged())
 	}
 	db_Connect();
 	$login = correct_sql_string($login);
-	@$vysledek=MySQL_Query('SELECT * FROM '.TBL_ACCOUNT.' WHERE `login` = \''.$login.'\' LIMIT 1');
+	@$vysledek=mysqli_query($db_conn, 'SELECT * FROM '.TBL_ACCOUNT.' WHERE `login` = \''.$login.'\' LIMIT 1');
 	if (!$vysledek)
 	{
 		header("location: ".$g_baseadr."error.php?code=12");
 		exit;
 	}
-	$zaznam=MySQL_Fetch_Array($vysledek);
+	$zaznam=mysqli_fetch_array($vysledek);
 	if (!$zaznam)
 	{
 		if ($g_log_loginfailed)
@@ -72,10 +73,10 @@ if (!IsLogged())
 	}
 	$usr->cross_id = 0;	// preset value
 	$usr->user_id = 0; // preset value
-	@$vysledek2=MySQL_Query("SELECT * FROM ".TBL_USXUS." WHERE id_accounts = '$usr->account_id' LIMIT 1");
+	@$vysledek2=mysqli_query($db_conn, "SELECT * FROM ".TBL_USXUS." WHERE id_accounts = '$usr->account_id' LIMIT 1");
 	if ($vysledek2)
 	{
-		$zaznam2=MySQL_Fetch_Array($vysledek2);
+		$zaznam2=mysqli_fetch_array($vysledek2);
 		if ($zaznam2)
 		{
 			$usr->cross_id=$zaznam2["id"];
@@ -88,7 +89,7 @@ if (!IsLogged())
 //	$sqldate= $currdate['year']."-".$currdate['mon']."-".$currdate['mday'];
 	$sqldate= GetCurrentDate();
 	$id=$zaznam["id"];
-	MySQL_Query("UPDATE ".TBL_ACCOUNT." SET last_visit='$sqldate' WHERE id='$id'")
+	mysqli_query($db_conn, "UPDATE ".TBL_ACCOUNT." SET last_visit='$sqldate' WHERE id='$id'")
 		or die("Chyba při provádění dotazu do databáze.");
 	//<--
 	require_once ("log_browser.php");

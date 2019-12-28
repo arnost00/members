@@ -39,8 +39,8 @@ $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
 db_Connect();
 
-@$vysledek_z=MySQL_Query("SELECT * FROM ".TBL_RACE." WHERE id=$id");
-$zaznam_z = MySQL_Fetch_Array($vysledek_z);
+@$vysledek_z=mysqli_query($db_conn, "SELECT * FROM ".TBL_RACE." WHERE id=$id");
+$zaznam_z = mysqli_fetch_array($vysledek_z);
 
 DrawPageSubTitle('Vybraný závod');
 
@@ -72,7 +72,7 @@ $sub_query = (IsLoggedRegistrator() || IsLoggedManager()) ? '' : ' AND '.TBL_USE
 
 $query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, kat, pozn, pozn_in, termin, entry_locked, '.TBL_ZAVXUS.'.transport, '.TBL_ZAVXUS.'.ubytovani FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query.' ORDER BY sort_name ASC';
 
-@$vysledek=MySQL_Query($query);
+@$vysledek=mysqli_query($db_conn, $query);
 
 echo '<TABLE width="90%">';
 echo '<TR>';
@@ -89,7 +89,7 @@ $is_spol_ubyt_auto = ($zaznam_z["ubytovani"]==2) && $g_enable_race_accommodation
 
 $i=0;
 $us_rows = array();
-while ($zaznam=MySQL_Fetch_Array($vysledek))
+while ($zaznam=mysqli_fetch_array($vysledek))
 {
 	if ($zaznam['entry_locked'] == 0)
 	{
@@ -307,15 +307,15 @@ echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
-@$vysledek=MySQL_Query("SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod=$id ORDER BY id");
+@$vysledek=mysqli_query("SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod=$id ORDER BY id");
 
 $i=0;
 $trans=0;
 $ubyt=0;
-while ($zaznam=MySQL_Fetch_Array($vysledek))
+while ($zaznam=mysqli_fetch_array($vysledek))
 {
-	@$vysledek1=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE id=$zaznam[id_user] LIMIT 1");
-	$zaznam1=MySQL_Fetch_Array($vysledek1);
+	@$vysledek1=mysqli_query("SELECT * FROM ".TBL_USER." WHERE id=$zaznam[id_user] LIMIT 1");
+	$zaznam1=mysqli_fetch_array($vysledek1);
 	if ($zaznam1)
 	{
 		$i++;

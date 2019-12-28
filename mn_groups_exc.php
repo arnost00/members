@@ -19,20 +19,20 @@ switch ($type)
 {
 	case 1:
 		// reset trenera
-		$result=MySQL_Query("UPDATE ".TBL_USER." SET chief_id = '0', chief_pay = null WHERE id='".$id."'");
+		$result=mysqli_query($db_conn, "UPDATE ".TBL_USER." SET chief_id = '0', chief_pay = null WHERE id='".$id."'");
 		break;
 	case 2:
 		// reset platiciho trenera
 		if (IsLoggedSmallAdmin())
 		{
-			$result=MySQL_Query("UPDATE ".TBL_USER." SET chief_pay = null WHERE id='".$id."'");
+			$result=mysqli_query($db_conn, "UPDATE ".TBL_USER." SET chief_pay = null WHERE id='".$id."'");
 		}
 		break;
 	case 3:
 		// povol platiciho trenera
 		if (IsLoggedSmallAdmin())
 		{
-			$result=MySQL_Query("UPDATE ".TBL_USER." SET chief_pay = chief_id WHERE id='".$id."'");
+			$result=mysqli_query($db_conn, "UPDATE ".TBL_USER." SET chief_pay = chief_id WHERE id='".$id."'");
 		}
 		break;
 }

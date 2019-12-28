@@ -8,8 +8,8 @@ DrawPageTitle('Nastavení osobních údajů členů oddílu');
 if (IsLogged())
 {
 
-$vysledek=MySQL_Query("SELECT login,podpis FROM ".TBL_ACCOUNT." WHERE id = '$usr->account_id' LIMIT 1");
-$curr_usr=MySQL_Fetch_Array($vysledek);
+$vysledek=mysqli_query($db_conn, "SELECT login,podpis FROM ".TBL_ACCOUNT." WHERE id = '$usr->account_id' LIMIT 1");
+$curr_usr=mysqli_fetch_array($vysledek);
 
 if (IsSet($result) && is_numeric($result) && $result != 0)
 {

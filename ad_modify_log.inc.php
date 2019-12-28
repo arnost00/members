@@ -6,7 +6,7 @@ DrawPageTitle('Výpis změn v databázi');
 <CENTER>
 <?
 $sql_query = "SELECT * FROM ".TBL_MODLOG." ORDER BY id DESC";
-$vysledek=mysql_query($sql_query);
+$vysledek=mysqli_query($db_conn, $sql_query);
 if($vysledek != FALSE)
 {
 	$data_tbl = new html_table_mc();
@@ -22,7 +22,7 @@ if($vysledek != FALSE)
 	echo $data_tbl->get_header()."\n";
 	echo $data_tbl->get_header_row()."\n";
 
-	while ($zaznam=mysql_fetch_array($vysledek))
+	while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		$row = array();
 		$row[] = $zaznam['id'];

@@ -49,7 +49,7 @@ if (IsLoggedSmallAdmin())
 	{
 		$update = (isset($update) && is_numeric($update)) ? (int)$update : 0;
 
-		$result=MySQL_Query("UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic='$lic', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin', rc='$rc', narodnost='$narodnost' WHERE id='$update'")
+		$result=mysqli_query($db_conn, "UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic='$lic', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin', rc='$rc', narodnost='$narodnost' WHERE id='$update'")
 				or die("Chyba při provádění dotazu do databáze.");
 		if ($result == FALSE)
 			die ("Nepodařilo se změnit údaje člena.");
@@ -57,7 +57,7 @@ if (IsLoggedSmallAdmin())
 	}
 	else
 	{
-		$result=MySQL_Query("INSERT INTO ".TBL_USER." (prijmeni,jmeno,datum,adresa,mesto,psc,tel_domu,tel_zam,tel_mobil,email,reg,si_chip,hidden,sort_name,poh,lic,lic_mtbo,lic_lob,fin,rc,narodnost) VALUES ('$prijmeni','$jmeno','$datum','$adresa','$mesto','$psc','$domu','$zam','$mobil','$email','$reg','$si','$hidden','$name2','$poh','$lic','$lic_mtbo','$lic_lob','$fin','$rc','$narodnost')")
+		$result=mysqli_query($db_conn, "INSERT INTO ".TBL_USER." (prijmeni,jmeno,datum,adresa,mesto,psc,tel_domu,tel_zam,tel_mobil,email,reg,si_chip,hidden,sort_name,poh,lic,lic_mtbo,lic_lob,fin,rc,narodnost) VALUES ('$prijmeni','$jmeno','$datum','$adresa','$mesto','$psc','$domu','$zam','$mobil','$email','$reg','$si','$hidden','$name2','$poh','$lic','$lic_mtbo','$lic_lob','$fin','$rc','$narodnost')")
 			or die("Chyba při provádění dotazu do databáze.");
 		if ($result == FALSE)
 			die ("Nepodařilo se vložit člena.");
@@ -73,7 +73,7 @@ else if ((IsLoggedManager() || IsLoggedSmallManager()) && !$self_edit)
 	{
 		$update = (isset($update) && is_numeric($update)) ? (int)$update : 0;
 		
-		$result=MySQL_Query("UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic='$lic', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin' , narodnost='$narodnost' WHERE id='$update'")
+		$result=mysqli_query($db_conn, "UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic='$lic', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin' , narodnost='$narodnost' WHERE id='$update'")
 			or die("Chyba při provádění dotazu do databáze.");
 		if ($result == FALSE)
 			die ("Nepodařilo se změnit údaje člena.");
@@ -81,7 +81,7 @@ else if ((IsLoggedManager() || IsLoggedSmallManager()) && !$self_edit)
 	}
 	else
 	{
-		$result=MySQL_Query("INSERT INTO ".TBL_USER." (prijmeni,jmeno,datum,adresa,mesto,psc,tel_domu,tel_zam,tel_mobil,email,reg,si_chip,hidden,sort_name,poh,lic,lic_mtbo,lic_lob,fin,rc,narodnost) VALUES ('$prijmeni','$jmeno','$datum','$adresa','$mesto','$psc','$domu','$zam','$mobil','$email','$reg','$si','$hidden','$name2','$poh','$lic','$lic_mtbo','$lic_lob','$fin','$rc','$narodnost')")
+		$result=mysqli_query($db_conn, "INSERT INTO ".TBL_USER." (prijmeni,jmeno,datum,adresa,mesto,psc,tel_domu,tel_zam,tel_mobil,email,reg,si_chip,hidden,sort_name,poh,lic,lic_mtbo,lic_lob,fin,rc,narodnost) VALUES ('$prijmeni','$jmeno','$datum','$adresa','$mesto','$psc','$domu','$zam','$mobil','$email','$reg','$si','$hidden','$name2','$poh','$lic','$lic_mtbo','$lic_lob','$fin','$rc','$narodnost')")
 			or die("Chyba při provádění dotazu do databáze.");
 		if ($result == FALSE)
 			die ("Nepodařilo se vložit člena.");
@@ -102,7 +102,7 @@ else if (IsLoggedUser())
 
 		$hidden = 0;	// unhidden users only
 
-		$result=MySQL_Query("UPDATE ".TBL_USER." SET adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', si_chip='$si' , hidden='$hidden', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin' WHERE id='$update'")
+		$result=mysqli_query($db_conn, "UPDATE ".TBL_USER." SET adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', si_chip='$si' , hidden='$hidden', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin' WHERE id='$update'")
 			or die("Chyba při provádění dotazu do databáze.");
 		if ($result == FALSE)
 			die ("Nepodařilo se změnit údaje člena.");

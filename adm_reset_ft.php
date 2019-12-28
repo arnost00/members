@@ -29,14 +29,14 @@ if ($accept == 1)
 {
 	// action
 	db_Connect();
-	$result=MySQL_Query("UPDATE ".TBL_USER." SET finance_type = '0'");
+	$result=mysqli_query($db_conn,"UPDATE ".TBL_USER." SET finance_type = '0'");
 	if ($result == FALSE)
 	{
 		echo ("Nepodařilo se vynulovat.");
 	}
 	else
 	{
-		echo ("Akce proběhla v pořádku, byly změněny ".mysql_affected_rows()." záznamy.<br><br>");
+		echo ("Akce proběhla v pořádku, byly změněny ".mysqli_affected_rows($db_conn)." záznamy.<br><br>");
 	}
 
 ?>

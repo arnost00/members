@@ -18,11 +18,11 @@ db_Connect();
 $query = 'SELECT z.id_user, u.si_chip FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' AND u.hidden = 0';
 //$query = 'SELECT z.id_user FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' AND u.si_chip = 0 AND u.hidden = 0';
 
-@$vysledek=MySQL_Query($query);
+@$vysledek=mysqli_query($db_conn, $query);
 
-if (mysql_num_rows($vysledek) > 0)
+if (mysqli_num_rows($vysledek) > 0)
 {
-	while ($zaznam=MySQL_Fetch_Array($vysledek))
+	while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		$user=$zaznam['id_user'];
 		if (IsSet($chip[$user]))
@@ -30,7 +30,7 @@ if (mysql_num_rows($vysledek) > 0)
 			$si_chip = (int)$chip[$user];
 			if ($si_chip != $zaznam['si_chip'])
 			{
-				$result=MySQL_Query('UPDATE '.TBL_ZAVXUS.' SET `si_chip`= '.$si_chip.' WHERE `id_zavod` = '.$id_zav.' AND `id_user` = '.$user)
+				$result=mysqli_query($db_conn, 'UPDATE '.TBL_ZAVXUS.' SET `si_chip`= '.$si_chip.' WHERE `id_zavod` = '.$id_zav.' AND `id_user` = '.$user)
 					or die("Chyba při provádění dotazu do databáze.");
 				if ($result == FALSE)
 					die ("Nepodařilo se změnit přihlášku člena.");
