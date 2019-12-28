@@ -27,10 +27,10 @@ $id_zav = (isset($id_zav) && is_numeric($id_zav)) ? (int)$id_zav : 0;
 //$query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.si_chip as t_si_chip FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' AND u.si_chip = 0 AND u.hidden = 0 ORDER BY z.id ASC';
 $query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.si_chip as t_si_chip FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' AND u.hidden = 0 ORDER BY z.id ASC';
 
-@$vysledek=MySQL_Query($query);
+@$vysledek=mysqli_query($db_conn, $query);
 
-@$vysledek_z=MySQL_Query("SELECT * FROM ".TBL_RACE." WHERE id=$id_zav LIMIT 1");
-$zaznam_z = MySQL_Fetch_Array($vysledek_z);
+@$vysledek_z=mysqli_query($db_conn, "SELECT * FROM ".TBL_RACE." WHERE id=$id_zav LIMIT 1");
+$zaznam_z = mysqli_fetch_array($vysledek_z);
 
 DrawPageSubTitle('Vybraný závod');
 
@@ -41,7 +41,7 @@ RaceInfoTable($zaznam_z,'',false,false,true);
 <?
 DrawPageSubTitle('Přihlášení závodníci bez trvalých SI čipů');
 
-if (mysql_num_rows($vysledek) > 0)
+if (mysqli_num_rows($vysledek) > 0)
 {
 ?>
 <FORM METHOD="POST" ACTION="race_reg_chip_exc.php?id_zav=<? echo($id_zav); ?>">
@@ -63,7 +63,7 @@ if (mysql_num_rows($vysledek) > 0)
 	echo $data_tbl->get_header_row()."\n";
 
 	$i=0;
-	while ($zaznam=MySQL_Fetch_Array($vysledek))
+	while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		$i++;
 

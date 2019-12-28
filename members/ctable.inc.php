@@ -25,7 +25,7 @@ class html_table_base
 	protected $paddingTB;
 
 	//__________________________________________________________________
-	function html_table_base($table_class_name)
+	function __construct($table_class_name)
 	{
 		global $g_colors;
 		$this->bgc_header = $g_colors["table_header"];
@@ -125,9 +125,9 @@ class html_table_mc extends html_table_base
 	protected $cols;
 
 	//__________________________________________________________________
-	function html_table_mc($table_class_name = '')
+	function __construct($table_class_name = '')
 	{
-		html_table_base::html_table_base(($table_class_name != '') ? $table_class_name : 'ctmc');
+		html_table_base::__construct(($table_class_name != '') ? $table_class_name : 'ctmc');
 		global $g_colors;
 		$this->header_row = array();
 		$this->header_row2 = array();
@@ -361,9 +361,9 @@ class html_table_nfo extends html_table_base
 	protected $c1_width, $c2_width;
 
 	//__________________________________________________________________
-	function html_table_nfo($table_class_name = '')
+	function __construct($table_class_name = '')
 	{
-		html_table_base::html_table_base(($table_class_name != '') ? $table_class_name : 'ctnf');
+		html_table_base::__construct(($table_class_name != '') ? $table_class_name : 'ctnf');
 		$this->cellpadding = 0;
 		$this->cellspacing = 0;
 		$this->c1_width = 150;
@@ -415,9 +415,9 @@ class html_table_form extends html_table_base
 	var $enable_row_bgcolor;
 
 	//__________________________________________________________________
-	function html_table_form($table_class_name = '')
+	function __construct($table_class_name = '')
 	{
-		html_table_base::html_table_base(($table_class_name != '') ? $table_class_name : 'ctfo');
+		html_table_base::__construct(($table_class_name != '') ? $table_class_name : 'ctfo');
 		$this->cellpadding = 0;
 		$this->cellspacing = 0;
 		$this->c1_width = 150;//'30%';

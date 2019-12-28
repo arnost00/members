@@ -15,8 +15,8 @@ require_once ("./common.inc.php");
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
 db_Connect();
-@$vysledek=MySQL_Query("SELECT jmeno,prijmeni,datum,hidden FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
-@$zaznam=MySQL_Fetch_Array($vysledek);
+@$vysledek=mysqli_query($db_conn, "SELECT jmeno,prijmeni,datum,hidden FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
+@$zaznam=mysqli_fetch_array($vysledek);
 if (!$zaznam)
 {	// error not exist
 	header("location: ".$g_baseadr."error.php?code=201");
@@ -34,8 +34,8 @@ DrawPageTitle('Členská základna - Editace uživatelských účtů');
 <CENTER>
 <?
 	$id_acc = GetUserAccountId_Users($id);
-	$vysledek2=MySQL_Query("SELECT login,podpis,policy_news,policy_regs,policy_mng,locked FROM ".TBL_ACCOUNT." WHERE id = '$id_acc' LIMIT 1");
-	$zaznam2=MySQL_Fetch_Array($vysledek2);
+	$vysledek2=mysqli_query($db_conn, "SELECT login,podpis,policy_news,policy_regs,policy_mng,locked FROM ".TBL_ACCOUNT." WHERE id = '$id_acc' LIMIT 1");
+	$zaznam2=mysqli_fetch_array($vysledek2);
 ?>
 <BR><hr><BR>
 <? DrawPageSubTitle('Základní údaje o vybraném členovi'); ?>

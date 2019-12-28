@@ -46,12 +46,12 @@ if (IsLogged() && $g_enable_mailinfo)
 require_once ('common_race.inc.php');
 require_once ('common_fin.inc.php');
 
-$vysledek=MySQL_Query("SELECT * FROM ".TBL_MAILINFO." WHERE id_user = '$usr->user_id' LIMIT 1");
-$zaznam=MySQL_Fetch_Array($vysledek);
+$vysledek=mysqli_query($db_conn, "SELECT * FROM ".TBL_MAILINFO." WHERE id_user = '$usr->user_id' LIMIT 1");
+$zaznam=mysqli_fetch_array($vysledek);
 if ($zaznam == FALSE)
 {
-	$vysledek=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE id = '$usr->user_id' LIMIT 1");
-	$zaznam2=MySQL_Fetch_Array($vysledek);
+	$vysledek=mysqli_query($db_conn, "SELECT * FROM ".TBL_USER." WHERE id = '$usr->user_id' LIMIT 1");
+	$zaznam2=mysqli_fetch_array($vysledek);
 	if ($zaznam2 == FALSE)
 		$zaznam['email'] = '';
 	else

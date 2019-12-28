@@ -17,7 +17,7 @@ db_Connect();
 $user_id = (isset($user_id) && is_numeric($user_id)) ? (int)$user_id : 0;
 $type = (isset($type)&& is_numeric($type)) ? (int)$type : 0;
 
-$result=MySQL_Query("UPDATE ".TBL_USER." SET finance_type='$type' WHERE id='$user_id'")
+$result=mysqli_query($db_conn, "UPDATE ".TBL_USER." SET finance_type='$type' WHERE id='$user_id'")
 	or die("Chyba při provádění dotazu do databáze.");
 if ($result == FALSE)
 	die ("Nepodařilo se změnit údaje o závodě.");

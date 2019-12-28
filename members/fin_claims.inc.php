@@ -20,10 +20,10 @@ $query = 'select *, f.id as fin_id from `'.TBL_FINANCE.'` as f inner join
 where f.claim = 1 and c.id in (select max(id) from `'.TBL_CLAIM.'` group by payment_id)
 order by u.sort_name'; 
 
-@$vysledek=MySQL_Query($query);
+@$vysledek=mysqli_query($db_conn, $query);
 
 $i=1;
-if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
+if ($vysledek != FALSE && mysqli_num_rows($vysledek) > 0)
 {
 	$data_tbl = new html_table_mc();
 	$col = 0;
@@ -41,7 +41,7 @@ if ($vysledek != FALSE && mysql_num_rows($vysledek) > 0)
 
 	echo $data_tbl->get_header_row()."\n";
 
-	while ($zaznam=MySQL_Fetch_Array($vysledek))
+	while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		$row = array();
 		$row[] = $i++;

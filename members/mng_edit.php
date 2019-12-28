@@ -38,8 +38,8 @@ function check_mng(vstup)
 <?
 db_Connect();
 
-@$vysledek=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE id = $id LIMIT 1");
-@$zaznam=MySQL_Fetch_Array($vysledek);
+@$vysledek=mysqli_query($db_conn, "SELECT * FROM ".TBL_USER." WHERE id = $id LIMIT 1");
+@$zaznam=mysqli_fetch_array($vysledek);
 
 $data_tbl = new html_table_nfo;
 echo $data_tbl->get_css()."\n";
@@ -65,9 +65,9 @@ echo '<FORM METHOD=POST ACTION="./mng_edit_exc.php?id='.$id.'" onsubmit="return 
 	echo '<OPTION value="0'.(($zaznam['chief_id'] == 0) ? '" selected ':'"').'>-- bez malého trenéra --';
 
 $query = 'SELECT u.id,u.prijmeni,u.jmeno, u.hidden FROM '.TBL_USER.' as u, '.TBL_ACCOUNT.', '.TBL_USXUS.' WHERE '.TBL_ACCOUNT.'.id = '.TBL_USXUS.'.id_accounts AND '.TBL_USXUS.'.id_users = u.id AND '.TBL_ACCOUNT.'.policy_mng = '._MNG_SMALL_INT_VALUE_." AND u.id <> $id";
-@$vysl=MySQL_Query($query);
+@$vysl=mysqli_query($db_conn, $query);
 
-while ($zazn=MySQL_Fetch_Array($vysl))
+while ($zazn=mysqli_fetch_array($vysl))
 {
 	if(!$zazn['hidden'])
 	{

@@ -14,7 +14,7 @@ function confirm_delete(text) {
 <?
 
 
-@$vysl=MySQL_Query('SELECT * FROM '.TBL_MAILINFO.' ORDER BY `id`')
+@$vysl=mysqli_query($db_conn, 'SELECT * FROM '.TBL_MAILINFO.' ORDER BY `id`')
 	or die("Chyba při provádění dotazu do databáze.");
 
 $data_tbl = new html_table_mc();
@@ -30,15 +30,15 @@ echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
-while ($zaznam=MySQL_Fetch_Array($vysl))
+while ($zaznam=mysqli_fetch_array($vysl))
 {
 	$row = array();
 	
 	$err = false;
 	$row[] = $zaznam['id'];
 	$row[] = $zaznam['email'];
-	$vysl2=MySQL_Query('SELECT * FROM '.TBL_USER.' WHERE id = \''.$zaznam['id_user'].'\' LIMIT 1');
-	$zazn=MySQL_Fetch_Array($vysl2);
+	$vysl2=mysqli_query($db_conn, 'SELECT * FROM '.TBL_USER.' WHERE id = \''.$zaznam['id_user'].'\' LIMIT 1');
+	$zazn=mysqli_fetch_array($vysl2);
 	if ($zazn != FALSE)
 	{
 		$err = $zazn['hidden'];

@@ -16,11 +16,11 @@ $fD = (IsSet($fD) && is_numeric($fD)) ? (int)$fD : 0;  // type 0
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD);
 
 $query = 'SELECT '.TBL_RACE.'.id, datum, datum2, nazev, typ0, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, kat, termin, vedouci, cancelled FROM '.TBL_RACE.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_RACE.'.id = '.TBL_ZAVXUS.'.id_zavod AND '.TBL_ZAVXUS.'.id_user='.$usr->user_id.$sql_sub_query.' ORDER BY datum, datum2, '.TBL_RACE.'.id';
-@$vysledek=MySQL_Query($query);
+@$vysledek=mysqli_query($db_conn, $query);
 
-@$vysledek2=MySQL_Query("SELECT * FROM ".TBL_USER." where id=$usr->user_id");
+@$vysledek2=mysqli_query($db_conn, "SELECT * FROM ".TBL_USER." where id=$usr->user_id");
 $entry_lock = false;
-if ($zaznam2=MySQL_Fetch_Array($vysledek2))
+if ($zaznam2=mysqli_fetch_array($vysledek2))
 {
 	$entry_lock = ($zaznam2['entry_locked'] != 0);
 }
@@ -42,7 +42,7 @@ if ($zaznam2=MySQL_Fetch_Array($vysledek2))
 <?
 $curr_date = GetCurrentDate();
 
-$num_rows = mysql_num_rows($vysledek);
+$num_rows = mysqli_num_rows($vysledek);
 if ($num_rows > 0)
 {
 	if ($entry_lock)
@@ -73,7 +73,7 @@ if ($num_rows > 0)
 	$i = 1;
 	$brk_tbl = false;
 	$old_year = 0;
-	while ($zaznam=MySQL_Fetch_Array($vysledek))
+	while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		$row = array();
 		if($zaznam['vicedenni'])
@@ -133,8 +133,8 @@ if ($num_rows > 0)
 			$boss = '-';
 			if($zaznam['vedouci'] != 0)
 			{
-				@$vysledekU=MySQL_Query("SELECT jmeno,prijmeni FROM ".TBL_USER." WHERE id = '".$zaznam['vedouci']."' LIMIT 1");
-				@$zaznamU=MySQL_Fetch_Array($vysledekU);
+				@$vysledekU=mysqli_query($db_conn, "SELECT jmeno,prijmeni FROM ".TBL_USER." WHERE id = '".$zaznam['vedouci']."' LIMIT 1");
+				@$zaznamU=mysqli_fetch_array($vysledekU);
 				if($zaznamU != FALSE)
 					$boss = $zaznamU['jmeno'].' '.$zaznamU['prijmeni'];
 			}

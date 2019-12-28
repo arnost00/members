@@ -38,14 +38,16 @@ function GetFinMailFlagDesc(&$mflags)
 
 function IsFinanceTypeTblFilled()
 {
-	@$vysledek=MySQL_Query("SELECT id FROM ".TBL_FINANCE_TYPES.' ORDER BY id');
-	if ($vysledek === FALSE )
+	global $db_conn;
+	
+	@$vysledek=mysqli_query($db_conn, "SELECT id FROM ".TBL_FINANCE_TYPES.' ORDER BY id');
+	if ($vysledek === FALSE || $vysledek == null)
 	{
 		return 0;
 	}
 	else
 	{
-		return mysql_num_rows($vysledek);
+		return mysqli_num_rows($vysledek);
 	}
 }
 

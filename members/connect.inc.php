@@ -5,11 +5,13 @@
 require_once('cfg/_cfg.php');
 require_once('cfg/_tables.php');
 
+$db_conn = null;
+
 function db_Connect ($silent = false)
 {
-	global $g_dbserver,$g_dbuser,$g_dbpass,$g_dbname,$g_baseadr;
+	global $g_dbserver,$g_dbuser,$g_dbpass,$g_dbname,$g_baseadr, $db_conn;
 
-	@$spojeni=MySQL_Connect($g_dbserver,$g_dbuser,$g_dbpass);
+	$spojeni= new mysqli($g_dbserver,$g_dbuser,$g_dbpass);
 	if (!$spojeni)
 	{
 		if($silent)
@@ -20,15 +22,17 @@ function db_Connect ($silent = false)
 			exit;
 		}
 	}
-	MySQL_Select_DB($g_dbname);
-	MySQL_Query("SET CHARACTER SET UTF8");
+	$spojeni->select_db ($g_dbname);
+	$spojeni->query("SET CHARACTER SET UTF8");
+	$db_conn = $spojeni;
 	return true;
 }
 
 // from db.inc.php
 function correct_sql_string($str)
 {
-	return mysql_real_escape_string($str);
+	global $db_conn;
+	return mysqli_real_escape_string($db_conn, $str);
 }
 
 ?>

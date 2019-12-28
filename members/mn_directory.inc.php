@@ -25,7 +25,7 @@ $sc->set_url('index.php?id=500&subid=1',true);
 $sub_query = $sc->get_sql_string();
 
 $query = "SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob,entry_locked FROM ".TBL_USER.$sub_query;
-@$vysledek=MySQL_Query($query);
+@$vysledek=mysqli_query($db_conn, $query);
 
 if (IsSet($result) && is_numeric($result) && $result != 0)
 {
@@ -57,7 +57,7 @@ $data_tbl->set_sort_col(3,$sc->get_col_content(1));
 echo $data_tbl->get_header_row_with_sort()."\n";
 
 $i=1;
-while ($zaznam=MySQL_Fetch_Array($vysledek))
+while ($zaznam=mysqli_fetch_array($vysledek))
 {
 	if (!$zaznam['hidden'])
 	{
@@ -77,8 +77,8 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 		$acc = '';
 		if ($val)
 		{
-			$vysl2=MySQL_Query("SELECT locked FROM ".TBL_ACCOUNT." WHERE id = '$val' LIMIT 1");
-			$zaznam2=MySQL_Fetch_Array($vysl2);
+			$vysl2=mysqli_query($db_conn, "SELECT locked FROM ".TBL_ACCOUNT." WHERE id = '$val' LIMIT 1");
+			$zaznam2=mysqli_fetch_array($vysl2);
 			if ($zaznam2 != FALSE)
 			{
 				if ($zaznam2['locked'] != 0) 

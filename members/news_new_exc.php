@@ -31,14 +31,14 @@ if (IsLoggedEditor())
 		{
 			$update = (isset($update) && is_numeric($update)) ? (int)$update : 0;
 
-			$result=MySQL_Query("UPDATE ".TBL_NEWS." SET datum='$datum2', nadpis='$nadpis', text='$text', internal='$internal', modify_flag='2' WHERE id='$update'")
+			$result=mysqli_query($db_conn, "UPDATE ".TBL_NEWS." SET datum='$datum2', nadpis='$nadpis', text='$text', internal='$internal', modify_flag='2' WHERE id='$update'")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se změnit novinku.");
 		}
 		else
 		{
-			$result = MySQL_Query("INSERT INTO ".TBL_NEWS." (id_user,datum,nadpis,text,internal,modify_flag) VALUES ('$usr->account_id','$datum2','$nadpis','$text','$internal', '1')")
+			$result = mysqli_query($db_conn, "INSERT INTO ".TBL_NEWS." (id_user,datum,nadpis,text,internal,modify_flag) VALUES ('$usr->account_id','$datum2','$nadpis','$text','$internal', '1')")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se vložit novinku.");

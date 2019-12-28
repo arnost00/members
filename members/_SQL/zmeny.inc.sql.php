@@ -34,6 +34,8 @@ function _list_sql_queries (&$qlist)
 
 function _run_sql_queries (&$qlist)
 {
+	global $db_conn;
+	
 	$db_ok = 0;
 	$db_err = 0;
 	echo '<U>Provádím SQL příkazy</U> :';
@@ -45,13 +47,13 @@ function _run_sql_queries (&$qlist)
 		echo '<B>SQL QUERY</B> = "'.$line.'"';
 		echo "<BR>\n";
 
-		$result=mysql_query($line);
+		$result=mysqli_query($db_conn, $line);
 		echo '&nbsp;\-------- ';
 		if ($result == FALSE)
 		{
 			echo '<span class="ErrorText"><B>Chyba</B><BR>'."\n";
 			echo 'Nepodařilo se provést změnu v databázi.<BR>'."\n";
-			echo 'Error - '.mysql_errno().': '.mysql_error().'</span><BR>'."\n"; 
+			echo 'Error - '.mysqli_errno($db_conn).': '.mysqli_error($db_conn).'</span><BR>'."\n"; 
 			echo '----------<BR>'."\n";
 			$db_err ++;
 		}

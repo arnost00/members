@@ -24,13 +24,13 @@ TXT_Header();
 
 db_Connect();
 
-@$vysledek=MySQL_Query("SELECT f.date, concat('".$g_shortcut."',u.reg) as reg, u.sort_name as name, f.amount, f.note, rc.nazev zavod_nazev, from_unixtime(rc.datum,'%Y-%c-%e') zavod_datum FROM `".TBL_FINANCE."` f join `".TBL_USER."` u on u.id = f.id_users_user left join `".TBL_RACE."` rc on f.id_zavod = rc.id where f.storno is null ORDER BY f.date desc")
+@$vysledek=mysqli_query($db_conn,"SELECT f.date, concat('".$g_shortcut."',u.reg) as reg, u.sort_name as name, f.amount, f.note, rc.nazev zavod_nazev, from_unixtime(rc.datum,'%Y-%c-%e') zavod_datum FROM `".TBL_FINANCE."` f join `".TBL_USER."` u on u.id = f.id_users_user left join `".TBL_RACE."` rc on f.id_zavod = rc.id where f.storno is null ORDER BY f.date desc")
 	or die("Chyba při provádění dotazu do databáze.");
 
 require_once ('exports.inc.php');
 
 $users = new CSV_Export($g_shortcut,$delim,$par2,$par3);
-while ($zaznam=MySQL_Fetch_Array($vysledek))
+while ($zaznam=mysqli_fetch_array($vysledek))
 {
 	$users->add_line_user($zaznam);
 }

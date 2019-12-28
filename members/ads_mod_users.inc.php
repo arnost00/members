@@ -29,7 +29,7 @@ function confirm_unlock(name) {
 <?
 require_once "./common_user.inc.php";
 
-@$vysledek=MySQL_Query("SELECT id,prijmeni,jmeno,reg,hidden FROM ".TBL_USER." ORDER BY sort_name ASC");
+@$vysledek=mysqli_query($db_conn, "SELECT id,prijmeni,jmeno,reg,hidden FROM ".TBL_USER." ORDER BY sort_name ASC");
 
 $data_tbl = new html_table_mc();
 $col = 0;
@@ -47,7 +47,7 @@ echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
 $i=1;
-while ($zaznam=MySQL_Fetch_Array($vysledek))
+while ($zaznam=mysqli_fetch_array($vysledek))
 {
 	$row = array();
 	$row[] = $i++;
@@ -72,8 +72,8 @@ while ($zaznam=MySQL_Fetch_Array($vysledek))
 	
 	if ($val)
 	{
-		$vysl2=MySQL_Query("SELECT * FROM ".TBL_ACCOUNT." WHERE id = '$val'");
-		$zaznam2=MySQL_Fetch_Array($vysl2);
+		$vysl2=mysqli_query("SELECT * FROM ".TBL_ACCOUNT." WHERE id = '$val'");
+		$zaznam2=mysqli_fetch_array($vysl2);
 		if ($zaznam2 != FALSE)
 		{
 			$acc = 'Ano';

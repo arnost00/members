@@ -7,7 +7,7 @@ return $buffer;
 
 error_reporting(E_ALL);
 ob_start('savedebug');
-  
+
 require_once(dirname(__FILE__) .'/timestamp.inc.php');
 _set_global_RT_Start();
 
@@ -71,9 +71,11 @@ class CLogMe
 
 function ClearAllModifyFlags()
 {
+	global $db_conn;
+	
 	$done = 0;
 	$query='UPDATE '.TBL_RACE." SET modify_flag='0'";
-	$result=MySQL_Query($query)
+	$result=mysqli_query($db_conn, $query)
 		or die("Chyba při provádění dotazu do databáze.");
 	if ($result == FALSE)
 		echo("Nepodařilo se změnit údaje o upozorňování.\n");
@@ -81,7 +83,7 @@ function ClearAllModifyFlags()
 		$done++;
 	
 	$query='UPDATE '.TBL_NEWS." SET modify_flag='0'";
-	$result=MySQL_Query($query)
+	$result=mysqli_query($db_conn, $query)
 		or die("Chyba při provádění dotazu do databáze.");
 	if ($result == FALSE)
 		echo("Nepodařilo se změnit údaje o upozorňování.\n");
@@ -224,26 +226,26 @@ $query_m='SELECT * FROM '.TBL_MAILINFO.' ORDER BY `id`';
 $query_r='SELECT * FROM '.TBL_RACE.' WHERE datum >= '.$curr_date.' AND (prihlasky > 0 OR modify_flag > 0) ORDER BY datum';
 $query_n='SELECT * FROM '.TBL_NEWS.' WHERE modify_flag > 0 ORDER BY datum';
 
-$vysledek_m=MySQL_Query($query_m);
-$vysledek_r=MySQL_Query($query_r);
-$vysledek_n=MySQL_Query($query_n);
+$vysledek_m=mysqli_query($db_conn, $query_m);
+$vysledek_r=mysqli_query($db_conn, $query_r);
+$vysledek_n=mysqli_query($db_conn, $query_n);
 
 $cnt_send = $cnt_tested = 0;
-if (mysql_num_rows($vysledek_m) > 0)
+if (mysqli_num_rows($vysledek_m) > 0)
 {
 	$races = array();
-	if (mysql_num_rows($vysledek_r) > 0)
+	if (mysqli_num_rows($vysledek_r) > 0)
 	{
-		while ($zaznam_r=MySQL_Fetch_Array($vysledek_r))
+		while ($zaznam_r=mysqli_fetch_array($vysledek_r))
 		{
 			$races[] = $zaznam_r;
 		}
 	}
 
 	$news = array();
-	if (mysql_num_rows($vysledek_n) > 0)
+	if (mysqli_num_rows($vysledek_n) > 0)
 	{
-		while ($zaznam_n=MySQL_Fetch_Array($vysledek_n))
+		while ($zaznam_n=mysqli_fetch_array($vysledek_n))
 		{
 			$news[] = $zaznam_n;
 		}
@@ -252,7 +254,7 @@ if (mysql_num_rows($vysledek_m) > 0)
 	$finance = getAllUsersCurrentBalance();
 	
 	// prochazeni pozadavku a generovani emailu
-	while ($zaznam_m=MySQL_Fetch_Array($vysledek_m))
+	while ($zaznam_m=mysqli_fetch_array($vysledek_m))
 	{
 		$cnt_tested++;
 /*

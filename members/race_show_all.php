@@ -41,7 +41,7 @@ else
 ?>
 <br>
 <?
-@$vysledek=MySQL_Query("SELECT id,hidden,prijmeni,jmeno FROM ".TBL_USER." ORDER BY sort_name ASC")
+@$vysledek=mysqli_query($db_conn, "SELECT id,hidden,prijmeni,jmeno FROM ".TBL_USER." ORDER BY sort_name ASC")
 	or die("Chyba při provádění dotazu do databáze.");
 
 $sql_query = "SELECT id,datum,datum2,nazev,misto,vicedenni,oddil,cancelled FROM ".TBL_RACE;
@@ -52,7 +52,7 @@ if($old == 0)
 }
 $sql_query .= " ORDER BY datum, datum2, id";
 
-@$races=MySQL_Query($sql_query)
+@$races=mysqli_query($db_conn, $sql_query)
 	or die("Chyba při provádění dotazu do databáze.");
 
 $data_tbl = new html_table_mc();
@@ -61,7 +61,7 @@ $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $i=0;
 $races_arr = array();
 $race_msg = array();
-while ($race=MySQL_Fetch_Array($races))
+while ($race=mysqli_fetch_array($races))
 {
 	$datum= Date2StringDM($race["datum"]);
 	$tip_code = 'onMouseOut="hideTip();" onMouseOver="doTooltip(event,'.++$i.');"';
@@ -81,7 +81,7 @@ echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
 $i=1;
-while ($row=MySQL_Fetch_Array($vysledek))
+while ($row=mysqli_fetch_array($vysledek))
 {
 	if (!$row["hidden"])
 	{
@@ -92,9 +92,9 @@ while ($row=MySQL_Fetch_Array($vysledek))
 		
 		$rc=(($i++ % 2) == 0) ? $g_colors["table_row1"] : $g_colors["table_row2"];
 		$user_id = $row["id"];
-		@$vysledek1=MySQL_Query("SELECT * FROM ".TBL_ZAVXUS." where id_user='$user_id'");
+		@$vysledek1=mysqli_query($db_conn, "SELECT * FROM ".TBL_ZAVXUS." where id_user='$user_id'");
 		unset($zav);
-		while ($zaznam1=MySQL_Fetch_Array($vysledek1))
+		while ($zaznam1=mysqli_fetch_array($vysledek1))
 		{
 			$zav[] = $zaznam1["id_zavod"];
 		}

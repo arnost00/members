@@ -15,8 +15,8 @@ db_Connect();
 $id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
 
 // id je z tabulky "users"
-@$vysledek=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
-@$zaznam=MySQL_Fetch_Array($vysledek);
+@$vysledek=mysqli_query($db_conn, "SELECT * FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
+@$zaznam=mysqli_fetch_array($vysledek);
 $update=$id;
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 require_once ("./common.inc.php");

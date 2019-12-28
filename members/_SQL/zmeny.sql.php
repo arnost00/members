@@ -70,13 +70,13 @@ else if ($action == 1)
 		$line = 'OPTIMIZE TABLE '.TBL_RACE.', '.TBL_NEWS.', '.TBL_USER.', '.TBL_ACCOUNT.', '.TBL_USXUS.', '.TBL_ZAVXUS.', '.TBL_MODLOG;
 		echo '<B>SQL QUERY</B> = "'.$line.'"';
 		echo "<BR>\n";
-		$result=MySQL_Query($line);
+		$result=mysqli_query($db_conn,$line);
 		echo '&nbsp;\-------- ';
 		if ($result == FALSE)
 		{
 			echo '<span class="ErrorText"><B>Chyba</B><BR>'."\n";
 			echo 'Nepodařilo se optimalizovat tabulky v databázi.<BR>'."\n";
-			echo 'Error - '.mysql_errno().': '.mysql_error().'</span><BR>'."\n"; 
+			echo 'Error - '.mysqli_errno($db_conn).': '.mysqli_error($db_conn).'</span><BR>'."\n"; 
 			echo '----------<BR>'."\n";
 		}
 		else
@@ -84,7 +84,7 @@ else if ($action == 1)
 			echo '<B>OK</B><BR>'."\n";
 			echo '<TABLE BORDER=1>';
 			echo '<TR><TD>Table</TD><TD>Op</TD><TD>Msg_type</TD><TD>Msg_text</TD></TR>';
-			while ($zaznam=MySQL_Fetch_Array($result))
+			while ($zaznam=mysqli_fetch_array($result))
 			{
 				echo '<TR><TD>'.$zaznam[0].'</TD><TD>'.$zaznam[1].'</TD><TD>'.$zaznam[2].'</TD><TD>'.$zaznam[3].'</TD></TR>';
 			}
@@ -98,13 +98,13 @@ else if ($action == 2)
 		$line = 'REPAIR TABLE '.TBL_RACE.', '.TBL_NEWS.', '.TBL_USER.', '.TBL_ACCOUNT.', '.TBL_USXUS.', '.TBL_ZAVXUS.', '.TBL_MODLOG;
 		echo '<B>SQL QUERY</B> = "'.$line.'"';
 		echo "<BR>\n";
-		$result=MySQL_Query($line);
+		$result=mysqli_query($db_conn,$line);
 		echo '&nbsp;\-------- ';
 		if ($result == FALSE)
 		{
 			echo '<span class="ErrorText"><B>Chyba</B><BR>'."\n";
 			echo 'Nepodařilo se opravit tabulky v databázi.<BR>'."\n";
-			echo 'Error - '.mysql_errno().': '.mysql_error().'</span><BR>'."\n"; 
+			echo 'Error - '.mysqli_errno($db_conn).': '.mysqli_error($db_conn).'</span><BR>'."\n"; 
 			echo '----------<BR>'."\n";
 		}
 		else
@@ -112,7 +112,7 @@ else if ($action == 2)
 			echo '<B>OK</B><BR>'."\n";
 			echo '<TABLE BORDER=1>';
 			echo '<TR><TD>Table</TD><TD>Op</TD><TD>Msg_type</TD><TD>Msg_text</TD></TR>';
-			while ($zaznam=MySQL_Fetch_Array($result))
+			while ($zaznam=mysqli_fetch_array($result))
 			{
 				echo '<TR><TD>'.$zaznam[0].'</TD><TD>'.$zaznam[1].'</TD><TD>'.$zaznam[2].'</TD><TD>'.$zaznam[3].'</TD></TR>';
 			}

@@ -8,7 +8,7 @@ select u.id u_id, u.sort_name, f.id, f.amount, f.note, zu.kat, zu.transport, zu.
 left join ".TBL_FINANCE_TYPES." ft on ft.id = u.finance_type
 where zu.id_zavod = $race_id and u.hidden = '0' order by u.sort_name
 ";
-$vysledek_prihlaseni = mysql_query($query_prihlaseni);
+$vysledek_prihlaseni = mysqli_query($db_conn, $query_prihlaseni);
 
 $query_platici = "
 select u.id u_id, u.sort_name, f.id, f.amount, f.note, null kat, ft.nazev from ".TBL_USER." u inner join
@@ -19,7 +19,7 @@ and u.id not in (select id_user from ".TBL_ZAVXUS." where id_zavod = $race_id)
 and u.hidden = '0' 
 order by u.sort_name
 ";
-$vysledek_platici = mysql_query($query_platici);
+$vysledek_platici = mysqli_query($db_conn, $query_platici);
 
 $query_neprihlaseni = "
 select u.id u_id, u.sort_name, null id, null amount, null note, null kat, ft.nazev from ".TBL_USER." u 
@@ -34,16 +34,16 @@ and u.hidden = '0'
 order by u.sort_name
 ";
 
-$vysledek_neprihlaseni = mysql_query($query_neprihlaseni);
+$vysledek_neprihlaseni = mysqli_query($db_conn, $query_neprihlaseni);
 
 //vytazeni informaci o zavode
-@$vysledek_race=MySQL_Query("select z.nazev, from_unixtime(z.datum, '%Y-%c-%e') datum from ".TBL_RACE." z where z.id = ".$race_id);
-$zaznam_race=MySQL_Fetch_Array($vysledek_race);
+@$vysledek_race=mysqli_query($db_conn, "select z.nazev, from_unixtime(z.datum, '%Y-%c-%e') datum from ".TBL_RACE." z where z.id = ".$race_id);
+$zaznam_race=mysqli_fetch_array($vysledek_race);
 
 DrawPageSubTitle('Vybraný závod');
 
-@$vysledek_z=MySQL_Query('SELECT * FROM '.TBL_RACE." WHERE `id`='$race_id' LIMIT 1");
-$zaznam_z = MySQL_Fetch_Array($vysledek_z);
+@$vysledek_z=mysqli_query($db_conn, 'SELECT * FROM '.TBL_RACE." WHERE `id`='$race_id' LIMIT 1");
+$zaznam_z = mysqli_fetch_array($vysledek_z);
 
 require_once ("./url.inc.php");
 require_once ("./common_race.inc.php");
@@ -115,7 +115,7 @@ $sum_minus_amount = 0;
 $i = 1;
 
 echo $data_tbl->get_subheader_row("Přihlášení")."\n";
-while ($zaznam=mysql_fetch_assoc($vysledek_prihlaseni))
+while ($zaznam=mysqli_fetch_assoc($vysledek_prihlaseni))
 {
 	$id = $zaznam['id'];
 	
@@ -162,7 +162,7 @@ if ($i == 1)
 $i0 = $i;
 //---------------------------------------------------
 echo $data_tbl->get_subheader_row("Nepřihlášení s platbami")."\n";
-while ($zaznam=mysql_fetch_assoc($vysledek_platici))
+while ($zaznam=mysqli_fetch_assoc($vysledek_platici))
 {
 	$id = $zaznam['id'];
 	
@@ -221,7 +221,7 @@ echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
 $i = 1;
-while ($zaznam=mysql_fetch_assoc($vysledek_neprihlaseni))
+while ($zaznam=mysqli_fetch_assoc($vysledek_neprihlaseni))
 {
 	
 	$id = $zaznam['id'];

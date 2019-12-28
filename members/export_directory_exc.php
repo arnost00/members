@@ -31,7 +31,7 @@ TXT_Header();
 
 db_Connect();
 
-@$vysledek=MySQL_Query("SELECT * FROM ".TBL_USER." WHERE hidden = 0 ORDER BY sort_name ASC")
+@$vysledek=mysqli_query($db_conn, "SELECT * FROM ".TBL_USER." WHERE hidden = 0 ORDER BY sort_name ASC")
 	or die("Chyba při provádění dotazu do databáze.");
 
 require_once ('exports.inc.php');
@@ -39,7 +39,7 @@ require_once ('exports.inc.php');
 if ($oris == 2)
 {
 	$users = new ORIS_Export($g_shortcut);
-	while ($zaznam=MySQL_Fetch_Array($vysledek))
+	while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		$users->add_line_contact($zaznam['reg'],$zaznam['email'], $zaznam['tel_mobil'], $zaznam['adresa'], $zaznam['mesto'], $zaznam['psc'],$zaznam['narodnost']);
 	}
@@ -48,7 +48,7 @@ if ($oris == 2)
 else if ($oris == 1)
 {
 	$users = new ORIS_Export($g_shortcut);
-	while ($zaznam=MySQL_Fetch_Array($vysledek))
+	while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		$users->add_line_user($zaznam['prijmeni'], $zaznam['jmeno'], $zaznam['reg'], $zaznam['si_chip'], $zaznam['poh'], $zaznam['narodnost'], $zaznam['datum'], $zaznam['rc']);
 	}
@@ -57,7 +57,7 @@ else if ($oris == 1)
 else if ($oris == 3)
 {
 	$users = new ORIS_Export($g_shortcut);
-	while ($zaznam=MySQL_Fetch_Array($vysledek))
+	while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		$users->add_line_registration($zaznam['prijmeni'], $zaznam['jmeno'], $zaznam['reg']);
 	}
@@ -65,7 +65,7 @@ else if ($oris == 3)
 }else
 {
 	$users = new CSV_Export($g_shortcut,$delim,$par2,$par3);
-	while ($zaznam=MySQL_Fetch_Array($vysledek))
+	while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		$users->add_line_user($zaznam);
 	}

@@ -30,8 +30,8 @@ DrawPageTitle('Přehled přihlášek na závody');
 <?
 
 // id je z tabulky "users"
-@$vysledekU=MySQL_Query("SELECT id,prijmeni,jmeno FROM ".TBL_USER." WHERE id=".$id." LIMIT 1");
-$zaznamU=MySQL_Fetch_Array($vysledekU);
+@$vysledekU=mysqli_query($db_conn, "SELECT id,prijmeni,jmeno FROM ".TBL_USER." WHERE id=".$id." LIMIT 1");
+$zaznamU=mysqli_fetch_array($vysledekU);
 
 DrawPageSubTitle('Vybraný člen : '.$zaznamU["jmeno"].' '.$zaznamU["prijmeni"]);
 ?>
@@ -46,9 +46,9 @@ require_once ("./common_race.inc.php");
 // show only races with registration
 $query = 'SELECT r.id, datum, datum2, nazev, oddil, typ0, typ, vicedenni, misto, kat FROM '.TBL_RACE.' as r JOIN '.TBL_ZAVXUS.' as z ON r.id = z.id_zavod AND z.id_user='.$id.' ORDER BY r.datum, r.datum2, r.id';
 
-@$vysledek=MySQL_Query($query);
+@$vysledek=mysqli_query($db_conn, $query);
 
-$num_rows = mysql_num_rows($vysledek);
+$num_rows = mysqli_num_rows($vysledek);
 if ($num_rows > 0)
 {
 	show_link_to_actual_race($num_rows);
@@ -72,7 +72,7 @@ if ($num_rows > 0)
 	$old_year = 0;
 	if($vysledek != FALSE)
 	{
-		while ($zaznam=MySQL_Fetch_Array($vysledek))
+		while ($zaznam=mysqli_fetch_array($vysledek))
 		{
 			$row = array();
 			$race_is_old = (GetTimeToRace($zaznam['datum']) == -1);

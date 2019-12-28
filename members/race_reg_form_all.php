@@ -6,7 +6,6 @@ require_once("./cfg/_colors.php");
 require_once("./cfg/_globals.php");
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
-	require_once ('debuglib.phps');
 
 if (!IsLogged())
 {
@@ -44,11 +43,11 @@ $entry = '';
 require_once ('exports.inc.php');
 
 $query = 'SELECT * FROM '.TBL_USER.' WHERE '.TBL_USER.'.hidden = 0 ORDER BY reg';
-@$vysledek=MySQL_Query($query);
+@$vysledek=mysqli_query($db_conn, $query);
 
 $entry = new CSOB_Export_Entry($g_shortcut);
 
-while ($zaznam=MySQL_Fetch_Array($vysledek))
+while ($zaznam=mysqli_fetch_array($vysledek))
 {
 	// function get_entry_line_CSOB($prijmeni, $jmeno, $reg, $lic, $kat, $si, $pozn)
 	$u=$zaznam['id'];
@@ -92,10 +91,10 @@ echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
 $query = 'SELECT * FROM '.TBL_USER.' WHERE '.TBL_USER.'.hidden = 0 ORDER BY reg';
-@$vysledek=MySQL_Query($query);
+@$vysledek=mysqli_query($db_conn, $query);
 
 $i=0;
-while ($zaznam=MySQL_Fetch_Array($vysledek))
+while ($zaznam=mysqli_fetch_array($vysledek))
 {
 	$row = array();
 	$row[] = RegNumToStr($zaznam['reg']);

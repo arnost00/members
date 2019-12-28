@@ -11,7 +11,7 @@ class column_sort_db
 	protected $def_col;	// default column
 	protected $def_dir;	// default direction
 
-	function column_sort_db()
+	function __construct()
 	{
 		$this->cols_n = array();
 		$this->cols_t = array();

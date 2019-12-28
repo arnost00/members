@@ -34,8 +34,8 @@ $sc->set_url('race_regs_all.php?gr_id='.$gr_id.'&id='.$id,true);
 $sc->set_default_sort(0,1);
 $sub_query = $sc->get_sql_string();
 
-@$vysledek_z=MySQL_Query("SELECT * FROM ".TBL_RACE." WHERE id=$id");
-$zaznam_z = MySQL_Fetch_Array($vysledek_z);
+@$vysledek_z=mysqli_query($db_conn, "SELECT * FROM ".TBL_RACE." WHERE id=$id");
+$zaznam_z = mysqli_fetch_array($vysledek_z);
 
 DrawPageSubTitle('Vybraný závod');
 
@@ -98,9 +98,9 @@ $sub_query2 = (IsLoggedRegistrator() || IsLoggedManager()) ? '' : ' AND '.TBL_US
 
 $query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, datum, kat, pozn, pozn_in, termin, entry_locked, '.TBL_ZAVXUS.'.transport, '.TBL_ZAVXUS.'.ubytovani FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query2.$sub_query;
 
-@$vysledek=MySQL_Query($query);
+@$vysledek=mysqli_query($query);
 
-//echo "Počet již přihlášených členů je ".mysql_num_rows($vysledek_p).".<BR>";
+//echo "Počet již přihlášených členů je ".mysqli_num_rows($vysledek_p).".<BR>";
 
 $is_registrator_on = IsCalledByRegistrator($gr_id);
 $is_termin_show_on = ($zaznam_z['prihlasky'] > 1);
@@ -134,7 +134,7 @@ $data_tbl->set_sort_col(2,$sc->get_col_content(1));
 echo $data_tbl->get_sort_row()."\n";
 
 $i=1;
-while ($zaznam=MySQL_Fetch_Array($vysledek))
+while ($zaznam=mysqli_fetch_array($vysledek))
 {
 	$row = array();
 	$row[] = $i++;

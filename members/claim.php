@@ -19,8 +19,8 @@ if (IsSet($submit) or IsSet($close))
  	//vytazeni posledni reklamace pro tuto platbu
  	//pokud je uzivatel stejny jako prihlaseny, tak to bude update
  	//pokud je jiny, tak je to insert	
- 	@$result_last_claim = MySQL_Query("select id, user_id, payment_id, text, date from ".TBL_CLAIM." c where c.payment_id = ".$payment_id." order by date desc LIMIT 1");
- 	$record_last_claim = MySQL_Fetch_Array($result_last_claim);
+ 	@$result_last_claim = mysqli_query($db_conn, "select id, user_id, payment_id, text, date from ".TBL_CLAIM." c where c.payment_id = ".$payment_id." order by date desc LIMIT 1");
+ 	$record_last_claim = mysqli_fetch_array($result_last_claim);
  	if (IsSet($close))
  	{
  		closeClaim($record_last_claim['id'], $payment_id);
@@ -39,11 +39,11 @@ require_once ("./common_user.inc.php");
 require_once ("./ctable.inc.php");
 DrawPageTitle('Reklamace platby');
 
-@$result_claims = MySQL_Query("select c.id, user_id, payment_id, text, date_format(date, '%e.%c.%Y %k:%i') date, u.sort_name user_name from ".TBL_CLAIM." c inner join
+@$result_claims = mysqli_query($db_conn, "select c.id, user_id, payment_id, text, date_format(date, '%e.%c.%Y %k:%i') date, u.sort_name user_name from ".TBL_CLAIM." c inner join
 		".TBL_USER." u on c.user_id = u.id
 		where c.payment_id = ".$payment_id." order by c.date desc");
-$record_claims = MySQL_Fetch_Array($result_claims);
-if ($record_claims != null) mysql_data_seek($result_claims, 0);
+$record_claims = mysqli_fetch_array($result_claims);
+if ($record_claims != null) mysqli_data_seek ($result_claims, 0);
 $actual_text = "";
 if ($user_id == $record_claims['user_id'])
 {
@@ -65,7 +65,7 @@ if ($user_id == $record_claims['user_id'])
 <hr>
 <?
 DrawPageTitle('Historie');
-while ($record_claims = MySQL_Fetch_Array($result_claims))
+while ($record_claims = mysqli_fetch_array($result_claims))
 {
 	echo "<div class=\"claim-history\"><div class=\"claim-date-name\">".$record_claims['date']." - ".$record_claims['user_name']."</div><div class=\"claim-history-text\">".$record_claims['text']."</div></div>";
 }

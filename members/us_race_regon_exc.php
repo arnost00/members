@@ -20,9 +20,9 @@ if ($kat != '')
 {
 	db_Connect();
 
-	@$vysledek2=MySQL_Query("SELECT * FROM ".TBL_USER." where id=$id_us");
+	@$vysledek2=mysqli_query($db_conn, "SELECT * FROM ".TBL_USER." where id=$id_us");
 	$entry_lock = false;
-	if ($zaznam2=MySQL_Fetch_Array($vysledek2))
+	if ($zaznam2=mysqli_fetch_array($vysledek2))
 	{
 		$entry_lock = ($zaznam2['entry_locked'] != 0);
 	}
@@ -33,8 +33,8 @@ if ($kat != '')
 		$pozn=correct_sql_string($pozn);
 		$pozn2=correct_sql_string($pozn2);
 
-		@$vysledek_z=MySQL_Query("SELECT datum, vicedenni, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5 FROM ".TBL_RACE." WHERE id=$id_zav");
-		$zaznam_z = MySQL_Fetch_Array($vysledek_z);
+		@$vysledek_z=mysqli_query($db_conn, "SELECT datum, vicedenni, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5 FROM ".TBL_RACE." WHERE id=$id_zav");
+		$zaznam_z = mysqli_fetch_array($vysledek_z);
 
 		$termin = raceterms::GetCurr4RegTerm($zaznam_z);
 
@@ -45,19 +45,19 @@ if ($kat != '')
 
 			if ($novy)
 			{
-				$vysledek=MySQL_Query("SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod='$id_zav' and id_user='$id_us'");
-				if ($vysledek != FALSE && ($zaznam = MySQL_Fetch_Array($vysledek)) != FALSE )
+				$vysledek=mysqli_query($db_conn, "SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod='$id_zav' and id_user='$id_us'");
+				if ($vysledek != FALSE && ($zaznam = mysqli_fetch_array($vysledek)) != FALSE )
 				{	// latest new == update
-					MySQL_Query("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$pozn', pozn_in='$pozn2', termin='$termin', transport='$transport', ubytovani='$ubytovani' WHERE id_zavod='$id_zav' and id_user='$id_us'");
+					mysqli_query($db_conn, "UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$pozn', pozn_in='$pozn2', termin='$termin', transport='$transport', ubytovani='$ubytovani' WHERE id_zavod='$id_zav' and id_user='$id_us'");
 				}
 				else
 				{	// really new
-					MySQL_Query("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in, termin, transport, ubytovani) VALUES ('$id_us','$id_zav','$kat','$pozn','$pozn2','$termin','$transport', '$ubytovani')");	
+					mysqli_query($db_conn, "INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in, termin, transport, ubytovani) VALUES ('$id_us','$id_zav','$kat','$pozn','$pozn2','$termin','$transport', '$ubytovani')");	
 				}
 			}
 			else
 			{	// update
-				MySQL_Query("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$pozn', pozn_in='$pozn2', transport='$transport', ubytovani='$ubytovani' WHERE id='$id_z'");
+				mysqli_query($db_conn, "UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$pozn', pozn_in='$pozn2', transport='$transport', ubytovani='$ubytovani' WHERE id='$id_z'");
 			}
 		}
 	}

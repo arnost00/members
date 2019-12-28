@@ -22,8 +22,8 @@ if (IsLogged())
 		$login=correct_sql_string($login);
 		$podpis=correct_sql_string($podpis);
 		$heslo= md5($hesloo);
-		$vysledek=MySQL_Query("SELECT heslo FROM ".TBL_ACCOUNT." WHERE id = '$id' LIMIT 1");
-		$curr_usr=MySQL_Fetch_Array($vysledek);
+		$vysledek=mysqli_query($db_conn, "SELECT heslo FROM ".TBL_ACCOUNT." WHERE id = '$id' LIMIT 1");
+		$curr_usr=mysqli_fetch_array($vysledek);
 
 		if ($heslo != $curr_usr["heslo"])
 			$result=CS_BAD_CUR_PASS;
@@ -35,7 +35,7 @@ if (IsLogged())
 			$result=CS_LOGIN_EXIST;
 		else
 		{
-			MySQL_Query("UPDATE ".TBL_ACCOUNT." SET podpis='$podpis', login='$login' WHERE id='$id'");
+			mysqli_query($db_conn, "UPDATE ".TBL_ACCOUNT." SET podpis='$podpis', login='$login' WHERE id='$id'");
 			$result=CS_LOGIN_UPDATED;
 			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id.' login = "'.$login.'" ['.$podpis.']');
 		}
@@ -47,8 +47,8 @@ if (IsLogged())
 		{
 			$hheslo = md5($heslo);
 			$oldhheslo = md5($oldheslo);
-			$vysledek=MySQL_Query("SELECT heslo FROM ".TBL_ACCOUNT." WHERE id = '$id' LIMIT 1");
-			$curr_usr=MySQL_Fetch_Array($vysledek);
+			$vysledek=mysqli_query($db_conn, "SELECT heslo FROM ".TBL_ACCOUNT." WHERE id = '$id' LIMIT 1");
+			$curr_usr=mysqli_fetch_array($vysledek);
 			if ($oldhheslo != $curr_usr["heslo"])
 				$result=CS_BAD_CUR_PASS;
 			else if ($heslo == $oldheslo)
@@ -59,7 +59,7 @@ if (IsLogged())
 				$result=CS_DIFF_NEWPASS;
 			else
 			{
-				MySQL_Query("UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id'");
+				mysqli_query($db_conn, "UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id'");
 				$result=CS_PASS_UPDATED;
 				SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id.' - pass');
 			}

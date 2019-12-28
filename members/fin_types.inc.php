@@ -12,7 +12,7 @@ function confirm_delete() {
 -->
 </script><?
 
-@$vysledek=MySQL_Query("SELECT * FROM ".TBL_FINANCE_TYPES.' ORDER BY id');
+@$vysledek=mysqli_query($db_conn, "SELECT * FROM ".TBL_FINANCE_TYPES.' ORDER BY id');
 
 if ($vysledek === FALSE )
 {
@@ -20,7 +20,7 @@ if ($vysledek === FALSE )
 }
 else
 {
-	$num_rows = mysql_num_rows($vysledek);
+	$num_rows = mysqli_num_rows($vysledek);
 	if ($num_rows > 0)
 	{
 
@@ -35,7 +35,7 @@ else
 		echo $data_tbl->get_header()."\n";
 		echo $data_tbl->get_header_row()."\n";
 
-		while ($zaznam=MySQL_Fetch_Array($vysledek))
+		while ($zaznam=mysqli_fetch_array($vysledek))
 		{
 			$row = array();
 			$row[] = $zaznam['id'];

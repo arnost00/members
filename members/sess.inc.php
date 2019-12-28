@@ -32,7 +32,7 @@ class sess
 	var $account_id;	// id v "accounts"
 	var $cross_id;		// id v "usxus"
 
-	function sess()
+	function __construct()
 	{
 		$this->logged = 0;
 	}

@@ -14,7 +14,7 @@ DrawPageTitle('Přihlášky členů oddílu');
 <?
 require_once "./common_user.inc.php";
 
-@$vysledek=MySQL_Query("SELECT id,prijmeni,jmeno,reg,si_chip,hidden FROM ".TBL_USER." ORDER BY sort_name ASC");
+@$vysledek=mysqli_query($db_conn, "SELECT id,prijmeni,jmeno,reg,si_chip,hidden FROM ".TBL_USER." ORDER BY sort_name ASC");
 
 $data_tbl = new html_table_mc();
 $col = 0;
@@ -29,7 +29,7 @@ echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
 $i=1;
-while ($zaznam=MySQL_Fetch_Array($vysledek))
+while ($zaznam=mysqli_fetch_array($vysledek))
 {
 	if ($zaznam["hidden"] == 0)
 	{

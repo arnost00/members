@@ -34,15 +34,15 @@ $d1 = $curr_date;
 
 $query="SELECT id,datum,typ,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,nazev,vicedenni,odkaz,vedouci, oddil,send,misto,cancelled,typ0, ubytovani, transport, zebricek, ranking, etap, poznamka FROM ".TBL_RACE.' WHERE datum >= '.$d1.' || datum2 >= '.$d1.' ORDER BY datum, datum2, id';
 
-@$vysledek=MySQL_Query($query);
+@$vysledek=mysqli_query($db_conn, $query);
 
 $data = array();
 $data['Format'] = 'json';
 $data['Source'] = 'members';
 
-if (mysql_num_rows($vysledek) > 0)
+if (mysqli_num_rows($vysledek) > 0)
 {
-	while ($zaznam=MySQL_Fetch_Array($vysledek))
+	while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		$race_key = 'Race_'.$zaznam['id'];
 		
