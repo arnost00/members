@@ -90,7 +90,7 @@ function ClearAllModifyFlags()
 	else
 		$done++;
 
-	if (done == 2)
+	if ($done == 2)
 		echo("Modify flags cleared.\n");
 	else
 		echo("Modify flags partially cleared.\n");
