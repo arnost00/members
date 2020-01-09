@@ -4,7 +4,7 @@
 @$vysledek_historie=mysqli_query($db_conn,"select fin.id fin_id, fin.id_users_editor id_editor, rc.nazev zavod_nazev, rc.cancelled zavod_cancelled, from_unixtime(rc.datum,'%Y-%c-%e') zavod_datum, fin.amount amount, fin.note note, us.sort_name name, fin.date `date` from ".TBL_FINANCE." fin 
 		left join ".TBL_USER." us on fin.id_users_editor = us.id
 		left join ".TBL_RACE." rc on fin.id_zavod = rc.id
-		where fin.id_users_user = ".$user_id." and fin.storno is null  order by fin.date asc, fin.id asc");
+		where fin.id_users_user = ".$user_id." and fin.storno is null  order by fin.date desc, fin.id desc");
 
 //vytazeni jmena uzivatele a typu prispevku
 $vysledek_user_name=mysqli_query($db_conn,"select us.sort_name name, ft.nazev ft_nazev from ".TBL_USER." us LEFT JOIN ".TBL_FINANCE_TYPES." ft ON us.finance_type = ft.id where us.id = ".$user_id);
@@ -20,6 +20,16 @@ if ($zaznam_user_name['ft_nazev'] != null)
 require_once ("./common_race.inc.php");
 require_once ('./url.inc.php');
 
+?>
+<script language="JavaScript">
+function toggle_display_by_class(cls) {
+    var lst = document.getElementsByClassName(cls);
+    for(var i = 0; i < lst.length; ++i) {
+        (lst[i].style.display == '')?(lst[i].style.display='none'):(lst[i].style.display='');
+    }
+}
+</script>
+<?
 $data_tbl = new html_table_mc();
 $col = 0;
 $data_tbl->set_header_col($col++,'Datum transakce',ALIGN_CENTER);
@@ -32,13 +42,13 @@ if ($g_enable_finances_claim)
 	$data_tbl->set_header_col($col++,'Reklamace',ALIGN_LEFT);
 isset($finance_readonly)?"":IsLoggedFinance()?$data_tbl->set_header_col($col++,'Možnosti',ALIGN_LEFT):"";
 
-
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
 $sum_amount = 0;
 $i = 0;
+$year = 0;
 while ($zaznam=mysqli_fetch_array($vysledek_historie))
 {
 	$row = array();
@@ -49,15 +59,22 @@ while ($zaznam=mysqli_fetch_array($vysledek_historie))
 	$row[] = $zaznam['amount'];
 	$row[] = $zaznam['note'];
 	$row[] = ($zaznam['name'] == null) ? "<<<".$zaznam['id_editor'].">>>":$zaznam['name'];
-//priprava pro pouziti ajaxu a jquery
-// 	$row[] = "<div class=\"div-claim\" claim=\"".$zaznam['fin_id']."\" id=\"claim-".$zaznam['fin_id']."\">Problém?</div>";
 	if ($g_enable_finances_claim)
 		$row[] = '<A HREF="javascript:open_win(\'./claim.php?payment_id='.$zaznam['fin_id'].'\',\'\')">Problém?</A>';
 	isset($finance_readonly)?"":IsLoggedFinance()?$row[]=" <a href=\"?change=change&trn_id=".$zaznam['fin_id']."\">Změnit</a>&nbsp;/&nbsp;<a href=\"?storno=storno&trn_id=".$zaznam['fin_id']."\">Storno</a>":"";
 	
 	$sum_amount += $zaznam['amount'];
 	
-	echo $data_tbl->get_new_row_arr($row)."\n";
+	//pridani roku do class kvuli moznosti schovat starsi roky z vypisu
+	$row_date = substr($zaznam['date'],0,4);
+	if ($year != $row_date) {
+		$year = $row_date;
+		$odkaz = "<button onclick='toggle_display_by_class(\"$year\")'>Histore transakcí pro rok $year</button>";
+		echo $data_tbl->get_info_row($odkaz)."\n";
+	}
+	//prasacky schovane radky krome poslednich 2 let
+	($year+1 < date("Y"))?($class = $year."\" style=\"display:none") : ($class = $year);
+	echo $data_tbl->get_new_row_arr($row, $class)."\n";
 	$i++;
 }
 if ($i > 0)
@@ -107,34 +124,5 @@ $return_url = parse_url($return_url, PHP_URL_QUERY);
 require_once 'user_finance_transfer_form.inc.php';
 
 
-//priprava pro pouziti ajaxu a jquery
-// <div style="display: none;" id="dialog-modal">
-// <form action="http://localhost/members/index.php?id=200&subid=10">
-// <fieldset>
-// <label for="dialog-text" id="label-dialog-text"></label>
-// <textarea rows="3" id="dialog-text"></textarea>
-// <button type="submit">Odešli</button>
-// </fieldset>
-// </form>
-// </div>
 
-//   <style>
-//     textarea#dialog-text { width:95%; padding: 10px; }
-//     fieldset { padding:0; border:0; margin-top:10px; }
-//   </style>
-
-// <script>
-// $(".div-claim").click(function () {
-// 	var id = $(this).prop("id");
-// 	$("#label-dialog-text").prop("innerHTML",id);
-//     $("#dialog-modal").dialog({
-//         width: 500,
-//         height: 220,
-//         modal: true,
-//         autoOpen: false,
-//         title: "Zadej reklamaci"
-//     });
-// 	$("#dialog-modal").dialog("open");
-// });
-// </script>
 ?>
