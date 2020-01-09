@@ -39,10 +39,18 @@ require_once ("./common_user.inc.php");
 require_once ("./ctable.inc.php");
 DrawPageTitle('Reklamace platby');
 
-@$result_claims = mysqli_query($db_conn, "select c.id, user_id, payment_id, text, date_format(date, '%e.%c.%Y %k:%i') date, u.sort_name user_name from ".TBL_CLAIM." c inner join
+@$result_claims = mysqli_query($db_conn, "select f.date fin_date, f.note fin_note, f.amount fin_amount, c.id, c.user_id, c.payment_id, c.text, date_format(c.date, '%e.%c.%Y %k:%i') date, u.sort_name user_name from ".TBL_CLAIM." c inner join
 		".TBL_USER." u on c.user_id = u.id
+		inner join ".TBL_FINANCE." f on c.payment_id = f.id
 		where c.payment_id = ".$payment_id." order by c.date desc");
 $record_claims = mysqli_fetch_array($result_claims);
+
+$claim_detail = "Zadal: ".$record_claims['user_name']."<br/>";
+$claim_detail .= "Datum: ".formatDate($record_claims['fin_date'])."<br/>";
+$claim_detail .= "Částka: ".$record_claims['fin_amount']."<br/>";
+$claim_detail .= "Poznámka: ".$record_claims['fin_note']."<br/><br/>";
+echo $claim_detail;
+
 if ($record_claims != null) mysqli_data_seek ($result_claims, 0);
 $actual_text = "";
 if ($user_id == $record_claims['user_id'])
