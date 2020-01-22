@@ -20,7 +20,7 @@ if(SHOW_USER)
 	
 	$sql_query = 'SELECT '.TBL_NEWS.'.*, '.TBL_ACCOUNT.'.podpis FROM '.TBL_NEWS.' LEFT JOIN '.TBL_ACCOUNT.' ON '.TBL_NEWS.'.id_user = '.TBL_ACCOUNT.'.id WHERE '.TBL_NEWS.'.internal = 1 ORDER BY datum > '.$date_limit.' DESC,id DESC LIMIT '.GC_INTERNAL_NEWS_CNT_LIMIT;
 
-	@$vysledek=mysqli_query($db_conn, $sql_query);
+	@$vysledek=query_db($sql_query);
 	$cnt= ($vysledek != FALSE) ? mysqli_num_rows($vysledek) : 0;
 	if($cnt > 0)
 	{
@@ -41,7 +41,7 @@ require_once ('./url.inc.php');
 
 if(SHOW_USER)
 {
-	@$vysledek1=mysqli_query($db_conn, "SELECT * FROM ".TBL_ZAVXUS." where id_user=$usr->user_id");
+	@$vysledek1=query_db("SELECT * FROM ".TBL_ZAVXUS." where id_user=$usr->user_id");
 
 	while ($zaznam1=mysqli_fetch_array($vysledek1))
 	{
@@ -51,7 +51,7 @@ if(SHOW_USER)
 		$zaz[]=$zaznam1['id_zavod'];
 	}
 	
-	@$vysledek2=mysqli_query($db_conn, "SELECT * FROM ".TBL_USER." where id=$usr->user_id");
+	@$vysledek2=query_db("SELECT * FROM ".TBL_USER." where id=$usr->user_id");
 	$entry_lock = false;
 	if ($zaznam2=mysqli_fetch_array($vysledek2))
 	{
@@ -77,7 +77,7 @@ $d1 = $curr_date;
 $d2 = IncDate($curr_date,GC_SHOW_REG_DAYS);
 $query = 'SELECT id, datum, datum2, nazev, typ0, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, vedouci, cancelled FROM '.TBL_RACE.' WHERE (((prihlasky1 >= '.$d1.' && prihlasky1 <= '.$d2.') || (prihlasky2 >= '.$d1.' && prihlasky2 <= '.$d2.') || (prihlasky3 >= '.$d1.' && prihlasky3 <= '.$d2.') || (prihlasky4 >= '.$d1.' && prihlasky4 <= '.$d2.') || (prihlasky5 >= '.$d1.' && prihlasky5 <= '.$d2.')) || ( datum >= '.$d1.' AND datum <= '.$d2.')) ORDER BY datum, datum2, id';
 
-@$vysledek=mysqli_query($db_conn, $query);
+@$vysledek=query_db($query);
 
 if (mysqli_num_rows($vysledek) > 0)
 {
@@ -171,7 +171,7 @@ if (mysqli_num_rows($vysledek) > 0)
 			$boss = '-';
 			if($zaznam['vedouci'] != 0)
 			{
-				@$vysledekU=mysqli_query($db_conn, "SELECT jmeno,prijmeni FROM ".TBL_USER." WHERE id = '".$zaznam['vedouci']."' LIMIT 1");
+				@$vysledekU=query_db("SELECT jmeno,prijmeni FROM ".TBL_USER." WHERE id = '".$zaznam['vedouci']."' LIMIT 1");
 				@$zaznamU=mysqli_fetch_array($vysledekU);
 				if($zaznamU != FALSE)
 					$boss = $zaznamU['jmeno'].' '.$zaznamU['prijmeni'];

@@ -29,7 +29,7 @@ echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 
 $users_query = "select id, reg, sort_name  from `".TBL_USER."` where hidden=false order by sort_name asc;";
-$users_result=mysqli_query($db_conn, $users_query);
+$users_result=query_db($users_query);
 $to_options = array();
 
 $opt = array();

@@ -21,12 +21,12 @@ if (IsSet($chiefPayFor))
 {
 	if (empty($chief_pay)) $chief_pay = "null";
 	$chief_pay_query = "update `".TBL_USER."` set chief_pay = $chief_pay where id = $chiefPayFor";
-	$chief_pay_result = mysqli_query($db_conn, $chief_pay_query);
-	// 	echo $chief_pay_query;
+	$chief_pay_result = query_db($chief_pay_query);
 }
 
 // id je z tabulky "users"
-@$vysledek=mysqli_query($db_conn, "SELECT * FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
+$query = "SELECT * FROM ".TBL_USER." WHERE id = '$id' LIMIT 1";
+@$vysledek=query_db($query);
 @$zaznam=mysqli_fetch_array($vysledek);
 $update=$id;
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
@@ -52,7 +52,7 @@ $return_url = parse_url($return_url, PHP_URL_QUERY);
 $user_id = $id;
 $chief_query = "select u.chief_id, ch.sort_name as chief_name, u.chief_pay from `".TBL_USER."` u join `".TBL_USER."` ch on u.chief_id = ch.id where u.id = $user_id";
 // echo "|$chief_query|";
-$chief_result = mysqli_query($db_conn, $chief_query);
+$chief_result = query_db($chief_query);
 $chief_record = mysqli_fetch_array($chief_result);
 $chief_id = $chief_record["chief_id"]; 
 

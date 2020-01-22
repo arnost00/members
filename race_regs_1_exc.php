@@ -27,13 +27,13 @@ $ubytovani = (IsSet($ubytovani)) ? 1 : null;
 
 db_Connect();
 
-$vysledek=mysqli_query($db_conn, 'SELECT * FROM '.TBL_ZAVXUS.' WHERE id_zavod='.$id.' and id_user='.$user_id);
+$vysledek=query_db('SELECT * FROM '.TBL_ZAVXUS.' WHERE id_zavod='.$id.' and id_user='.$user_id);
 if ($vysledek != FALSE && mysqli_num_rows ($vysledek) == 1)
 	$zaznam=mysqli_fetch_array($vysledek);
 else
 	$zaznam=false;
 
-@$vysledek_z=mysqli_query($db_conn, 'SELECT * FROM '.TBL_RACE.' WHERE id='.$id);
+@$vysledek_z=query_db('SELECT * FROM '.TBL_RACE.' WHERE id='.$id);
 $zaznam_z = mysqli_fetch_array($vysledek_z);
 
 $termin = raceterms::GetCurr4RegTerm($zaznam_z);
@@ -59,7 +59,7 @@ if($termin != 0)
 		if ($kateg == '')
 		{	// del
 //			echo "DEL";
-			$result=mysqli_query($db_conn, "DELETE FROM ".TBL_ZAVXUS." WHERE id_zavod = '$id' AND id_user = '$user_id'")
+			$result=query_db("DELETE FROM ".TBL_ZAVXUS." WHERE id_zavod = '$id' AND id_user = '$user_id'")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se změnit přihlášku člena.");
@@ -72,7 +72,7 @@ if($termin != 0)
 			$pozn2=correct_sql_string($pozn2);
 			$termin=correct_sql_string($termin);
 			
-			$result=mysqli_query($db_conn, "UPDATE ".TBL_ZAVXUS." SET kat='$kateg', pozn='$pozn', pozn_in='$pozn2', termin='$termin', transport = '$transport', ubytovani = '$ubytovani' WHERE id_zavod = '$id' AND id_user = '$user_id'")
+			$result=query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kateg', pozn='$pozn', pozn_in='$pozn2', termin='$termin', transport = '$transport', ubytovani = '$ubytovani' WHERE id_zavod = '$id' AND id_user = '$user_id'")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se změnit přihlášku člena.");
@@ -88,7 +88,7 @@ if($termin != 0)
 			$pozn2=correct_sql_string($pozn2);
 			$termin=correct_sql_string($termin);
 
-			$result=mysqli_query($db_conn, "INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in,termin,transport,ubytovani) VALUES ('$user_id','$id','$kateg', '$pozn', '$pozn2','$termin','$transport','$ubytovani')")
+			$result=query_db("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in,termin,transport,ubytovani) VALUES ('$user_id','$id','$kateg', '$pozn', '$pozn2','$termin','$transport','$ubytovani')")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se změnit přihlášku člena.");

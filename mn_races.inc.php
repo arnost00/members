@@ -14,7 +14,8 @@ $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 0;  // old races
 $fD = (IsSet($fD) && is_numeric($fD)) ? (int)$fD : 0;  // type 0
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD);
 
-@$vysledek=mysqli_query($db_conn, "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, nazev,oddil,ranking,typ0,typ,vicedenni,odkaz,misto,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
+$query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, nazev,oddil,ranking,typ0,typ,vicedenni,odkaz,misto,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id';
+@$vysledek=query_db($query);
 
 ?>
 

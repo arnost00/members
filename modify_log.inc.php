@@ -9,7 +9,7 @@ function private_SaveItemToModifyLog(&$action,&$table,&$description)
 	$tstamp = time();
 	$author = $usr->account_id;
 	$sql_query = 'INSERT INTO '.TBL_MODLOG." (`timestamp`,`action`,`table`,`description`,`author`) VALUES ('$tstamp','$action','$table','$description',$author)";
-	$vysledek=mysqli_query($db_conn, $sql_query);
+	$vysledek=query_db($sql_query);
 	return ($vysledek != FALSE);
 }
 

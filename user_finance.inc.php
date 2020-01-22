@@ -1,13 +1,13 @@
 <?php /* finance -  show exact user finance */ ?>
 
 <?
-@$vysledek_historie=mysqli_query($db_conn,"select fin.id fin_id, fin.id_users_editor id_editor, rc.nazev zavod_nazev, rc.cancelled zavod_cancelled, from_unixtime(rc.datum,'%Y-%c-%e') zavod_datum, fin.amount amount, fin.note note, us.sort_name name, fin.date `date` from ".TBL_FINANCE." fin 
+@$vysledek_historie=query_db("select fin.id fin_id, fin.id_users_editor id_editor, rc.nazev zavod_nazev, rc.cancelled zavod_cancelled, from_unixtime(rc.datum,'%Y-%c-%e') zavod_datum, fin.amount amount, fin.note note, us.sort_name name, fin.date `date` from ".TBL_FINANCE." fin 
 		left join ".TBL_USER." us on fin.id_users_editor = us.id
 		left join ".TBL_RACE." rc on fin.id_zavod = rc.id
 		where fin.id_users_user = ".$user_id." and fin.storno is null  order by fin.date desc, fin.id desc");
 
 //vytazeni jmena uzivatele a typu prispevku
-$vysledek_user_name=mysqli_query($db_conn,"select us.sort_name name, ft.nazev ft_nazev from ".TBL_USER." us LEFT JOIN ".TBL_FINANCE_TYPES." ft ON us.finance_type = ft.id where us.id = ".$user_id);
+$vysledek_user_name=query_db("select us.sort_name name, ft.nazev ft_nazev from ".TBL_USER." us LEFT JOIN ".TBL_FINANCE_TYPES." ft ON us.finance_type = ft.id where us.id = ".$user_id);
 $zaznam_user_name=mysqli_fetch_array($vysledek_user_name);
 
 DrawPageSubTitle('Historie účtu pro člena: '.$zaznam_user_name['name']);
@@ -90,7 +90,7 @@ echo $data_tbl->get_new_row_arr($row)."\n";
 
 //--------------pridani vypisu stavu kont sverencu pro rodice
 $nch_query = "select u.id, u.sort_name, ifnull(sum(f.amount),0) as sum from `".TBL_USER."` u left join `".TBL_FINANCE."` f on u.id = f.id_users_user where f.storno is null and (u.chief_pay = $user_id) group by u.id;";
-$nch_result = mysqli_query($db_conn, $nch_query);
+$nch_result = query_db($nch_query);
 if (mysqli_num_rows($nch_result))
 {
 	while ($nch_record = mysqli_fetch_array($nch_result))

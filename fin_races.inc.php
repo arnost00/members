@@ -14,9 +14,11 @@ $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 1;  // old races
 $fD = (IsSet($fD) && is_numeric($fD)) ? (int)$fD : 0;  // type 0
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD);
 
-@$vysledek=mysqli_query($db_conn,"SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,nazev,oddil,ranking,typ0,typ,vicedenni,odkaz,misto,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
+$query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,nazev,oddil,ranking,typ0,typ,vicedenni,odkaz,misto,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id';
+@$vysledek=query_db($query);
 
-@$result_amount=mysqli_query($db_conn,"select id_zavod, sum(amount) amount from ".TBL_FINANCE." where storno is null group by id_zavod;");
+$query = "select id_zavod, sum(amount) amount from ".TBL_FINANCE." where storno is null group by id_zavod;";
+@$result_amount=query_db($query);
 while ($rec=mysqli_fetch_array($result_amount)) $race_amount[$rec["id_zavod"]]=$rec["amount"];
 // print_r($race_amount);
 ?>

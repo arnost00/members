@@ -35,7 +35,7 @@ db_Connect();
 
 if($id_zav > 0)
 {
-	@$vysledek_z=mysqli_query($db_conn, "SELECT typ FROM ".TBL_RACE." WHERE id=$id_zav");
+	@$vysledek_z=query_db("SELECT typ FROM ".TBL_RACE." WHERE id=$id_zav");
 	$zaznam_z = mysqli_fetch_array($vysledek_z);
 
 	$sub_query = ($termin != 0) ? ' AND z.termin='.$termin : '';
@@ -51,7 +51,7 @@ else
 //	$creg = 1; // central reg.
 }
 
-@$vysledek=mysqli_query($db_conn, $query);
+@$vysledek=query_db($query);
 
 if (mysqli_num_rows($vysledek) == 0)
 {

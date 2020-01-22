@@ -40,7 +40,7 @@ function IsFinanceTypeTblFilled()
 {
 	global $db_conn;
 	
-	@$vysledek=mysqli_query($db_conn, "SELECT id FROM ".TBL_FINANCE_TYPES.' ORDER BY id');
+	@$vysledek=query_db("SELECT id FROM ".TBL_FINANCE_TYPES.' ORDER BY id');
 	if ($vysledek === FALSE || $vysledek == null)
 	{
 		return 0;

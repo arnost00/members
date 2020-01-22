@@ -22,7 +22,7 @@ $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 0;  // old races
 $fD = (IsSet($fD) && is_numeric($fD)) ? (int)$fD : 0;  // type 0
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD);
 
-@$vysledek=mysqli_query($db_conn, 'SELECT * FROM '.TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
+@$vysledek=query_db('SELECT * FROM '.TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
 
 $num_rows = ($vysledek != FALSE) ? mysqli_num_rows($vysledek) : 0;
 $old_year = 0;
@@ -88,7 +88,7 @@ if ($num_rows > 0)
 			$boss = '-';
 			if($zaznam['vedouci'] != 0)
 			{
-				@$vysledekU=mysqli_query($db_conn, "SELECT jmeno,prijmeni FROM ".TBL_USER." WHERE id = '".$zaznam['vedouci']."' LIMIT 1");
+				@$vysledekU=query_db("SELECT jmeno,prijmeni FROM ".TBL_USER." WHERE id = '".$zaznam['vedouci']."' LIMIT 1");
 				@$zaznamU=mysqli_fetch_array($vysledekU);
 				if($zaznamU != FALSE)
 					$boss = $zaznamU['jmeno'].' '.$zaznamU['prijmeni'];

@@ -24,9 +24,9 @@ db_Connect();
 
 $query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.termin, z.si_chip as t_si_chip, z.id_user, z.transport transport, z.ubytovani ubytovani FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id.' ORDER BY z.termin ASC, z.id ASC';
 
-@$vysledek=mysqli_query($db_conn, $query);
+@$vysledek=query_db($query);
 
-@$vysledek_z=mysqli_query($db_conn, 'SELECT * FROM '.TBL_RACE." WHERE `id`='$id' LIMIT 1");
+@$vysledek_z=query_db('SELECT * FROM '.TBL_RACE." WHERE `id`='$id' LIMIT 1");
 $zaznam_z = mysqli_fetch_array($vysledek_z);
 
 

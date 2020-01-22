@@ -21,10 +21,10 @@ $sql_query = 'SELECT * FROM '.TBL_USER." WHERE id = '$user_id' LIMIT 1";
 // id je z tabulky "finance types"
 $sql_query2 = 'SELECT * FROM '.TBL_FINANCE_TYPES.' ORDER BY id';
 
-
-@$vysledek=mysqli_query($db_conn, $sql_query);
+@$vysledek=query_db($sql_query);
 @$zaznam=mysqli_fetch_array($vysledek);
-@$vysledek2=mysqli_query($db_conn, $sql_query2);
+
+@$vysledek2=query_db($sql_query2);
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 require_once ("./common.inc.php");
 

@@ -29,7 +29,8 @@ if ($accept == 1)
 {
 	// action
 	db_Connect();
-	$result=mysqli_query($db_conn,"UPDATE ".TBL_USER." SET finance_type = '0'");
+	$query = "UPDATE ".TBL_USER." SET finance_type = '0'";
+	$result=query_db($query);
 	if ($result == FALSE)
 	{
 		echo ("Nepodařilo se vynulovat.");

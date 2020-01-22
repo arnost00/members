@@ -22,7 +22,7 @@ $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
 db_Connect();
 
-@$vysledek=mysqli_query($db_conn, "SELECT * FROM ".TBL_RACE." where id=$id LIMIT 1");
+@$vysledek=query_db("SELECT * FROM ".TBL_RACE." where id=$id LIMIT 1");
 $zaznam=mysqli_fetch_array($vysledek);
 
 if($zaznam['vicedenni'])

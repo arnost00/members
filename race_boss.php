@@ -24,11 +24,11 @@ $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 DrawPageTitle('Editace vedoucí na závod');
 
 db_Connect();
-
-@$vysledek=mysqli_query($db_conn, "SELECT * FROM ".TBL_RACE." where `id`='$id' LIMIT 1");
+$query = "SELECT * FROM ".TBL_RACE." where `id`='$id' LIMIT 1";
+@$vysledek=query_db($query);
 $zaznam=mysqli_fetch_array($vysledek);
-
-@$vysledekU=mysqli_query($db_conn, "SELECT id,prijmeni,jmeno,hidden FROM ".TBL_USER." ORDER BY sort_name ASC");
+$query = "SELECT id,prijmeni,jmeno,hidden FROM ".TBL_USER." ORDER BY sort_name ASC";
+@$vysledekU=query_db($query);
 
 DrawPageSubTitle('Vybraný závod');
 

@@ -31,7 +31,8 @@ TXT_Header();
 
 db_Connect();
 
-@$vysledek=mysqli_query($db_conn, "SELECT * FROM ".TBL_USER." WHERE hidden = 0 ORDER BY sort_name ASC")
+$query = "SELECT * FROM ".TBL_USER." WHERE hidden = 0 ORDER BY sort_name ASC";
+@$vysledek=query_db($query)
 	or die("Chyba při provádění dotazu do databáze.");
 
 require_once ('exports.inc.php');

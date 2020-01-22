@@ -26,7 +26,7 @@ $sql_query = 'SELECT '.TBL_NEWS.'.*, '.TBL_ACCOUNT.'.podpis FROM '.TBL_NEWS.' LE
 if ($news != 1)
 	$sql_query .= " LIMIT ".GC_NEWS_LIMIT;
 
-@$vysledek=mysqli_query($db_conn, $sql_query);
+@$vysledek=query_db($sql_query);
 $cnt= ($vysledek != FALSE) ? mysqli_num_rows($vysledek) : 0;
 if($cnt > 0)
 {

@@ -39,7 +39,7 @@ $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
 db_Connect();
 
-@$vysledek_z=mysqli_query($db_conn, "SELECT * FROM ".TBL_RACE." WHERE id=$id");
+@$vysledek_z=query_db("SELECT * FROM ".TBL_RACE." WHERE id=$id");
 $zaznam_z = mysqli_fetch_array($vysledek_z);
 
 DrawPageSubTitle('Vybraný závod');
@@ -72,7 +72,7 @@ $sub_query = (IsLoggedRegistrator() || IsLoggedManager()) ? '' : ' AND '.TBL_USE
 
 $query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, kat, pozn, pozn_in, termin, entry_locked, '.TBL_ZAVXUS.'.transport, '.TBL_ZAVXUS.'.ubytovani FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query.' ORDER BY sort_name ASC';
 
-@$vysledek=mysqli_query($db_conn, $query);
+@$vysledek=query_db($query);
 
 echo '<TABLE width="90%">';
 echo '<TR>';
@@ -307,14 +307,14 @@ echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
-@$vysledek=mysqli_query("SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod=$id ORDER BY id");
+@$vysledek=query_db("SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod=$id ORDER BY id");
 
 $i=0;
 $trans=0;
 $ubyt=0;
 while ($zaznam=mysqli_fetch_array($vysledek))
 {
-	@$vysledek1=mysqli_query("SELECT * FROM ".TBL_USER." WHERE id=$zaznam[id_user] LIMIT 1");
+	@$vysledek1=query_db("SELECT * FROM ".TBL_USER." WHERE id=$zaznam[id_user] LIMIT 1");
 	$zaznam1=mysqli_fetch_array($vysledek1);
 	if ($zaznam1)
 	{

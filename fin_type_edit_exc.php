@@ -27,15 +27,17 @@ if (IsLoggedFinance())
 		if (IsSet($update))
 		{
 			$update = (isset($update) && is_numeric($update)) ? (int)$update : 0;
-
-			$result=mysqli_query($db_conn, "UPDATE ".TBL_FINANCE_TYPES." SET nazev='$nazev', popis='$popis' WHERE id='$update'")
+			
+			$query = "UPDATE ".TBL_FINANCE_TYPES." SET nazev='$nazev', popis='$popis' WHERE id='$update'";
+			$result=query_db($query)
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se změnit typ příspěvku.");
 		}
 		else
 		{
-			$result = mysqli_query($db_conn, "INSERT INTO ".TBL_FINANCE_TYPES." (nazev,popis) VALUES ('$nazev','$popis')")
+			$query = "INSERT INTO ".TBL_FINANCE_TYPES." (nazev,popis) VALUES ('$nazev','$popis')";
+			$result = query_db($query)
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se vložit typ příspěvku.");

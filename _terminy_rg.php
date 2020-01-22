@@ -43,7 +43,7 @@ $d1 = $curr_date;
 
 $query="SELECT id,datum,typ,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,nazev,vicedenni,odkaz,vedouci, oddil,send,misto,cancelled,typ0 FROM ".TBL_RACE.' WHERE datum >= '.$d1.' || datum2 >= '.$d1.' ORDER BY datum, datum2, id';
 
-@$vysledek=mysqli_query($db_conn, $query);
+@$vysledek=query_db($query);
 
 if (mysqli_num_rows($vysledek) > 0)
 {

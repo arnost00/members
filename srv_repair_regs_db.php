@@ -16,13 +16,13 @@ if (IsLoggedAdmin())
 	$races = Array();
 	$users = Array();
 
-	$vysledekR=mysqli_query($db_conn, "SELECT id FROM ".TBL_RACE);
+	$vysledekR=query_db("SELECT id FROM ".TBL_RACE);
 	while ($zaznamR=mysqli_fetch_array($vysledekR))
 	{
 		$races[] = $zaznamR['id'];
 	}
 
-	$vysledekU=mysqli_query($db_conn, "SELECT id FROM ".TBL_USER);
+	$vysledekU=query_db("SELECT id FROM ".TBL_USER);
 	while ($zaznamU=mysqli_fetch_array($vysledekU))
 	{
 		$users[] = $zaznamU['id'];
@@ -30,7 +30,7 @@ if (IsLoggedAdmin())
 
 	$i = 0;
 	$j = 0;
-	$vysledek=mysqli_query($db_conn, "SELECT id,id_zavod,id_user FROM ".TBL_ZAVXUS);
+	$vysledek=query_db("SELECT id,id_zavod,id_user FROM ".TBL_ZAVXUS);
 	$cnt = mysqli_num_rows($vysledek);
 	while ($zaznam=mysqli_fetch_array($vysledek))
 	{
@@ -40,7 +40,7 @@ if (IsLoggedAdmin())
 		}
 		else
 		{
-			$result=mysqli_query($db_conn, "DELETE FROM ".TBL_ZAVXUS." WHERE id='".$zaznam['id']."'")
+			$result=query_db("DELETE FROM ".TBL_ZAVXUS." WHERE id='".$zaznam['id']."'")
 			or die("Chyba při provádění dotazu do databáze.");
 			if ($result != FALSE)
 				$j++;

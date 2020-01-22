@@ -41,7 +41,7 @@ else
 ?>
 <br>
 <?
-@$vysledek=mysqli_query($db_conn, "SELECT id,hidden,prijmeni,jmeno FROM ".TBL_USER." ORDER BY sort_name ASC")
+@$vysledek=query_db("SELECT id,hidden,prijmeni,jmeno FROM ".TBL_USER." ORDER BY sort_name ASC")
 	or die("Chyba při provádění dotazu do databáze.");
 
 $sql_query = "SELECT id,datum,datum2,nazev,misto,vicedenni,oddil,cancelled FROM ".TBL_RACE;
@@ -52,7 +52,7 @@ if($old == 0)
 }
 $sql_query .= " ORDER BY datum, datum2, id";
 
-@$races=mysqli_query($db_conn, $sql_query)
+@$races=query_db($sql_query)
 	or die("Chyba při provádění dotazu do databáze.");
 
 $data_tbl = new html_table_mc();
@@ -92,7 +92,7 @@ while ($row=mysqli_fetch_array($vysledek))
 		
 		$rc=(($i++ % 2) == 0) ? $g_colors["table_row1"] : $g_colors["table_row2"];
 		$user_id = $row["id"];
-		@$vysledek1=mysqli_query($db_conn, "SELECT * FROM ".TBL_ZAVXUS." where id_user='$user_id'");
+		@$vysledek1=query_db("SELECT * FROM ".TBL_ZAVXUS." where id_user='$user_id'");
 		unset($zav);
 		while ($zaznam1=mysqli_fetch_array($vysledek1))
 		{

@@ -19,8 +19,7 @@ $id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
 // id je z tabulky "finance types"
 $sql_query = 'SELECT * FROM '.TBL_FINANCE_TYPES." WHERE id = '$id' LIMIT 1";
 
-
-@$vysledek=mysqli_query($db_conn, $sql_query);
+@$vysledek=query_db($sql_query);
 @$zaznam=mysqli_fetch_array($vysledek);
 $update=$id;
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>

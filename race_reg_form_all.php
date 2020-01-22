@@ -43,7 +43,7 @@ $entry = '';
 require_once ('exports.inc.php');
 
 $query = 'SELECT * FROM '.TBL_USER.' WHERE '.TBL_USER.'.hidden = 0 ORDER BY reg';
-@$vysledek=mysqli_query($db_conn, $query);
+@$vysledek=query_db($query);
 
 $entry = new CSOB_Export_Entry($g_shortcut);
 
@@ -91,7 +91,7 @@ echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
 $query = 'SELECT * FROM '.TBL_USER.' WHERE '.TBL_USER.'.hidden = 0 ORDER BY reg';
-@$vysledek=mysqli_query($db_conn, $query);
+@$vysledek=query_db($query);
 
 $i=0;
 while ($zaznam=mysqli_fetch_array($vysledek))

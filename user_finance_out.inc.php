@@ -12,7 +12,7 @@ $race_sel = '';
 $race_sel .= '<select name="id_zavod">';
 $race_sel .= '<option value=null>---</option>';
 
-@$vysledek_zavody=mysqli_query($db_conn, "select id, nazev, from_unixtime(datum,'%Y-%c-%e') datum_text from ".TBL_RACE." order by datum desc");
+@$vysledek_zavody=query_db("select id, nazev, from_unixtime(datum,'%Y-%c-%e') datum_text from ".TBL_RACE." order by datum desc");
 while ($zaznam=mysqli_fetch_array($vysledek_zavody))
 {
 	$race_sel .= "<option value=".$zaznam["id"].">".$zaznam["nazev"]."&nbsp;-&nbsp;".formatDate($zaznam["datum_text"])."</option>";

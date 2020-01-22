@@ -24,7 +24,7 @@ DrawPageTitle('Informace o závodě');
 
 db_Connect();
 
-@$vysledek_z=mysqli_query($db_conn, "SELECT * FROM ".TBL_RACE." WHERE id=$id_zav LIMIT 1");
+@$vysledek_z=query_db("SELECT * FROM ".TBL_RACE." WHERE id=$id_zav LIMIT 1");
 $zaznam_z = mysqli_fetch_array($vysledek_z);
 
 RaceInfoTable($zaznam_z,'',false,true,false);
