@@ -17,13 +17,13 @@ if (IsLoggedSmallAdmin())
 	$id2 = GetUserAccountId_Users($id);
 	if ($id2)
 	{
-		$vysl2=mysqli_query($db_conn, 'SELECT * FROM '.TBL_ACCOUNT.' WHERE `id`=\''.$id2."'");
+		$vysl2=query_db('SELECT * FROM '.TBL_ACCOUNT.' WHERE `id`=\''.$id2."'");
 		$zaznam2=mysqli_fetch_array($vysl2);
 		if ($zaznam2 != FALSE)
 		{
 			$lock = (bool)($zaznam2['locked']);
 			$lock = !$lock;
-			$result=mysqli_query($db_conn, 'UPDATE '.TBL_ACCOUNT.' SET locked=\''.$lock.'\' WHERE `id`=\''.$id2."'")
+			$result=query_db('UPDATE '.TBL_ACCOUNT.' SET locked=\''.$lock.'\' WHERE `id`=\''.$id2."'")
 				or die('Chyba při provádění dotazu do databáze.');
 			if ($result == FALSE)
 				die ('Nepodařilo se zamčít/odemčít účet člena.');

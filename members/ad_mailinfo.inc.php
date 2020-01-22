@@ -13,8 +13,8 @@ function confirm_delete(text) {
 </script>
 <?
 
-
-@$vysl=mysqli_query($db_conn, 'SELECT * FROM '.TBL_MAILINFO.' ORDER BY `id`')
+$query = 'SELECT * FROM '.TBL_MAILINFO.' ORDER BY `id`';
+@$vysl = query_db($query)
 	or die("Chyba při provádění dotazu do databáze.");
 
 $data_tbl = new html_table_mc();
@@ -37,7 +37,8 @@ while ($zaznam=mysqli_fetch_array($vysl))
 	$err = false;
 	$row[] = $zaznam['id'];
 	$row[] = $zaznam['email'];
-	$vysl2=mysqli_query($db_conn, 'SELECT * FROM '.TBL_USER.' WHERE id = \''.$zaznam['id_user'].'\' LIMIT 1');
+	$query = 'SELECT * FROM '.TBL_USER.' WHERE id = \''.$zaznam['id_user'].'\' LIMIT 1';
+	$vysl2=query_db($query);
 	$zazn=mysqli_fetch_array($vysl2);
 	if ($zazn != FALSE)
 	{

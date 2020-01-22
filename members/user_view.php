@@ -30,7 +30,7 @@ DrawPageTitle('Přehled přihlášek na závody');
 <?
 
 // id je z tabulky "users"
-@$vysledekU=mysqli_query($db_conn, "SELECT id,prijmeni,jmeno FROM ".TBL_USER." WHERE id=".$id." LIMIT 1");
+@$vysledekU=query_db("SELECT id,prijmeni,jmeno FROM ".TBL_USER." WHERE id=".$id." LIMIT 1");
 $zaznamU=mysqli_fetch_array($vysledekU);
 
 DrawPageSubTitle('Vybraný člen : '.$zaznamU["jmeno"].' '.$zaznamU["prijmeni"]);
@@ -46,7 +46,7 @@ require_once ("./common_race.inc.php");
 // show only races with registration
 $query = 'SELECT r.id, datum, datum2, nazev, oddil, typ0, typ, vicedenni, misto, kat FROM '.TBL_RACE.' as r JOIN '.TBL_ZAVXUS.' as z ON r.id = z.id_zavod AND z.id_user='.$id.' ORDER BY r.datum, r.datum2, r.id';
 
-@$vysledek=mysqli_query($db_conn, $query);
+@$vysledek=query_db($query);
 
 $num_rows = mysqli_num_rows($vysledek);
 if ($num_rows > 0)

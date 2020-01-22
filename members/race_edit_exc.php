@@ -73,7 +73,7 @@ if($prihlasky3 != '') $prihlasky++;
 if($prihlasky4 != '') $prihlasky++;
 if($prihlasky5 != '') $prihlasky++;
 
-$result=mysqli_query($db_conn, "SELECT * FROM ".TBL_RACE." WHERE id='$id'");
+$result=query_db("SELECT * FROM ".TBL_RACE." WHERE id='$id'");
 $item=mysqli_fetch_array($result);
 if ($item != FALSE)
 {	// zmena terminu prihlasek
@@ -121,7 +121,7 @@ else
 	
 	$cancelled = !isset($cancelled)? 0: 1;
 
-	$result=mysqli_query($db_conn, "UPDATE ".TBL_RACE." SET datum='$datum', datum2='$datum2', nazev='$nazev', misto='$misto', typ0='$typ0', typ='$typ', zebricek='$zebricek2', ranking='$ranking', prihlasky='$prihlasky', odkaz='$odkaz', prihlasky1='$prihlasky1', prihlasky2='$prihlasky2', prihlasky3='$prihlasky3', prihlasky4='$prihlasky4', prihlasky5='$prihlasky5', etap='$etap', poznamka='$poznamka', oddil='$oddil', modify_flag='$modify_flag', transport='$transport',  ubytovani='$accommodation', cancelled='$cancelled' WHERE id='$id'")
+	$result=query_db("UPDATE ".TBL_RACE." SET datum='$datum', datum2='$datum2', nazev='$nazev', misto='$misto', typ0='$typ0', typ='$typ', zebricek='$zebricek2', ranking='$ranking', prihlasky='$prihlasky', odkaz='$odkaz', prihlasky1='$prihlasky1', prihlasky2='$prihlasky2', prihlasky3='$prihlasky3', prihlasky4='$prihlasky4', prihlasky5='$prihlasky5', etap='$etap', poznamka='$poznamka', oddil='$oddil', modify_flag='$modify_flag', transport='$transport',  ubytovani='$accommodation', cancelled='$cancelled' WHERE id='$id'")
 		or die("Chyba při provádění dotazu do databáze.");
 	if ($result == FALSE)
 		die ("Nepodařilo se změnit údaje o závodě.");

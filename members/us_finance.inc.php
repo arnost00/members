@@ -20,14 +20,14 @@ if (IsSet($payment) && IsSet($user_id) && IsSet($id_to) && IsSet($amount) && $id
 	$id_to = (int)$id_to;
 	$note = (IsSet($note)) ? correct_sql_string($note) : '';
 	$can_send = true;
-	@$vysledek=mysqli_query($db_conn, 'SELECT id FROM '.TBL_USER.' WHERE `id` = \''.$id_to.'\' AND `hidden` = \'0\' LIMIT 1');
+	@$vysledek=query_db('SELECT id FROM '.TBL_USER.' WHERE `id` = \''.$id_to.'\' AND `hidden` = \'0\' LIMIT 1');
 	if (!$vysledek)
 	{
 		$result = 'Nelze převést neexistujícímu členu.';
 		$can_send = false;
 	}
 
-	@$vysledek2=mysqli_query($db_conn, 'SELECT fin.amount AS amount  from '.TBL_FINANCE.' fin 
+	@$vysledek2=query_db('SELECT fin.amount AS amount  from '.TBL_FINANCE.' fin 
 		where fin.id_users_user = '.$user_id.' and fin.storno is null');
 
 	$db_sum_amount = 0;

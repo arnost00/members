@@ -34,7 +34,7 @@ $sc->set_url('race_regs_all.php?gr_id='.$gr_id.'&id='.$id,true);
 $sc->set_default_sort(0,1);
 $sub_query = $sc->get_sql_string();
 
-@$vysledek_z=mysqli_query($db_conn, "SELECT * FROM ".TBL_RACE." WHERE id=$id");
+@$vysledek_z=query_db("SELECT * FROM ".TBL_RACE." WHERE id=$id");
 $zaznam_z = mysqli_fetch_array($vysledek_z);
 
 DrawPageSubTitle('Vybraný závod');
@@ -98,7 +98,7 @@ $sub_query2 = (IsLoggedRegistrator() || IsLoggedManager()) ? '' : ' AND '.TBL_US
 
 $query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, datum, kat, pozn, pozn_in, termin, entry_locked, '.TBL_ZAVXUS.'.transport, '.TBL_ZAVXUS.'.ubytovani FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query2.$sub_query;
 
-@$vysledek=mysqli_query($query);
+@$vysledek=query_db($query);
 
 //echo "Počet již přihlášených členů je ".mysqli_num_rows($vysledek_p).".<BR>";
 

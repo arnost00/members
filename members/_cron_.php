@@ -75,7 +75,7 @@ function ClearAllModifyFlags()
 	
 	$done = 0;
 	$query='UPDATE '.TBL_RACE." SET modify_flag='0'";
-	$result=mysqli_query($db_conn, $query)
+	$result=query_db($query)
 		or die("Chyba při provádění dotazu do databáze.");
 	if ($result == FALSE)
 		echo("Nepodařilo se změnit údaje o upozorňování.\n");
@@ -83,7 +83,7 @@ function ClearAllModifyFlags()
 		$done++;
 	
 	$query='UPDATE '.TBL_NEWS." SET modify_flag='0'";
-	$result=mysqli_query($db_conn, $query)
+	$result=query_db($query)
 		or die("Chyba při provádění dotazu do databáze.");
 	if ($result == FALSE)
 		echo("Nepodařilo se změnit údaje o upozorňování.\n");
@@ -226,9 +226,9 @@ $query_m='SELECT * FROM '.TBL_MAILINFO.' ORDER BY `id`';
 $query_r='SELECT * FROM '.TBL_RACE.' WHERE datum >= '.$curr_date.' AND (prihlasky > 0 OR modify_flag > 0) ORDER BY datum';
 $query_n='SELECT * FROM '.TBL_NEWS.' WHERE modify_flag > 0 ORDER BY datum';
 
-$vysledek_m=mysqli_query($db_conn, $query_m);
-$vysledek_r=mysqli_query($db_conn, $query_r);
-$vysledek_n=mysqli_query($db_conn, $query_n);
+$vysledek_m=query_db($query_m);
+$vysledek_r=query_db($query_r);
+$vysledek_n=query_db($query_n);
 
 $cnt_send = $cnt_tested = 0;
 if (mysqli_num_rows($vysledek_m) > 0)

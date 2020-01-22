@@ -8,8 +8,10 @@ if (IsLoggedEditor())
 {
 	db_Connect();
 	$id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
-	if ($id > 0)
-		mysqli_query($db_conn, 'DELETE FROM '.TBL_NEWS.' WHERE `id`=\''.$id.'\'');
+	if ($id > 0) {
+		$query = 'DELETE FROM '.TBL_NEWS.' WHERE `id`=\''.$id.'\'';
+		query_db($query);
+	}
 	header("location: ".$g_baseadr);
 	exit;
 }

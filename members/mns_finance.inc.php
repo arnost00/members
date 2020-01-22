@@ -23,7 +23,7 @@ $query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob, ifnull(sum
 		left join '.TBL_FINANCE_TYPES.' ft on ft.id = u.finance_type
 		left join '.TBL_FINANCE.' f on u.id=f.id_users_user where f.storno is null AND ((u.chief_id = '.$usr->user_id.' and u.chief_pay is null) or u.id = '.$usr->user_id.') group by u.id '.$sub_query;
 // echo "|$query|";
-@$vysledek=mysqli_query($db_conn, $query);
+@$vysledek=query_db($query);
 //--------------------------------
 
 //priprava pro zobrazeni rodiny = sverenci, za ktere platim
@@ -35,7 +35,7 @@ $sub_query_family = $sc_family->get_sql_string();
 $query_family = 'SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob, ifnull(sum(f.amount),0) sum_amount, ft.nazev FROM '.TBL_USER.' u
 		left join '.TBL_FINANCE_TYPES.' ft on ft.id = u.finance_type
 		left join '.TBL_FINANCE.' f on u.id=f.id_users_user where f.storno is null AND ((u.chief_id = '.$usr->user_id.' and u.chief_pay = '.$usr->user_id.') or u.id = '.$usr->user_id.') group by u.id '.$sub_query;
-@$vysledek_family=mysqli_query($db_conn, $query_family);
+@$vysledek_family=query_db($query_family);
 //---------------------------------------------------------
 
 //funkce pro zobrazeni tabulky se sverenci nebo rodinou

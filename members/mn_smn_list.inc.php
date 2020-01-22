@@ -38,7 +38,7 @@ where u.id in
 (select u.id from ".TBL_ACCOUNT." a inner join ".TBL_USXUS." uu on a.id = uu.id_accounts inner join ".TBL_USER." u on uu.id_users = u.id
 where a.policy_mng = "._MNG_SMALL_INT_VALUE_.") order by u.sort_name";
 
-@$vysl=mysqli_query($db_conn, $select);
+@$vysl=query_db($select);
 $i=1;
 while ($zazn=mysqli_fetch_array($vysl))
 {

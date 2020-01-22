@@ -12,7 +12,8 @@ function confirm_delete() {
 -->
 </script><?
 
-@$vysledek=mysqli_query($db_conn, "SELECT * FROM ".TBL_FINANCE_TYPES.' ORDER BY id');
+$query = "SELECT * FROM ".TBL_FINANCE_TYPES.' ORDER BY id';
+@$vysledek=query_db($query);
 
 if ($vysledek === FALSE )
 {

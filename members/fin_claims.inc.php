@@ -19,8 +19,7 @@ $query = 'select *, f.id as fin_id from `'.TBL_FINANCE.'` as f inner join
 `'.TBL_RACE.'` as r on f.id_zavod = r.id
 where f.claim = 1 and c.id in (select max(id) from `'.TBL_CLAIM.'` group by payment_id)
 order by u.sort_name'; 
-
-@$vysledek=mysqli_query($db_conn, $query);
+@$vysledek=query_db($query);
 
 $i=1;
 if ($vysledek != FALSE && mysqli_num_rows($vysledek) > 0)

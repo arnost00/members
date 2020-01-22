@@ -284,7 +284,7 @@ function RIT_SH(divId1, divId2)
 		$vedouci = '-';
 		if($zaznam['vedouci'] != 0)
 		{
-			@$vysledekU=mysqli_query($db_conn,"SELECT jmeno,prijmeni FROM ".TBL_USER." WHERE id = '".$zaznam['vedouci']."' LIMIT 1");
+			@$vysledekU=query_db("SELECT jmeno,prijmeni FROM ".TBL_USER." WHERE id = '".$zaznam['vedouci']."' LIMIT 1");
 			@$zaznamU=mysqli_fetch_array($vysledekU);
 			if($zaznamU != FALSE)
 				$vedouci = $zaznamU['jmeno'].' '.$zaznamU['prijmeni'];

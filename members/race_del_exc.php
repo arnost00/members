@@ -9,14 +9,16 @@ if (IsLoggedRegistrator())
 {
 	db_Connect();
 	$id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
-
-	@$vysledek=mysqli_query($db_conn, "SELECT id FROM ".TBL_ZAVXUS." WHERE id_zavod='$id'");
+	$query = "SELECT id FROM ".TBL_ZAVXUS." WHERE id_zavod='$id'";
+	@$vysledek=query_db($query);
 	while ($zaznam=mysqli_fetch_array($vysledek))
 	{
-		mysqli_query($db_conn, "DELETE FROM ".TBL_ZAVXUS." WHERE id='".$zaznam['id']."'");
+		$query = "DELETE FROM ".TBL_ZAVXUS." WHERE id='".$zaznam['id']."'";
+		query_db($query);
 	}
-
-	@$vysledek=mysqli_query($db_conn, "DELETE FROM ".TBL_RACE." WHERE id='$id'");
+	
+	$query = "DELETE FROM ".TBL_RACE." WHERE id='$id'";
+	@$vysledek=query_db($query);
 
 	if (IsLoggedAdmin())
 		header("location: ".$g_baseadr."index.php?id=300&subid=5");

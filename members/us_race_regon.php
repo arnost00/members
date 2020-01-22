@@ -25,15 +25,15 @@ $id_us = (IsSet($id_us) && is_numeric($id_us)) ? (int)$id_us : 0;
 
 DrawPageTitle('Přihláška na závod');
 
-@$vysledek=mysqli_query($db_conn, "SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod=$id_zav ORDER BY id");
+@$vysledek=query_db("SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod=$id_zav ORDER BY id");
 
-@$vysledek_z=mysqli_query($db_conn, "SELECT * FROM ".TBL_RACE." WHERE id=$id_zav");
+@$vysledek_z=query_db("SELECT * FROM ".TBL_RACE." WHERE id=$id_zav");
 $zaznam_z = mysqli_fetch_array($vysledek_z);
 
-@$vysledek_rg=mysqli_query($db_conn, "SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod=$id_zav and id_user=$id_us");
+@$vysledek_rg=query_db("SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod=$id_zav and id_user=$id_us");
 $zaznam_rg=mysqli_fetch_array($vysledek_rg);
 
-@$vysledek_u=mysqli_query($db_conn, "SELECT * FROM ".TBL_USER." WHERE id=$id_us");
+@$vysledek_u=query_db("SELECT * FROM ".TBL_USER." WHERE id=$id_us");
 $zaznam_u = mysqli_fetch_array($vysledek_u);
 
 $new = ($zaznam_rg && $zaznam_rg['kat'] != '') ? 0 : 1;
@@ -234,7 +234,7 @@ $trans=0;
 $ubyt=0;
 while ($zaznam=mysqli_fetch_array($vysledek))
 {
-	@$vysledek1=mysqli_query($db_conn, "SELECT * FROM ".TBL_USER." WHERE id=$zaznam[id_user] LIMIT 1");
+	@$vysledek1=query_db("SELECT * FROM ".TBL_USER." WHERE id=$zaznam[id_user] LIMIT 1");
 	$zaznam1=mysqli_fetch_array($vysledek1);
 	if ($zaznam1)
 	{

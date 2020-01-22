@@ -14,9 +14,9 @@ function createClaim($user_id, $payment_id, $claim_text)
 	
 	$query = "insert into ".TBL_CLAIM." (user_id, payment_id, text) 
 		values (".$user_id.", ".$payment_id.", '".$claim_text."')";
-	mysqli_query($db_conn, $query);
+	query_db($query);
 	$query = "update ".TBL_FINANCE." set claim = 1 where id = $payment_id";
-	mysqli_query($db_conn, $query);
+	query_db($query);
 }
 
 /*
@@ -25,7 +25,7 @@ function createClaim($user_id, $payment_id, $claim_text)
 function updateClaim($claim_id, $claim_text)
 {
 	$query = "update ".TBL_CLAIM." set text='".$claim_text."' where id = $claim_id";
-	mysqli_query($db_conn, $query);
+	query_db($query);
 }
 
 /*
@@ -34,9 +34,9 @@ function updateClaim($claim_id, $claim_text)
 function closeClaim($claim_id, $payment_id)
 {
 	$query = "update ".TBL_CLAIM." set closed = 1 where id = $claim_id";
-	mysqli_query($db_conn, $query);
+	query_db($query);
 	$query = "update ".TBL_FINANCE." set claim = 0 where id = $payment_id";
-	mysqli_query($db_conn, $query);
+	query_db($query);
 }
 
 /* 
@@ -55,7 +55,7 @@ function createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod)
 	$note = correct_sql_string($note);
 	$query = "insert into ".TBL_FINANCE." (id_users_editor, id_users_user, amount, note, date, id_zavod) values 
 			(".$editor_id.", ".$user_id.", ".$amount.", '".$note."', '".$datum."', '".$id_zavod."')";
-	mysqli_query($db_conn, $query);
+	query_db($query);
 	$lastId = mysqli_insert_id($db_conn);
 	SaveItemToModifyLog_Add(TBL_FINANCE, "id=$lastId|user_id=$user_id|amount=$amount");
 }
@@ -70,7 +70,7 @@ function stornoPayment($editor_id, $trn_id, $storno_note)
 	$datum=date("Y-m-d");
 	$storno_note = correct_sql_string($storno_note);
 	$query = "update ".TBL_FINANCE." set storno='1', storno_by=".$editor_id.", storno_note='".$storno_note."', storno_date = '".$datum."' where id = $trn_id";
-	mysqli_query($db_conn, $query);
+	query_db($query);
 	SaveItemToModifyLog_Add(TBL_FINANCE, "id=$trn_id|note=$storno_note");
 }
 
@@ -80,7 +80,7 @@ function updatePayment($editor_id, $trn_id, $id_zavod, $amount, $note)
 
 	$note = correct_sql_string($note);
 	$query = "update ".TBL_FINANCE." set id_zavod=".$id_zavod.", amount=".$amount.", note='".$note."' where id = $trn_id";
-	mysqli_query($db_conn, $query);
+	query_db($query);
 	SaveItemToModifyLog_Edit(TBL_FINANCE, "id=$trn_id|user_id=$editor_id|amount=$amount|note=$note");
 }
 
@@ -166,7 +166,7 @@ function getAllUsersCurrentBalance()
 		left join '.TBL_FINANCE_TYPES.' ft on ft.id = u.finance_type
 		group by u.id ORDER BY u.`sort_name` ASC;';
 		
-	$vysl=mysqli_query($db_conn, $query);
+	$vysl=query_db($query);
 	$data = array();
 	if ($vysl != FALSE)
 	{
@@ -200,12 +200,14 @@ function createFinanceNoteFromTo($lid_from, $lid_to)
 {
 	global $db_conn;
 
-		//nutno delat spojenim 2 selectu, aby bylo zachovano poradi na vystupu nejdrive from a pote to
-		$select = "SELECT sort_name name FROM ".TBL_USER." WHERE id = $lid_from UNION SELECT sort_name name FROM ".TBL_USER." WHERE id = $lid_to";
-		$vysledek_name_from_name_to = mysqli_query($db_conn, $select);
-		$zaznam_from = mysqli_fetch_array($vysledek_name_from_name_to);
-		$zaznam_to = mysqli_fetch_array($vysledek_name_from_name_to);
-		return " <i>[".$zaznam_from['name']."->".$zaznam_to['name']."]</i> ";
+	//TODO popremyslet, zda nerozdelit do 2 selectu, takhle je to zbytecne necitelne
+
+	//nutno delat spojenim 2 selectu, aby bylo zachovano poradi na vystupu nejdrive from a pote to
+	$select = "SELECT sort_name name FROM ".TBL_USER." WHERE id = $lid_from UNION SELECT sort_name name FROM ".TBL_USER." WHERE id = $lid_to";
+	$vysledek_name_from_name_to = query_db($select);
+	$zaznam_from = mysqli_fetch_array($vysledek_name_from_name_to);
+	$zaznam_to = mysqli_fetch_array($vysledek_name_from_name_to);
+	return " <i>[".$zaznam_from['name']."->".$zaznam_to['name']."]</i> ";
 }
 
 ?>

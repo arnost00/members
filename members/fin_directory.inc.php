@@ -61,7 +61,7 @@ $query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,entry_locked, ifnull(f.sum_amoun
 		left join '.TBL_FINANCE_TYPES.' ft on ft.id = u.finance_type
 		group by u.id '.$sub_query;
 
-@$vysledek=mysqli_query($db_conn,$query);
+@$vysledek=query_db($query);
 
 require_once ('./common_fin.inc.php');
 $enable_fin_types = IsFinanceTypeTblFilled();

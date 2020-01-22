@@ -7,7 +7,8 @@ DrawPageTitle('Náhled na účty - Administrace');
 <?
 // specialni vypis user z accounts -->
 
-@$list_v=mysqli_query($db_conn, "SELECT id,login,podpis,policy_news,policy_regs,policy_mng,policy_fin,locked,last_visit, policy_adm FROM ".TBL_ACCOUNT." ORDER BY id");
+$query = "SELECT id,login,podpis,policy_news,policy_regs,policy_mng,policy_fin,locked,last_visit, policy_adm FROM ".TBL_ACCOUNT." ORDER BY id";
+@$list_v = query_db($query);
 
 $data_tbl = new html_table_mc();
 $col = 0;
@@ -40,7 +41,8 @@ while ($list_z=mysqli_fetch_array($list_v))
 	
 	if ($g_enable_mailinfo)
 	{
-		$vysledek=mysqli_query($db_conn, "SELECT m.* FROM ".TBL_MAILINFO." m, ".TBL_USXUS." u WHERE m.id_user = u.id_users AND u.id_accounts = '".$list_z["id"]."'  LIMIT 1");
+		$query = "SELECT m.* FROM ".TBL_MAILINFO." m, ".TBL_USXUS." u WHERE m.id_user = u.id_users AND u.id_accounts = '".$list_z["id"]."'  LIMIT 1";
+		$vysledek = query_db($query);
 		$zaznam=mysqli_fetch_array($vysledek);
 		if ($zaznam == FALSE)
 		{

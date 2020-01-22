@@ -16,8 +16,7 @@ $sc->set_url('index.php?id=600&subid=1',true);
 $sub_query = $sc->get_sql_string();
 
 $query = 'SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob,entry_locked FROM '.TBL_USER.' WHERE chief_id = '.$usr->user_id.' OR id = '.$usr->user_id.$sub_query;
-//$query = 'SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob FROM '.TBL_USER.' WHERE chief_id = '.$usr->user_id.' OR id = '.$usr->user_id.' ORDER BY sort_name ASC '
-@$vysledek=mysqli_query($db_conn, $query);
+@$vysledek=query_db($query);
 
 if (IsSet($result) && is_numeric($result) && $result != 0)
 {

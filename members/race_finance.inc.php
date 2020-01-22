@@ -8,7 +8,7 @@ select u.id u_id, u.sort_name, f.id, f.amount, f.note, zu.kat, zu.transport, zu.
 left join ".TBL_FINANCE_TYPES." ft on ft.id = u.finance_type
 where zu.id_zavod = $race_id and u.hidden = '0' order by u.sort_name
 ";
-$vysledek_prihlaseni = mysqli_query($db_conn, $query_prihlaseni);
+$vysledek_prihlaseni = query_db($query_prihlaseni);
 
 $query_platici = "
 select u.id u_id, u.sort_name, f.id, f.amount, f.note, null kat, ft.nazev from ".TBL_USER." u inner join
@@ -19,7 +19,7 @@ and u.id not in (select id_user from ".TBL_ZAVXUS." where id_zavod = $race_id)
 and u.hidden = '0' 
 order by u.sort_name
 ";
-$vysledek_platici = mysqli_query($db_conn, $query_platici);
+$vysledek_platici = query_db($query_platici);
 
 $query_neprihlaseni = "
 select u.id u_id, u.sort_name, null id, null amount, null note, null kat, ft.nazev from ".TBL_USER." u 
@@ -34,15 +34,15 @@ and u.hidden = '0'
 order by u.sort_name
 ";
 
-$vysledek_neprihlaseni = mysqli_query($db_conn, $query_neprihlaseni);
+$vysledek_neprihlaseni = query_db($query_neprihlaseni);
 
 //vytazeni informaci o zavode
-@$vysledek_race=mysqli_query($db_conn, "select z.nazev, from_unixtime(z.datum, '%Y-%c-%e') datum from ".TBL_RACE." z where z.id = ".$race_id);
+@$vysledek_race=query_db("select z.nazev, from_unixtime(z.datum, '%Y-%c-%e') datum from ".TBL_RACE." z where z.id = ".$race_id);
 $zaznam_race=mysqli_fetch_array($vysledek_race);
 
 DrawPageSubTitle('Vybraný závod');
 
-@$vysledek_z=mysqli_query($db_conn, 'SELECT * FROM '.TBL_RACE." WHERE `id`='$race_id' LIMIT 1");
+@$vysledek_z=query_db('SELECT * FROM '.TBL_RACE." WHERE `id`='$race_id' LIMIT 1");
 $zaznam_z = mysqli_fetch_array($vysledek_z);
 
 require_once ("./url.inc.php");

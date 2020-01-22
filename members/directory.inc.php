@@ -27,7 +27,8 @@ DrawPageTitle('Adresář členů oddílu');
 require_once ("./common_user.inc.php");
 
 $columns = 'id, prijmeni,jmeno,email,hidden,reg';
-@$vysledek=mysqli_query($db_conn, "SELECT ".$columns." FROM ".TBL_USER." ORDER BY sort_name ASC");
+$query = "SELECT ".$columns." FROM ".TBL_USER." ORDER BY sort_name ASC";
+@$vysledek=query_db($query);
 
 if (($vysledek != FALSE) && mysqli_num_rows($vysledek) > 0)
 { // aspon jeden zaznam

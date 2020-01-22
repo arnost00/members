@@ -18,12 +18,7 @@ $sc->add_column('sort_name','');
 $sc->add_column('reg','');
 $sc->set_url('index.php?id=500&subid=10',true);
 $sub_query = $sc->get_sql_string();
-/*
-$query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob, ifnull(sum(f.amount),0) sum_amount, ft.nazev FROM '.TBL_USER.' u 
-		left join '.TBL_FINANCE_TYPES.' ft on ft.id = u.finance_type
-		left join '.TBL_FINANCE.' f on u.id=f.id_users_user where f.storno is null 
-		group by u.id '.$sub_query;
-*/
+
 $query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,entry_locked, ifnull(f.sum_amount,0) sum_amount, (n.amount+f.sum_amount) total_amount, u.chief_pay, ft.nazev, ft.popis FROM '.TBL_USER.' u 
 		left join (select sum(fin.amount) sum_amount, id_users_user from '.TBL_FINANCE.' fin where (fin.storno is null) group by fin.id_users_user) f on u.id=f.id_users_user 
 		left join (select ui.chief_pay payer_id, ifnull(sum(fi.amount),0) amount from '.TBL_USER.' ui 
@@ -31,7 +26,7 @@ $query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,entry_locked, ifnull(f.sum_amoun
 		left join '.TBL_FINANCE_TYPES.' ft on ft.id = u.finance_type
 		group by u.id '.$sub_query;
 
-@$vysledek=mysqli_query($db_conn, $query);
+@$vysledek=query_db($query);
 
 require_once ('./common_fin.inc.php');
 $enable_fin_types = IsFinanceTypeTblFilled();

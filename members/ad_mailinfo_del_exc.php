@@ -9,7 +9,8 @@ if (IsLoggedAdmin())
 	db_Connect();
 	$id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
 	if ($id > 0)
-		mysqli_query($db_conn, 'DELETE FROM '.TBL_MAILINFO.' WHERE `id`=\''.$id.'\'');
+		$query = 'DELETE FROM '.TBL_MAILINFO.' WHERE `id`=\''.$id.'\'';
+		query_db($query);
 	header("location: ".$g_baseadr."index.php?id=300&subid=8");
 	exit;
 }

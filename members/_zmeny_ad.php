@@ -38,7 +38,7 @@ $curr_date = GetCurrentDate();
 
 $query="SELECT id,datum,typ,datum2,nazev,vicedenni,odkaz,oddil,misto,modify_flag,cancelled FROM ".TBL_RACE.' WHERE datum >= '.$curr_date.' ORDER BY datum, datum2, id';
 
-@$vysledek=mysqli_query($db_conn, $query);
+@$vysledek=query_db($query);
 
 if (mysqli_num_rows($vysledek) > 0)
 {

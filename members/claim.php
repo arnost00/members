@@ -19,7 +19,8 @@ if (IsSet($submit) or IsSet($close))
  	//vytazeni posledni reklamace pro tuto platbu
  	//pokud je uzivatel stejny jako prihlaseny, tak to bude update
  	//pokud je jiny, tak je to insert	
- 	@$result_last_claim = mysqli_query($db_conn, "select id, user_id, payment_id, text, date from ".TBL_CLAIM." c where c.payment_id = ".$payment_id." order by date desc LIMIT 1");
+	$query = "select id, user_id, payment_id, text, date from ".TBL_CLAIM." c where c.payment_id = ".$payment_id." order by date desc LIMIT 1";
+ 	@$result_last_claim = query_db($query);
  	$record_last_claim = mysqli_fetch_array($result_last_claim);
  	if (IsSet($close))
  	{
@@ -39,10 +40,11 @@ require_once ("./common_user.inc.php");
 require_once ("./ctable.inc.php");
 DrawPageTitle('Reklamace platby');
 
-@$result_claims = mysqli_query($db_conn, "select f.date fin_date, f.note fin_note, f.amount fin_amount, c.id, c.user_id, c.payment_id, c.text, date_format(c.date, '%e.%c.%Y %k:%i') date, u.sort_name user_name from ".TBL_CLAIM." c inner join
+$query = "select f.date fin_date, f.note fin_note, f.amount fin_amount, c.id, c.user_id, c.payment_id, c.text, date_format(c.date, '%e.%c.%Y %k:%i') date, u.sort_name user_name from ".TBL_CLAIM." c inner join
 		".TBL_USER." u on c.user_id = u.id
 		inner join ".TBL_FINANCE." f on c.payment_id = f.id
-		where c.payment_id = ".$payment_id." order by c.date desc");
+		where c.payment_id = ".$payment_id." order by c.date desc";
+@$result_claims = query_db($query);
 $record_claims = mysqli_fetch_array($result_claims);
 
 $claim_detail = "Zadal: ".$record_claims['user_name']."<br/>";

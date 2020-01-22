@@ -16,9 +16,9 @@ $fD = (IsSet($fD) && is_numeric($fD)) ? (int)$fD : 0;  // type 0
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD);
 
 $query = 'SELECT '.TBL_RACE.'.id, datum, datum2, nazev, typ0, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, kat, termin, vedouci, cancelled FROM '.TBL_RACE.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_RACE.'.id = '.TBL_ZAVXUS.'.id_zavod AND '.TBL_ZAVXUS.'.id_user='.$usr->user_id.$sql_sub_query.' ORDER BY datum, datum2, '.TBL_RACE.'.id';
-@$vysledek=mysqli_query($db_conn, $query);
+@$vysledek=query_db($query);
 
-@$vysledek2=mysqli_query($db_conn, "SELECT * FROM ".TBL_USER." where id=$usr->user_id");
+@$vysledek2=query_db("SELECT * FROM ".TBL_USER." where id=$usr->user_id");
 $entry_lock = false;
 if ($zaznam2=mysqli_fetch_array($vysledek2))
 {
@@ -133,7 +133,7 @@ if ($num_rows > 0)
 			$boss = '-';
 			if($zaznam['vedouci'] != 0)
 			{
-				@$vysledekU=mysqli_query($db_conn, "SELECT jmeno,prijmeni FROM ".TBL_USER." WHERE id = '".$zaznam['vedouci']."' LIMIT 1");
+				@$vysledekU=query_db("SELECT jmeno,prijmeni FROM ".TBL_USER." WHERE id = '".$zaznam['vedouci']."' LIMIT 1");
 				@$zaznamU=mysqli_fetch_array($vysledekU);
 				if($zaznamU != FALSE)
 					$boss = $zaznamU['jmeno'].' '.$zaznamU['prijmeni'];

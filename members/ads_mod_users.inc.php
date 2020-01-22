@@ -29,7 +29,8 @@ function confirm_unlock(name) {
 <?
 require_once "./common_user.inc.php";
 
-@$vysledek=mysqli_query($db_conn, "SELECT id,prijmeni,jmeno,reg,hidden FROM ".TBL_USER." ORDER BY sort_name ASC");
+$query = "SELECT id,prijmeni,jmeno,reg,hidden FROM ".TBL_USER." ORDER BY sort_name ASC";
+@$vysledek=query_db($query);
 
 $data_tbl = new html_table_mc();
 $col = 0;
@@ -72,7 +73,8 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	
 	if ($val)
 	{
-		$vysl2=mysqli_query("SELECT * FROM ".TBL_ACCOUNT." WHERE id = '$val'");
+		$query = "SELECT * FROM ".TBL_ACCOUNT." WHERE id = '$val'";
+		$vysl2=query_db($query);
 		$zaznam2=mysqli_fetch_array($vysl2);
 		if ($zaznam2 != FALSE)
 		{

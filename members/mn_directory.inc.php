@@ -25,7 +25,7 @@ $sc->set_url('index.php?id=500&subid=1',true);
 $sub_query = $sc->get_sql_string();
 
 $query = "SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob,entry_locked FROM ".TBL_USER.$sub_query;
-@$vysledek=mysqli_query($db_conn, $query);
+@$vysledek=query_db($query);
 
 if (IsSet($result) && is_numeric($result) && $result != 0)
 {
@@ -77,7 +77,8 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 		$acc = '';
 		if ($val)
 		{
-			$vysl2=mysqli_query($db_conn, "SELECT locked FROM ".TBL_ACCOUNT." WHERE id = '$val' LIMIT 1");
+			$query = "SELECT locked FROM ".TBL_ACCOUNT." WHERE id = '$val' LIMIT 1";
+			$vysl2=query_db($query);
 			$zaznam2=mysqli_fetch_array($vysl2);
 			if ($zaznam2 != FALSE)
 			{
@@ -91,7 +92,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 		else
 			$acc = '-';
 		$row[] = $acc;
-		$row[] = '<A HREF="./user_edit.php?id='.$zaznam['id'].'&cb=500">Edit</A>&nbsp;/&nbsp;<A HREF="./user_login_edit.php?id='.$zaznam["id"].'&cb=500">Účet</A>&nbsp;/&nbsp;<A HREF="./user_del_exc.php?id='.$zaznam["id"]."\" onclick=\"return confirm_delete('".$zaznam["jmeno"].' '.$zaznam["prijmeni"]."')\" class=\"Erase\">Smazat</A>";
+		$row[] = '<A HREF="./user_edit.php?id='.$zaznam['id'].'&cb=500">Edit</A>&nbsp;/&nbsp;<A HREF="./user_login_edit.php?id='.$zaznam["id"].'&cb=500">Účet</A>';
 		echo $data_tbl->get_new_row_arr($row)."\n";
 	}
 }

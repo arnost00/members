@@ -15,7 +15,7 @@ require_once ("./common.inc.php");
 db_Connect();
 $id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
 
-@$vysledek=mysqli_query($db_conn, "SELECT jmeno,prijmeni,datum,hidden,email,reg FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
+@$vysledek=query_db("SELECT jmeno,prijmeni,datum,hidden,email,reg FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
 @$zaznam=mysqli_fetch_array($vysledek);
 if (!$zaznam)
 {	// error not exist
@@ -26,7 +26,7 @@ require_once "./header.inc.php"; // header obsahuje uvod html a konci <BODY>
 DrawPageTitle('Členská základna - Administrace uživatelských účtů');
 
 	$id_acc = GetUserAccountId_Users($id);
-	$vysledek2=mysqli_query($db_conn, "SELECT login,podpis,policy_news,policy_regs,policy_mng,policy_adm,policy_fin,locked FROM ".TBL_ACCOUNT." WHERE id = '$id_acc' LIMIT 1");
+	$vysledek2=query_db("SELECT login,podpis,policy_news,policy_regs,policy_mng,policy_adm,policy_fin,locked FROM ".TBL_ACCOUNT." WHERE id = '$id_acc' LIMIT 1");
 	$zaznam2=mysqli_fetch_array($vysledek2);
 ?>
 <script>

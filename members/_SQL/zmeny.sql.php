@@ -70,7 +70,7 @@ else if ($action == 1)
 		$line = 'OPTIMIZE TABLE '.TBL_RACE.', '.TBL_NEWS.', '.TBL_USER.', '.TBL_ACCOUNT.', '.TBL_USXUS.', '.TBL_ZAVXUS.', '.TBL_MODLOG;
 		echo '<B>SQL QUERY</B> = "'.$line.'"';
 		echo "<BR>\n";
-		$result=mysqli_query($db_conn,$line);
+		$result=query_db($line);
 		echo '&nbsp;\-------- ';
 		if ($result == FALSE)
 		{
@@ -98,7 +98,7 @@ else if ($action == 2)
 		$line = 'REPAIR TABLE '.TBL_RACE.', '.TBL_NEWS.', '.TBL_USER.', '.TBL_ACCOUNT.', '.TBL_USXUS.', '.TBL_ZAVXUS.', '.TBL_MODLOG;
 		echo '<B>SQL QUERY</B> = "'.$line.'"';
 		echo "<BR>\n";
-		$result=mysqli_query($db_conn,$line);
+		$result=query_db($line);
 		echo '&nbsp;\-------- ';
 		if ($result == FALSE)
 		{
