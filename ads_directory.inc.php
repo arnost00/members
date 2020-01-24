@@ -32,7 +32,9 @@ $sc->add_column('reg','');
 $sc->set_url('index.php?id=700&subid=1',true);
 $sub_query = $sc->get_sql_string();
 
-$query = "SELECT id,prijmeni,jmeno,reg,hidden,entry_locked FROM ".TBL_USER.$sub_query;
+$query = "SELECT u.id,u.prijmeni,u.jmeno,u.reg,u.hidden,u.entry_locked, a.locked, a.policy_news, a.policy_regs, a.policy_mng, a.policy_adm, a.policy_fin, a.id aid FROM ".TBL_USER." u "
+	."left join ".TBL_USXUS." ux on ux.id_users = u.id left join ".TBL_ACCOUNT." a on a.id = ux.id_accounts "
+	.$sub_query;
 @$vysledek=query_db($query);
 
 if (IsSet($result) && is_numeric($result) && $result != 0)
@@ -55,11 +57,9 @@ $data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
-//echo $data_tbl->get_header_row()."\n";
 
 $data_tbl->set_sort_col(1,$sc->get_col_content(0));
 $data_tbl->set_sort_col(3,$sc->get_col_content(1));
-//echo $data_tbl->get_sort_row()."\n";
 echo $data_tbl->get_header_row_with_sort()."\n";
 
 $i=1;
@@ -74,35 +74,23 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	$acc_r = '<code>';
 	if ($zaznam["hidden"] != 0) 
 		$acc = '<span class="WarningText">H </span>';
-	$val=GetUserAccountId_Users($zaznam['id']);
-	if ($val)
-	{
-		$query = "SELECT locked, policy_news, policy_regs, policy_mng, policy_adm,policy_fin FROM ".TBL_ACCOUNT." WHERE id = '$val'";
-		$vysl2=query_db($query);
-		$zaznam2=mysqli_fetch_array($vysl2);
-		if ($zaznam2 != FALSE)
+		if ($zaznam["aid"] != null)
 		{
-			if ($zaznam2['locked'] != 0) 
+			if ($zaznam['locked'] != 0) 
 				$acc .= '<span class="WarningText">L </span>';
 			$acc .= "Ano";
-			$acc_r .= ($zaznam2['policy_news'] == 1) ? 'N ' : '. ';
-			$acc_r .= ($zaznam2['policy_regs'] == 1) ? 'P ' : '. ';
-			$acc_r .= ($zaznam2['policy_mng'] == _MNG_BIG_INT_VALUE_) ? 'T ' : '. ';
-			$acc_r .= ($zaznam2['policy_mng'] == _MNG_SMALL_INT_VALUE_) ? 't ' : '. ';
-			$acc_r .= ($zaznam2['policy_adm'] == 1) ? 'S ' : '. ';
-			$acc_r .= ($zaznam2['policy_fin'] == 1) ? 'F' : '.';
+			$acc_r .= ($zaznam['policy_news'] == 1) ? 'N ' : '. ';
+			$acc_r .= ($zaznam['policy_regs'] == 1) ? 'P ' : '. ';
+			$acc_r .= ($zaznam['policy_mng'] == _MNG_BIG_INT_VALUE_) ? 'T ' : '. ';
+			$acc_r .= ($zaznam['policy_mng'] == _MNG_SMALL_INT_VALUE_) ? 't ' : '. ';
+			$acc_r .= ($zaznam['policy_adm'] == 1) ? 'S ' : '. ';
+			$acc_r .= ($zaznam['policy_fin'] == 1) ? 'F' : '.';
 		}
 		else
 		{
 			$acc .= '-';
 			$acc_r .= '. . . . . .';
 		}
-	}
-	else
-	{
-		$acc .= '-';
-		$acc_r .= '. . . . . .';
-	}
 	$row[] = $acc;
 	if ($zaznam['entry_locked'] != 0)
 		$row[] = '<span class="WarningText">Ne</span>';
