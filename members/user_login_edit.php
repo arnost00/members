@@ -28,6 +28,7 @@ DrawPageTitle('Členská základna - Administrace uživatelských účtů');
 	$id_acc = GetUserAccountId_Users($id);
 	$vysledek2=query_db("SELECT login,podpis,policy_news,policy_regs,policy_mng,policy_adm,policy_fin,locked FROM ".TBL_ACCOUNT." WHERE id = '$id_acc' LIMIT 1");
 	$zaznam2=mysqli_fetch_array($vysledek2);
+	$new_account = ($zaznam2 == FALSE);
 ?>
 <script>
 function changeVisibility(name, atr_id)
@@ -50,7 +51,7 @@ function changeVisibility(name, atr_id)
 function checkAllVisibilities()
 {
 <?
-	if($zaznam2 == FALSE)
+	if($new_account)
 	{	// novy uzivatel
 ?>
 	changeVisibility('acc_email_hide', 'id_email');
@@ -102,7 +103,7 @@ function checkAllVisibilities()
 </TABLE>
 <BR><hr><BR>
 <?
-$new_account = ($zaznam2 == FALSE);
+
 if ($new_account)
 {
 	$zaznam2["login"] = '';
@@ -121,7 +122,7 @@ if ($new_account)
 	else
 		DrawPageSubTitle('Založení nového účtu vybranému členu oddílu');
 ?>
-<FORM METHOD=POST ACTION="./user_login_edit_exc.php?type=<? echo ($zaznam2 != FALSE) ? "1" : "2"; echo "&id=".$id;?>">
+<FORM METHOD=POST ACTION="./user_login_edit_exc.php?type=<? echo ($new_account) ? "2" : "1"; echo "&id=".$id;?>">
 <TABLE width="90%">
 <?
 	if($new_account)
@@ -236,7 +237,7 @@ require_once ('generators.inc.php');
 	<TD colspan="3"></TD>
 </TR>
 <TR>
-	<TD colspan="3" align="center"><INPUT TYPE="submit" VALUE="<? echo ($zaznam2 != FALSE) ? "Provést změny" : "Založit účet"; ?>"></TD>
+	<TD colspan="3" align="center"><INPUT TYPE="submit" VALUE="<? echo ($new_account) ? "Založit účet" : "Provést změny"; ?>"></TD>
 </TR>
 <TR>
 	<TD colspan="3"></TD>
