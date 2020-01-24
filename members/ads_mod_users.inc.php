@@ -29,7 +29,8 @@ function confirm_unlock(name) {
 <?
 require_once "./common_user.inc.php";
 
-$query = "SELECT id,prijmeni,jmeno,reg,hidden FROM ".TBL_USER." ORDER BY sort_name ASC";
+$query = "SELECT u.id,prijmeni,jmeno,reg,hidden,locked,a.id aid FROM ".TBL_USER." u left join ".TBL_USXUS." ux on ux.id_users = u.id "
+	."left join ".TBL_ACCOUNT." a on a.id = ux.id_accounts ORDER BY sort_name ASC";
 @$vysledek=query_db($query);
 
 $data_tbl = new html_table_mc();
@@ -67,28 +68,21 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 		$action = '<A HREF="./user_hide_exc.php?id='.$zaznam['id'].'" onclick="return confirm_show(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')">Zviditelnit</A>';
 	}
 	
-	$val=GetUserAccountId_Users($zaznam['id']);
 	$acc = '<span class="DisableText">Ne</span>';
 	$acc_r = 'Ne';
-	
-	if ($val)
+
+	if ($zaznam["aid"] != null)
 	{
-		$query = "SELECT * FROM ".TBL_ACCOUNT." WHERE id = '$val'";
-		$vysl2=query_db($query);
-		$zaznam2=mysqli_fetch_array($vysl2);
-		if ($zaznam2 != FALSE)
+		$acc = 'Ano';
+		if ($zaznam['locked'] != 0) 
 		{
-			$acc = 'Ano';
-			if ($zaznam2['locked'] != 0) 
-			{
-				$acc_r = '<span class="WarningText">Ano</span>';
-				if ($zaznam['hidden'] == 0) 
-					$action .= '&nbsp;/&nbsp;<A HREF="./user_lock_exc.php?id='.$zaznam['id'].'" onclick="return confirm_unlock(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')">Odemknout</A>';
-			}
-			else
-			{
-				$action .= '&nbsp;/&nbsp;<A HREF="./user_lock_exc.php?id='.$zaznam['id'].'" onclick="return confirm_lock(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')">Zamknout</A>';
-			}
+			$acc_r = '<span class="WarningText">Ano</span>';
+			if ($zaznam['hidden'] == 0) 
+				$action .= '&nbsp;/&nbsp;<A HREF="./user_lock_exc.php?id='.$zaznam['id'].'" onclick="return confirm_unlock(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')">Odemknout</A>';
+		}
+		else
+		{
+			$action .= '&nbsp;/&nbsp;<A HREF="./user_lock_exc.php?id='.$zaznam['id'].'" onclick="return confirm_lock(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')">Zamknout</A>';
 		}
 	}
 	if ( $usr->user_id == $zaznam['id'])
