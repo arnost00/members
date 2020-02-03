@@ -10,7 +10,7 @@ function private_SaveItemToModifyLog(&$action,&$table,&$description)
 	$author = $usr->account_id;
 	$sql_query = 'INSERT INTO '.TBL_MODLOG." (`timestamp`,`action`,`table`,`description`,`author`) VALUES ('$tstamp','$action','$table','$description',$author)";
 	$vysledek=query_db($sql_query);
-	return ($vysledek != FALSE);
+	return (($vysledek == null)?FALSE:TRUE);
 }
 
 function SaveItemToModifyLog_Add($table,$description)

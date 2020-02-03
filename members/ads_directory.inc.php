@@ -32,8 +32,8 @@ $sc->add_column('reg','');
 $sc->set_url('index.php?id=700&subid=1',true);
 $sub_query = $sc->get_sql_string();
 
-$query = "SELECT u.id,u.prijmeni,u.jmeno,u.reg,u.hidden,u.entry_locked, a.locked, a.policy_news, a.policy_regs, a.policy_mng, a.policy_adm, a.policy_fin, a.id aid FROM ".TBL_USER." u "
-	."left join ".TBL_USXUS." ux on ux.id_users = u.id left join ".TBL_ACCOUNT." a on a.id = ux.id_accounts "
+$query = "SELECT u.id,u.prijmeni,u.jmeno,u.reg,u.hidden,u.entry_locked, a.locked, a.policy_news, a.policy_regs, a.policy_mng, a.policy_adm, a.policy_fin, a.id aid FROM ".TBL_USER." u"
+	." left join ".TBL_ACCOUNT." a on a.id_users = u.id "
 	.$sub_query;
 @$vysledek=query_db($query);
 

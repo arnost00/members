@@ -16,8 +16,8 @@ db_Connect();
 $id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
 
 @$vysledek=query_db("SELECT jmeno,prijmeni,datum,hidden,email,reg FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
-@$zaznam=mysqli_fetch_array($vysledek);
-if (!$zaznam)
+@$zaznam=MySQLi_Fetch_Array($vysledek);
+if ($zaznam==null)
 {	// error not exist
 	header("location: ".$g_baseadr."error.php?code=201");
 	exit;
@@ -25,10 +25,9 @@ if (!$zaznam)
 require_once "./header.inc.php"; // header obsahuje uvod html a konci <BODY>
 DrawPageTitle('Členská základna - Administrace uživatelských účtů');
 
-	$id_acc = GetUserAccountId_Users($id);
-	$vysledek2=query_db("SELECT login,podpis,policy_news,policy_regs,policy_mng,policy_adm,policy_fin,locked FROM ".TBL_ACCOUNT." WHERE id = '$id_acc' LIMIT 1");
-	$zaznam2=mysqli_fetch_array($vysledek2);
-	$new_account = ($zaznam2 == FALSE);
+	$vysledek2=query_db("SELECT login,podpis,policy_news,policy_regs,policy_mng,policy_adm,policy_fin,locked FROM ".TBL_ACCOUNT." WHERE id_users = '$id' LIMIT 1");
+	$zaznam2=MySQLi_Fetch_Array($vysledek2);
+	$new_account = (is_null($zaznam2));
 ?>
 <script>
 function changeVisibility(name, atr_id)

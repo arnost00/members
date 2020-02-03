@@ -1,56 +1,15 @@
 <?php if (!defined('__HIDE_TEST__')) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
-function GetUserAccountId_Users($users_id)	// get id_accounts from "usxus" for id_users == x
-{
-	global $db_conn;
-	
-	$query = "SELECT id_accounts FROM ".TBL_USXUS." WHERE id_users = '$users_id' LIMIT 1";
-	$vysl=query_db($query);
-	$zazn=mysqli_fetch_array($vysl);
-	if ($zazn != FALSE)
-		return $zazn['id_accounts'];
-	else
-		return 0;
-}
-/*
-function GetUserAccountId_Id($id)	// get id_accounts from "usxus" for id == x
-{
-	$vysl=query_db("SELECT id_accounts FROM ".TBL_USXUS." WHERE id = '$id' LIMIT 1");
-	$zazn=mysqli_fetch_array($vysl);
-	if ($zazn != FALSE)
-	{
-		return $zazn['id_accounts'];
-	}
-	else
-		return 0;
-}
-
-function GetUserId_Account($id)	// get id_users from "usxus" for id_accounts == x
-{
-	$vysl=query_db("SELECT id_users FROM ".TBL_USXUS." WHERE id_accounts = '$id' LIMIT 1");
-	$zazn=mysqli_fetch_array($vysl);
-	if ($zazn != FALSE)
-	{
-		return $zazn['id_users'];
-	}
-	else
-		return 0;
-}
-*/
-
 function CheckIfLoginIsValid($new_login,$curr_id)
 {
-	global $db_conn;
-
-	$query = "SELECT id,login FROM ".TBL_ACCOUNT." WHERE login = '$new_login' LIMIT 1";
-	@$vysl=query_db($query);
+	@$vysl=query_db("SELECT id,login FROM ".TBL_ACCOUNT." WHERE login = '$new_login' LIMIT 1");
 	if (mysqli_num_rows ($vysl) == 0)
 	{
 		return true;
 	}
 	else
 	{
-		$zazn=mysqli_fetch_array($vysl);
+		$zazn=MySQLi_Fetch_Array($vysl);
 		if ($zazn["id"] == $curr_id)
 			return true;
 		else

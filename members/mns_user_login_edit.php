@@ -15,7 +15,8 @@ require_once ("./common.inc.php");
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
 db_Connect();
-$query = "SELECT jmeno,prijmeni,datum,hidden FROM ".TBL_USER." WHERE id = '$id' LIMIT 1";
+$query = "SELECT u.jmeno,u.prijmeni,u.datum datum,u.hidden,a.login,a.podpis,a.policy_news,a.policy_regs,a.policy_mng,a.locked FROM ".TBL_USER." u left join "
+	.TBL_ACCOUNT." a on a.id_users = u.id WHERE u.id = '$id' LIMIT 1";
 @$vysledek=query_db($query);
 @$zaznam=mysqli_fetch_array($vysledek);
 if (!$zaznam)
@@ -33,12 +34,6 @@ DrawPageTitle('Členská základna - Editace uživatelských účtů');
 <TD width="2%"></TD>
 <TD width="90%" ALIGN=left>
 <CENTER>
-<?
-	$id_acc = GetUserAccountId_Users($id);
-	$query = "SELECT login,podpis,policy_news,policy_regs,policy_mng,locked FROM ".TBL_ACCOUNT." WHERE id = '$id_acc' LIMIT 1";
-	$vysledek2=query_db($query);
-	$zaznam2=mysqli_fetch_array($vysledek2);
-?>
 <BR><hr><BR>
 <? DrawPageSubTitle('Základní údaje o vybraném členovi'); ?>
 <TABLE width="90%">
@@ -55,12 +50,12 @@ DrawPageTitle('Členská základna - Editace uživatelských účtů');
 <TR>
 	<TD width="45%" align="right">Datum narození</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><?echo Date2String($zaznam["datum"])?></TD>
+	<TD class="DataValue"><?echo SQLDate2String($zaznam["datum"])?></TD>
 </TR>
 <TR>
 	<TD width="45%" align="right">Přihlašovací jméno</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><?echo $zaznam2["login"]?></TD>
+	<TD class="DataValue"><?echo $zaznam["login"]?></TD>
 </TR>
 <? if ($zaznam["hidden"] != 0) { ?>
 <TR>

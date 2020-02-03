@@ -30,7 +30,6 @@ class sess
 	var $policy_fin;
 	var $user_id;		// id v "users"
 	var $account_id;	// id v "accounts"
-	var $cross_id;		// id v "usxus"
 
 	function __construct()
 	{

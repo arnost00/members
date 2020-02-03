@@ -22,8 +22,7 @@ function GenerateInfoEmail($type,$id,$login,$heslo,$email)
 	
 	if ($login == '')
 	{
-		$id_acc=GetUserAccountId_Users($id);
-		@$vysledek=query_db("SELECT login FROM ".TBL_ACCOUNT." WHERE id = '$id_acc' LIMIT 1");
+		@$vysledek=query_db("SELECT login FROM ".TBL_ACCOUNT." WHERE id_users = '$id' LIMIT 1");
 		if ($zaznam=mysqli_fetch_array($vysledek))
 		{
 			$login = $zaznam['login'];
@@ -62,13 +61,19 @@ function GenerateInfoEmail($type,$id,$login,$heslo,$email)
 	SendEmail($g_fullname, $g_emailadr,'',$email,$full_msg,$subject);
 }
 
+db_Connect();
+require_once "./common_user.inc.php";
+
+$vysledek=query_db("SELECT id FROM ".TBL_ACCOUNT." WHERE id_users = $id LIMIT 1");
+$zaznam=mysqli_fetch_array($vysledek);
+$id2 = ($zaznam["id"] == null)?null:$zaznam["id"];
+
 if (IsLoggedSmallAdmin())
 {
 	$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 	$type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
 	$action_type = (IsSet($action_type) && is_numeric($action_type)) ? (int)$action_type : 1;
 
-	db_Connect();
 	require_once "./common_user.inc.php";
 
 	$result=0;
@@ -96,14 +101,13 @@ if (IsLoggedSmallAdmin())
 		$fin=correct_sql_string($fin);
 		$adm=correct_sql_string($adm);
  
-		$id2 = GetUserAccountId_Users($id);
 		if ($login=="" || $podpis=="")
 			$result=CS_EMPTY_ITEM;
 		else if (!CheckIfLoginIsValid($login,$id2))
 			$result=CS_LOGIN_EXIST;
 		else
 		{
-			$vysledek=query_db("UPDATE ".TBL_ACCOUNT." SET login='$login', podpis='$podpis', policy_news='$news', policy_regs='$regs', policy_mng='$mng', policy_adm='$adm', policy_fin='$fin' WHERE id='$id2'")
+			$vysledek=query_db("UPDATE ".TBL_ACCOUNT." SET login='$login', podpis='$podpis', policy_news='$news', policy_regs='$regs', policy_mng='$mng', policy_adm='$adm', policy_fin='$fin' WHERE id_users='$id'")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($vysledek == FALSE)
 				die ("Nepodařilo se upravit účet členu.");
@@ -140,26 +144,12 @@ if (IsLoggedSmallAdmin())
 		else
 		{
 			$hheslo = md5($nheslo);
-			$id2 = 9; // min. value
-			// find max idx in table "usxus" -->
-			{
-				@$vysledek=query_db("SELECT id_accounts FROM ".TBL_USXUS);
-				while ($zaznam=mysqli_fetch_array($vysledek))
-				{
-					if ($zaznam["id_accounts"] > $id2)
-						$id2 = $zaznam["id_accounts"];
-				}
-				$id2++;	// = maximum + 1
-			}
-			// <--
-			$vysledek=query_db("INSERT INTO ".TBL_ACCOUNT." (id,login,heslo,policy_news,policy_regs,policy_mng,policy_adm,policy_fin,podpis) VALUES ('$id2','$login','$hheslo','$news','$regs','$mng','$adm','$fin','$podpis')")
+			$vysledek=query_db("INSERT INTO ".TBL_ACCOUNT." (id,id_users,login,heslo,policy_news,policy_regs,policy_mng,policy_adm,policy_fin,podpis) VALUES (null,'$id','$login','$hheslo','$news','$regs','$mng','$adm','$fin','$podpis')")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($vysledek == FALSE)
 				die ("Nepodařilo se založit účet členu.");
 			else
 			{
-				$vysledek=query_db("INSERT INTO ".TBL_USXUS." (id_accounts,id_users) VALUES ('$id2','$id')")
-					or die("Chyba při provádění dotazu do databáze.");
 				$result = CS_ACC_CREATED;
 			}
 			SaveItemToModifyLog_Add(TBL_ACCOUNT,'acc.id = '.$id2.' login = "'.$login.'" ['.$podpis.']');
@@ -184,7 +174,6 @@ if (IsLoggedSmallAdmin())
 			$result=CS_DIFF_NEWPASS;
 		else
 		{
-			$id2 = GetUserAccountId_Users($id);
 			$hheslo = md5($nheslo);
 			$vysledek=query_db("UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id2'")
 				or die("Chyba při provádění dotazu do databáze.");
@@ -210,8 +199,7 @@ else if (IsLoggedManager())
 	$type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
 	$action_type = (IsSet($action_type) && is_numeric($action_type)) ? (int)$action_type : 1;
 	
-	db_Connect();
-	require_once "./common_user.inc.php";
+
 
 	$result="";
 
@@ -228,7 +216,6 @@ else if (IsLoggedManager())
 		$news=correct_sql_string($news);
 		$mng2=correct_sql_string($mng2);
 
- 		$id2 = GetUserAccountId_Users($id);
 		if ($login=="" || $podpis=="")
 			$result=CS_EMPTY_ITEM;
 		else if (!CheckIfLoginIsValid($login,$id2))
@@ -269,26 +256,12 @@ else if (IsLoggedManager())
 		else
 		{
 			$hheslo = md5($nheslo);
-			$id2 = 9; // min. value
-			// find max idx in table "usxus" -->
-			{
-				@$vysledek=query_db("SELECT * FROM ".TBL_USXUS);
-				while ($zaznam=mysqli_fetch_array($vysledek))
-				{
-					if ($zaznam["id_accounts"] > $id2)
-						$id2 = $zaznam["id_accounts"];
-				}
-				$id2++;	// = maximum + 1
-			}
-			// <--
-			$result=query_db("INSERT INTO ".TBL_ACCOUNT." (id,login,heslo,policy_news,policy_regs,policy_mng,podpis) VALUES ('$id2','$login','$hheslo','$news',0,'$mng2','$podpis')")
+			$result=query_db("INSERT INTO ".TBL_ACCOUNT." (id,id_users,login,heslo,policy_news,policy_regs,policy_mng,podpis) VALUES (null,'$id','$login','$hheslo','$news',0,'$mng2','$podpis')")
 				or die("Chyba při provádění dotazu do databáze.");
-			if ($result == FALSE)
+			if ($result == null)
 				die ("Nepodařilo se založit účet členu.");
 			else
 			{
-				$result=query_db("INSERT INTO ".TBL_USXUS." (id_accounts,id_users) VALUES ('$id2','$id')")
-					or die("Chyba při provádění dotazu do databáze.");
 				$result = CS_ACC_CREATED;
 			}
 			SaveItemToModifyLog_Add(TBL_ACCOUNT,'acc.id = '.$id2.' login = "'.$login.'" ['.$podpis.']');
@@ -313,7 +286,6 @@ else if (IsLoggedManager())
 			$result=CS_DIFF_NEWPASS;
 		else
 		{
-			$id2 = GetUserAccountId_Users($id);
 			$hheslo = md5($nheslo);
 			$result=query_db("UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id2'")
 				or die("Chyba při provádění dotazu do databáze.");
@@ -338,9 +310,6 @@ else if (IsLoggedSmallManager())
 	$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 	$type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
 	
-	db_Connect();
-	require_once "./common_user.inc.php";
-
 	$result="";
 
 	switch ($type)
@@ -354,7 +323,6 @@ else if (IsLoggedSmallManager())
 			$result=CS_DIFF_NEWPASS;
 		else
 		{
-			$id2 = GetUserAccountId_Users($id);
 			$hheslo = md5($nheslo);
 			$result=query_db("UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id2'")
 				or die("Chyba při provádění dotazu do databáze.");

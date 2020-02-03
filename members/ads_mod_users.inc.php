@@ -29,8 +29,8 @@ function confirm_unlock(name) {
 <?
 require_once "./common_user.inc.php";
 
-$query = "SELECT u.id,prijmeni,jmeno,reg,hidden,locked,a.id aid FROM ".TBL_USER." u left join ".TBL_USXUS." ux on ux.id_users = u.id "
-	."left join ".TBL_ACCOUNT." a on a.id = ux.id_accounts ORDER BY sort_name ASC";
+$query = "SELECT u.id,prijmeni,jmeno,reg,hidden,locked,a.id aid FROM ".TBL_USER." u"
+	." left join ".TBL_ACCOUNT." a on a.id_users = u.id ORDER BY sort_name ASC";
 @$vysledek=query_db($query);
 
 $data_tbl = new html_table_mc();

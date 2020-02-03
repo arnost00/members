@@ -74,7 +74,7 @@ if (!IsLogged())
 	}
 	$usr->cross_id = 0;	// preset value
 	$usr->user_id = 0; // preset value
-	$query = "SELECT * FROM ".TBL_USXUS." WHERE id_accounts = '$usr->account_id' LIMIT 1";
+	$query = "SELECT id, id_users FROM ".TBL_ACCOUNT." WHERE id = '$usr->account_id' LIMIT 1";
 	@$vysledek2=query_db($query);
 	if ($vysledek2)
 	{
@@ -87,8 +87,6 @@ if (!IsLogged())
 	}
 	$_SESSION['usr'] = $usr;
 	//--> set last visited
-//	$currdate=getdate();
-//	$sqldate= $currdate['year']."-".$currdate['mon']."-".$currdate['mday'];
 	$sqldate= GetCurrentDate();
 	$id=$zaznam["id"];
 	$query = "UPDATE ".TBL_ACCOUNT." SET last_visit='$sqldate' WHERE id='$id'";
