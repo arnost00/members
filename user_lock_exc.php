@@ -27,6 +27,12 @@ if (IsLoggedSmallAdmin())
 				or die('Chyba při provádění dotazu do databáze.');
 			if ($result == FALSE)
 				die ('Nepodařilo se zamčít/odemčít účet člena.');
+			//pri zamceni rovnou promazat opravneni a mailinfo
+			//promazava i pri odemceni, coz nevadi, protoze je stejne promazano, ale neni to hezka
+			$result_clear_rights=query_db("update ".TBL_ACCOUNT." set policy_news=0, policy_regs=0, policy_mng=0, policy_adm=0, policy_fin=0 where id = ".$id2);
+			$result_delete_mailinfo=query_db("delete from ".TBL_MAILINFO." where id_user = ".$id2);
+			if ($result_clear_rights == null or $result_delete_mailinfo == null)
+				die ('Nepodařilo se promazat práva nebo mailinfo člena.');
 			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id2.' - lock ('.(int)$lock.')');
 		}
 	}
