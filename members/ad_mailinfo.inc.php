@@ -13,7 +13,7 @@ function confirm_delete(text) {
 </script>
 <?
 
-$query = 'SELECT * FROM '.TBL_MAILINFO.' ORDER BY `id`';
+$query = 'SELECT m.*, u.jmeno, u.hidden, u.prijmeni, u.id uid FROM '.TBL_MAILINFO.' m left join '.TBL_USER.' u on u.id = m.id_user ORDER BY `id`';
 @$vysl = query_db($query)
 	or die("Chyba při provádění dotazu do databáze.");
 
@@ -37,13 +37,10 @@ while ($zaznam=mysqli_fetch_array($vysl))
 	$err = false;
 	$row[] = $zaznam['id'];
 	$row[] = $zaznam['email'];
-	$query = 'SELECT * FROM '.TBL_USER.' WHERE id = \''.$zaznam['id_user'].'\' LIMIT 1';
-	$vysl2=query_db($query);
-	$zazn=mysqli_fetch_array($vysl2);
-	if ($zazn != FALSE)
+	if ($zaznam["uid"] != null)
 	{
-		$err = $zazn['hidden'];
-		$row[] = $zazn['prijmeni'].' '.$zazn['jmeno'];
+		$err = $zaznam['hidden'];
+		$row[] = $zaznam['prijmeni'].' '.$zaznam['jmeno'];
 		$row[] = ($err) ? '<span class="WarningText">skryt</span>' : '-';
 	}
 	else
