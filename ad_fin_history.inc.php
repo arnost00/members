@@ -13,7 +13,10 @@ DrawPageSubTitle('Historie financí');
 
 // zvyraznovani ?
 
-$query = "SELECT f.date, concat('".$g_shortcut."',u.reg) as reg, u.sort_name as name, f.id_users_editor, f.amount, f.note, rc.nazev zavod_nazev, from_unixtime(rc.datum,'%Y-%m-%d') zavod_datum FROM `".TBL_FINANCE."` f join `".TBL_USER."` u on u.id = f.id_users_user left join `".TBL_RACE."` rc on f.id_zavod = rc.id where f.storno is null ORDER BY f.date desc";
+$query = "SELECT f.date, concat('".$g_shortcut."',u.reg) as reg, u.sort_name as name, f.id_users_editor, f.amount, f.note, rc.nazev zavod_nazev, "
+		." from_unixtime(rc.datum,'%Y-%m-%d') zavod_datum FROM `".TBL_FINANCE."` f "
+		." left join `".TBL_USER."` u on u.id = f.id_users_user "
+		." left join `".TBL_RACE."` rc on f.id_zavod = rc.id where f.storno is null and f.date > '2019-01-01' ORDER BY f.date desc";
 @$vysl=query_db($query)
 	or die("Chyba při provádění dotazu do databáze.");
 

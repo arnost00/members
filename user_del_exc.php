@@ -3,6 +3,7 @@
 @extract($_REQUEST);
 
 require_once ('./connect.inc.php');
+require_once ('./common.inc.php');
 require_once ('./sess.inc.php');
 require_once ('./modify_log.inc.php');
 
@@ -19,15 +20,13 @@ if (IsLoggedSmallAdmin())
 	db_Connect();
 	require_once "./common_user.inc.php";
 
+	$user=MySQLi_Fetch_Array(query_db("SELECT u.sort_name, u.reg, u.datum FROM ".TBL_USER." u WHERE u.id = '$id'"));
+	$userData = "jmeno = ".$user["sort_name"]." reg = ".$user["reg"]." narozen = ".SQLDate2String($user["datum"]);
+	@$vysledekAccount=query_db("DELETE from ".TBL_ACCOUNT." WHERE id_users = '$id'");
+	//TODO rozmyslet, zda zalogovat i nepovedene smazani z account
+	($vysledekAccount == null)?"":SaveItemToModifyLog_Delete(TBL_ACCOUNT,"id_users = $id $userData");
 	@$vysledek=query_db("DELETE FROM ".TBL_USER." WHERE id = '$id'");
-	$id2 = GetUserAccountId_Users($id);
-	SaveItemToModifyLog_Delete(TBL_USER,'id = '.$id);
-	if ($id2)
-	{	// has account
-		@$vysledek=query_db("DELETE FROM ".TBL_ACCOUNT." WHERE id = '$id2'");
-		@$vysledek=query_db("DELETE FROM ".TBL_USXUS." WHERE id_accounts = '$id2'");
-		SaveItemToModifyLog_Delete(TBL_ACCOUNT,'user.id = '.$id.' acc.id = '.$id2);
-	}
+	SaveItemToModifyLog_Delete(TBL_USER,"id = $id $userData");
 	header("location: ".$g_baseadr."index.php?id=700&subid=1");
 }
 else

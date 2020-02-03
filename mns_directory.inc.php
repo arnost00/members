@@ -15,7 +15,8 @@ $sc->add_column('reg','');
 $sc->set_url('index.php?id=600&subid=1',true);
 $sub_query = $sc->get_sql_string();
 
-$query = 'SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob,entry_locked FROM '.TBL_USER.' WHERE chief_id = '.$usr->user_id.' OR id = '.$usr->user_id.$sub_query;
+$query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob,entry_locked, a.id aid FROM '.TBL_USER.' u'
+	.' left join '.TBL_ACCOUNT.' a on a.id_users = u.id WHERE u.chief_id = '.$usr->user_id.' OR u.id = '.$usr->user_id.$sub_query;
 @$vysledek=query_db($query);
 
 if (IsSet($result) && is_numeric($result) && $result != 0)
@@ -73,9 +74,8 @@ if ($vysledek != FALSE && mysqli_num_rows($vysledek) > 0)
 			}
 			else
 			{
-				$val=GetUserAccountId_Users($zaznam['id']);
 				$row_text = '<A HREF="./mns_user_edit.php?id='.$zaznam['id'].'&cb=600">Editovat</A>';
-				if ($val)
+				if ($zaznam['aid'] != null)
 					$row_text .= '&nbsp;/&nbsp;<A HREF="./mns_user_login_edit.php?id='.$zaznam['id'].'&cb=600">Účet</A>';
 			}
 			$row[] = $row_text;

@@ -35,7 +35,7 @@ echo $data_tbl->get_header_row()."\n";
 $select = "select u.id, u.jmeno, u.prijmeni, u.reg, ifnull(ucn.cnt,0) `mbr_cnt`, u.hidden from ".TBL_USER." u left join
 (select count(1) cnt, chief_id cid from ".TBL_USER." group by chief_id) as ucn on u.id = ucn.cid
 where u.id in
-(select u.id from ".TBL_ACCOUNT." a inner join ".TBL_USXUS." uu on a.id = uu.id_accounts inner join ".TBL_USER." u on uu.id_users = u.id
+(select u.id from ".TBL_ACCOUNT." a inner join ".TBL_USER." u on a.id_users = u.id
 where a.policy_mng = "._MNG_SMALL_INT_VALUE_.") order by u.sort_name";
 
 @$vysl=query_db($select);

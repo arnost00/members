@@ -18,7 +18,7 @@ $mng = (IsSet($mng) && is_numeric($mng)) ? (int)$mng : 0;
 if($id > 0)
 {
 	$query = "UPDATE ".TBL_USER." SET `chief_id`='$mng', `chief_pay`=null  WHERE `id` = '$id'";
-	$result=query_db($query);
+	$result=query_db($query)
 		or die("Chyba při provádění dotazu do databáze.");
 	if ($result == FALSE)
 		die ("Nepodařilo se změnit přihlášku člena.");

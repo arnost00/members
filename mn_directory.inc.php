@@ -24,7 +24,9 @@ $sc->add_column('reg','');
 $sc->set_url('index.php?id=500&subid=1',true);
 $sub_query = $sc->get_sql_string();
 
-$query = "SELECT id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob,entry_locked FROM ".TBL_USER.$sub_query;
+$query = "SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob,entry_locked, a.id aid, a.locked FROM ".TBL_USER." u"
+	." left join ".TBL_ACCOUNT." a on a.id_users = u.id "
+	.$sub_query;
 @$vysledek=query_db($query);
 
 if (IsSet($result) && is_numeric($result) && $result != 0)
@@ -49,11 +51,9 @@ $data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
-//echo $data_tbl->get_header_row()."\n";
 
 $data_tbl->set_sort_col(1,$sc->get_col_content(0));
 $data_tbl->set_sort_col(3,$sc->get_col_content(1));
-//echo $data_tbl->get_sort_row()."\n";
 echo $data_tbl->get_header_row_with_sort()."\n";
 
 $i=1;
@@ -73,21 +73,12 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 		$row[] = ($zaznam['lic'] != 'C' || $zaznam['lic'] != '-') ? '<B>'.$zaznam['lic'].'</B>' : $zaznam['lic'];
 		$row[] = ($zaznam['lic_mtbo'] != 'C' || $zaznam['lic_mtbo'] != '-') ? '<B>'.$zaznam['lic_mtbo'].'</B>' : $zaznam['lic_mtbo'];
 		$row[] = ($zaznam['lic_lob'] != 'C' || $zaznam['lic_lob'] != '-') ? '<B>'.$zaznam['lic_lob'].'</B>' : $zaznam['lic_lob'];
-		$val=GetUserAccountId_Users($zaznam['id']);
 		$acc = '';
-		if ($val)
+		if ($zaznam["aid"] != null)
 		{
-			$query = "SELECT locked FROM ".TBL_ACCOUNT." WHERE id = '$val' LIMIT 1";
-			$vysl2=query_db($query);
-			$zaznam2=mysqli_fetch_array($vysl2);
-			if ($zaznam2 != FALSE)
-			{
-				if ($zaznam2['locked'] != 0) 
+				if ($zaznam['locked'] != 0) 
 					$acc = '<span class="WarningText">L</span> ';
 				$acc .= 'Ano';
-			}
-			else
-				$acc = '-';
 		}
 		else
 			$acc = '-';

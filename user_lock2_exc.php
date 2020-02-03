@@ -15,17 +15,17 @@ if (IsLoggedSmallAdmin() || IsLoggedFinance())
 	$gr_id = (isset($gr_id) && is_numeric($gr_id)) ? (int)$gr_id : 0;
 	$id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
 
-	$vysl2=query_db('SELECT * FROM '.TBL_USER.' WHERE `id`=\''.$id."'");
-	$zaznam2=mysqli_fetch_array($vysl2);
-	if ($zaznam2 != FALSE)
+	$vysl=query_db('SELECT id, entry_locked, jmeno, prijmeni, reg FROM '.TBL_USER.' WHERE `id`=\''.$id."'");
+	$zaznam=mysqli_fetch_array($vysl);
+	if ($zaznam["id"] != null)
 	{
-		$lock = (bool)($zaznam2['entry_locked']);
+		$lock = (bool)($zaznam['entry_locked']);
 		$lock = !$lock;
 		$result=query_db('UPDATE '.TBL_USER.' SET entry_locked=\''.$lock.'\' WHERE `id`=\''.$id."'")
 			or die('Chyba při provádění dotazu do databáze.');
-		if ($result == FALSE)
+		if ($result == null)
 			die ('Nepodařilo se zamčít/odemčít přihlášky člena.');
-		SaveItemToModifyLog_Edit(TBL_USER,$zaznam2['jmeno'].' '.$zaznam2['prijmeni'].' ['.$zaznam2['reg'].'] - entry lock ('.(int)$lock.')');
+		SaveItemToModifyLog_Edit(TBL_USER,$zaznam['jmeno'].' '.$zaznam['prijmeni'].' ['.$zaznam['reg'].'] - entry lock ('.(int)$lock.')');
 	}
 	header('location: '.$g_baseadr.'index.php?id='.$gr_id.'&subid=1');
 }

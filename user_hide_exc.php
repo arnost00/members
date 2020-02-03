@@ -17,9 +17,9 @@ if (IsLoggedSmallAdmin())
 	if ($id)
 	{
 		$hidden_result = false;
-		$vysl=query_db('SELECT * FROM '.TBL_USER.' WHERE `id`=\''.$id."'");
+		$vysl=query_db('SELECT u.id, u.hidden, a.id aid FROM '.TBL_USER.' u left join '.TBL_ACCOUNT.' a on a.id_users = u.id WHERE u.id=\''.$id."'");
 		$zaznam=mysqli_fetch_array($vysl);
-		if ($zaznam != FALSE)
+		if ($zaznam["id"] != null)
 		{
 			$hidden = (bool)($zaznam['hidden']);
 			$hidden = !$hidden;
@@ -31,20 +31,14 @@ if (IsLoggedSmallAdmin())
 			SaveItemToModifyLog_Edit(TBL_USER,'user.id = '.$id.' - hide ('.(int)$hidden.')');
 		}
 
-		$id2 = GetUserAccountId_Users($id);
-		if ($id2 && $hidden_result)
+		if (($zaznam["aid"] != null) && $hidden_result)
 		{
-			$vysl2=query_db('SELECT * FROM '.TBL_ACCOUNT.' WHERE `id`=\''.$id2."'");
-			$zaznam2=mysqli_fetch_array($vysl2);
-			if ($zaznam2 != FALSE)
-			{
-				$lock = $hidden;
-				$result=query_db('UPDATE '.TBL_ACCOUNT.' SET locked=\''.$lock.'\' WHERE `id`=\''.$id2."'")
-					or die('Chyba při provádění dotazu do databáze.');
-				if ($result == FALSE)
-					die ('Nepodařilo se zamčít/odemčít účet člena.');
-				SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id2.' - lock ('.(int)$lock.')');
-			}
+			$lock = $hidden;
+			$result=query_db('UPDATE '.TBL_ACCOUNT.' SET locked=\''.$lock.'\' WHERE `id`=\''.$zaznam["aid"]."'")
+				or die('Chyba při provádění dotazu do databáze.');
+			if ($result == null)
+				die ('Nepodařilo se zamčít/odemčít účet člena.');
+			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$zaznam["aid"].' - lock ('.(int)$lock.')');
 		}
 	}
 	header('location: '.$g_baseadr.'index.php?id='._SMALL_ADMIN_GROUP_ID_.'&subid=3');

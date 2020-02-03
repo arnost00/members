@@ -41,8 +41,9 @@ function query_db($sql_query)
 	global $db_query_cnt, $db_conn, $g_is_release;
 	if (!$g_is_release) echo "<code>$sql_query</code>";
 	$db_query_cnt++;
-	$result=$db_conn->query($sql_query)
-		or error_db();
+	$result=$db_conn->query($sql_query);
+//dokud nebude pripraven db.inc.php nebo sem nepridame funkci error_db()
+//		or error_db();
 	return $result;
 }
 
