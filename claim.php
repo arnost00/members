@@ -13,7 +13,6 @@ db_Connect();
 $user_id = $usr->user_id;
 
 // vytvorit reklamaci, pokud byl odeslan formular
-// if (IsSet($claim_text) and IsSet($payment_id))
 if (IsSet($submit) or IsSet($close))
 {
  	//vytazeni posledni reklamace pro tuto platbu
@@ -40,18 +39,25 @@ require_once ("./common_user.inc.php");
 require_once ("./ctable.inc.php");
 DrawPageTitle('Reklamace platby');
 
-$query = "select f.date fin_date, f.note fin_note, f.amount fin_amount, c.id, c.user_id, c.payment_id, c.text, date_format(c.date, '%e.%c.%Y %k:%i') date, u.sort_name user_name from ".TBL_CLAIM." c inner join
-		".TBL_USER." u on c.user_id = u.id
-		inner join ".TBL_FINANCE." f on c.payment_id = f.id
-		where c.payment_id = ".$payment_id." order by c.date desc";
+$query = "select u.sort_name user_name, f.date fin_date, f.amount fin_amount, f.note fin_note from ".TBL_FINANCE." f left join ".TBL_USER." u on u.id = f.id_users_editor"
+	." where f.id = $payment_id";
+
+@$result_payment = query_db($query);
+$record_payment = mysqli_fetch_array($result_payment);
+
+$payment_detail = "Zadal: ".$record_payment['user_name']."<br/>";
+$payment_detail .= "Datum: ".formatDate($record_payment['fin_date'])."<br/>";
+$payment_detail .= "Částka: ".$record_payment['fin_amount']."<br/>";
+$payment_detail .= "Poznámka: ".$record_payment['fin_note']."<br/><br/>";
+echo $payment_detail;
+
+
+$query = "SELECT c.user_id, c.payment_id, c.text, DATE_FORMAT( c.date, '%e.%c.%Y %k:%i' ) date, u.sort_name user_name"
+	." FROM ".TBL_CLAIM." c LEFT JOIN ".TBL_USER." u ON u.id = c.user_id"
+	." where c.payment_id = ".$payment_id." order by c.date desc";
+	
 @$result_claims = query_db($query);
 $record_claims = mysqli_fetch_array($result_claims);
-
-$claim_detail = "Zadal: ".$record_claims['user_name']."<br/>";
-$claim_detail .= "Datum: ".formatDate($record_claims['fin_date'])."<br/>";
-$claim_detail .= "Částka: ".$record_claims['fin_amount']."<br/>";
-$claim_detail .= "Poznámka: ".$record_claims['fin_note']."<br/><br/>";
-echo $claim_detail;
 
 if ($record_claims != null) mysqli_data_seek ($result_claims, 0);
 $actual_text = "";
