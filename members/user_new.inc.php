@@ -59,6 +59,9 @@ if ($self_edit)
 	echo $data_tbl->get_new_row('Příjmení', $zaznam["prijmeni"]);
 	echo $data_tbl->get_new_row('Jméno', $zaznam["jmeno"]);
 	echo $data_tbl->get_new_row('Registrační číslo', $g_shortcut.RegNumToStr($zaznam['reg']));
+	echo '<INPUT TYPE="hidden" NAME="prijmeni" VALUE="'.$zaznam["prijmeni"].'">';
+	echo '<INPUT TYPE="hidden" NAME="jmeno" VALUE="'.$zaznam["jmeno"].'">';
+	echo '<INPUT TYPE="hidden" NAME="reg" VALUE="'.$g_shortcut.RegNumToStr($zaznam['reg']).'">';
 }
 else
 {
@@ -72,6 +75,9 @@ if ($self_edit)
 {
 	echo $data_tbl->get_new_row('Datum narození', SQLDate2String($zaznam["datum"]));
 	echo $data_tbl->get_new_row('Národnost', get_country_string($zaznam['narodnost']));
+	echo '<INPUT TYPE="hidden" NAME="datum" VALUE="'.SQLDate2String($zaznam["datum"]).'">';
+	echo '<INPUT TYPE="hidden" NAME="narodnost" VALUE="'.$zaznam["narodnost"].'">';
+	
 }
 else
 {
@@ -91,6 +97,7 @@ echo $data_tbl->get_new_row('Mobil', '<INPUT TYPE="text" NAME="mobil" SIZE=20 MA
 if ($self_edit)
 {
 	echo $data_tbl->get_new_row('Pohlavi', $zaznam["poh"]);
+	echo '<INPUT TYPE="hidden" NAME="poh" VALUE="'.$zaznam["poh"].'">';
 }
 else
 {
