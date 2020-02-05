@@ -47,7 +47,7 @@ function _run_sql_queries (&$qlist)
 		echo '<B>SQL QUERY</B> = "'.$line.'"';
 		echo "<BR>\n";
 
-		$result=query_db($line);
+		$result=mysqli_query($db_conn, $line);
 		echo '&nbsp;\-------- ';
 		if ($result == FALSE)
 		{
