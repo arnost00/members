@@ -24,6 +24,7 @@ if (IsSet($submit) or IsSet($close))
  	if (IsSet($close))
  	{
  		closeClaim($record_last_claim['id'], $payment_id);
+		echo "<script>window.close();</script>";
  	} else {
  		if ($user_id == $record_last_claim['user_id'])
  		{
