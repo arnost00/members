@@ -12,7 +12,7 @@ function db_connect ()
 	@$spojeni=new mysqli($g_dbserver,$g_dbuser,$g_dbpass) 
 		or die ('Chyba pri pripojovani do db.');
 	$spojeni->select_db($g_dbname);
-	$spojeni->query("SET CHARACTER SET UTF-8");
+	$spojeni->query("SET CHARACTER SET UTF8");
 	$db_conn = $spojeni;
 }
 
