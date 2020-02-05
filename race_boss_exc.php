@@ -21,7 +21,7 @@ $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 if($id > 0)
 {
 	$query = "UPDATE ".TBL_RACE." SET `vedouci`='$boss' WHERE `id`='$id'";
-	$result=query_db($query);
+	$result=query_db($query)
 		or die("Chyba při provádění dotazu do databáze.");
 	if ($result == FALSE)
 		die ("Nepodařilo se změnit údaje o závodě.");
