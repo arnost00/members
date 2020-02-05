@@ -41,7 +41,7 @@ require_once ('./url.inc.php');
 
 if(SHOW_USER)
 {
-	@$vysledek1=query_db("SELECT * FROM ".TBL_ZAVXUS." where id_user=$usr->user_id");
+	@$vysledek1=query_db("SELECT id_zavod, kat, termin FROM ".TBL_ZAVXUS." where id_user=$usr->user_id");
 
 	while ($zaznam1=mysqli_fetch_array($vysledek1))
 	{
@@ -75,7 +75,9 @@ $curr_date = GetCurrentDate();
 
 $d1 = $curr_date;
 $d2 = IncDate($curr_date,GC_SHOW_REG_DAYS);
-$query = 'SELECT id, datum, datum2, nazev, typ0, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, vedouci, cancelled FROM '.TBL_RACE.' WHERE (((prihlasky1 >= '.$d1.' && prihlasky1 <= '.$d2.') || (prihlasky2 >= '.$d1.' && prihlasky2 <= '.$d2.') || (prihlasky3 >= '.$d1.' && prihlasky3 <= '.$d2.') || (prihlasky4 >= '.$d1.' && prihlasky4 <= '.$d2.') || (prihlasky5 >= '.$d1.' && prihlasky5 <= '.$d2.')) || ( datum >= '.$d1.' AND datum <= '.$d2.')) ORDER BY datum, datum2, id';
+$query = 'SELECT r.id, r.datum, datum2, nazev, typ0, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, vedouci, cancelled, concat(u.jmeno, \' \', u.prijmeni) as boss '
+	.' FROM '.TBL_RACE.' r left join '.TBL_USER.' u on r.vedouci = u.id '
+	.' WHERE (((prihlasky1 >= '.$d1.' && prihlasky1 <= '.$d2.') || (prihlasky2 >= '.$d1.' && prihlasky2 <= '.$d2.') || (prihlasky3 >= '.$d1.' && prihlasky3 <= '.$d2.') || (prihlasky4 >= '.$d1.' && prihlasky4 <= '.$d2.') || (prihlasky5 >= '.$d1.' && prihlasky5 <= '.$d2.')) || ( r.datum >= '.$d1.' AND r.datum <= '.$d2.')) ORDER BY datum, datum2, r.id';
 
 @$vysledek=query_db($query);
 
@@ -168,14 +170,7 @@ if (mysqli_num_rows($vysledek) > 0)
 		}
 		if($g_enable_race_boss)
 		{
-			$boss = '-';
-			if($zaznam['vedouci'] != 0)
-			{
-				@$vysledekU=query_db("SELECT jmeno,prijmeni FROM ".TBL_USER." WHERE id = '".$zaznam['vedouci']."' LIMIT 1");
-				@$zaznamU=mysqli_fetch_array($vysledekU);
-				if($zaznamU != FALSE)
-					$boss = $zaznamU['jmeno'].' '.$zaznamU['prijmeni'];
-			}
+			($zaznam['vedouci'] == 0)?$boss = '-':$boss = $zaznam['boss'];
 			if(SHOW_USER)
 				echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ0,$typ,$odkaz,$prihl,$termin,$boss);
 			else
