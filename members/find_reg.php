@@ -7,7 +7,7 @@ require_once("./cfg/_colors.php");
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
 
-if (!IsLoggedManager())
+if (!IsLoggedManager() || !IsLoggedSmallAdmin())
 {
 	header("location: ".$g_baseadr."error.php?code=21");
 	exit;
