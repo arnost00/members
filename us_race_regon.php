@@ -213,8 +213,8 @@ $is_spol_ubyt_on = ($zaznam_z["ubytovani"]==1) && $g_enable_race_accommodation;
 $data_tbl = new html_table_mc();
 $col = 0;
 $data_tbl->set_header_col($col++,'Poř.',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Příjmení',ALIGN_LEFT);
+$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
 if($is_spol_dopr_on)
 	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,'Společná doprava');
@@ -242,8 +242,8 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 
 		$row = array();
 		$row[] = $i.'<!-- '.$zaznam['id'].' -->';
-		$row[] = $zaznam1['jmeno'];
 		$row[] = $zaznam1['prijmeni'];
+		$row[] = $zaznam1['jmeno'];
 		$row[] = '<B>'.$zaznam['kat'].'</B>';
 		if($is_spol_dopr_on)
 		{

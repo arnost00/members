@@ -22,6 +22,33 @@ function confirm_entry_unlock(name) {
 -->
 </script>
 
+<style type="text/css">
+<!--
+
+.ctmc {
+    table-layout: fixed;
+    border-collapse: collapse;
+	width: 975px;
+}
+
+.ctmc tbody {
+	display: block;
+	overflow: auto;
+	height: 600px;
+}
+
+.ctmc thead tr {
+	display: block;
+}
+
+.ctmc tr {
+	max-height: 20px;
+}
+
+-->
+</style>
+
+
 <?
 require_once "./common_user.inc.php";
 require_once('./csort.inc.php');
@@ -50,17 +77,21 @@ $data_tbl->set_header_col($col++,'Poř.č.',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Příjmení',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col_with_help($col++,'Reg.č.',ALIGN_CENTER,"Registrační číslo");
-$data_tbl->set_header_col_with_help($col++,'Účet',ALIGN_CENTER,"Stav a existence účtu");
-$data_tbl->set_header_col_with_help($col++,'Přihl.',ALIGN_CENTER,"Možnost přihlašování se člena na závody");
+$data_tbl->set_header_col_with_help($col++,'Uživatel',ALIGN_CENTER,"Editace uživatele");
+$data_tbl->set_header_col_with_help($col++,'Účet',ALIGN_CENTER,"Vytvoř nebo edituj účet");
+$data_tbl->set_header_col_with_help($col++,'Zamknut',ALIGN_CENTER,"Vypni uživateli možnost se přihlásit do systému");
+$data_tbl->set_header_col_with_help($col++,'Skrytý',ALIGN_CENTER,"Uživatel je skrytý");
+$data_tbl->set_header_col_with_help($col++,'Přihlášky',ALIGN_CENTER,"Možnost přihlašování se člena na závody");
 $data_tbl->set_header_col_with_help($col++,'Práva',ALIGN_CENTER,"Přiřazená práva (zleva) : novinky, přihlašovatel, trenér, malý trenér, správce, finančník");
-$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 
 $data_tbl->set_sort_col(1,$sc->get_col_content(0));
 $data_tbl->set_sort_col(3,$sc->get_col_content(1));
+echo '<thead>';
 echo $data_tbl->get_header_row_with_sort()."\n";
+echo '</thead>';
 
 $i=1;
 while ($zaznam=mysqli_fetch_array($vysledek))
@@ -70,51 +101,99 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	$row[] = $zaznam['prijmeni'];
 	$row[] = $zaznam['jmeno'];
 	$row[] = RegNumToStr($zaznam['reg']);
-	$acc = '';
+	//4. sloupec
+	$row[] = '<A HREF="./user_edit.php?id='.$zaznam['id'].'&cb=700">Uprav</A>';
+
+	$acc_exist = '<span class="WarningText">Vytvoř</span>';
+
+	$acc_hidden = '<A HREF="./user_hide_exc.php?id='.$zaznam['id'].'" onclick="return confirm_hide(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')">Skrýt</A>';
+	$acc_locked = '<A HREF="./user_lock_exc.php?id='.$zaznam['id'].'" onclick="return confirm_lock(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')">Zamknout</A>';
+
 	$acc_r = '<code>';
-	if ($zaznam["hidden"] != 0) 
-		$acc = '<span class="WarningText">H </span>';
-		if ($zaznam["aid"] != null)
-		{
-			if ($zaznam['locked'] != 0) 
-				$acc .= '<span class="WarningText">L </span>';
-			$acc .= "Ano";
-			$acc_r .= ($zaznam['policy_news'] == 1) ? 'N ' : '. ';
-			$acc_r .= ($zaznam['policy_regs'] == 1) ? 'P ' : '. ';
-			$acc_r .= ($zaznam['policy_mng'] == _MNG_BIG_INT_VALUE_) ? 'T ' : '. ';
-			$acc_r .= ($zaznam['policy_mng'] == _MNG_SMALL_INT_VALUE_) ? 't ' : '. ';
-			$acc_r .= ($zaznam['policy_adm'] == 1) ? 'S ' : '. ';
-			$acc_r .= ($zaznam['policy_fin'] == 1) ? 'F' : '.';
+	if ($zaznam["hidden"] != 0)
+	{
+		$acc_hidden = '<A HREF="./user_hide_exc.php?id='.$zaznam['id'].'" onclick="return confirm_show(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')"><span class="WarningText">Zviditelnit</span></A>';
+	}
+	if ($zaznam["aid"] != null)
+	{
+		if ($zaznam['locked'] != 0)
+		{			
+			$acc_locked = '<A HREF="./user_lock_exc.php?id='.$zaznam['id'].'" onclick="return confirm_unlock(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')"><span class="WarningText">Odemknout</span></A>';
 		}
-		else
-		{
-			$acc .= '-';
-			$acc_r .= '. . . . . .';
-		}
-	$row[] = $acc;
-	if ($zaznam['entry_locked'] != 0)
-		$row[] = '<span class="WarningText">Ne</span>';
+		$acc_exist = 'Uprav';
+		$acc_r .= ($zaznam['policy_news'] == 1) ? 'N ' : '. ';
+		$acc_r .= ($zaznam['policy_regs'] == 1) ? 'P ' : '. ';
+		$acc_r .= ($zaznam['policy_mng'] == _MNG_BIG_INT_VALUE_) ? 'T ' : '. ';
+		$acc_r .= ($zaznam['policy_mng'] == _MNG_SMALL_INT_VALUE_) ? 't ' : '. ';
+		$acc_r .= ($zaznam['policy_adm'] == 1) ? 'S ' : '. ';
+		$acc_r .= ($zaznam['policy_fin'] == 1) ? 'F' : '.';
+	}
 	else
-		$row[] = '';
+	{
+		$acc_r .= '. . . . . .';
+	}
+	//if exist then label is Edit, if doesn't exist then label is Vytvor
+	$row[] = '<A HREF="./user_login_edit.php?id='.$zaznam["id"].'&cb=700">'.$acc_exist.'</A>';
+
+	$row[] = $acc_locked;
+	$row[] = $acc_hidden;
+	if ($zaznam['entry_locked'] != 0)
+		$row[] = '<A HREF="./user_lock2_exc.php?gr_id='._SMALL_ADMIN_GROUP_ID_.'&id='.$zaznam['id'].'" onclick="return confirm_entry_lock(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')"><span class="WarningText">Odemknout</span></A>';
+	else
+		$row[] = '<A HREF="./user_lock2_exc.php?gr_id='._SMALL_ADMIN_GROUP_ID_.'&id='.$zaznam['id'].'" onclick="return confirm_entry_unlock(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')">Zamknout</A>';
 	$row[] = $acc_r.'</code>';
-	$action = '<A HREF="./user_edit.php?id='.$zaznam['id'].'&cb=700">Edit</A>';
-	$action .= '&nbsp;/&nbsp;';
-	$action .= '<A HREF="./user_login_edit.php?id='.$zaznam["id"].'&cb=700">Účet</A>';
-	$action .= '&nbsp;/&nbsp;';
-	$action .= '<A HREF="./user_del_exc.php?id='.$zaznam["id"]."\" onclick=\"return confirm_delete('".$zaznam["jmeno"].' '.$zaznam["prijmeni"]."')\" class=\"Erase\">Smazat</A>";
-	$lock = ($zaznam['entry_locked'] != 0) ? 'Odemknout' : 'Zamknout';
-	$lock_onclick = ($zaznam['entry_locked'] != 0) ? 'confirm_entry_unlock' : 'confirm_entry_lock';
-	$action .= '&nbsp;/&nbsp;';
-	$action .= '<A HREF="./user_lock2_exc.php?gr_id='._SMALL_ADMIN_GROUP_ID_.'&id='.$zaznam['id'].'" onclick="return '.$lock_onclick.'(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')">'.$lock.'</A>';
-	$row[] = $action;
 	echo $data_tbl->get_new_row_arr($row)."\n";
 }
+
 echo $data_tbl->get_footer()."\n";
 
-echo '<BR><BR>';
-echo '(Červené <span class="WarningText">H</span> značí skrytého člena. Tj. vidí ho jen admin.)<BR>';
-echo '(Červené <span class="WarningText">L</span> značí že účet je zablokován. Tj. nejde se na něj přihlásit.)<BR>';
+//echo '<BR><BR>';
+//echo '(Červené <span class="WarningText">H</span> značí skrytého člena. Tj. vidí ho jen admin.)<BR>';
+//echo '(Červené <span class="WarningText">L</span> značí že účet je zablokován. Tj. nejde se na něj přihlásit.)<BR>';
 echo '<BR><hr><BR>';
+
+?>
+<script language="JavaScript">
+(function() {
+	var e_table = document.getElementsByClassName("ctmc")[0];
+
+	var head1 = e_table.children[0].rows[0].children[0];
+	var head2 = e_table.children[0].rows[0].children[1];
+	var head3 = e_table.children[0].rows[0].children[2];
+	var head4 = e_table.children[0].rows[0].children[3];
+	var headUzivatel = e_table.children[0].rows[0].children[4];
+	var head6 = e_table.children[0].rows[0].children[5];
+	var head7 = e_table.children[0].rows[0].children[6];
+	var head8 = e_table.children[0].rows[0].children[7];
+	var head9 = e_table.children[0].rows[0].children[8];
+	var head10 = e_table.children[0].rows[0].children[9];
+ 
+	var col1 = e_table.children[1].rows[0].children[0];
+	var col2 = e_table.children[1].rows[0].children[1];
+	var col3 = e_table.children[1].rows[0].children[2];
+	var col4 = e_table.children[1].rows[0].children[3];
+	var colUzivatel = e_table.children[1].rows[0].children[4];
+	var col6 = e_table.children[1].rows[0].children[5];
+	var col7 = e_table.children[1].rows[0].children[6];
+	var col8 = e_table.children[1].rows[0].children[7];
+	var col9 = e_table.children[1].rows[0].children[8];
+	var col10 = e_table.children[1].rows[0].children[9];
+	
+//set table header or table body cells same width as longer one
+	col1.width = head1.offsetWidth;col1.style.padding = 0;
+	head2.width = col2.offsetWidth;head2.style.padding = 0;
+	head3.width = col3.offsetWidth;head3.style.padding = 0;
+	col4.width = head4.offsetWidth;col4.style.padding = 0;
+	colUzivatel.width = headUzivatel.offsetWidth;colUzivatel.style.padding = 0;
+	head6.width = col6.offsetWidth;head6.style.padding = 0;
+	head7.width = col7.offsetWidth;head7.style.padding = 0;
+	head8.width = col8.offsetWidth;head8.style.padding = 0;
+	head9.width = col9.offsetWidth;head9.style.padding = 0;
+	head10.width = col10.offsetWidth;head10.style.padding = 0;
+	
+})();
+</script>
+<?
 
 require_once "./user_new.inc.php";
 ?>

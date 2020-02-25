@@ -1,5 +1,16 @@
 <?php /* adminova stranka - vlozeni clena */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
+
+<script language="JavaScript">
+<!--
+function focusOn(elem)
+{
+	console.log(elem);
+	document.getElementById(elem).scrollIntoView();
+}
+-->
+</script>
+
 <?
 if (IsLogged())
 {
@@ -7,7 +18,7 @@ if (IsLogged())
 		DrawPageSubTitle('Editace údajů vybraného člena oddílu');
 	else
 	{
-		DrawPageSubTitle('Vložení nového člena');
+		DrawPageSubTitle('Vložení nového člena', 'form_create_user');
 		$zaznam['prijmeni'] = '';
 		$zaznam['jmeno'] = '';
 		$zaznam['reg'] = '';
@@ -48,7 +59,7 @@ function GetLicenceComboBox($lic_name, $lic_value)
 	return $value;
 }
 
-$data_tbl = new html_table_form();
+$data_tbl = new html_table_form("createUser");
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 
@@ -65,7 +76,7 @@ if ($self_edit)
 }
 else
 {
-	echo $data_tbl->get_new_row('Příjmení', '<INPUT TYPE="text" NAME="prijmeni" SIZE=30 MAXLENGTH=30 VALUE="'.$zaznam["prijmeni"].'">');
+	echo $data_tbl->get_new_row('Příjmení', '<INPUT onfocus="focusOn(\'form_create_user\');" accessKey="C" TYPE="text" NAME="prijmeni" SIZE=30 MAXLENGTH=30 VALUE="'.$zaznam["prijmeni"].'">');
 	echo $data_tbl->get_new_row('Jméno', '<INPUT TYPE="text" NAME="jmeno" SIZE=30 MAXLENGTH=20 VALUE="'.$zaznam["jmeno"].'">');
 	$find_reg_text = (!IsSet($update)) ? ' <a href="javascript:open_win_ex(\'./find_reg.php\',\'\',600,400)">Hledání volných reg.č.</a>': '';
 	echo $data_tbl->get_new_row('Registrační číslo', $g_shortcut.'&nbsp;&nbsp;<INPUT TYPE="text" NAME="reg" SIZE=4 MAXLENGTH=4 VALUE="'.RegNumToStr($zaznam['reg']).'">'.$find_reg_text);
