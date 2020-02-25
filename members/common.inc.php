@@ -18,7 +18,7 @@ function formatDate($date)
 
 function Date2String($date, $long = false)
 {
-	$text = ($date == 0) ? "-" : @date((($long) ? "d.m.Y":"j.n.Y"),$date);
+	$text = ($date == 0) ? "" : @date((($long) ? "d.m.Y":"j.n.Y"),$date);
 	return $text;
 }
 
@@ -176,7 +176,6 @@ function GetTimeToReg($t_p)
 	$t_p += (25*60*60); //+(25*60*60) - posun terminu prihlasek o 2 hodiny navic, kvuli time() ktery vraci UTC je tam +25 hodin
 //	$diff = (int)(($t_p) - GetCurrentDate());  // puvodni pred pridanim 2 hodin navic
 	$diff = (int)(($t_p) - time());
-//	echo('['.$diff.']');
 	if ($diff > 0)
 		$diff = _todays($diff);
 	else if ($diff < 0)
@@ -318,7 +317,6 @@ function GetEmailSecuredHTML($emails)
 			if ($u != 0)
 				$mail_row.='<BR>';
 			$mail_row.= EncodeString2Bytes(str_replace(array('@','.'),array(' (zavináč) ',' (tečka) '),$emails[$u]));
-//			$mail_row.= EncodeString2Bytes($emails[$u]);
 		}
 		return $mail_row;
 	}
@@ -375,9 +373,9 @@ function DrawPageTitle($title)
 	echo('<H2>'.$title.'</H2>');
 }
 
-function DrawPageSubTitle($title)
+function DrawPageSubTitle($title, $id=null)
 {
-	echo('<H3>'.$title.'</H3>');
+	echo("<H3 ID='$id'>".$title."</H3>");
 }
 
 

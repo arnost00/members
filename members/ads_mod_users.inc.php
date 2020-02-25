@@ -65,7 +65,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	else
 	{
 		$hidd = '<span class="WarningText">Ano</span>';
-		$action = '<A HREF="./user_hide_exc.php?id='.$zaznam['id'].'" onclick="return confirm_show(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')">Zviditelnit</A>';
+		$action = '<A HREF="./user_hide_exc.php?id='.$zaznam['id'].'" onclick="return confirm_show(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')"><font color="green">Zviditelnit</font></A>';
 	}
 	
 	$acc = '<span class="DisableText">Ne</span>';
@@ -82,7 +82,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 		}
 		else
 		{
-			$action .= '&nbsp;/&nbsp;<A HREF="./user_lock_exc.php?id='.$zaznam['id'].'" onclick="return confirm_lock(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')">Zamknout</A>';
+			$action .= '&nbsp;/&nbsp;<A HREF="./user_lock_exc.php?id='.$zaznam['id'].'" onclick="return confirm_lock(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')">Zamknout účet</A>';
 		}
 	}
 	if ( $usr->user_id == $zaznam['id'])

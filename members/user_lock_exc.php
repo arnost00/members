@@ -32,7 +32,7 @@ if (IsLoggedSmallAdmin())
 			die ('Nepodařilo se promazat práva nebo mailinfo člena.');
 		SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$zaznam["id"].' - lock ('.(int)$lock.')');
 	}
-	header('location: '.$g_baseadr.'index.php?id='._SMALL_ADMIN_GROUP_ID_.'&subid=3');
+	header('location: '.$g_baseadr.'index.php?id='._SMALL_ADMIN_GROUP_ID_.'&subid=1');
 }
 else
 {

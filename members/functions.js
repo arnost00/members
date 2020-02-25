@@ -90,17 +90,6 @@ function isValidDate(subject)
 			return true;
 	} 
 	return false;
-
-/*  old code ... not function for X.X.XXXX .. only for XX.XX.XXXX
-  if (x =subject.match(/^(?:(0[1-9]|[12][0-9]|3[01]|?[1-9]])[\- \/.](0[1-9]|1[012]|[1-9])[\- \/.](19|20)[0-9]{2})$/)) // DD-MM-YYYY
-  { 
-    return true;
-  }
-  else
-  {
-    return false;
-  }
-*/  
 }
 
 function isValidLogin(subject)

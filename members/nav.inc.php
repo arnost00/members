@@ -115,7 +115,6 @@ function DrawMenuGroupHeader($name)
 	{
 		DrawMenuGroupHeader('Menu&nbsp;správce');
 		DrawMenuItem('Členská základna',_SMALL_ADMIN_GROUP_ID_,1);
-		DrawMenuItem('Správa účtů',_SMALL_ADMIN_GROUP_ID_,3);
 	}
 	if(IsLoggedFinance() && $g_enable_finances)
 	{
@@ -135,7 +134,6 @@ function DrawMenuGroupHeader($name)
 		DrawMenuItem('Výpis změn',_ADMIN_GROUP_ID_,6);
 		DrawMenuItem('Historie plateb',_ADMIN_GROUP_ID_,7);
 		DrawMenuItem('Email info',_ADMIN_GROUP_ID_,8);
-//		DrawMenuItem('Malý trenéři',_ADMIN_GROUP_ID_,9);
 	}
 ?>
  	<TR><TD height="15"></TD></TR>
@@ -176,7 +174,6 @@ function check_login_form(form)
 	<TR><TD class="login"><label>Heslo&nbsp;</TD><TD><INPUT TYPE="password" NAME="<? echo(_VAR_USER_PASS);?>" SIZE="10" class="login" tabindex="2"></label></TD></TR>
 	<TR><TD colspan="2" height="4"></TD></TR>
 	<TR><TD></TD><TD><INPUT TYPE="submit" VALUE="Přihlásit" tabindex="3"></TD></TR>
-<!-- 	<TR><TD></TD><TD><INPUT TYPE="submit" class="loginsbm" VALUE="Přihlásit" tabindex="3"></TD></TR> -->
 </TABLE>
 	</FORM>
 <?

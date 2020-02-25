@@ -41,7 +41,7 @@ if (IsLoggedSmallAdmin())
 			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$zaznam["aid"].' - lock ('.(int)$lock.')');
 		}
 	}
-	header('location: '.$g_baseadr.'index.php?id='._SMALL_ADMIN_GROUP_ID_.'&subid=3');
+	header('location: '.$g_baseadr.'index.php?id='._SMALL_ADMIN_GROUP_ID_.'&subid=1');
 }
 else
 {
