@@ -77,9 +77,9 @@ function fillInputsByCategory() {
 	var note = $("#in-note").val();
 
 	jQuery.each( cats, function( index, value ) {
-		if ($('#ckbx-'+value).is(':checked')) {
-			$("input.amount-"+value).val(amount);
-			$("input.note-"+value).val(note);
+		if ($('#ckbx-'+index).is(':checked')) {
+			$("input.amount-"+index).val(amount);
+			$("input.note-"+index).val(note);
 		}
 
 	});
@@ -114,9 +114,15 @@ $sum_plus_amount = 0;
 $sum_minus_amount = 0;
 $i = 1;
 
+$arr_kat = array();
+
 echo $data_tbl->get_subheader_row("Přihlášení")."\n";
 while ($zaznam=mysqli_fetch_assoc($vysledek_prihlaseni))
 {
+	$kat = $zaznam['kat'];
+	if (!in_array($kat, $arr_kat)) $arr_kat[] = $kat;
+	$kat_id = array_search($kat, $arr_kat);
+	
 	$id = $zaznam['id'];
 	
 	$row = array();
@@ -125,14 +131,14 @@ while ($zaznam=mysqli_fetch_assoc($vysledek_prihlaseni))
 	$amount = $zaznam['amount'];
 	$amount>0?$sum_plus_amount+=$amount:$sum_minus_amount+=$amount;
 	
-	$input_amount = '<input class="amount-'.$zaznam['kat'].'" type="number" id="am'.$i.'" name="am'.$i.'" value="'.$amount.'" size="5" maxlength="10" />';
+	$input_amount = '<input class="amount-'.$kat_id.'" type="number" id="am'.$i.'" name="am'.$i.'" value="'.$amount.'" size="5" maxlength="10" />';
 	$row[] = $input_amount;
 	
 	$note = $zaznam['note'];
-	$input_note = '<input class="note-'.$zaznam['kat'].'" type="text" id="nt'.$i.'" name="nt'.$i.'" value="'.$note.'" size="40" maxlength="200" />';
+	$input_note = '<input class="note-'.$kat_id.'" type="text" id="nt'.$i.'" name="nt'.$i.'" value="'.$note.'" size="40" maxlength="200" />';
 	$row[] = $input_note;
 	
-	$row[] = "<span class=\"cat\">".$zaznam['kat']."</span>";
+	$row[] = "<span class=\"cat\">".$kat."</span>";
 	if ($enable_fin_types)
 		$row[] = ($zaznam['nazev'] != null)? $zaznam['nazev'] : '-';
 
@@ -150,7 +156,7 @@ while ($zaznam=mysqli_fetch_assoc($vysledek_prihlaseni))
 		$row[] = "<span>".$ubyt."</span>";
 	}
 
-	$row_class = "cat-".$zaznam['kat'];
+	$row_class = "cat-".$kat_id;
 
 	echo $data_tbl->get_new_row_arr($row, $row_class)."\n";
 	$i++;
@@ -263,16 +269,12 @@ echo $data_tbl->get_footer()."\n";
 <script>
 //vlozeni checkboxu pro vyber kategorii, kterym se budou menit platby
 var ckbx = document.getElementById("ckbx-cat");
-var cats = [];
-$("span.cat").each(function(event) {
-	//vloz novou kategorii, pokud jiz neni v seznamu
-	if (cats.indexOf(this.innerHTML,0) < 0)	cats.push(this.innerHTML);
-});
-cats.sort();
+var cats = <?php echo json_encode($arr_kat); ?>;
+console.log(cats);
 
 //vlozeni checkboxu do pripraveneho divu
 jQuery.each( cats, function( index, value ) {
-	ckbx.innerHTML += value+"<input type=\"checkbox\" class=\"ckbx-cat\" value=\"" + value + "\" id=\"ckbx-" + value + "\" /> ";
+	ckbx.innerHTML += value+"<input type=\"checkbox\" class=\"ckbx-cat\" value=\"" + index + "\" id=\"ckbx-" + index + "\" /> ";
 });
 
 //pri kliku na jednu kategorii se odznaci Vse
