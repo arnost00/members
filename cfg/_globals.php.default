@@ -41,5 +41,7 @@ define ('GC_MIN_RACES_2_SHOW_LINK',25);
 // cron - define only when debug (block email send)
 // define('_CRON_DEBUG_SEND_',1);
 
+// bez prihlaseni neni nic videt
+define ('GC_NOTHING_VISIBLE_WO_LOGIN', 1);
 
 ?>
