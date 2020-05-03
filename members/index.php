@@ -18,6 +18,24 @@ define('IS_INDEX',true);
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 require_once ("./version.inc.php");
 db_Connect();
+
+if (defined('GC_NOTHING_VISIBLE_WO_LOGIN') && !IsLogged())
+{
+DrawPageTitle('Přihlášení do přihláškového systému');
+?>
+<FORM METHOD=POST ACTION="./login.php">
+<TABLE border="0" cellpadding="0" cellspacing="2">
+<TR><TD class="login">Jméno&nbsp;</TD><TD><INPUT TYPE="text" NAME="<? echo(_VAR_USER_LOGIN);?>" SIZE=10 class="login"></TD></TR>
+<TR><TD class="login">Heslo&nbsp;</TD><TD><INPUT TYPE="password" NAME="<? echo(_VAR_USER_PASS);?>" SIZE=10 class="login"></TD></TR>
+<TR><TD colspan="2" height="4"></TD></TR>
+<TR><TD></TD><TD><INPUT TYPE="submit" VALUE="Přihlásit"></TD></TR>
+</TABLE>
+</FORM>
+<?
+	HTML_Footer();
+	exit;
+}
+
 ?>
 <TABLE width="100%" cellpadding="0" cellspacing="0" border="0">
 <? 
