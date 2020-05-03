@@ -71,8 +71,6 @@ class CLogMe
 
 function ClearAllModifyFlags()
 {
-	global $db_conn;
-	
 	$done = 0;
 	$query='UPDATE '.TBL_RACE." SET modify_flag='0'";
 	$result=query_db($query)
