@@ -170,7 +170,7 @@ if (mysqli_num_rows($vysledek) > 0)
 		}
 		if($g_enable_race_boss)
 		{
-			($zaznam['vedouci'] == 0)?$boss = '-':$boss = $zaznam['boss'];
+			$boss = ($zaznam['vedouci'] == 0)? '-': $zaznam['boss'];
 			if(SHOW_USER)
 				echo $data_tbl->get_new_row($datum,$nazev,$misto,$oddil,$typ0,$typ,$odkaz,$prihl,$termin,$boss);
 			else
