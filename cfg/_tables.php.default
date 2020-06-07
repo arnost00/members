@@ -17,7 +17,7 @@ define ('TBL_RACE','zavod');
 define ('TBL_NEWS','news');
 define ('TBL_USER','users');
 define ('TBL_ACCOUNT','accounts');
-define ('TBL_USXUS','usxus');
+define ('TBL_USXUS','usxus'); // from build 553 not used, but don't erase this line (needed for_SQL folder)
 define ('TBL_ZAVXUS','zavxus');
 define ('TBL_MODLOG','modify_log');
 define ('TBL_MAILINFO','mailinfo');
