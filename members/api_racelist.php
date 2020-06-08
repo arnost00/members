@@ -33,7 +33,7 @@ $curr_date = GetCurrentDate();
 $d1 = $curr_date;
 
 $query="SELECT id,datum,typ,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,nazev,vicedenni,odkaz,vedouci, oddil,send,misto,cancelled,typ0, ubytovani, transport, zebricek, ranking, etap, poznamka FROM ".TBL_RACE.' WHERE datum >= '.$d1.' || datum2 >= '.$d1.' ORDER BY datum, datum2, id';
-@$vysledek=query_db($query);
+@$vysledek=$db_conn->query($query);
 
 $data = array();
 $data['Format'] = 'json';
@@ -130,7 +130,7 @@ if (mysqli_num_rows($vysledek) > 0)
 
 	for($ii=0; $ii<$g_racetype_cnt; $ii++)
 	{
-		$data['Enums']['Rankings'][$g_racetype[$ii]['enum']] = $g_racetype [$ii]['nm'];
+		$data['Enums']['Sports'][$g_racetype[$ii]['enum']] = $g_racetype [$ii]['nm'];
 	}
 	
 	$data['Status'] = 'OK';
