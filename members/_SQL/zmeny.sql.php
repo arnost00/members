@@ -1,4 +1,4 @@
-﻿<?
+<?
 @extract($_REQUEST);
 
 $zmeny_list = array();
