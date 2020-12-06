@@ -41,8 +41,6 @@ class sess
 @session_start();
 if (!IsSet($_SESSION['usr']))
 {
-	session_name(_CURR_SESS_ID_);
-//	session_register("usr"); -- deprecated
 	$usr = new sess; 
 	$usr->logged=0;
 	$usr->policy_news=0;
