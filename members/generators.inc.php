@@ -1,6 +1,5 @@
 <?php if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
-
-<?
+<?php
 
 function GeneratePassword($length)
 {
