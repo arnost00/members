@@ -1,4 +1,4 @@
-﻿<?
+<?
 function createHTMLSelect($select_name, $options)
 {	
 	$select = "<select name=\"$select_name\">";
