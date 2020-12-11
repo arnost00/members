@@ -23,6 +23,7 @@ if (IsSet($code) && $code != 0)
 		42 => 'Je potřeba zadat nějaké údaje pro vytvoření závodu.',
 		52 => 'Je potřeba zadat nějaké údaje pro změnu upozorňování na email.',
 		62 => 'Je potřeba zadat nějaké údaje pro vytvoření typu oddílového příspěvku.',
+		72 => 'Je potřeba zadat nějaké údaje pro vytvoření předdefinovaných kategorií.',
 		101 => 'Neexistující uživatel. Zadejte správné uživatelské jméno.',
 		102 => 'Špatně zadané heslo! Zkuste zadat heslo znovu.',
 		103 => 'Učet je zablokován! Pokud nevíte důvod, kontaktujte správce stránek.',

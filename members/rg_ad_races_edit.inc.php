@@ -112,6 +112,7 @@ echo '<BR><hr><BR>';
 
 echo("<A HREF=\"javascript:open_win('./race_new.php?type=0','')\">Vytvořit nový závod</A><br>");
 echo("<A HREF=\"javascript:open_win('./race_new.php?type=1','')\">Vytvořit nový vícedenní závod</A><br>");
+echo("<br><A HREF=\"categ_predef.php\">Editovat předdefinované seznamy kategorií</A><br>");
 
 ?>
 </CENTER>
