@@ -34,7 +34,9 @@ DrawPageTitle('Editace typu oddílového příspěvku');
 <CENTER>
 <? require_once ('fin_type_edit.inc.php'); ?>
 <BR><hr><BR>
-<A HREF="index.php?id=800&subid=4">Zpět</A><BR>
+<?
+echo('<A HREF="index.php?id='._REGISTRATOR_GROUP_ID_.'&subid=4">Zpět</A><BR>');
+?>
 <BR><hr><BR>
 </CENTER>
 </TD>
