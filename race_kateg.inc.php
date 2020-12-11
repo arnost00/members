@@ -26,10 +26,6 @@ function GetKategorieCheckBox($type,$zeb,$kat)
 		$result .= ' CHECKED';
 		unset($kategorie[$key]);
 	}
-	/*	old code
-		if (in_array($k,$kategorie))
-			$result .= ' CHECKED';
-	*/
 	$result .= '>';
 	return $result;
 }
@@ -38,9 +34,9 @@ function GetKategorieCheckBox($type,$zeb,$kat)
 <table>
 <TR>
 <TD></TD>
-<TD colspan="6" align="center">H</TD>
+<TD colspan="6" align="center"><? echo (GC_KATEG_M); ?></TD>
 <TD></TD>
-<TD colspan="6" align="center">D</TD>
+<TD colspan="6" align="center"><? echo (GC_KATEG_W); ?></TD>
 </TR>
 <TR>
 <TD></TD>
@@ -63,28 +59,28 @@ foreach ($kategorie_vypis as $kat)
 {
 	$tr_item = ($kat == 21) ? ' bgcolor="'.$g_colors['table_row_highlight'].'"' : '';
 	echo ('<TR'.$tr_item.'><TD align="center">'.$kat.'</TD>');
-	// H -->
+	// Men -->
 	foreach ($zebricek_vypis as $zeb)
 	{	// zeb E .. D
 		echo('<TD align="center">');
-		echo(GetKategorieCheckBox('H',$zeb,$kat));
+		echo(GetKategorieCheckBox(GC_KATEG_M,$zeb,$kat));
 		echo('</TD>');
 	}
 	echo('<TD align="center">');
-	echo(GetKategorieCheckBox('H','',$kat));
+	echo(GetKategorieCheckBox(GC_KATEG_M,'',$kat));
 	echo('</TD>');
 
 	echo('<TD align="center">|</TD>');
 
-	// D -->
+	// Women -->
 	foreach ($zebricek_vypis as $zeb)
 	{	// zeb E .. D
 		echo('<TD align="center">');
-		echo(GetKategorieCheckBox('D',$zeb,$kat));
+		echo(GetKategorieCheckBox(GC_KATEG_W,$zeb,$kat));
 		echo('</TD>');
 	}
 	echo('<TD align="center">');
-	echo(GetKategorieCheckBox('D','',$kat));
+	echo(GetKategorieCheckBox(GC_KATEG_W,'',$kat));
 	echo('</TD>');
 ?>
 </TR>

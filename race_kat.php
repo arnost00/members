@@ -5,6 +5,7 @@
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
 require_once("./cfg/_colors.php");
+require_once('./cfg/_globals.php');
 
 require_once ("./ctable.inc.php");
 require_once ("./common.inc.php");
@@ -57,35 +58,32 @@ function zmen_kat_null()
 
 <BR>
 
-Nestandartni kategorie&nbsp;&nbsp;
+Nestandartní kategorie&nbsp;&nbsp;
 
 <button onclick="javascript:zmen_kat_null(); return false;">Vyprázdni</button><BR>
 
 <TEXTAREA name="kat_n" cols="90" rows="3"><?echo $kat_nf;?></TEXTAREA><BR>
 
-<span class="WarningText">Zadavej jako text bez uvozovek, kazdou kategorii ukonci strednikem, vse bez mezer</span>
+<span class="WarningText">Zadávej jako text bez uvozovek, každou kategorii ukonči středníkem, vše bez mezer</span>
 
-<BR><BR>Předefinované kategorie :
-<button onclick="javascript:zmen_kat_n('<? echo $g_kategorie ['oblz']?>'); return false;">Oblž</button>&nbsp;
-<button onclick="javascript:zmen_kat_n('<? echo $g_kategorie ['oblz_vetsi']?>'); return false;">Oblž větší</button>&nbsp;
-<button onclick="javascript:zmen_kat_n('<? echo $g_kategorie ['becka']?>'); return false;">žeb.B.</button>&nbsp;
-<button onclick="javascript:zmen_kat_n('<? echo $g_kategorie ['acka']?>'); return false;">žeb.A.</button>&nbsp;
-<button onclick="javascript:zmen_kat_n('<? echo $g_kategorie ['stafety']?>'); return false;">Štafety</button>
-<button onclick="javascript:zmen_kat_n('<? echo $g_kategorie ['MTBO']?>'); return false;">MTBO</button>
+<BR><BR>Předdefinované kategorie :
+
+<?
+@$vysledek=query_db("SELECT * FROM ".TBL_CATEGORIES_PREDEF." order by ID");
+$cl = '';
+while ($zaznam=mysqli_fetch_array($vysledek))
+{
+	echo('<button onclick="javascript:zmen_kat_n(\''.$zaznam['cat_list'].'\'); return false;">'.$zaznam['name'].'</button>&nbsp;');
+	$cl .= $zaznam['name'].' = ('.$zaznam['cat_list'].')';
+	$cl .= "<BR>\n";
+}
+?>
 <BR>
 <BR>
 <span class="kategory_small_list">
-Oblž = (<? echo $g_kategorie ['oblz']; ?>)
-<BR>
-Oblž větší = (<? echo $g_kategorie ['oblz_vetsi']; ?>)
-<BR>
-žeb.B. = (<? echo $g_kategorie ['becka']; ?>)
-<BR>
-žeb.A. = (<? echo $g_kategorie ['acka']; ?>)
-<BR>
-Štafety = (<? echo $g_kategorie ['stafety']; ?>)
-<BR>
-MTBO = (<? echo $g_kategorie ['MTBO']; ?>)
+<?
+echo($cl);
+?>
 </span>
 <BR>
 

@@ -24,5 +24,6 @@ define ('TBL_MAILINFO','mailinfo');
 define ('TBL_FINANCE','finance');
 define ('TBL_CLAIM','claim');
 define ('TBL_FINANCE_TYPES','finance_types');
+define ('TBL_CATEGORIES_PREDEF','categories_predef');
 
 ?>
