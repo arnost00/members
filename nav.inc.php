@@ -55,7 +55,15 @@ function DrawMenuGroupHeader($name)
 <!-- Obsah Nav.Sloupce Begin -->
 	<TABLE cellpadding="0" cellspacing="0" border="0" width="100%">
 	<TR><TD height="5"></TD></TR>
-	<TR><TD valign="top" align="center"><a href="<? echo($g_mainwww); ?>" target="_blank"><img src="imgs/<? echo ($g_club_logo['FileN']);?>" width="<? echo $g_club_logo['SizeW']; ?>" height="<? echo $g_club_logo['SizeH']; ?>" alt="<? echo $g_fullname;?>" border="0"></a></TD></tr>
+	<?
+	if (!empty($g_club_logo['FileN']))
+	{
+		echo('<TR><TD valign="top" align="center"><a href="'.$g_mainwww);
+		echo('" target="_blank"><img src="imgs/'.$g_club_logo['FileN']);
+		echo('" width="'.$g_club_logo['SizeW'].'" height="'.$g_club_logo['SizeH']);
+		echo('" alt="'.$g_fullname.'" border="0"></a></TD></tr>');
+	}
+	?>
 	<TR><TD height="5"></TD></TR>
 <?
 	DrawMenuItem('Novinky',0,0);
