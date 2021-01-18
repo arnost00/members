@@ -48,4 +48,6 @@ define ('GC_NOTHING_VISIBLE_WO_LOGIN', 1);
 define ('GC_KATEG_W', 'D');
 define ('GC_KATEG_M', 'H');
 
+define ('GC_DEFAULT_NATIONALITY', 'CZ');
+
 ?>

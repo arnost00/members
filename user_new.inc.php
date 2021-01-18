@@ -38,7 +38,7 @@ if (IsLogged())
 		$zaznam['hidden'] = 0;
 		$zaznam['fin'] = '';
 		$zaznam['rc'] = '';
-		$zaznam['narodnost'] = 'CZ';
+		$zaznam['narodnost'] = GC_DEFAULT_NATIONALITY;
 	}
 	$self_edit = IsSet($self_edit) ? (bool)$self_edit : false;
 
