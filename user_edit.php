@@ -6,6 +6,8 @@ define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 require_once ("connect.inc.php");
 require_once ("sess.inc.php");
 require_once ("ctable.inc.php");
+require_once("./cfg/_globals.php");
+
 if (!IsLoggedSmallAdmin() && !IsLoggedManager())
 {
 	header("location: ".$g_baseadr."error.php?code=21");
