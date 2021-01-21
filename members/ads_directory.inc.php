@@ -157,40 +157,16 @@ echo '<BR><hr><BR>';
 (function() {
 	var e_table = document.getElementsByClassName("ctmc")[0];
 
-	var head1 = e_table.children[0].rows[0].children[0];
-	var head2 = e_table.children[0].rows[0].children[1];
-	var head3 = e_table.children[0].rows[0].children[2];
-	var head4 = e_table.children[0].rows[0].children[3];
-	var headUzivatel = e_table.children[0].rows[0].children[4];
-	var head6 = e_table.children[0].rows[0].children[5];
-	var head7 = e_table.children[0].rows[0].children[6];
-	var head8 = e_table.children[0].rows[0].children[7];
-	var head9 = e_table.children[0].rows[0].children[8];
-	var head10 = e_table.children[0].rows[0].children[9];
- 
-	var col1 = e_table.children[1].rows[0].children[0];
-	var col2 = e_table.children[1].rows[0].children[1];
-	var col3 = e_table.children[1].rows[0].children[2];
-	var col4 = e_table.children[1].rows[0].children[3];
-	var colUzivatel = e_table.children[1].rows[0].children[4];
-	var col6 = e_table.children[1].rows[0].children[5];
-	var col7 = e_table.children[1].rows[0].children[6];
-	var col8 = e_table.children[1].rows[0].children[7];
-	var col9 = e_table.children[1].rows[0].children[8];
-	var col10 = e_table.children[1].rows[0].children[9];
-	
 //set table header or table body cells same width as longer one
-	col1.width = head1.offsetWidth;col1.style.padding = 0;
-	head2.width = col2.offsetWidth;head2.style.padding = 0;
-	head3.width = col3.offsetWidth;head3.style.padding = 0;
-	col4.width = head4.offsetWidth;col4.style.padding = 0;
-	colUzivatel.width = headUzivatel.offsetWidth;colUzivatel.style.padding = 0;
-	head6.width = col6.offsetWidth;head6.style.padding = 0;
-	head7.width = col7.offsetWidth;head7.style.padding = 0;
-	head8.width = col8.offsetWidth;head8.style.padding = 0;
-	head9.width = col9.offsetWidth;head9.style.padding = 0;
-	head10.width = col10.offsetWidth;head10.style.padding = 0;
-	
+
+	for (var i = 0; i < 9; i++)
+	{ 
+		var head = e_table.children[0].rows[0].children[i];
+		var col = e_table.children[1].rows[0].children[i];
+		head.width = col.width = Math.max(head.offsetWidth,col.offsetWidth);
+		head.style.padding = 0;
+		col.style.padding = 0;
+	}
 })();
 </script>
 <?
