@@ -91,7 +91,7 @@ $data_tbl->set_sort_col(1,$sc->get_col_content(0));
 $data_tbl->set_sort_col(3,$sc->get_col_content(1));
 echo '<thead>';
 echo $data_tbl->get_header_row_with_sort()."\n";
-echo '</thead>';
+echo '</thead><tbody>';
 
 $i=1;
 while ($zaznam=mysqli_fetch_array($vysledek))
@@ -144,7 +144,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	$row[] = $acc_r.'</code>';
 	echo $data_tbl->get_new_row_arr($row)."\n";
 }
-
+echo ('</tbody>');
 echo $data_tbl->get_footer()."\n";
 
 //echo '<BR><BR>';
@@ -158,14 +158,12 @@ echo '<BR><hr><BR>';
 	var e_table = document.getElementsByClassName("ctmc")[0];
 
 //set table header or table body cells same width as longer one
-
-	for (var i = 0; i < 9; i++)
+	var cols = e_table.children[0].rows[0].cells.length;
+	for (var i = 0; i < cols; i++)
 	{ 
 		var head = e_table.children[0].rows[0].children[i];
 		var col = e_table.children[1].rows[0].children[i];
 		head.width = col.width = Math.max(head.offsetWidth,col.offsetWidth);
-		head.style.padding = 0;
-		col.style.padding = 0;
 	}
 })();
 </script>
