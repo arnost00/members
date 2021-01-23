@@ -5,6 +5,7 @@
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
 require_once ("./common.inc.php");
+require_once('./cfg/_globals.php');
 
 require_once "./race_kateg_list.inc.php";
 
@@ -25,20 +26,20 @@ foreach ($kategorie_vypis as $kat_key => $kat_value)
 	{
 		if (IsSet($H[$kat_value][$zeb_value]) && $H[$kat_value][$zeb_value])
 		{
-			$kat_arr[] = 'H'.$kat_key.$zeb_key;
+			$kat_arr[] = GC_KATEG_M.$kat_key.$zeb_key;
 		}
 		if (IsSet($D[$kat_value][$zeb_value]) && $D[$kat_value][$zeb_value])
 		{
-			$kat_arr[] ='D'.$kat_key.$zeb_key;
+			$kat_arr[] = GC_KATEG_W.$kat_key.$zeb_key;
 		}
 	}
 	if (IsSet($H[$kat_value]['X']) && $H[$kat_value]['X'])
 	{
-		$kat_arr[] ='H'.$kat_key;
+		$kat_arr[] = GC_KATEG_M.$kat_key;
 	}
 	if (IsSet($D[$kat_value]['X']) && $D[$kat_value]['X'])
 	{
-		$kat_arr[] ='D'.$kat_key;
+		$kat_arr[] =GC_KATEG_W.$kat_key;
 	}
 
 }
