@@ -28,6 +28,7 @@ db_Connect();
 @$vysledek=query_db("SELECT * FROM ".TBL_RACE." where id=$id LIMIT 1");
 $zaznam=mysqli_fetch_array($vysledek);
 $kat_nf ='';
+$curr_kateg = $zaznam['kategorie'];
 
 DrawPageSubTitle('Vybraný závod');
 
@@ -93,7 +94,7 @@ echo($cl);
 <BUTTON onclick="javascript:close_popup();">Zpět</BUTTON>
 
 <br><br>Aktuální kategorie:<br>
-<span class="kategory_small_list"><? echo $zaznam['kategorie'];?></span><br>
+<span class="kategory_small_list"><? echo $curr_kateg;?></span><br>
 
 <?
 HTML_Footer();
