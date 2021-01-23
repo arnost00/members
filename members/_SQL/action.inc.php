@@ -13,6 +13,10 @@ else if ($action == 1)
 	_run_sql_queries($sql);
 	db_close();
 }
+else if ($action == 2)
+{
+	_list_sql_queries_copy_paste($sql);
+}
 else
 	echo '- nothing -'."\n";
 
