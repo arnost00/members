@@ -30,6 +30,32 @@ function _list_sql_queries (&$qlist)
 	echo '</code>';
 	echo '<HR>';
 	echo '<BUTTON type="button" onclick="window.location = \'./'.$this_file_name.'?action=1\'">Proveď aktualizaci</BUTTON>';
+	echo '<BUTTON type="button" onclick="window.location = \'./'.$this_file_name.'?action=2\'">Vypiš pro copy&paste</BUTTON>';
+}
+
+function _list_sql_queries_copy_paste (&$qlist)
+{
+	global $this_file_name;
+
+	echo '<U>SQL příkazy</U> :';
+	echo "<BR>\n";
+	echo "<BR>\n";
+	echo '<code>';
+	$idx = 0;
+	foreach($qlist as $line)
+	{
+		$idx++;
+		echo '<B>SQL QUERY ['.$idx.']</B>';
+		echo '<br />';
+		echo('<TEXTAREA id="o_'.$idx.'" name="output_'.$idx.'" cols="160" rows="5" readonly>');
+		echo($line);
+		echo('</TEXTAREA>');
+		echo "<BR>\n";
+	}
+	echo '</code>';
+	echo '<HR>';
+	echo '<BUTTON type="button" onclick="window.location = \'./'.$this_file_name.'?action=1\'">Proveď aktualizaci</BUTTON>';
+	echo '<BUTTON type="button" onclick="window.location = \'./'.$this_file_name.'?action=0\'">Vypiš normálně</BUTTON>';
 }
 
 function _run_sql_queries (&$qlist)
