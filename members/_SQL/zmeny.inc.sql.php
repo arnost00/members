@@ -31,6 +31,10 @@ function _list_sql_queries (&$qlist)
 	echo '<HR>';
 	echo '<BUTTON type="button" onclick="window.location = \'./'.$this_file_name.'?action=1\'">Proveď aktualizaci</BUTTON>';
 	echo '<BUTTON type="button" onclick="window.location = \'./'.$this_file_name.'?action=2\'">Vypiš pro copy&paste</BUTTON>';
+	if (function_exists('post_sql_function'))
+	{
+		echo ('<BR><BUTTON type="button" onclick="window.location = \'./'.$this_file_name.'?action=3\'">Proveď akci po aktualizaci SQL</BUTTON>');
+	}
 }
 
 function _list_sql_queries_copy_paste (&$qlist)

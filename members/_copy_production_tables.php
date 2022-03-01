@@ -8,7 +8,7 @@ require ('./cfg/_cfg.php');
 
 //nastavit vsem heslo na '12345' - 1 = True, 0 = False
 $set_default_password=1;
-$default_password=md5('12345');
+$default_password=password_hash(md5('12345'), PASSWORD_DEFAULT);
 $default_password_except = "'admin'";
 //nastavit vsem login stejny jako registracka
 //zatim nefunkcni, neni zadna rozumna logika, co tam dat

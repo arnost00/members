@@ -36,7 +36,7 @@ if (!IsLogged())
 		header("location: ".$g_baseadr."error.php?code=101");
 		exit;
 	}
-	if (md5($password) != $zaznam['heslo'])
+	if (!password_verify(md5($password), $zaznam['heslo']))
 	{
 		if ($g_log_loginfailed)
 		{	// log.

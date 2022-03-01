@@ -143,7 +143,7 @@ if (IsLoggedSmallAdmin())
 			$result=CS_DIFF_NEWPASS;
 		else
 		{
-			$hheslo = md5($nheslo);
+			$hheslo = password_hash(md5($nheslo), PASSWORD_DEFAULT);
 			$vysledek=query_db("INSERT INTO ".TBL_ACCOUNT." (id,id_users,login,heslo,policy_news,policy_regs,policy_mng,policy_adm,policy_fin,podpis) VALUES (null,'$id','$login','$hheslo','$news','$regs','$mng','$adm','$fin','$podpis')")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($vysledek == FALSE)
@@ -174,7 +174,7 @@ if (IsLoggedSmallAdmin())
 			$result=CS_DIFF_NEWPASS;
 		else
 		{
-			$hheslo = md5($nheslo);
+			$hheslo = password_hash(md5($nheslo), PASSWORD_DEFAULT);
 			$vysledek=query_db("UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id2'")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($vysledek == FALSE)
@@ -255,7 +255,7 @@ else if (IsLoggedManager())
 			$result=CS_DIFF_NEWPASS;
 		else
 		{
-			$hheslo = md5($nheslo);
+			$hheslo = password_hash(md5($nheslo), PASSWORD_DEFAULT);
 			$result=query_db("INSERT INTO ".TBL_ACCOUNT." (id,id_users,login,heslo,policy_news,policy_regs,policy_mng,podpis) VALUES (null,'$id','$login','$hheslo','$news',0,'$mng2','$podpis')")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == null)
@@ -286,7 +286,7 @@ else if (IsLoggedManager())
 			$result=CS_DIFF_NEWPASS;
 		else
 		{
-			$hheslo = md5($nheslo);
+			$hheslo = password_hash(md5($nheslo), PASSWORD_DEFAULT);
 			$result=query_db("UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id2'")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
@@ -323,7 +323,7 @@ else if (IsLoggedSmallManager())
 			$result=CS_DIFF_NEWPASS;
 		else
 		{
-			$hheslo = md5($nheslo);
+			$hheslo = password_hash(md5($nheslo), PASSWORD_DEFAULT);
 			$result=query_db("UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id2'")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)

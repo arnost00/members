@@ -17,8 +17,15 @@ else if ($action == 2)
 {
 	_list_sql_queries_copy_paste($sql);
 }
+else if ($action == 3)
+{
+	db_connect();
+	post_sql_function();
+	db_close();
+}
 else
 	echo '- nothing -'."\n";
+
 
 echo '<HR>';
 echo '<a href="./zmeny.sql.php">Zpět</a>';
