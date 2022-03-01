@@ -21,11 +21,10 @@ if (IsLogged())
 	case 1: // podpis & login
 		$login=correct_sql_string($login);
 		$podpis=correct_sql_string($podpis);
-		$heslo= md5($hesloo);
 		$vysledek=query_db("SELECT heslo FROM ".TBL_ACCOUNT." WHERE id = '$id' LIMIT 1");
 		$curr_usr=mysqli_fetch_array($vysledek);
 
-		if ($heslo != $curr_usr["heslo"])
+		if (!password_verify(md5($hesloo), $curr_usr['heslo']))
 			$result=CS_BAD_CUR_PASS;
 		else if ($podpis=="" || $login=="")
 			$result=CS_EMPTY_ITEM;
@@ -45,11 +44,9 @@ if (IsLogged())
 			$result=CS_EMPTY_ITEM;
 		else
 		{
-			$hheslo = md5($heslo);
-			$oldhheslo = md5($oldheslo);
 			$vysledek=query_db("SELECT heslo FROM ".TBL_ACCOUNT." WHERE id = '$id' LIMIT 1");
 			$curr_usr=mysqli_fetch_array($vysledek);
-			if ($oldhheslo != $curr_usr["heslo"])
+			if (!password_verify(md5($oldheslo), $curr_usr['heslo']))
 				$result=CS_BAD_CUR_PASS;
 			else if ($heslo == $oldheslo)
 				$result=CS_NODIFF_PASS;
@@ -59,6 +56,7 @@ if (IsLogged())
 				$result=CS_DIFF_NEWPASS;
 			else
 			{
+				$hheslo = password_hash(md5($heslo), PASSWORD_DEFAULT);
 				query_db("UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id'");
 				$result=CS_PASS_UPDATED;
 				SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id.' - pass');
