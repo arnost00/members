@@ -126,7 +126,7 @@ while ($zaznam=mysqli_fetch_assoc($vysledek_prihlaseni))
 	$id = $zaznam['id'];
 	
 	$row = array();
-	$row[] = $zaznam['sort_name'];
+	$row[] = "<A href=\"javascript:open_win('./view_address.php?id=".$zaznam["u_id"]."','')\" class=\"adr_name\">".$zaznam['sort_name']."</A>";
 	
 	$amount = $zaznam['amount'];
 	$amount>0?$sum_plus_amount+=$amount:$sum_minus_amount+=$amount;
@@ -173,7 +173,7 @@ while ($zaznam=mysqli_fetch_assoc($vysledek_platici))
 	$id = $zaznam['id'];
 	
 	$row = array();
-	$row[] = $zaznam['sort_name'];
+	$row[] = "<A href=\"javascript:open_win('./view_address.php?id=".$zaznam["u_id"]."','')\" class=\"adr_name\">".$zaznam['sort_name']."</A>";
 
 	$amount = $zaznam['amount'];
 	$amount>0?$sum_plus_amount+=$amount:$sum_minus_amount+=$amount;
@@ -233,7 +233,7 @@ while ($zaznam=mysqli_fetch_assoc($vysledek_neprihlaseni))
 	$id = $zaznam['id'];
 	
 	$row = array();
-	$row[] = $zaznam['sort_name'];
+	$row[] = "<A href=\"javascript:open_win('./view_address.php?id=".$zaznam["u_id"]."','')\" class=\"adr_name\">".$zaznam['sort_name']."</A>";
 	
 	$amount = $zaznam['amount'];
 	$input_amount = '<input type="number" id="am'.$i.'" name="am'.$i.'" value="'.$amount.'" size="5" maxlength="10" />';
