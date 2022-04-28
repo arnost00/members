@@ -93,7 +93,7 @@ if ($vysledek != FALSE && mysqli_num_rows($vysledek) > 0)
 		{
 			$row = array();
 			$row[] = $i++;
-			$row[] = "<A href=\"javascript:open_win('./view_address.php?id=".$zaznam["id"]."','')\" class=\"adr_name\">".$zaznam["prijmeni"]."</A>";
+			$row[] = "<A href=\"javascript:open_win_ex('./view_address.php?id=".$zaznam["id"]."','',500,540)\" class=\"adr_name\">".$zaznam["prijmeni"]."</A>";
 			$row[] = $zaznam['jmeno'];
 			$row[] = RegNumToStr($zaznam['reg']);
 			$class= ($zaznam['sum_amount']<0)? "red":"";

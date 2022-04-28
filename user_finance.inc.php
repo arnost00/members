@@ -40,7 +40,8 @@ $data_tbl->set_header_col($col++,'Poznámka',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Zapsal',ALIGN_LEFT);
 if ($g_enable_finances_claim)
 	$data_tbl->set_header_col($col++,'Reklamace',ALIGN_LEFT);
-isset($finance_readonly)?"":IsLoggedFinance()?$data_tbl->set_header_col($col++,'Možnosti',ALIGN_LEFT):"";
+if (!isset($finance_readonly) && IsLoggedFinance())
+	$data_tbl->set_header_col($col++,'Možnosti',ALIGN_LEFT);
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
@@ -61,7 +62,8 @@ while ($zaznam=mysqli_fetch_array($vysledek_historie))
 	$row[] = ($zaznam['name'] == null) ? "<<<".$zaznam['id_editor'].">>>":$zaznam['name'];
 	if ($g_enable_finances_claim)
 		$row[] = '<A HREF="javascript:open_win(\'./claim.php?payment_id='.$zaznam['fin_id'].'\',\'\')">Problém?</A>';
-	isset($finance_readonly)?"":IsLoggedFinance()?$row[]=" <a href=\"?change=change&trn_id=".$zaznam['fin_id']."\">Změnit</a>&nbsp;/&nbsp;<a href=\"?storno=storno&trn_id=".$zaznam['fin_id']."\">Storno</a>":"";
+	if (!isset($finance_readonly) && IsLoggedFinance())
+		$row[]=" <a href=\"?change=change&trn_id=".$zaznam['fin_id']."\">Změnit</a>&nbsp;/&nbsp;<a href=\"?storno=storno&trn_id=".$zaznam['fin_id']."\">Storno</a>";
 	
 	$sum_amount += $zaznam['amount'];
 	

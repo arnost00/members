@@ -126,7 +126,7 @@ while ($zaznam=mysqli_fetch_assoc($vysledek_prihlaseni))
 	$id = $zaznam['id'];
 	
 	$row = array();
-	$row[] = "<A href=\"javascript:open_win('./view_address.php?id=".$zaznam["u_id"]."','')\" class=\"adr_name\">".$zaznam['sort_name']."</A>";
+	$row[] = "<A href=\"javascript:open_win_ex('./view_address.php?id=".$zaznam["u_id"]."','',500,540)\" class=\"adr_name\">".$zaznam['sort_name']."</A>";
 	
 	$amount = $zaznam['amount'];
 	$amount>0?$sum_plus_amount+=$amount:$sum_minus_amount+=$amount;
