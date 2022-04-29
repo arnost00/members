@@ -428,7 +428,7 @@ function form_filter_racelist($page,&$filterA,&$filterB,&$filterC,&$filterD)
 <form>
 Typ akcí&nbsp;
 <?
-	echo('<select name="fD" onchange="javascript:window.open('.$urlD.'+this.options[this.selectedIndex].value,\'_top\')">'."\n");
+	echo('<select name="fD" onchange="javascript:location.replace('.$urlD.'+this.options[this.selectedIndex].value,\'_top\')">'."\n");
 	echo('<option value="0"'.(($filterD == 0)? ' selected' : '').'>všechny</option>'."\n");
 	$ii = 0;
 	foreach ( $g_racetype0 as $key => &$value )
@@ -443,7 +443,7 @@ Typ akcí&nbsp;
 <form>
 Typ sportů&nbsp;
 <?
-	echo('<select name="fA" onchange="javascript:window.open('.$urlA.'+this.options[this.selectedIndex].value,\'_top\')">'."\n");
+	echo('<select name="fA" onchange="javascript:location.replace('.$urlA.'+this.options[this.selectedIndex].value,\'_top\')">'."\n");
 	for($ii=0; $ii<count($filter_arr_niceA); $ii++)
 	{
 		echo('<option value="'.$ii.'"'.(($filterA == $ii)? ' selected' : '').'>'.$filter_arr_niceA[$ii].'</option>'."\n");
@@ -455,7 +455,7 @@ Typ sportů&nbsp;
 <form>
 Zařazení závodů&nbsp;
 <?
-	echo('<select name="fB" onchange="javascript:window.open('.$urlB.'+this.options[this.selectedIndex].value,\'_top\')">'."\n");
+	echo('<select name="fB" onchange="javascript:location.replace('.$urlB.'+this.options[this.selectedIndex].value,\'_top\')">'."\n");
 	echo('<option value="0"'.(($filterB == 0)? ' selected' : '').'>všechny</option>'."\n");
 	for($ii=0; $ii<$g_zebricek_cnt; $ii++)
 	{
@@ -465,8 +465,8 @@ Zařazení závodů&nbsp;
 </select>
 </form>
 </td><td>&nbsp;&nbsp;</td><td valign="top">
-<INPUT TYPE="checkbox" NAME="fC" onClick="javascript:window.open(<? echo($urlC);?>+Number(this.checked),'_top')" id="fC" value="1"<? if ($filterC == 1) echo(' checked');?>><label for="fC">Zobrazit staré závody</label>
-<INPUT TYPE="checkbox" NAME="fC2" onClick="javascript:window.open(<? echo($urlC);?>+Number(this.checked*2),'_top')" id="fC2" value="2"<? if ($filterC == 2) echo(' checked');?>><label for="fC2">jen cca měsíc zpět</label>
+<INPUT TYPE="checkbox" NAME="fC" onClick="javascript:location.replace(<? echo($urlC);?>+Number(this.checked),'_top')" id="fC" value="1"<? if ($filterC == 1) echo(' checked');?>><label for="fC">Zobrazit staré závody</label>
+<INPUT TYPE="checkbox" NAME="fC2" onClick="javascript:location.replace(<? echo($urlC);?>+Number(this.checked*2),'_top')" id="fC2" value="2"<? if ($filterC == 2) echo(' checked');?>><label for="fC2">jen cca měsíc zpět</label>
 </td></tr>
 </table>
 <?
