@@ -86,7 +86,7 @@ if ($num_rows > 0)
 		$row[] = GetRaceLinkHTML($zaznam['odkaz']);
 		if (!$prihl_finish)
 		{
-			$row[] = "<A HREF=\"javascript:open_win('./race_regs_1.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\">Př-1</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_all.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\">Př-V</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."&select=1','')\"><span class=\"TextAlertExpLight\">Zč</span></A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
+			$row[] = "<A HREF=\"javascript:open_win('./race_regs_1.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."&show_ed=1','')\">Př-1</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_all.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\">Př-V</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."&select=1','')\"><span class=\"TextAlertExpLight\">Zč</span></A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
 		}
 		else
 		{

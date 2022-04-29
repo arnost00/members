@@ -36,6 +36,9 @@ function zmen_kat(kat)
 
 $gr_id = (IsSet($gr_id) && is_numeric($gr_id)) ? (int)$gr_id : 0;
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+$show_ed = (IsSet($show_ed) && is_numeric($show_ed)) ? (int)$show_ed : 0;
+
+$show_ed_change_url = $g_baseadr.'race_regs_1.php?gr_id='.$gr_id.'&id='.$id.'&show_ed='.(($show_ed == 1) ? 0 : 1);
 
 db_Connect();
 
@@ -65,8 +68,8 @@ Přihlášení člena - se provede zapsáním kategorie pro vybraného člena.<B
 Odhlášení člena - se provede vymazáním kategorie (prázné textové pole) pro vybraného člena.<BR>
 Změna kategorie - se provede změnou textového pole s kategorií pro vybraného člena.<BR>
 </p>
-<FORM METHOD=POST ACTION="./race_regs_1_exc.php?gr_id=<?echo $gr_id;?>&id=<?echo $id;?>" name="form1" onReset="javascript:aktu_line();">
 <?
+echo('<FORM METHOD=POST ACTION="./race_regs_1_exc.php?gr_id='.$gr_id.'&id='.$id.'&show_ed='.$show_ed.'" name="form1" onReset="javascript:aktu_line();">'."\n");
 
 $sub_query = (IsLoggedRegistrator() || IsLoggedManager()) ? '' : ' AND '.TBL_USER.'.chief_id = '.$usr->user_id.' OR '.TBL_USER.'.id = '.$usr->user_id;
 
@@ -109,11 +112,20 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 				continue;
 			}
 		}
+		if ($show_ed == 0 && $zaznam['kat'] != NULL)
+			continue;
 		echo '<option value="'.$zaznam['id'].'">'.$zaznam['prijmeni'].' '.$zaznam['jmeno'].' ['.RegNumToStr($zaznam['reg'])."]</option>\n";
 		$i++;
 	}
 }
-echo '</SELECT>&nbsp;*</TD>'."\n";
+echo '</SELECT>&nbsp;*&nbsp;&nbsp;';
+if (!IsLoggedSmallManager())
+{
+	echo '<input type="checkbox" id="show_ed" name="show_ed" value="1" onclick="javascript:location.replace(\''.$show_ed_change_url.'\');"'.(($show_ed == 1) ? ' checked' : '').'>';
+	echo '<label for="show_ed">Zobrazit již přihlášené</label><br>';
+}
+echo '</TD>'."\n";
+
 echo'<SCRIPT LANGUAGE="JavaScript">'."\n";
 echo'//<!--'."\n";
 
@@ -307,50 +319,46 @@ echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
 
-@$vysledek=query_db("SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod=$id ORDER BY id");
+@$vysledek=query_db("SELECT z.*, u.jmeno, u.prijmeni FROM ".TBL_ZAVXUS." z, ".TBL_USER." u WHERE z.id_zavod=$id AND z.id_user = u.id ORDER BY id");
+//SELECT zavxus.*, users.jmeno, users.prijmeni FROM zavxus, users WHERE id_zavod=1 AND zavxus.id_user = users.id ORDER BY id
 
 $i=0;
 $trans=0;
 $ubyt=0;
 while ($zaznam=mysqli_fetch_array($vysledek))
 {
-	@$vysledek1=query_db("SELECT * FROM ".TBL_USER." WHERE id=$zaznam[id_user] LIMIT 1");
-	$zaznam1=mysqli_fetch_array($vysledek1);
-	if ($zaznam1)
-	{
-		$i++;
+	$i++;
 
-		$row = array();
-		$row[] = $i.'<!-- '.$zaznam['id'].' -->';
-		$row[] = $zaznam1['jmeno'];
-		$row[] = $zaznam1['prijmeni'];
-		$row[] = '<B>'.$zaznam['kat'].'</B>';
-		if($is_spol_dopr_on)
+	$row = array();
+	$row[] = $i.'<!-- '.$zaznam['id'].' -->';
+	$row[] = $zaznam['jmeno'];
+	$row[] = $zaznam['prijmeni'];
+	$row[] = '<B>'.$zaznam['kat'].'</B>';
+	if($is_spol_dopr_on)
+	{
+		if ($zaznam["transport"])
 		{
-			if ($zaznam["transport"])
-			{
-				$row[] = '<B>X</B>';
-				$trans++;
-			}
-			else
-				$row[] = '';
+			$row[] = '<B>X</B>';
+			$trans++;
 		}
-		if($is_spol_ubyt_on)
-		{
-			if ($zaznam["ubytovani"])
-			{
-				$row[] = '<B>X</B>';
-				$ubyt++;
-			}
-			else
-				$row[] = '';
-		}
-		if($zaznam_z['prihlasky'] > 1)
-			$row[] = $zaznam['termin'];
-		$row[] = $zaznam['pozn'];
-		$row[] = $zaznam['pozn_in'];
-		echo $data_tbl->get_new_row_arr($row)."\n";
+		else
+			$row[] = '';
 	}
+	if($is_spol_ubyt_on)
+	{
+		if ($zaznam["ubytovani"])
+		{
+			$row[] = '<B>X</B>';
+			$ubyt++;
+		}
+		else
+			$row[] = '';
+	}
+	if($zaznam_z['prihlasky'] > 1)
+		$row[] = $zaznam['termin'];
+	$row[] = $zaznam['pozn'];
+	$row[] = $zaznam['pozn_in'];
+	echo $data_tbl->get_new_row_arr($row)."\n";
 }
 echo $data_tbl->get_footer()."\n";
 

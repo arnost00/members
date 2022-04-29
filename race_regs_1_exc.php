@@ -17,13 +17,14 @@ require_once ("./common_race.inc.php");
 
 $gr_id = (IsSet($gr_id) && is_numeric($gr_id)) ? (int)$gr_id : 0;
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+$show_ed = (IsSet($show_ed) && is_numeric($show_ed)) ? (int)$show_ed : 0;	// only for resend
 $user_id = (IsSet($user_id) && is_numeric($user_id)) ? (int)$user_id : 0;
 $kateg = (IsSet($kateg)) ? $kateg : '';
 $pozn = (IsSet($pozn)) ? $pozn : '';
 $pozn2 =(IsSet($pozn2)) ? $pozn2 : '';
 $new_termin = (IsSet($new_termin) && is_numeric($new_termin)) ? (int)$new_termin : 0;
-$transport = (IsSet($transport)) ? 1 : null;
-$ubytovani = (IsSet($ubytovani)) ? 1 : null;
+$transport = (IsSet($transport)) ? 1 : 0;
+$ubytovani = (IsSet($ubytovani)) ? 1 : 0;
 
 db_Connect();
 
@@ -49,8 +50,8 @@ if($is_termin_show_on && $new_termin != 0)
 if ($zaznam_z['prihlasky'] <= 1 && $is_registrator_on && $termin == 0)
 	$termin = 1;
 
-$transport = ($is_spol_dopr_on) ? $transport : null;
-$ubytovani = ($is_spol_ubyt_on) ? $ubytovani : null;
+$transport = ($is_spol_dopr_on) ? $transport : 0;
+$ubytovani = ($is_spol_ubyt_on) ? $ubytovani : 0;
 
 if($termin != 0)
 {
@@ -97,8 +98,8 @@ if($termin != 0)
 }
 //echo " -".$kateg." u clena ".$user_id." a s pozn.: '".$pozn."'<BR>";
 if ($gr_id != 0)
-	header("location: ".$g_baseadr."race_regs_1.php?gr_id=".$gr_id."&id=".$id);
+	header('location: '.$g_baseadr.'race_regs_1.php?gr_id='.$gr_id.'&id='.$id.'&show_ed='.$show_ed);
 else
-	header("location: ".$g_baseadr."race_regs_1.php?id=".$id);
+	header('location: '.$g_baseadr.'race_regs_1.php?id='.$id.'&show_ed='.$show_ed);
 exit;
 ?>
