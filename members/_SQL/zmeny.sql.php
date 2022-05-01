@@ -13,31 +13,6 @@ function AddZmenyFile($version)
 //	seznam zmenovych souboru
 //#############################################################################
 
-AddZmenyFile('1.6.4.39');
-AddZmenyFile('1.6.5.41');
-AddZmenyFile('1.7.4.51');
-AddZmenyFile('1.7.5.53');
-AddZmenyFile('1.7.7.57');
-AddZmenyFile('1.8.1.61');
-AddZmenyFile('1.8.3.65');
-AddZmenyFile('1.8.3.65-post');
-AddZmenyFile('1.8.4.67');
-AddZmenyFile('2.0.1.75');
-AddZmenyFile('2.0.6.85');
-AddZmenyFile('2.1.0.88');
-AddZmenyFile('2.1.0.89');
-AddZmenyFile('2.1.0.90');
-AddZmenyFile('2.2.0.309');
-AddZmenyFile('2.2.0.319');
-AddZmenyFile('2.2.0.358');
-AddZmenyFile('2.2.0.389');
-AddZmenyFile('2.2.0.406');
-AddZmenyFile('2.2.0.409');
-AddZmenyFile('2.4.1.417');
-AddZmenyFile('2.4.1.423');
-AddZmenyFile('2.4.1.428');
-AddZmenyFile('2.5.4.451');
-AddZmenyFile('2.9.9.455');
 AddZmenyFile('3.0.5.482');
 AddZmenyFile('3.0.9.502');
 AddZmenyFile('3.0.14.526');
