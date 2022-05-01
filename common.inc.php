@@ -386,8 +386,11 @@ function HTML_Header($title,$style_file = '', $body_addons = '',$head_addons = '
 
 	require_once ('./version.inc.php');
 
+
+// <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"> - old
+// <!DOCTYPE html> - newer, some css issues (padding ??)
 ?>
-<!DOCTYPE html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
