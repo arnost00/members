@@ -14,26 +14,33 @@ function _print_upd_info ()
 	echo '<HR>';
 }
 
-function _list_sql_queries (&$qlist)
+function _list_sql_queries (&$qlist, $only_post_actions = false)
 {
-	global $this_file_name;
+	global $this_file_name, $post_sql_function_title;
 
-	echo '<U>SQL příkazy</U> :';
-	echo "<BR>\n";
-	echo "<BR>\n";
-	echo '<code>';
-	foreach($qlist as $line)
+	if (!$only_post_actions)
 	{
-		echo '<B>SQL QUERY</B> = "'.$line.'"';
+		echo '<U>SQL příkazy</U> :';
 		echo "<BR>\n";
+		echo "<BR>\n";
+		echo '<code>';
+		foreach($qlist as $line)
+		{
+			echo '<B>SQL QUERY</B> = "'.$line.'"';
+			echo "<BR>\n";
+		}
+		echo '</code>';
+		echo '<HR>';
+		echo '<BUTTON type="button" onclick="window.location = \'./'.$this_file_name.'?action=1\'">Proveď aktualizaci</BUTTON>';
+		echo '<BUTTON type="button" onclick="window.location = \'./'.$this_file_name.'?action=2\'">Vypiš pro copy&paste</BUTTON>';
 	}
-	echo '</code>';
-	echo '<HR>';
-	echo '<BUTTON type="button" onclick="window.location = \'./'.$this_file_name.'?action=1\'">Proveď aktualizaci</BUTTON>';
-	echo '<BUTTON type="button" onclick="window.location = \'./'.$this_file_name.'?action=2\'">Vypiš pro copy&paste</BUTTON>';
+	else
+		echo '<HR>';
 	if (function_exists('post_sql_function'))
 	{
 		echo ('<BR><BUTTON type="button" onclick="window.location = \'./'.$this_file_name.'?action=3\'">Proveď akci po aktualizaci SQL</BUTTON>');
+		if ($post_sql_function_title)
+			echo(' - '.$post_sql_function_title.'<BR>');
 	}
 }
 

@@ -11,6 +11,7 @@ else if ($action == 1)
 {
 	db_connect();
 	_run_sql_queries($sql);
+	_list_sql_queries($sql, true);
 	db_close();
 }
 else if ($action == 2)
