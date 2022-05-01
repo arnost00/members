@@ -38,6 +38,7 @@ function post_sql_function()
 			echo ('Aktualizování id - '.$zaznam['id'].'<br>');
 	}
 }
+$post_sql_function_title = 'Převede zápis hesel na nový formát - spustit pouze 1x !!';
 
 require_once ('action.inc.php');
 ?>
