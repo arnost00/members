@@ -49,7 +49,7 @@ else
 ?>
 Provede vymazání typu oddílových příspěvků u všech členů.<br><br>
 <form method=post action="adm_reset_ft.php?accept=1">
-<INPUT TYPE="submit" VALUE="Prověd reset"> <BUTTON onclick="javascript:close_popup();">Zavřít okno</BUTTON>
+<INPUT TYPE="submit" VALUE="Proveď reset"> <BUTTON onclick="javascript:close_popup();">Zavřít okno</BUTTON>
 </form>
 <?
 }

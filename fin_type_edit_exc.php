@@ -43,7 +43,7 @@ if (IsLoggedFinance())
 				die ("Nepodařilo se vložit typ příspěvku.");
 		}
 	}
-	header('location: '.$g_baseadr.'index.php?id=800&subid=4');
+	header('location: '.$g_baseadr.'index.php?id='._FINANCE_GROUP_ID_.'&subid=4');
 }
 else
 {

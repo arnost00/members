@@ -23,7 +23,7 @@ HR {
 	height : 2px;
 	color: <? echo $g_colors['body_hr_line']; ?>;
 	background-color: <? echo $g_colors['body_hr_line']; ?>;
-	border: 0;
+	border: 0px;
 }
 
 HR.nav {
@@ -31,7 +31,7 @@ HR.nav {
 	height : 3px;
 	color: <? echo $g_colors['nav_hr_line']; ?>;
 	background-color: <? echo $g_colors['nav_hr_line']; ?>;
-	border: 0;
+	border: 0px;
 }
 
 .HdrClubName {
@@ -165,8 +165,8 @@ A.NaviColSm:HOVER {
 	border-left:2px dotted <? echo $g_colors['nav_item_selected_border']; ?>;
 	border-right:2px dotted <? echo $g_colors['nav_item_selected_border']; ?>;
 	background-color : <? echo $g_colors['nav_bgcolor_item_selected']; ?>;
-	padding-left: 4;
-	padding-right: 4;
+	padding-left: 4px;
+	padding-right: 4px;
 }
 
 .NaviGroup {

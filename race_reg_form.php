@@ -123,7 +123,7 @@ Způsob výpisu:<input type="radio" name="ff" value="0" id="radio_ff0" checked="
 	}
 ?>
 </FORM>
-<BUTTON onclick="javascript:close_popup();">Zavři</BUTTON>
+<BR /><BUTTON onclick="javascript:close_popup();">Zavři</BUTTON>
 <?//------------------------------?>
 <br><br>
 <FORM METHOD="POST" ACTION="race_reg_form.php?id_zav=<? echo($id_zav); ?>">

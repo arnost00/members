@@ -39,12 +39,12 @@ DrawPageSubTitle('Úprava');
 
 <FORM METHOD="POST" ACTION="./race_boss_exc.php?id=<?echo $id?>">
 
-<TABLE width="90%">
+<TABLE>
 <TR>
-	<TD width="130" align="right" rowspan="4" valign="top">Vedoucí</TD>
-	<TD width="5" rowspan="4"></TD>
+	<TD width="130" align="right" valign="top">Vedoucí</TD>
+	<TD width="5"></TD>
 	<TD>
-		<select name='boss'>
+		<select name='boss' size="15">
 <?
 	echo("<option value='0'".(($zaznam['vedouci'] == 0)? ' SELECTED' : '').">- - - -</option>");
 	while ($zaznamU=mysqli_fetch_array($vysledekU))
@@ -58,12 +58,9 @@ DrawPageSubTitle('Úprava');
 ?>
 		</select>
 	</TD>
+	<TD width="5"></TD>
+	<TD align="left" valign="top"><INPUT TYPE="submit" VALUE="Odeslat údaje" valign="top"></TD>
 </TR>
-<TR><TD></TD></TR>
-<TR>
-	<TD><INPUT TYPE="submit" VALUE="Odeslat údaje"></TD>
-</TR>
-<TR><TD></TD></TR>
 </TABLE>
 
 </FORM>

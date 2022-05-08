@@ -469,6 +469,7 @@ Zařazení závodů&nbsp;
 <INPUT TYPE="checkbox" NAME="fC2" onClick="javascript:location.replace(<? echo($urlC);?>+Number(this.checked*2),'_top')" id="fC2" value="2"<? if ($filterC == 2) echo(' checked');?>><label for="fC2">jen cca měsíc zpět</label>
 </td></tr>
 </table>
+<br />
 <?
 	return $result;
 }
