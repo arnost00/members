@@ -22,7 +22,7 @@ $result=query_db("UPDATE ".TBL_USER." SET finance_type='$type' WHERE id='$user_i
 if ($result == FALSE)
 	die ("Nepodařilo se změnit údaje o závodě.");
 
-header('location: '.$g_baseadr.'?id=800&subid=1');
+header('location: '.$g_baseadr.'?id='._FINANCE_GROUP_ID_.'&subid=1');
 
 ?>
 

@@ -92,7 +92,7 @@ echo $data_tbl->get_footer()."\n";
 }
 ?>
 <BR><hr><BR>
-<A HREF="index.php?id=800&subid=1">Zpět</A><BR>
+<A HREF="index.php?id=<? echo _FINANCE_GROUP_ID_;?>&subid=1">Zpět</A><BR>
 <BR><hr><BR>
 </CENTER>
 </TD>

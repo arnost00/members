@@ -88,8 +88,8 @@ echo($cl);
 </span>
 <BR>
 
-<br><INPUT TYPE="submit" VALUE="Odeslat změny kategorií">&nbsp;&nbsp;
-</FORM>
+<br><INPUT TYPE="submit" VALUE="Odeslat změny kategorií">
+</FORM><br />
 
 <BUTTON onclick="javascript:close_popup();">Zpět</BUTTON>
 

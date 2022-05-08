@@ -51,19 +51,19 @@ class html_table_base
 	//__________________________________________________________________
 	protected function _get_row_css($align,$pLR,$pTB)
 	{	// inner class function
-		return 'td.'.$this->class_name.$align.' { padding-left: '.$pLR.'; padding-right: '.$pLR.'; padding-top: '.$pTB.'; padding-bottom: '.$pTB.(($align != '')?'; text-align: '.$align:'').'; } ';
+		return 'td.'.$this->class_name.$align.' { padding-left: '.$pLR.'px; padding-right: '.$pLR.'px; padding-top: '.$pTB.'px; padding-bottom: '.$pTB.'px'.(($align != '')?'; text-align: '.$align:'').'; } ';
 	}
 
 	//__________________________________________________________________
 	protected function _get_header_css($align,$pLR,$pTB)
 	{	// inner class function
-		return 'td.'.$this->class_name.'_header_'.$align.' { vertical-align: middle; padding-left: '.$pLR.'; padding-right: '.$pLR.'; padding-top: '.$pTB.'; padding-bottom: '.$pTB.'; text-align: '.$align.'; color : '.$this->tc_header.'; font-weight : bold; } ';
+		return 'td.'.$this->class_name.'_header_'.$align.' { vertical-align: middle; padding-left: '.$pLR.'px; padding-right: '.$pLR.'px; padding-top: '.$pTB.'px; padding-bottom: '.$pTB.'px; text-align: '.$align.'; color : '.$this->tc_header.'; font-weight : bold; } ';
 	}
 
 	//__________________________________________________________________
 	protected function _get_misc_css($name,$pLR,$pTB,$align,$additional)
 	{	// inner class function
-		return 'td.'.$this->class_name.$name.' { padding-left: '.$pLR.'; padding-right: '.$pLR.'; padding-top: '.$pTB.'; padding-bottom: '.$pTB.'; text-align: '.$align.'; '.$additional.' } ';
+		return 'td.'.$this->class_name.$name.' { padding-left: '.$pLR.'px; padding-right: '.$pLR.'px; padding-top: '.$pTB.'px; padding-bottom: '.$pTB.'px; text-align: '.$align.'; '.$additional.' } ';
 	}
 
 	//__________________________________________________________________

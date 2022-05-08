@@ -29,11 +29,11 @@ function confirm_entry_unlock(name) {
 </script>
 
 <form action="">
-<input type="hidden" name="id" value="800"/>
+<input type="hidden" name="id" value="<? echo _FINANCE_GROUP_ID_;?>"/>
 <input type="hidden" name="subid" value="1"/>
 <input type="text" class="tiny-date-picker" name="dateTo" id="dateTo" value="<?=isset($_GET['dateTo'])?$_GET['dateTo']:""?>"/>
-<input type="submit" value="Zobraz zustatky k datu"/>
-</form>
+<input type="submit" value="Zobraz zůstatky k datu"/>
+</form><br />
 <script src="tiny-date-picker.js"></script>
 <script>
       TinyDatePicker('.tiny-date-picker', {
@@ -49,7 +49,7 @@ require_once('./csort.inc.php');
 $sc = new column_sort_db();
 $sc->add_column('sort_name','');
 $sc->add_column('reg','');
-$sc->set_url('index.php?id=800&subid=1',true);
+$sc->set_url('index.php?id='._FINANCE_GROUP_ID_.'&subid=1',true);
 $sub_query = $sc->get_sql_string();
 
 $finance_dateTo_condition = isset($_GET["dateTo"])?' and date <= "'.$_GET["dateTo"].'"':"";

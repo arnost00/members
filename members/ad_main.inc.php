@@ -4,14 +4,6 @@ if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 DrawPageTitle('Administrace stránek oddílu');
 ?>
 <CENTER>
-
-<A HREF="index.php?id=<? echo (_ADMIN_GROUP_ID_); ?>&subid=2" class="NaviColSm">Přihlášky na závody</A><BR>
-<A HREF="index.php?id=<? echo (_ADMIN_GROUP_ID_); ?>&subid=5" class="NaviColSm">Editace závodů</A><BR><BR>
-<A HREF="index.php?id=<? echo (_ADMIN_GROUP_ID_); ?>&subid=4" class="NaviColSm">Náhled na účty</A><BR>
-<A HREF="index.php?id=<? echo (_ADMIN_GROUP_ID_); ?>&subid=6" class="NaviColSm">Výpis změn v databázi</A><BR>
-
-<BR><hr>
-
 <? DrawPageSubTitle('Speciální pomocné "funkce"'); ?>
 <B>! Používejte jen pokud víte co činíte !</B><BR>
 
