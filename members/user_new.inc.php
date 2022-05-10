@@ -113,8 +113,8 @@ if ($self_edit)
 else
 {
 	$value = '<select name=\'poh\'>';
-	$value .= '<option value=\''.GC_KATEG_M.'\''.(($zaznam["poh"]==GC_KATEG_M) ? ' SELECTED' : '').'>'.GC_KATEG_M.'</option>';
-	$value .= '<option value=\''.GC_KATEG_W.'\''.(($zaznam["poh"]==GC_KATEG_W) ? ' SELECTED' : '').'>'.GC_KATEG_W.'</option>';
+	$value .= '<option value=\'H\''.(($zaznam["poh"]==GC_KATEG_M) ? ' SELECTED' : '').'>'.GC_KATEG_M.'</option>';
+	$value .= '<option value=\'D\''.(($zaznam["poh"]==GC_KATEG_W) ? ' SELECTED' : '').'>'.GC_KATEG_W.'</option>';
 	$value .= '</select>';
 	echo $data_tbl->get_new_row('Pohlavi', $value);
 }
