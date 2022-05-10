@@ -129,12 +129,12 @@ class ORIS_Export
 			$str .= $zaznam['prijmeni'].SEMICOLON_CHAR;
 			$str .= $zaznam["datum"].SEMICOLON_CHAR;
 			if ($zaznam["rc"] == '')
-				$str .= $this->SQLDatumToRc($zaznam["datum"],$zaznam["poh"] == GC_KATEG_W).'/0000';
+				$str .= $this->SQLDatumToRc($zaznam["datum"],$zaznam["poh"] == 'D').'/0000';
 			else
 				$str .= substr($zaznam["rc"],0,6).'/'.substr($zaznam["rc"],6);
 			$str .= SEMICOLON_CHAR;
 			$str .= $zaznam['narodnost'].SEMICOLON_CHAR;
-			$str .= ($zaznam["poh"] == GC_KATEG_W) ? 'F' : 'M';
+			$str .= ($zaznam["poh"] == 'D') ? 'F' : 'M';
 			$str .= SEMICOLON_CHAR;
 			$str .= $zaznam["si_chip"];
 			$text .= $this->shortcut.$str;
