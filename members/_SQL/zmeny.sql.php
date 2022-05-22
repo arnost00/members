@@ -45,7 +45,7 @@ if ($action == 0)
 else if ($action == 1)
 {	// optimalization
 		db_Connect();
-		$line = 'OPTIMIZE TABLE '.TBL_RACE.', '.TBL_NEWS.', '.TBL_USER.', '.TBL_ACCOUNT.', '.TBL_ZAVXUS.', '.TBL_MODLOG;
+		$line = 'OPTIMIZE TABLE '.TBL_RACE.', '.TBL_NEWS.', '.TBL_USER.', '.TBL_ACCOUNT.', '.TBL_ZAVXUS.', '.TBL_MODLOG.', '.TBL_MAILINFO.', '.TBL_FINANCE.', '.TBL_CLAIM.', '.TBL_FINANCE_TYPES.', '.TBL_CATEGORIES_PREDEF;
 		echo '<B>SQL QUERY</B> = "'.$line.'"';
 		echo "<BR>\n";
 		$result=mysqli_query($db_conn, $line);
@@ -73,7 +73,7 @@ else if ($action == 1)
 else if ($action == 2)
 {	// repair
 		db_Connect();
-		$line = 'REPAIR TABLE '.TBL_RACE.', '.TBL_NEWS.', '.TBL_USER.', '.TBL_ACCOUNT.', '.TBL_ZAVXUS.', '.TBL_MODLOG;
+		$line = 'REPAIR TABLE '.TBL_RACE.', '.TBL_NEWS.', '.TBL_USER.', '.TBL_ACCOUNT.', '.TBL_ZAVXUS.', '.TBL_MODLOG.', '.TBL_MAILINFO.', '.TBL_FINANCE.', '.TBL_CLAIM.', '.TBL_FINANCE_TYPES.', '.TBL_CATEGORIES_PREDEF;
 		echo '<B>SQL QUERY</B> = "'.$line.'"';
 		echo "<BR>\n";
 		$result=mysqli_query($db_conn, $line);
