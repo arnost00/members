@@ -98,7 +98,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		if($zaznam['kat'] != NULL)
 		{
-			if($zaznam['termin'] == $termin || $is_termin_show_on)
+			if($zaznam['termin'] == $termin || $is_termin_show_on || $is_registrator_on)
 			{
 				$us_rows[$i][0] = $zaznam['kat'];
 				$us_rows[$i][1] = $zaznam['pozn'];
