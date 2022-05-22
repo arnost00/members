@@ -98,7 +98,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		if($zaznam['kat'] != NULL)
 		{
-			if($zaznam['termin'] == $termin || $is_termin_show_on || $is_registrator_on)
+			if(($zaznam['termin'] == $termin || $is_termin_show_on || $is_registrator_on) && $show_ed == 1 )
 			{
 				$us_rows[$i][0] = $zaznam['kat'];
 				$us_rows[$i][1] = $zaznam['pozn'];
@@ -112,8 +112,6 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 				continue;
 			}
 		}
-		if ($show_ed == 0 && $zaznam['kat'] != NULL)
-			continue;
 		echo '<option value="'.$zaznam['id'].'">'.$zaznam['prijmeni'].' '.$zaznam['jmeno'].' ['.RegNumToStr($zaznam['reg'])."]</option>\n";
 		$i++;
 	}
