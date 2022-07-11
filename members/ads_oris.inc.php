@@ -17,7 +17,7 @@ require_once('./oris_user.class.php');
 $sc = new column_sort_db();
 $sc->add_column('sort_name','');
 $sc->add_column('reg','');
-$sc->set_url('index.php?id=700&subid=1',true);
+$sc->set_url('index.php?id=700&subid=2',true);
 $sub_query = $sc->get_sql_string();
 
 $query = "SELECT u.id,u.prijmeni,u.jmeno,u.reg,u.si_chip as si,u.hidden,u.entry_locked, a.locked, a.policy_news, a.policy_regs, a.policy_mng, a.policy_adm, a.policy_fin, a.id aid FROM ".TBL_USER." u"
