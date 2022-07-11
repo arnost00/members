@@ -6,7 +6,7 @@ define('SYSTEM_AUTORS','Arnošt, Kenia a LuF');
 
 function GetCodeVersion()
 {
-	return "v3.3.2.604 dbg";
+	return "v3.3.2.608";
 }
 
 function GetDevelopYears()
