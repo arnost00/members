@@ -180,6 +180,9 @@ if($g_is_system_running || IsLoggedAdmin())
 					case 1:
 						require_once "./ads_directory.inc.php";
 						break;
+					case 2:
+						require_once "./ads_oris.inc.php";
+						break;
 					default:
 						require_once "./news.inc.php";
 				}

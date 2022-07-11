@@ -123,6 +123,7 @@ function DrawMenuGroupHeader($name)
 	{
 		DrawMenuGroupHeader('Menu&nbsp;správce');
 		DrawMenuItem('Členská základna',_SMALL_ADMIN_GROUP_ID_,1);
+		DrawMenuItem('Členové vs. ORIS',_SMALL_ADMIN_GROUP_ID_,2);
 	}
 	if(IsLoggedFinance() && $g_enable_finances)
 	{
