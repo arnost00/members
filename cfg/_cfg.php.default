@@ -18,6 +18,7 @@
 //==================================================================
 // adresa db serveru
 $g_dbserver='localhost';
+$g_dbport='3306';
 
 // uzivatelske informace
 $g_dbuser='root';
