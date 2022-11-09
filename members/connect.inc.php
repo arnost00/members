@@ -9,9 +9,9 @@ $db_conn = null;
 
 function db_Connect ($silent = false)
 {
-	global $g_dbserver,$g_dbuser,$g_dbpass,$g_dbname,$g_baseadr, $db_conn;
+	global $g_dbserver,$g_dbuser,$g_dbpass,$g_dbname,$g_dbport,$g_baseadr, $db_conn;
 
-	$spojeni= new mysqli($g_dbserver,$g_dbuser,$g_dbpass);
+	$spojeni = new mysqli($g_dbserver,$g_dbuser,$g_dbpass, '', $g_dbport);
 	if (!$spojeni)
 	{
 		if($silent)
