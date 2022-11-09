@@ -121,4 +121,11 @@ function haveMoney(subject, subject_sum)
 	return false;
 }
 
+function changeParameterValueInURL(currentUrl, parameter, value)
+{
+	var url = new URL(currentUrl);
+	url.searchParams.set(parameter, value);
+	return url.href;
+}
+
 //-->
