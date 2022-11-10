@@ -4,7 +4,7 @@
 @$vysledek_historie=query_db("select fin.id fin_id, fin.id_users_editor id_editor, rc.nazev zavod_nazev, rc.cancelled zavod_cancelled, from_unixtime(rc.datum,'%Y-%c-%e') zavod_datum, fin.amount amount, fin.note note, us.sort_name name, fin.date `date` from ".TBL_FINANCE." fin 
 		left join ".TBL_USER." us on fin.id_users_editor = us.id
 		left join ".TBL_RACE." rc on fin.id_zavod = rc.id
-		where fin.id_users_user = ".$user_id." and fin.storno is null  order by fin.date desc, fin.id desc");
+		where fin.id_users_user = ".$user_id." and fin.storno is null order by fin.date desc, fin.id desc");
 
 //vytazeni jmena uzivatele a typu prispevku
 $vysledek_user_name=query_db("select us.sort_name name, ft.nazev ft_nazev from ".TBL_USER." us LEFT JOIN ".TBL_FINANCE_TYPES." ft ON us.finance_type = ft.id where us.id = ".$user_id);
@@ -20,16 +20,6 @@ if ($zaznam_user_name['ft_nazev'] != null)
 require_once ("./common_race.inc.php");
 require_once ('./url.inc.php');
 
-?>
-<script language="JavaScript">
-function toggle_display_by_class(cls) {
-    var lst = document.getElementsByClassName(cls);
-    for(var i = 0; i < lst.length; ++i) {
-        (lst[i].style.display == '')?(lst[i].style.display='none'):(lst[i].style.display='');
-    }
-}
-</script>
-<?
 $data_tbl = new html_table_mc();
 $col = 0;
 $data_tbl->set_header_col($col++,'Datum transakce',ALIGN_CENTER);

@@ -1,4 +1,4 @@
-<?php /* zavody - zobrazeni zavodu */
+<? /* zavody - zobrazeni zavodu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
 DrawPageTitle('Přehled závodů pro finance');
@@ -14,7 +14,7 @@ $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 1;  // old races
 $fD = (IsSet($fD) && is_numeric($fD)) ? (int)$fD : 0;  // type 0
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD);
 
-$query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,nazev,oddil,ranking,typ0,typ,vicedenni,odkaz,misto,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id';
+$query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,nazev,oddil,ranking,typ0,typ,vicedenni,odkaz,misto,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum desc, datum2 desc, id desc';
 @$vysledek=query_db($query);
 
 $query = "select id_zavod, sum(amount) amount from ".TBL_FINANCE." where storno is null group by id_zavod;";
@@ -24,9 +24,7 @@ while ($rec=mysqli_fetch_array($result_amount)) $race_amount[$rec["id_zavod"]]=$
 ?>
 
 <script language="javascript">
-<!-- 
 	javascript:set_default_size(1000,800);
-//-->
 </script>
 
 <?
@@ -53,6 +51,7 @@ if ($num_rows > 0)
 	$i = 1;
 	$brk_tbl = false;
 	$old_year = 0;
+	$year = 0;
 	while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		$prefix = ($zaznam['datum'] < GetCurrentDate()) ? '<span class="TextAlertExp">' : '';
@@ -73,20 +72,26 @@ if ($num_rows > 0)
 		$row[] = '<A HREF="javascript:open_win(\'./race_finance_view.php?race_id='.$zaznam['id'].'\',\'\')">Přehled</A>';
 		$row[] = isset($race_amount[$zaznam['id']])?$race_amount[$zaznam['id']]:"";
 		
+		$year = Date2Year($zaznam['datum']);
+		
 		if (!$brk_tbl && $zaznam['datum'] >= GetCurrentDate())
 		{
 			if($i != 1)
 				echo $data_tbl->get_break_row()."\n";
 			$brk_tbl = true;
 		}
-		else if($i != 1 && Date2Year($zaznam['datum']) != $old_year)
+		else if($i != 1 && $year != $old_year)
 		{
-				echo $data_tbl->get_break_row(true)."\n";
+				$odkaz = "<button onclick='toggle_display_by_class(\"$year\")'>Histore závodů pro rok $year</button>";
+				echo $data_tbl->get_info_row($odkaz)."\n";
 		}
 
-		echo $data_tbl->get_new_row_arr($row)."\n";
+		//prasacky schovane radky krome posledniho roku
+		($year < date("Y"))?($class = $year."\" style=\"display:none") : ($class = $year);
+
+		echo $data_tbl->get_new_row_arr($row, $class)."\n";
 		$i++;
-		$old_year = Date2Year($zaznam['datum']);
+		$old_year = $year;
 	}
 	echo $data_tbl->get_footer()."\n";
 }

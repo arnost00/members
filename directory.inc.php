@@ -1,4 +1,4 @@
-<?php /* adresar clenu oddilu */
+<? /* adresar clenu oddilu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
 DrawPageTitle('Adresář členů oddílu');
@@ -14,11 +14,10 @@ DrawPageTitle('Adresář členů oddílu');
 <br>
 <? if ( IsLogged() ) { ?>
 <script language="javascript">
-<!-- 
+
 	/*	"width=500,height=400"	*/
 
 	javascript:set_default_size(500,540);
-//-->
 </script>
 <? } ?>
 

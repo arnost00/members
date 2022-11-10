@@ -1,4 +1,3 @@
-<!--
 /*	members - online prihlaskovy system	*/
 
 def_width = 400;
@@ -128,4 +127,9 @@ function changeParameterValueInURL(currentUrl, parameter, value)
 	return url.href;
 }
 
-//-->
+function toggle_display_by_class(cls) {
+    var lst = document.getElementsByClassName(cls);
+    for(var i = 0; i < lst.length; ++i) {
+        (lst[i].style.display == '')?(lst[i].style.display='none'):(lst[i].style.display='');
+    }
+}
