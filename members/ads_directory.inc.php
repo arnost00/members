@@ -6,7 +6,6 @@ DrawPageTitle('Členská základna - Administrace');
 <CENTER>
 
 <script language="JavaScript">
-<!--
 function confirm_delete(name) {
 	return confirm('Opravdu chcete smazat člena oddílu ? \n Jméno člena : "'+name+'" \n Člen bude nenávratně smazán !!');
 }
@@ -19,15 +18,13 @@ function confirm_entry_unlock(name) {
 	return confirm('Opravdu chcete odemknout členu oddílu možnost se přihlašovat ? \n Jméno člena : "'+name+'"');
 }
 
-function toggleShowLocked(element) {
-	var showLocked = 0;
+function toggleShowHidden(element) {
+	var showHidden = 0;
 	if (element.value == 0) {
-		showLocked = 1;
+		showHidden = 1;
 	};
-	window.location.href = changeParameterValueInURL(this.location.href, 'showLocked', showLocked);
+	window.location.href = changeParameterValueInURL(this.location.href, 'showHidden', showHidden);
 }
-
--->
 </script>
 
 <style type="text/css">
@@ -61,15 +58,15 @@ function toggleShowLocked(element) {
 require_once "./common_user.inc.php";
 require_once('./csort.inc.php');
 
-if (!isset($_GET['showLocked'])) $showLocked = 0;
+if (!isset($_GET['showHidden'])) $showHidden = 0;
 
 $sc = new column_sort_db();
 $sc->add_column('sort_name','');
 $sc->add_column('reg','');
 $sc->set_url('index.php?id=700&subid=1',true);
 $sort_query = $sc->get_sql_string();
-$where_query = ' where a.locked is false ';
-if ($showLocked) $where_query = ' ';
+$where_query = ' where u.hidden is false ';
+if ($showHidden) $where_query = ' ';
 
 $query = "SELECT u.id,u.prijmeni,u.jmeno,u.reg,u.hidden,u.entry_locked, a.locked, a.policy_news, a.policy_regs, a.policy_mng, a.policy_adm, a.policy_fin, a.id aid FROM ".TBL_USER." u"
 	." left join ".TBL_ACCOUNT." a on a.id_users = u.id "
@@ -84,7 +81,7 @@ if (IsSet($result) && is_numeric($result) && $result != 0)
 	Print_Action_Result($res_text);
 }
 
-echo "<button id='showLocked' name='showLocked' onclick='toggleShowLocked(this)' value='".$showLocked."'>".($showLocked?'Skryj':'Zobraz')." skryté uživatele</button>";
+echo "<button id='showHidden' name='showHidden' onclick='toggleShowHidden(this)' value='".$showHidden."'>".($showHidden?'Skryj':'Zobraz')." skryté uživatele</button>";
 
 $data_tbl = new html_table_mc();
 $col = 0;
