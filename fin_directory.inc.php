@@ -15,7 +15,6 @@ DrawPageTitle('Finance členů');
 
 <CENTER>
 <script language="javascript">
-<!-- 
 javascript:set_default_size(800,800);
 
 function confirm_entry_lock(name) {
@@ -25,7 +24,6 @@ function confirm_entry_lock(name) {
 function confirm_entry_unlock(name) {
 	return confirm('Opravdu chcete odemknout členu oddílu možnost se přihlašovat ? \n Jméno člena : "'+name+'"');
 }
-//-->
 </script>
 
 <form action="">

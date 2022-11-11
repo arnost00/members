@@ -128,10 +128,7 @@ else
 }
 ?>
 <SCRIPT LANGUAGE="JavaScript">
-<!--
 	window.opener.location.reload();
-
 	window.opener.focus();
 	window.close();
-//-->
 </SCRIPT>

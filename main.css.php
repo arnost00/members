@@ -474,6 +474,9 @@ TABLE.calendar TD.today
 	font-weight : bold;
 }
 
+.left-margin-50px {
+    margin-left: 50px;
+}
 
 <?
 if (!$g_is_release)
