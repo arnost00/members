@@ -110,7 +110,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 {
 	$row = array();
 	$row[] = $i++;
-	$row[] = $zaznam['prijmeni'];
+	$row[] = '<a href="javascript:open_win(\'./view_adm_user_detail.php?id='.$zaznam['id'].'\',\'\')" class="adr_name">'.$zaznam['prijmeni'].'</a>';
 	$row[] = $zaznam['jmeno'];
 	$row[] = RegNumToStr($zaznam['reg']);
 	//4. sloupec
