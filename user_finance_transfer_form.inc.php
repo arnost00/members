@@ -43,7 +43,7 @@ while ($record=mysqli_fetch_array($users_result))
 {
 	$opt = array();
 	$opt['value'] = $record['id'];
-	$opt['label'] = $g_shortcut.RegNumToStr($record["reg"])." :: ".$record["sort_name"] ;
+	$opt['label'] = $record["sort_name"]." :: ".$g_shortcut.RegNumToStr($record["reg"]) ;
 	if ($record['id'] != $user_id)
 		$to_options[] = $opt; 
 }
