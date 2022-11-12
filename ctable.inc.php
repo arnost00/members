@@ -98,7 +98,7 @@ class html_table_base
 	}
 
 	//__________________________________________________________________
-	protected function _get_pre_footer() {}	// inner class function
+	protected function _get_pre_footer() {return "";}	// inner class function
 
 	//__________________________________________________________________
 	function get_footer()
