@@ -150,9 +150,9 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	$row[] = $acc_locked;
 	$row[] = $acc_hidden;
 	if ($zaznam['entry_locked'] != 0)
-		$row[] = '<A HREF="./user_lock2_exc.php?gr_id='._SMALL_ADMIN_GROUP_ID_.'&id='.$zaznam['id'].'" onclick="return confirm_entry_lock(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')"><span class="WarningText">Odemknout</span></A>';
+		$row[] = '<A HREF="./user_lock2_exc.php?gr_id='._SMALL_ADMIN_GROUP_ID_.'&id='.$zaznam['id'].'" onclick="return confirm_entry_unlock(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')"><span class="WarningText">Odemknout</span></A>';
 	else
-		$row[] = '<A HREF="./user_lock2_exc.php?gr_id='._SMALL_ADMIN_GROUP_ID_.'&id='.$zaznam['id'].'" onclick="return confirm_entry_unlock(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')">Zamknout</A>';
+		$row[] = '<A HREF="./user_lock2_exc.php?gr_id='._SMALL_ADMIN_GROUP_ID_.'&id='.$zaznam['id'].'" onclick="return confirm_entry_lock(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')">Zamknout</A>';
 	$row[] = $acc_r.'</code>';
 	echo $data_tbl->get_new_row_arr($row)."\n";
 }

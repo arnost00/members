@@ -6,7 +6,6 @@ DrawPageTitle('Skrytí členů a zamykání účtů');
 <CENTER>
 
 <script language="JavaScript">
-<!--
 function confirm_hide(name) {
 	return confirm('Opravdu chcete skrýt člena oddílu ? \n Jméno člena : "'+name+'"\nČlen nebude viditelný v přihláškách!');
 }
@@ -22,8 +21,6 @@ function confirm_lock(name) {
 function confirm_unlock(name) {
 	return confirm('Opravdu chcete odemknout účet člena oddílu ? \n Jméno člena : "'+name+'"');
 }
-
--->
 </script>
 
 <?
