@@ -21,8 +21,7 @@ if (IsLoggedSmallAdmin())
 		$zaznam=mysqli_fetch_array($vysl);
 		if ($zaznam["id"] != null)
 		{
-			$hidden = (bool)($zaznam['hidden']);
-			$hidden = !$hidden;
+			$hidden = (bool)$zaznam['hidden']?0:1;
 			$result=query_db('UPDATE '.TBL_USER.' SET hidden=\''.$hidden.'\' WHERE `id`=\''.$id."'")
 				or die('Chyba při provádění dotazu do databáze.');
 			if ($result == FALSE)
