@@ -35,7 +35,7 @@ if (IsSet($edit) && $edit=true)
 }
 
 // id je z tabulky "users"
-@$vysledek=query_db("SELECT u.prijmeni, u.jmeno, u.reg, u.hidden, u.entry_locked, a.locked FROM ".TBL_USER." u, ".TBL_ACCOUNT." a WHERE u.id = '$id' and u.id = a.id_users LIMIT 1");
+@$vysledek=query_db("SELECT u.prijmeni, u.jmeno, u.reg, u.hidden, u.entry_locked, a.locked, a.id aid FROM ".TBL_USER." u left join ".TBL_ACCOUNT." a on a.id_users = u.id WHERE u.id = '$id' LIMIT 1");
 @$zaznam=mysqli_fetch_array($vysledek);
 print_r($zaznam);
 
@@ -70,13 +70,18 @@ echo $data_tbl->get_header()."\n";
 
 echo $data_tbl->get_new_row('Jméno', $zaznam["jmeno"].' '.$zaznam["prijmeni"]);
 echo $data_tbl->get_new_row('Registrační číslo', $g_shortcut.RegNumToStr($zaznam["reg"]));
-$checkbox = "<input id='locked' value='1' type='checkbox' ".($zaznam['locked']?"checked":"")."/>";
-echo $data_tbl->get_new_row('Zamčený účet', $checkbox);
 $checkbox = "<input id='hidden' value='1' type='checkbox' ".($zaznam['hidden']?"checked":"")."/>";
 echo $data_tbl->get_new_row('Skrytý člen', $checkbox);
-$checkbox = "<input id='entry_locked' value='1' type='checkbox' ".($zaznam['entry_locked']?"checked":"")."/>";
-echo $data_tbl->get_new_row('Zamčené přihlášky', $checkbox);
-
+if ($zaznam['aid']) //check if user has account
+{
+    $checkbox = "<input id='locked' value='1' type='checkbox' ".($zaznam['locked']?"checked":"")."/>";
+    echo $data_tbl->get_new_row('Zamčený účet', $checkbox);
+    $checkbox = "<input id='entry_locked' value='1' type='checkbox' ".($zaznam['entry_locked']?"checked":"")."/>";
+    echo $data_tbl->get_new_row('Zamčené přihlášky', $checkbox);
+} else
+{
+    echo $data_tbl->get_new_row("", '<span class="WarningText">Uživatel nemá účet</span>');
+}
 echo $data_tbl->get_footer()."\n";
 ?>
 
