@@ -18,8 +18,7 @@ if (IsLoggedSmallAdmin())
 	$zaznam=mysqli_fetch_array($vysl);
 	if ($zaznam["id"] != null)
 	{
-		$lock = (bool)($zaznam['locked']);
-		$lock = !$lock;
+		$lock = (bool)$zaznam['locked']?0:1;
 		$result=query_db('UPDATE '.TBL_ACCOUNT.' SET locked=\''.$lock.'\' WHERE `id`=\''.$zaznam["id"]."'")
 			or die('Chyba při provádění dotazu do databáze.');
 		if ($result == null)
