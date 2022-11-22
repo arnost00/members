@@ -1,4 +1,4 @@
-<?php /* zavody - zobrazeni zavodu */
+<? /* zavody - zobrazeni zavodu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
 DrawPageTitle('Přihlášky na závody');
@@ -15,7 +15,10 @@ $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 0;  // old races
 $fD = (IsSet($fD) && is_numeric($fD)) ? (int)$fD : 0;  // type 0
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD);
 
-$query = 'SELECT '.TBL_RACE.'.id, datum, datum2, nazev, typ0, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, kat, termin, vedouci, cancelled FROM '.TBL_RACE.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_RACE.'.id = '.TBL_ZAVXUS.'.id_zavod AND '.TBL_ZAVXUS.'.id_user='.$usr->user_id.$sql_sub_query.' ORDER BY datum, datum2, '.TBL_RACE.'.id';
+$query = 'SELECT r.id, r.datum, datum2, nazev, typ0, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, '.
+		'prihlasky4, prihlasky5, vicedenni, misto, oddil, kat, termin, cancelled, if(vedouci=0, "-", concat(u.jmeno, " ", u.prijmeni)) as vedouci '.
+		'FROM '.TBL_RACE.' r LEFT JOIN '.TBL_ZAVXUS.' zu ON r.id = zu.id_zavod AND zu.id_user='.$usr->user_id.' left join '.TBL_USER.' u on u.id = r.vedouci '.
+		$sql_sub_query.' ORDER BY r.datum, datum2, r.id';
 @$vysledek=query_db($query);
 
 @$vysledek2=query_db("SELECT * FROM ".TBL_USER." where id=$usr->user_id");
@@ -28,7 +31,6 @@ if ($zaznam2=mysqli_fetch_array($vysledek2))
 ?>
 
 <script language="javascript">
-<!-- 
 	/*	"status=yes,width=600,height=350"	*/
 
 	function confirm_delete() {
@@ -36,7 +38,6 @@ if ($zaznam2=mysqli_fetch_array($vysledek2))
 	}
 
 	javascript:set_default_size(600,600);
-//-->
 </script>
 
 <?
@@ -130,15 +131,8 @@ if ($num_rows > 0)
 
 		if($g_enable_race_boss)
 		{
-			$boss = '-';
-			if($zaznam['vedouci'] != 0)
-			{
-				@$vysledekU=query_db("SELECT jmeno,prijmeni FROM ".TBL_USER." WHERE id = '".$zaznam['vedouci']."' LIMIT 1");
-				@$zaznamU=mysqli_fetch_array($vysledekU);
-				if($zaznamU != FALSE)
-					$boss = $zaznamU['jmeno'].' '.$zaznamU['prijmeni'];
-			}
-			$row[] = $boss;
+
+			$row[] = $zaznam['vedouci'];
 		}
 		
 		if (!$brk_tbl && $zaznam['datum'] >= $curr_date)
