@@ -181,7 +181,10 @@ if($g_is_system_running || IsLoggedAdmin())
 						require_once "./ads_directory.inc.php";
 						break;
 					case 2:
-						require_once "./ads_oris.inc.php";
+						if ($g_enable_oris_support)
+							require_once "./ads_oris.inc.php";
+						else
+							require_once "./news.inc.php";
 						break;
 					default:
 						require_once "./news.inc.php";
@@ -322,7 +325,7 @@ echo '<B>Debug Informations ::</B>'."<BR>\n";
 echo '<U>Current User</U>'."<BR>\n";
 echo 'Func: Admin : '.IsLoggedAdmin().', Reg : '.IsLoggedRegistrator().', Mng : '.IsLoggedManager().', SmallMng : '.IsLoggedSmallManager().', Editor : '.IsLoggedEditor().', User : '.IsLogged()."<BR>\n";
 echo 'Vars: Admin : '.$usr->policy_admin.', Reg : '.$usr->policy_reg.', Mng : '.$usr->policy_mng.', Editor : '.$usr->policy_news.', User : '.$usr->logged."<BR>\n";
-echo 'Logged : '.$usr->logged.', UserID : '.$usr->user_id.', AccountID : '.$usr->account_id.', CrossID : '.$usr->cross_id."<BR>\n";
+echo 'Logged : '.$usr->logged.', UserID : '.$usr->user_id.', AccountID : '.$usr->account_id."<BR>\n";
 echo '<U>System & Browser</U>'."<BR>\n";
 echo 'PHP Session ID = '._CURR_SESS_ID_."<BR>\n";
 echo 'WWW Browser = ['.(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '')."]<BR>\n";

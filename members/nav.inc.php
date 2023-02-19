@@ -123,7 +123,8 @@ function DrawMenuGroupHeader($name)
 	{
 		DrawMenuGroupHeader('Menu&nbsp;správce');
 		DrawMenuItem('Členská základna',_SMALL_ADMIN_GROUP_ID_,1);
-		DrawMenuItem('Členové vs. ORIS',_SMALL_ADMIN_GROUP_ID_,2);
+		if ($g_enable_oris_support)
+			DrawMenuItem('Členové vs. ORIS',_SMALL_ADMIN_GROUP_ID_,2);
 	}
 	if(IsLoggedFinance() && $g_enable_finances)
 	{
@@ -156,7 +157,6 @@ if (!IsLogged())
 	{
 ?>
 <script language="javascript">
-<!-- 
 function check_login_form(form)
 {
 	if(form.<? echo(_VAR_USER_LOGIN);?>.value == "")
@@ -174,7 +174,6 @@ function check_login_form(form)
 	}
 	return true; // OK, submit form.
 }
-//-->
 </script>
 
 	<FORM METHOD=POST ACTION="./login.php" onSubmit="return check_login_form(this);">
