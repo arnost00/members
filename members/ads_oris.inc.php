@@ -23,7 +23,7 @@ $sc->set_url($curr_url,true);
 $sub_query = $sc->get_sql_string();
 
 $query = "SELECT u.id,u.prijmeni,u.jmeno,u.reg,u.si_chip as si,u.hidden,u.entry_locked, a.locked, a.policy_news, a.policy_regs, a.policy_mng, a.policy_adm, a.policy_fin, a.id aid FROM ".TBL_USER." u"
-	." left join ".TBL_ACCOUNT." a on a.id_users = u.id where (a.locked = False or a.locked is null) "
+	." left join ".TBL_ACCOUNT." a on a.id_users = u.id where (u.hidden = False or u.hidden is null) "
 	.$sub_query;
 @$vysledek=query_db($query);
 
@@ -74,9 +74,9 @@ else
 	$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 	$data_tbl->set_header_col_with_help($col++,'Reg.č.',ALIGN_CENTER,"Registrační číslo");
 	$data_tbl->set_header_col_with_help($col++,'SI',ALIGN_CENTER,"SI");
-	$data_tbl->set_header_col_with_help($col++,'Zamknut',ALIGN_CENTER,"Vypni uživateli možnost se přihlásit do systému");
-	$data_tbl->set_header_col_with_help($col++,'Skrytý',ALIGN_CENTER,"Uživatel je skrytý");
-	$data_tbl->set_header_col_with_help($col++,'Přihlášky',ALIGN_CENTER,"Možnost přihlašování se člena na závody");
+//	$data_tbl->set_header_col_with_help($col++,'Zamknut',ALIGN_CENTER,"Vypni uživateli možnost se přihlásit do systému");
+//	$data_tbl->set_header_col_with_help($col++,'Skrytý',ALIGN_CENTER,"Uživatel je skrytý");
+//	$data_tbl->set_header_col_with_help($col++,'Přihlášky',ALIGN_CENTER,"Možnost přihlašování se člena na závody");
 	$data_tbl->set_header_col_with_help($col++,' --- ',ALIGN_CENTER,"");
 	$data_tbl->set_header_col_with_help($col++,' ORIS reg.č.',ALIGN_CENTER,"Načtené registrační číslo z ORISu");
 	$data_tbl->set_header_col_with_help($col++,' ORIS jméno',ALIGN_CENTER,"Načtené jméno z ORISu");
@@ -103,7 +103,7 @@ else
 		$row[] = $reg;
 		$row[]  = $zaznam['si'];
 		//4. sloupec
-
+/*
 		$acc_hidden = '<A HREF="./user_hide_exc.php?id='.$zaznam['id'].'" onclick="return confirm_hide(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')">Skrýt</A>';
 		$acc_locked = '<A HREF="./user_lock_exc.php?id='.$zaznam['id'].'" onclick="return confirm_lock(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')">Zamknout</A>';
 
@@ -113,7 +113,7 @@ else
 			$row[] = '<A HREF="./user_lock2_exc.php?gr_id='._SMALL_ADMIN_GROUP_ID_.'&id='.$zaznam['id'].'" onclick="return confirm_entry_lock(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')"><span class="WarningText">Odemknout</span></A>';
 		else
 			$row[] = '<A HREF="./user_lock2_exc.php?gr_id='._SMALL_ADMIN_GROUP_ID_.'&id='.$zaznam['id'].'" onclick="return confirm_entry_unlock(\''.$zaznam['jmeno'].' '.$zaznam['prijmeni'].'\')">Zamknout</A>';
-
+*/
 		$row[] = '';
 		$fullreg = $g_shortcut.$reg;
 		if (array_key_exists($fullreg, $arr_oris["user"]))

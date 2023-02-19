@@ -81,7 +81,7 @@ if (IsSet($result) && is_numeric($result) && $result != 0)
 	Print_Action_Result($res_text);
 }
 
-echo "<button id='showHidden' name='showHidden' onclick='toggleShowHidden(this)' value='".$showHidden."'>".($showHidden?'Skryj':'Zobraz')." skryté uživatele</button>";
+echo "<button id='showHidden' name='showHidden' onclick='toggleShowHidden(this)' value='".$showHidden."'>".($showHidden?'Skryj':'Zobraz')." skryté uživatele</button><br/><br/>";
 
 $data_tbl = new html_table_mc();
 $col = 0;
