@@ -63,7 +63,7 @@ if (!isset($_GET['showHidden'])) $showHidden = 0;
 $sc = new column_sort_db();
 $sc->add_column('sort_name','');
 $sc->add_column('reg','');
-$sc->set_url('index.php?id=700&subid=1',true);
+$sc->set_url('index.php?id='._SMALL_ADMIN_GROUP_ID_.'&subid=1',true);
 $sort_query = $sc->get_sql_string();
 $where_query = ' where u.hidden is false ';
 if ($showHidden) $where_query = ' ';
@@ -114,7 +114,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	$row[] = $zaznam['jmeno'];
 	$row[] = RegNumToStr($zaznam['reg']);
 	//4. sloupec
-	$row[] = '<A HREF="./user_edit.php?id='.$zaznam['id'].'&cb=700">Uprav</A>';
+	$row[] = '<A HREF="./user_edit.php?id='.$zaznam['id'].'&cb='._SMALL_ADMIN_GROUP_ID_.'">Uprav</A>';
 
 	$acc_exist = '<span class="WarningText">Vytvoř</span>';
 
@@ -145,7 +145,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 		$acc_r .= '. . . . . .';
 	}
 	//if exist then label is Edit, if doesn't exist then label is Vytvor
-	$row[] = '<A HREF="./user_login_edit.php?id='.$zaznam["id"].'&cb=700">'.$acc_exist.'</A>';
+	$row[] = '<A HREF="./user_login_edit.php?id='.$zaznam["id"].'&cb='._SMALL_ADMIN_GROUP_ID_.'">'.$acc_exist.'</A>';
 
 	$row[] = $acc_locked;
 	$row[] = $acc_hidden;
