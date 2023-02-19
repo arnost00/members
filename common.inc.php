@@ -402,7 +402,7 @@ function HTML_Header($title,$style_file = '', $body_addons = '',$head_addons = '
 echo("\t".'<meta name="generator" content="'.SYSTEM_NAME.' '.GetCodeVersion().'">'."\n");
 echo("\t".'<meta name="description" content="'.$g_www_meta_description.'">'."\n");
 echo("\t".'<meta name="keywords" content="ČSOB, Orientacni beh, Orientační běh, Orienteering, beh, běh, run, running, IOF, orientační, OB, '.$g_www_meta_keyword.'">'."\n");
-echo("\t".'<meta name="copyright" content="(C) '.GetDevelopYears().' '.SYSTEM_AUTORS.', All rights&nbsp;reserved.">'."\n");
+echo("\t".'<meta name="copyright" content="'.GetCopyright().', All rights&nbsp;reserved.">'."\n");
 echo("\t".'<meta name="authors" content="'.SYSTEM_AUTORS.'">'."\n");
 
 if ($style_file  != '')

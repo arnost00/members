@@ -1,4 +1,4 @@
-<?php if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
+	<?php if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
 
 define('SYSTEM_NAME','members');
@@ -9,9 +9,9 @@ function GetCodeVersion()
 	return "v3.3.3.626";
 }
 
-function GetDevelopYears()
+function GetCopyright()
 {
-	return "2002-2023";
+	return 'Copyright © 2002-2023 Arnošt, Kenia a 2014-2015 LuF';
 }
 
 ?>
