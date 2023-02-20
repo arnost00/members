@@ -5,9 +5,7 @@ DrawPageTitle('Oddílová termínovka');
 ?>
 <CENTER>
 <script language="javascript">
-<!-- 
 	javascript:set_default_size(600,600);
-//-->
 </script>
 
 <?
