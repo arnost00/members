@@ -23,9 +23,12 @@ if (IsLoggedAdmin())
 	}
 
 	$vysledekU=query_db("SELECT id FROM ".TBL_USER);
-	while ($zaznamU=mysqli_fetch_array($vysledekU))
+	if ($vysledekU)
 	{
-		$users[] = $zaznamU['id'];
+		while ($zaznamU=mysqli_fetch_array($vysledekU))
+		{
+			$users[] = $zaznamU['id'];
+		}
 	}
 
 	$i = 0;
