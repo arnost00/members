@@ -88,6 +88,7 @@ function updatePayment($editor_id, $trn_id, $id_zavod, $amount, $note)
  * vraci flatrate pro zadane user_id
  * v budoucnu pouzit pro vraceni informace, zda user neni i sponsor
 */
+/* not used - undefined flatrate & percents
 function getUserPaymentMethod($id)
 {
 	//select flatrate, percents from user where id = $id;
@@ -95,10 +96,11 @@ function getUserPaymentMethod($id)
 	$paymentMethod['percent'] = $percents;
 	return $paymentMethod;
 }
-
+*/
 /*
  * vraci -1 pro flatrate, jinak procenta v desetinne podobe
 */
+/* not used - undefined flatrate & percents
 function getUserPercent($id)
 {
 	//TODO popremyslet, zda by nebylo lepsi vracet false (nebo -1, null?) v pripade, kdy je user na flatrate
@@ -108,13 +110,14 @@ function getUserPercent($id)
 	if ($flatrate) return -1;
 	return $percent;
 }
-
+*/
+/* not used - undefined csos
 function getCSOSFlag($id)
 {
 	//select csos from race where id = $id;
 	return $csos;
 }
-
+*/
 /* 
  * hisotrizuj platby
  * ve sloupci fin v user bude suma historizovanych plateb

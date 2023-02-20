@@ -25,11 +25,9 @@ db_Connect();
 ?>
 <CENTER>
 <script language="JavaScript">
-<!--
 function confirm_delete() {
 	return confirm('Opravdu chcete smazat tyto předdefinované kategorie?');
 }
--->
 </script><?
 
 $query = "SELECT * FROM ".TBL_CATEGORIES_PREDEF.' ORDER BY id';
