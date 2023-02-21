@@ -36,7 +36,6 @@ RaceInfoTable($zaznam,'',false,false,true);
 ?>
 
 <SCRIPT LANGUAGE="JavaScript">
-<!--
 function zmen_kat_n($str)
 {
 	
@@ -47,8 +46,6 @@ function zmen_kat_null()
 {
 	document.form2.kat_n.value="";
 }
-
-//-->
 </SCRIPT>
 
 <FORM METHOD=POST ACTION="./race_kat_exc.php?id=<?echo $id?>" name="form2">

@@ -20,7 +20,7 @@ require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 
 
 <SCRIPT LANGUAGE="JavaScript">
-<!--
+
 var error = "";
 var fatalError = false;
 
@@ -92,8 +92,6 @@ function checkDates()
 	return true;
 }
 
-
-//-->
 </SCRIPT>
 
 <?

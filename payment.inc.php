@@ -52,9 +52,11 @@ function createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod)
 		$datum=date("Y-m-d");
 	else
 		$datum = String2SQLDateDMY($datum);
+	if ($id_zavod == null)
+		$id_zavod = 'NULL'; // php null to sql null
 	$note = correct_sql_string($note);
 	$query = "insert into ".TBL_FINANCE." (id_users_editor, id_users_user, amount, note, date, id_zavod) values 
-			(".$editor_id.", ".$user_id.", ".$amount.", '".$note."', '".$datum."', '".$id_zavod."')";
+			(".$editor_id.", ".$user_id.", ".$amount.", '".$note."', '".$datum."', ".$id_zavod.")";
 	query_db($query);
 	$lastId = mysqli_insert_id($db_conn);
 	SaveItemToModifyLog_Add(TBL_FINANCE, "id=$lastId|user_id=$user_id|amount=$amount");

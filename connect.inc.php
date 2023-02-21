@@ -48,8 +48,17 @@ function query_db($sql_query)
 		*/
 	}
 	$db_query_cnt++;
-	$result=$db_conn->query($sql_query);
-
+	try
+	{
+		$result=$db_conn->query($sql_query);
+	}
+	catch (mysqli_sql_exception $ex)
+	{
+		$msg = 'Popis: '.$ex->getMessage(); 
+		echo ('Chyba při provádění dotazu do databáze. '.$msg."<br />\n");
+		LogToFile(dirname(__FILE__) . '/logs/.db_errors.txt','Db query error - '.$msg.__FILE__);
+		$result = false;
+	}
 //dokud nebude pripraven db.inc.php nebo sem nepridame funkci error_db()
 //		or error_db();
 	return $result;

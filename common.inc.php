@@ -5,7 +5,8 @@
 function LogToFile($file,$msg)
 {
 	$fp = fopen( $file, 'a');
-	fputs( $fp, $msg);
+	$dt = '['.date("c").'] ';
+	fputs( $fp, $dt.$msg."\n");
 	fclose($fp);
 }
 

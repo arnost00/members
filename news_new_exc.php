@@ -25,7 +25,7 @@ if (IsLoggedEditor())
 		$datum2=correct_sql_string($datum2);
 		$nadpis=correct_sql_string($nadpis);
 		$text=correct_sql_string($text);
-		$internal=(int)$internal;
+		$internal=(isset($internal)) ? (int)$internal : 0;
 		
 		if (IsSet($update))
 		{

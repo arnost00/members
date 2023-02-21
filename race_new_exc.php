@@ -26,7 +26,7 @@ if( $rtype == 1)
 }
 else
 {	// jednodenni
-	$datum2 = '';
+	$datum2 = 0;
 	$vicedenni = 0;
 	$etap = 1;
 }
@@ -79,17 +79,14 @@ else
 	if (!isset($accommodation))
 		$accommodation=0;
 	
-	$result=query_db("INSERT INTO ".TBL_RACE." (datum, datum2, nazev, misto, typ0, typ, zebricek, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, etap, poznamka, vicedenni, oddil, modify_flag, transport, ubytovani) VALUES ('$datum', '$datum2', '$nazev', '$misto', '$typ0', '$typ', '$zebricek2', '$ranking', '$odkaz', '$prihlasky', '$prihlasky1', '$prihlasky2', '$prihlasky3', '$prihlasky4', '$prihlasky5', '$etap', '$poznamka', '$vicedenni', '$oddil', '$modify_flag', '$transport', '$accommodation')")
+	$result=query_db("INSERT INTO ".TBL_RACE." (datum, datum2, nazev, misto, typ0, typ, zebricek, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, etap, poznamka, vicedenni, oddil, modify_flag, transport, ubytovani, kategorie, vedouci, poslano) VALUES ('$datum', '$datum2', '$nazev', '$misto', '$typ0', '$typ', '$zebricek2', '$ranking', '$odkaz', '$prihlasky', '$prihlasky1', '$prihlasky2', '$prihlasky3', '$prihlasky4', '$prihlasky5', '$etap', '$poznamka', '$vicedenni', '$oddil', '$modify_flag', '$transport', '$accommodation','', 0, 0)")
 		or die("Chyba při provádění dotazu do databáze.");
 	if ($result == FALSE)
 		die ("Nepodařilo se vložit údaje o závodě.");
 }
 ?>
 <SCRIPT LANGUAGE="JavaScript">
-<!--
 	window.opener.location.reload();
-
 	window.opener.focus();
 	window.close();
-//-->
 </SCRIPT>

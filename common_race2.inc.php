@@ -117,7 +117,10 @@ public static function ListRegDates(&$zaznam)
 			$result[] = Date2String($zaznam['prihlasky4']);
 		if ($zaznam['prihlasky5'] != 0)
 			$result[] = Date2String($zaznam['prihlasky5']);
-		return implode(' | ',$result);
+		if ($result != null)
+			return implode(' | ',$result);
+		else
+			return '';
 	}
 	else
 		return Date2String($zaznam['prihlasky1']);
