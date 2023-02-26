@@ -371,7 +371,7 @@ function RIT_SH(divId1, divId2)
 	}
 }
 
-function form_filter_racelist($page,&$filterA,&$filterB,&$filterC,&$filterD)
+function form_filter_racelist($page,&$filterA,&$filterB,&$filterC,&$filterD, $prefix_r = '')
 {
 	global $g_zebricek_cnt;
 	global $g_zebricek;
@@ -404,7 +404,7 @@ function form_filter_racelist($page,&$filterA,&$filterB,&$filterC,&$filterD)
 			$result = ' WHERE (';
 		else
 			$result .= ' AND (';
-		$result .= '`datum` >= \''.GetCurrentDate()."')";
+		$result .= $prefix_r.'`datum` >= \''.GetCurrentDate()."')";
 	}
 	else if ($filterC == 2)
 	{
@@ -412,7 +412,7 @@ function form_filter_racelist($page,&$filterA,&$filterB,&$filterC,&$filterD)
 			$result = ' WHERE (';
 		else
 			$result .= ' AND (';
-		$result .= '`datum` >= \''.DecDate(GetCurrentDate(),31)."')";
+		$result .= $prefix_r.'`datum` >= \''.DecDate(GetCurrentDate(),31)."')";
 	}
 	if($filterD > 0 && $filterD <= $g_racetype0_cnt)
 	{

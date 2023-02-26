@@ -60,7 +60,7 @@ echo '<FORM METHOD=POST ACTION="./mng_edit_exc.php?id='.$id.'" onsubmit="return 
 <TR><TD>
 <SELECT name="mng" size=10>
 <?
-$query = 'SELECT u.id,u.prijmeni,u.jmeno, u.hidden FROM '.TBL_USER.' as u, '.TBL_ACCOUNT.' WHERE '.TBL_ACCOUNT.'.id_users = u.id AND '.TBL_ACCOUNT.'.policy_mng = '._MNG_SMALL_INT_VALUE_." AND u.id <> $id";
+$query = 'SELECT u.id,u.prijmeni,u.jmeno, u.hidden FROM '.TBL_USER.' as u, '.TBL_ACCOUNT.' WHERE '.TBL_ACCOUNT.'.id_users = u.id AND '.TBL_ACCOUNT.'.policy_mng = '._MNG_SMALL_INT_VALUE_." AND u.id <> $id ORDER BY sort_name ASC";
 @$vysl=query_db($query);
 
 echo '<OPTION value="0'.(($zaznam['chief_id'] == 0) ? '" selected ':'"').'>-- bez malého trenéra --';

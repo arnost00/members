@@ -13,7 +13,7 @@ $fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
 $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
 $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 0;  // old races
 $fD = (IsSet($fD) && is_numeric($fD)) ? (int)$fD : 0;  // type 0
-$sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD);
+$sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD,'r.');
 
 $query = 'SELECT r.id, r.datum, datum2, nazev, typ0, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, '.
 		'prihlasky4, prihlasky5, vicedenni, misto, oddil, kat, termin, cancelled, if(vedouci=0, "-", concat(u.jmeno, " ", u.prijmeni)) as vedouci '.
@@ -43,7 +43,7 @@ if ($zaznam2=mysqli_fetch_array($vysledek2))
 <?
 $curr_date = GetCurrentDate();
 
-$num_rows = mysqli_num_rows($vysledek);
+$num_rows = ($vysledek) ? mysqli_num_rows($vysledek) : 0;
 if ($num_rows > 0)
 {
 	if ($entry_lock)

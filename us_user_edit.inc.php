@@ -35,7 +35,7 @@ $chief_query = "select u.chief_id, ch.sort_name as chief_name, u.chief_pay from 
 // echo "|$chief_query|";
 $chief_result = query_db($chief_query);
 $chief_record = mysqli_fetch_array($chief_result);
-$chief_id = $chief_record["chief_id"]; 
+$chief_id = ($chief_record) ? $chief_record["chief_id"] : 0; 
 
 if ($chief_id > 0) require_once 'us_setup_nursechild_form.inc.php';
 ?>
