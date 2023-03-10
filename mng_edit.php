@@ -69,7 +69,7 @@ while ($zazn=mysqli_fetch_array($vysl))
 {
 	if(!$zazn['hidden'])
 	{
-		echo '<OPTION value="'.$zazn['id'].(($zazn['id'] == $zaznam['chief_id']) ? '" selected ':'"').'>'.$zazn['jmeno'].' '.$zazn['prijmeni'];
+		echo '<OPTION value="'.$zazn['id'].(($zazn['id'] == $zaznam['chief_id']) ? '" selected ':'"').'>'.$zazn['prijmeni'].' '.$zazn['jmeno'];
 	}
 }
 ?>

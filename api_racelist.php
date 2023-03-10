@@ -114,31 +114,29 @@ if (mysqli_num_rows($vysledek) > 0)
 		}
 	}
 	
-	// enums
-	
-	foreach ( $g_racetype0 as $key => &$value )
-	{
-		$data['Enums']['Type'][$key] = $value;
-	}
-
-	for($ii=0; $ii<$g_zebricek_cnt; $ii++)
-	{
-//		$data['Enums']['Rankings'][$ii]['Value'] = $g_zebricek [$ii]['id'];
-//		$data['Enums']['Rankings'][$ii]['Name'] = $g_zebricek [$ii]['nm'];
-		$data['Enums']['Rankings'][$g_zebricek [$ii]['id']] = $g_zebricek [$ii]['nm'];
-	}
-
-	for($ii=0; $ii<$g_racetype_cnt; $ii++)
-	{
-		$data['Enums']['Sports'][$g_racetype[$ii]['enum']] = $g_racetype [$ii]['nm'];
-	}
-	
 	$data['Status'] = 'OK';
 }
 else
 {
 	$data['Status'] = 'empty';
-	// empty request
+	// empty data request
+}
+
+// enums
+
+foreach ( $g_racetype0 as $key => &$value )
+{
+	$data['Enums']['Type'][$key] = $value;
+}
+
+for($ii=0; $ii<$g_zebricek_cnt; $ii++)
+{
+	$data['Enums']['Rankings'][$g_zebricek [$ii]['id']] = $g_zebricek [$ii]['nm'];
+}
+
+for($ii=0; $ii<$g_racetype_cnt; $ii++)
+{
+	$data['Enums']['Sports'][$g_racetype[$ii]['enum']] = $g_racetype [$ii]['nm'];
 }
 
 echo (json_encode($data));
