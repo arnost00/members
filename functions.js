@@ -21,7 +21,7 @@ function open_win_ex(url,win_name,width, height)
 	nwin.focus();
 }
 
-function open_win(url,win_name)
+function open_win(url, win_name)
 {
 	nwin = window.open(url, win_name, 'toolbars=0, scrollbars=1, location=0, status=0, menubar=0, resizable=1, left=0, top=0, width='+def_width+', height='+def_height);
 	nwin.focus();
