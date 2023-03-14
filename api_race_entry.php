@@ -46,16 +46,16 @@ if ($userSelected)
 	switch ($action) {
 		case 'participate':
 			//id_race=X&id_user=X&action=participate
-			$query="UPDATE ".TBL_ZAVXUS." SET participated = not(participated) where id_zavod = $race_id and id_user = (select id from ".TBL_USER." where reg = '$id_user')";
+			$query="UPDATE ".TBL_ZAVXUS." SET participated = not(participated) where id_zavod = $race_id and id_user = (select id from ".TBL_USER." where reg = '$id_user' and hidden=0)";
 			@$result=$db_conn->query($query);
 			$data = $db_conn->affected_rows;
 			break;
 		case 'entryByFin':
 			//id_race=X&id_user=X&action=entryByFin
-			$query="SELECT id FROM ".TBL_ZAVXUS." WHERE id_user = (select id from ".TBL_USER." where reg = '$id_user') and id_zavod = '$race_id' and add_by_fin = 1;";
+			$query="SELECT id FROM ".TBL_ZAVXUS." WHERE id_user = (select id from ".TBL_USER." where reg = '$id_user' and hidden=0) and id_zavod = '$race_id' and add_by_fin = 1;";
 			if (mysqli_num_rows($db_conn->query($query)) > 0) {
 				//zaznam v db existuje, pozadavek na smazani
-				$query="DELETE FROM ".TBL_ZAVXUS." WHERE id_user = (select id from ".TBL_USER." where reg = '$id_user') and id_zavod = '$race_id' and add_by_fin = 1;";
+				$query="DELETE FROM ".TBL_ZAVXUS." WHERE id_user = (select id from ".TBL_USER." where reg = '$id_user' and hidden=0) and id_zavod = '$race_id' and add_by_fin = 1;";
 				@$result=$db_conn->query($query);
 				$data = 'deleted:'.$db_conn->affected_rows;
 			} else {
@@ -67,7 +67,7 @@ if ($userSelected)
 				$ubytovani = 0;
 				$participated = 1;
 				$addByFin = 1;
-				$query="INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in, termin, transport, ubytovani, participated, add_by_fin) VALUES ((select id from ".TBL_USER." where reg='$id_user'), '$race_id', '$kat', '$pozn', '$pozn2', '$termin', '$transport', '$ubytovani', '$participated', '$addByFin');";
+				$query="INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in, termin, transport, ubytovani, participated, add_by_fin) VALUES ((select id from ".TBL_USER." where reg='$id_user' and hidden=0), '$race_id', '$kat', '$pozn', '$pozn2', '$termin', '$transport', '$ubytovani', '$participated', '$addByFin');";
 				@$result=$db_conn->query($query);
 				$data = 'inserted:'.$db_conn->affected_rows;
 			}
@@ -75,7 +75,7 @@ if ($userSelected)
 		case 'detail':
 		default:
 			// return entry detail about user in race
-			$query="select * from ".TBL_ZAVXUS." z where id_zavod = $race_id and id_user = (select id from ".TBL_USER." where reg='$id_user')";
+			$query="select * from ".TBL_ZAVXUS." z where id_zavod = $race_id and id_user = (select id from ".TBL_USER." where reg='$id_user' and hidden=0)";
 			@$result=$db_conn->query($query);
 			$data = mysqli_fetch_array($result);
 			break;
