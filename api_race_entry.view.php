@@ -38,8 +38,8 @@
             
             // tlacitka na prihlaseni a ucast v headru accordionu
             var head_span_prihlasen = '<button id="btnEntry-'+el.reg+'" style="margin-right:2px;" onClick="tickEntry(this,\''+el.reg+'\','+race+')" '+(el.add_by_fin==1?'class="active"':'class=""')+'>Prihl.</button>';
-            var head_span_ucast = '<button id="btnParticipate-'+el.reg+'" onClick="tickParticipate(this,\''+el.reg+'\','+race+')" '+(el.participated==1?'class="active"':'class=""')+' '+((!el.add_by_fin&&!el.participated)?'hidden':'')+'>Ucast</button>';
-            var head_span = '<span style="float:right;" class="toolbar ui-widget-header ui-corner-all">'+(el.id&&!el.add_by_fin?'':head_span_prihlasen)+head_span_ucast+'</span>';
+            var head_span_ucast = '<button id="btnParticipate-'+el.reg+'" onClick="tickParticipate(this,\''+el.reg+'\','+race+')" '+(el.participated==1?'class="active"':'class=""')+' '+((!el.id)?'hidden':'')+'>Ucast</button>';
+            var head_span = '<span style="float:right;" class="toolbar ui-widget-header ui-corner-all">'+(el.id&&!el.add_by_fin==1?'':head_span_prihlasen)+head_span_ucast+'</span>';
 
             $( accordion ).append('<h3 id='+el.reg+'>'+el.reg+'::'+el.name+' '+head_span+'</h3><div id="div-'+el.reg+'"></div>');
             var div_entry_data = $( "#div-"+el.reg);

@@ -82,7 +82,7 @@ if ($userSelected)
 	}
 } else {
 
-	$query="SELECT sort_name as name, reg, id_user, zu.id as id, kat, zu.participated, zu.add_by_fin  FROM ".TBL_USER." u left join ".TBL_ZAVXUS." zu on u.id=zu.id_user and zu.id_zavod = $race_id where u.hidden = false order by zu.kat desc, u.sort_name asc";
+	$query="SELECT sort_name as name, reg, id_user, zu.id as id, kat, if(zu.participated is null or zu.participated = 0, 0, 1) as participated, zu.add_by_fin  FROM ".TBL_USER." u left join ".TBL_ZAVXUS." zu on u.id=zu.id_user and zu.id_zavod = $race_id where u.hidden = false order by zu.kat desc, u.sort_name asc";
 	@$result=$db_conn->query($query);
 	$data = array();
 	if (mysqli_num_rows($result) > 0)
