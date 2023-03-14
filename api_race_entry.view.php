@@ -110,21 +110,15 @@
             document.getElementById('btnEntry-'+reg).classList.remove("active");
             document.getElementById('btnParticipate-'+reg).classList.remove("active");
             document.getElementById('btnParticipate-'+reg).hidden=true;
-            // console.log(result);
         } else {
             //user updated
             (result.participated == 1) ? document.getElementById('btnParticipate-'+reg).classList.add("active") : document.getElementById('btnParticipate-'+reg).classList.remove("active");
-            if (result.add_by_fin == 1) {
-                document.getElementById('btnEntry-'+reg).classList.add("active");
-                document.getElementById('btnParticipate-'+reg).hidden=false;
-            } else {
-                document.getElementById('btnEntry-'+reg).classList.remove("active");
-                document.getElementById('btnParticipate-'+reg).hidden=true;
-            }
+            document.getElementById('btnEntry-'+reg).classList.add("active");
+            document.getElementById('btnParticipate-'+reg).hidden=false;
+
         }
     })
   };
-  
   
   </script>
 </head>
