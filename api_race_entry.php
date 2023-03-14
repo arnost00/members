@@ -38,8 +38,7 @@ $data = array(); //variable for return in json
 
 $userSelected = (isset($_GET['id_user']));
 
-if ($userSelected)
-{
+if ($userSelected) {
 	// user selected
 	$id_user = $_GET['id_user'];
 	// now select what to do with user
@@ -82,19 +81,34 @@ if ($userSelected)
 			break;
 	}
 } else {
-	$query="SELECT sort_name as `name`, reg, u.id as id_user, zu.id as id, kat, if(zu.participated is null or zu.participated = 1, 1, 0) as participated, if(zu.add_by_fin is null or zu.add_by_fin = 0, 0, 1) as add_by_fin  FROM ".TBL_USER." u left join ".TBL_ZAVXUS." zu on u.id=zu.id_user and zu.id_zavod = $race_id where u.hidden = 0 order by zu.kat desc, u.sort_name asc";
-	@$result=$db_conn->query($query);
-	if (mysqli_num_rows($result) > 0)
-	{
-		while ($record=mysqli_fetch_array($result))
-		{
-			$data[] = $record;
-		}
-	}
-	else
-	{
-		$data = 'empty';
-		// empty request
+	$action = (isset($_GET['action'])) ? $_GET['action'] : 'detail';
+	switch ($action) {
+		case 'accomodation':
+			$query="SELECT sort_name as `name`, adresa, mesto, psc from ".TBL_ZAVXUS." zu join ".TBL_USER." u on u.id = zu.id_user where id_zavod = $race_id and (zu.participated = 1 or zu.participated is null) and u.hidden = 0";
+			@$result=$db_conn->query($query);
+			if (mysqli_num_rows($result) > 0) {
+				while ($record=mysqli_fetch_row($result))	{
+					$data[] = implode(";", $record);
+				}
+			} else {
+				$data = 'empty';
+				// empty request
+			}
+			break;
+
+		case 'detail':
+		default:
+			$query="SELECT sort_name as `name`, reg, u.id as id_user, zu.id as id, kat, if(zu.participated is null or zu.participated = 1, 1, 0) as participated, if(zu.add_by_fin is null or zu.add_by_fin = 0, 0, 1) as add_by_fin  FROM ".TBL_USER." u left join ".TBL_ZAVXUS." zu on u.id=zu.id_user and zu.id_zavod = $race_id where u.hidden = 0 order by zu.kat desc, u.sort_name asc";
+			@$result=$db_conn->query($query);
+			if (mysqli_num_rows($result) > 0) {
+				while ($record=mysqli_fetch_array($result)) {
+					$data[] = $record;
+				}
+			} else {
+				$data = 'empty';
+				// empty request
+			}
+			break;
 	}
 }
 

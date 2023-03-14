@@ -25,11 +25,11 @@
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    var race = urlParams.get('race_id');
-    document.getElementById("title").innerHTML = "Zavod "+race;
+    var id_race = urlParams.get('race_id');
+    document.getElementById("title").innerHTML = "Zavod "+id_race;
     var dat = [];
     var accordion = document.getElementById("accordion");
-    $.getJSON('api_race_entry.php?id_race='+race, function(data) {
+    $.getJSON('api_race_entry.php?id_race='+id_race, function(data) {
         $( "#accordion" ).html('');
         data.forEach(el => {
             var flds_entry = '<label for="checkbox-1-'+el.id_user+'">Přihlášen</label><input type="checkbox" name="checkbox-1-'+el.id_user+'" id="checkbox-1-'+el.id_user+'"><label for="checkbox-2-'+el.id_user+'">Účast</label><input type="checkbox" name="checkbox-2-'+el.id_user+'" id="checkbox-2-'+el.id_user+'">';
@@ -37,8 +37,8 @@
             var flds_note = '<input type="text" value="sem napis poznamku ..."></input>';
             
             // tlacitka na prihlaseni a ucast v headru accordionu
-            var head_span_prihlasen = '<button id="btnEntry-'+el.id_user+'" style="margin-right:2px;" onClick="tickEntry(this,\''+el.id_user+'\','+race+')" '+(el.add_by_fin==1?'class="active"':'class=""')+'>Prihl.</button>';
-            var head_span_ucast = '<button id="btnParticipate-'+el.id_user+'" onClick="tickParticipate(this,\''+el.id_user+'\','+race+')" '+(el.participated==1?'class="active"':'class=""')+' '+((el.id)?'':'hidden')+'>Ucast</button>';
+            var head_span_prihlasen = '<button id="btnEntry-'+el.id_user+'" style="margin-right:2px;" onClick="tickEntry(this,\''+el.id_user+'\','+id_race+')" '+(el.add_by_fin==1?'class="active"':'class=""')+'>Prihl.</button>';
+            var head_span_ucast = '<button id="btnParticipate-'+el.id_user+'" onClick="tickParticipate(this,\''+el.id_user+'\','+id_race+')" '+(el.participated==1?'class="active"':'class=""')+' '+((el.id)?'':'hidden')+'>Ucast</button>';
             var head_span = '<span style="float:right;" class="toolbar ui-widget-header ui-corner-all">'+((el.add_by_fin!=1&&el.id)?'':head_span_prihlasen)+head_span_ucast+'</span>';
 
             $( accordion ).append('<h3 id='+el.id_user+'>'+el.reg+'::'+el.name+' '+head_span+'</h3><div id="div-'+el.reg+'"></div>');
@@ -77,7 +77,18 @@
         });
     });
 
-  });
+    $(document).on('click', '#btnAccomodation', function(){
+        $.getJSON('api_race_entry.php?id_race='+id_race+'&action=accomodation', function(data) {
+            console.log('accomodation||id_race:'+id_race+'|time:'+new Date().getTime());
+        }).done(function(result) {
+            let accomodation = document.getElementById("accomodation");
+            accomodation.textContent = result.join("\n");
+            // divAccomodation.
+            console.log('accomodation||id_race:'+id_race+'|result:'+result+'|time:'+new Date().getTime());
+        })
+    });
+
+  }); // end of inner function on document ready
   
   function tickParticipate(elem, id_user, id_race) {
     event.stopPropagation(); // this is
@@ -119,12 +130,23 @@
         }
     })
   };
+
+  function generateAccomodation(id_race) {
+    $.getJSON('api_race_entry.php?id_race='+id_race+'&action=accomodation', function(data) {
+        console.log('accomodation||id_race:'+id_race);
+    }).done(function(result) {
+        console.log('accomodation||id_race:'+id_race+'|result:'+result);
+    })
+  };
   
   </script>
 </head>
 <body>
 <h2 id='title'>Nacitam data ...</h2>
-<input id="search" placeholder="filtr podle jmena"/>
+<input id="search" placeholder="filtr podle jmena"/><button id="btnAccomodation">Generuj ubytovaci list</button>
+
+<textarea id="accomodation" class="hidden"></textarea>
+
 <div id="accordion">
 Nacitam data zavodu ...
 </div>
