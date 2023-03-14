@@ -48,10 +48,6 @@ if ($num_rows > 0)
 	echo $data_tbl->get_header()."\n";
 	echo $data_tbl->get_header_row()."\n";
 
-
-	// echo '<a href=afa"d\'aasfd?sa\'s"fa\'ds>fhakshfahfkhdsa<a/>';
-
-
 	$i = 1;
 	$brk_tbl = false;
 	$old_year = 0;

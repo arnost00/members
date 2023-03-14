@@ -32,23 +32,23 @@
     $.getJSON('api_race_entry.php?id_race='+race, function(data) {
         $( "#accordion" ).html('');
         data.forEach(el => {
-            var flds_entry = '<label for="checkbox-1-'+el.reg+'">Přihlášen</label><input type="checkbox" name="checkbox-1-'+el.reg+'" id="checkbox-1-'+el.reg+'"><label for="checkbox-2-'+el.reg+'">Účast</label><input type="checkbox" name="checkbox-2-'+el.reg+'" id="checkbox-2-'+el.reg+'">';
+            var flds_entry = '<label for="checkbox-1-'+el.id_user+'">Přihlášen</label><input type="checkbox" name="checkbox-1-'+el.id_user+'" id="checkbox-1-'+el.id_user+'"><label for="checkbox-2-'+el.id_user+'">Účast</label><input type="checkbox" name="checkbox-2-'+el.id_user+'" id="checkbox-2-'+el.id_user+'">';
             var flds_kat = '<select id="cat-'+el.reg+'" class="select-cat"></select>';
             var flds_note = '<input type="text" value="sem napis poznamku ..."></input>';
             
             // tlacitka na prihlaseni a ucast v headru accordionu
-            var head_span_prihlasen = '<button id="btnEntry-'+el.reg+'" style="margin-right:2px;" onClick="tickEntry(this,\''+el.reg+'\','+race+')" '+(el.add_by_fin==1?'class="active"':'class=""')+'>Prihl.</button>';
-            var head_span_ucast = '<button id="btnParticipate-'+el.reg+'" onClick="tickParticipate(this,\''+el.reg+'\','+race+')" '+(el.participated==1?'class="active"':'class=""')+' '+((!el.id)?'hidden':'')+'>Ucast</button>';
-            var head_span = '<span style="float:right;" class="toolbar ui-widget-header ui-corner-all">'+(el.id&&!el.add_by_fin==1?'':head_span_prihlasen)+head_span_ucast+'</span>';
+            var head_span_prihlasen = '<button id="btnEntry-'+el.id_user+'" style="margin-right:2px;" onClick="tickEntry(this,\''+el.id_user+'\','+race+')" '+(el.add_by_fin==1?'class="active"':'class=""')+'>Prihl.</button>';
+            var head_span_ucast = '<button id="btnParticipate-'+el.id_user+'" onClick="tickParticipate(this,\''+el.id_user+'\','+race+')" '+(el.participated==1?'class="active"':'class=""')+' '+((el.id)?'':'hidden')+'>Ucast</button>';
+            var head_span = '<span style="float:right;" class="toolbar ui-widget-header ui-corner-all">'+((el.add_by_fin!=1&&el.id)?'':head_span_prihlasen)+head_span_ucast+'</span>';
 
-            $( accordion ).append('<h3 id='+el.reg+'>'+el.reg+'::'+el.name+' '+head_span+'</h3><div id="div-'+el.reg+'"></div>');
-            var div_entry_data = $( "#div-"+el.reg);
+            $( accordion ).append('<h3 id='+el.id_user+'>'+el.reg+'::'+el.name+' '+head_span+'</h3><div id="div-'+el.reg+'"></div>');
+            var div_entry_data = $( "#div-"+el.id_user);
             $( div_entry_data ).append(flds_note).append(flds_kat).append(flds_entry);
-            if(el.kat) $( "#checkbox-1-"+el.reg).prop("checked", true );
-            var sel_cat = $( "#cat-"+el.reg );
+            if(el.kat) $( "#checkbox-1-"+el.id_user).prop("checked", true );
+            var sel_cat = $( "#cat-"+el.id_user );
             var arr_cat = ['vyber kategorii','h21','d21'];
             arr_cat.forEach(el_cat => {
-                $( sel_cat ).append('<option id="cat-opt-'+el.reg+'-'+el_cat+'" value="'+el_cat+' selected">'+el_cat+'</option>');
+                $( sel_cat ).append('<option id="cat-opt-'+el.id_user+'-'+el_cat+'" value="'+el_cat+' selected">'+el_cat+'</option>');
             });
         });
         $( accordion ).accordion("refresh");
@@ -91,30 +91,30 @@
     });
   }
     
-  function tickEntry(elem, reg, id_race) {
+  function tickEntry(elem, id_user, id_race) {
     event.stopPropagation(); // this is
     event.preventDefault(); // the magic
-    $.getJSON('api_race_entry.php?id_race='+id_race+'&action=entryByFin&id_user='+reg, function(data) {
-        console.log('entryByFin|user:'+reg+'|id_race:'+id_race+'|result:'+data);
+    $.getJSON('api_race_entry.php?id_race='+id_race+'&action=entryByFin&id_user='+id_user, function(data) {
+        console.log('entryByFin|id_user:'+id_user+'|id_race:'+id_race+'|result:'+data);
     }).done(function(result) {
-        refresh(id_race, reg, elem);
+        refresh(id_race, id_user, elem);
     })
   };
 
-  function refresh(id_race, reg, elem) {
-    $.getJSON('api_race_entry.php?id_race='+id_race+'&action=detail&id_user='+reg, function(data) {
-        console.log('entryByFin|user:'+reg+'|id_race:'+id_race+'|result:'+data);
+  function refresh(id_race, id_user, elem) {
+    $.getJSON('api_race_entry.php?id_race='+id_race+'&action=detail&id_user='+id_user, function(data) {
+        console.log('entryByFin|id_user:'+id_user+'|id_race:'+id_race+'|result:'+data);
     }).done(function(result) {
         if (result == null) {
             //user deleted
-            document.getElementById('btnEntry-'+reg).classList.remove("active");
-            document.getElementById('btnParticipate-'+reg).classList.remove("active");
-            document.getElementById('btnParticipate-'+reg).hidden=true;
+            document.getElementById('btnEntry-'+id_user).classList.remove("active");
+            document.getElementById('btnParticipate-'+id_user).classList.remove("active");
+            document.getElementById('btnParticipate-'+id_user).hidden=true;
         } else {
             //user updated
-            (result.participated == 1) ? document.getElementById('btnParticipate-'+reg).classList.add("active") : document.getElementById('btnParticipate-'+reg).classList.remove("active");
-            document.getElementById('btnEntry-'+reg).classList.add("active");
-            document.getElementById('btnParticipate-'+reg).hidden=false;
+            (result.participated == 1) ? document.getElementById('btnParticipate-'+id_user).classList.add("active") : document.getElementById('btnParticipate-'+id_user).classList.remove("active");
+            document.getElementById('btnEntry-'+id_user).classList.add("active");
+            document.getElementById('btnParticipate-'+id_user).hidden=false;
 
         }
     })
