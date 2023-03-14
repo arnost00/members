@@ -37,11 +37,11 @@
             var flds_note = '<input type="text" value="sem napis poznamku ..."></input>';
             
             // tlacitka na prihlaseni a ucast v headru accordionu
-            var head_span_prihlasen = '<button style="margin-right:2px;"onClick="tickEntry(this,'+el.reg+','+race+')" '+(el.add_by_fin==1?'class="active"':'')+'>Prihl.</button>';
-            var head_span_ucast = '<button onClick="tickParticipate(this,'+el.id_user+','+race+')" '+(el.participated==1?'class="active"':'')+'>Ucast</button>';
-            var head_span = '<span style="float:right;" class="toolbar ui-widget-header ui-corner-all">'+(el.kat?'':head_span_prihlasen)+head_span_ucast+'</span>';
+            var head_span_prihlasen = '<button id="btnEntry-'+el.reg+'" style="margin-right:2px;" onClick="tickEntry(this,\''+el.reg+'\','+race+')" '+(el.add_by_fin==1?'class="active"':'class=""')+'>Prihl.</button>';
+            var head_span_ucast = '<button id="btnParticipate-'+el.reg+'" onClick="tickParticipate(this,\''+el.reg+'\','+race+')" '+(el.participated==1?'class="active"':'class=""')+' '+((!el.add_by_fin&&!el.participated)?'hidden':'')+'>Ucast</button>';
+            var head_span = '<span style="float:right;" class="toolbar ui-widget-header ui-corner-all">'+(el.id&&!el.add_by_fin?'':head_span_prihlasen)+head_span_ucast+'</span>';
 
-            $( accordion ).append('<h3>'+el.id_user+'|'+el.reg+'::'+el.name+' '+head_span+'</h3><div id="div-'+el.reg+'"></div>');
+            $( accordion ).append('<h3 id='+el.reg+'>'+el.reg+'::'+el.name+' '+head_span+'</h3><div id="div-'+el.reg+'"></div>');
             var div_entry_data = $( "#div-"+el.reg);
             $( div_entry_data ).append(flds_note).append(flds_kat).append(flds_entry);
             if(el.kat) $( "#checkbox-1-"+el.reg).prop("checked", true );
@@ -56,7 +56,6 @@
         $( "input:checkbox" ).checkboxradio({
             icon: false
         });
-
 
     });
 
@@ -79,36 +78,58 @@
     });
 
   });
-
-  function tickEntry(elem, id_user, id_race) {
-    event.stopPropagation(); // this is
-    event.preventDefault(); // the magic
-    $.getJSON('api_race_entry.php?id_race='+id_race+'&action=addByFin&value=insert&id_user='+id_user, function(data) {
-        console.log('entry :: '+data)
-    }).done(function(result) {
-        if (result > 0) {
-            $( elem ).toggleClass("active");
-        }
-    });
-  }
-
+  
   function tickParticipate(elem, id_user, id_race) {
     event.stopPropagation(); // this is
     event.preventDefault(); // the magic
     $.getJSON('api_race_entry.php?id_race='+id_race+'&action=participate&id_user='+id_user, function(data) {
-        console.log('participate :: '+data)
+        console.log('participate|user:'+id_user+'|id_race:'+id_race+'|result:'+data);
     }).done(function(result) {
         if (result > 0) {
             $( elem ).toggleClass("active");
         }
     });
   }
+    
+  function tickEntry(elem, reg, id_race) {
+    event.stopPropagation(); // this is
+    event.preventDefault(); // the magic
+    $.getJSON('api_race_entry.php?id_race='+id_race+'&action=entryByFin&id_user='+reg, function(data) {
+        console.log('entryByFin|user:'+reg+'|id_race:'+id_race+'|result:'+data);
+    }).done(function(result) {
+        refresh(id_race, reg, elem);
+    })
+  };
 
-
+  function refresh(id_race, reg, elem) {
+    $.getJSON('api_race_entry.php?id_race='+id_race+'&action=detail&id_user='+reg, function(data) {
+        console.log('entryByFin|user:'+reg+'|id_race:'+id_race+'|result:'+data);
+    }).done(function(result) {
+        if (result == null) {
+            //user deleted
+            document.getElementById('btnEntry-'+reg).classList.remove("active");
+            document.getElementById('btnParticipate-'+reg).classList.remove("active");
+            document.getElementById('btnParticipate-'+reg).hidden=true;
+            // console.log(result);
+        } else {
+            //user updated
+            (result.participated == 1) ? document.getElementById('btnParticipate-'+reg).classList.add("active") : document.getElementById('btnParticipate-'+reg).classList.remove("active");
+            if (result.add_by_fin == 1) {
+                document.getElementById('btnEntry-'+reg).classList.add("active");
+                document.getElementById('btnParticipate-'+reg).hidden=false;
+            } else {
+                document.getElementById('btnEntry-'+reg).classList.remove("active");
+                document.getElementById('btnParticipate-'+reg).hidden=true;
+            }
+        }
+    })
+  };
+  
+  
   </script>
 </head>
 <body>
-<h2 id='title'>Zavod id=582, 50 lidi, prvni 2 jsou prihlaseni</h2>
+<h2 id='title'>Nacitam data ...</h2>
 <input id="search" placeholder="filtr podle jmena"/>
 <div id="accordion">
 Nacitam data zavodu ...
