@@ -8,15 +8,19 @@
 
   <style>
 
-        .ui-selectmenu-button.ui-button {
-            width: 85%;
-        }
+    .ui-selectmenu-button.ui-button {
+        width: 85%;
+    }
 
-        .active {
-            background-color: darkorange;
-        }
+    .active {
+        background-color: darkorange;
+    }
 
-    </style>
+    .hidden {
+        display: none;
+    }
+
+  </style>
 
   <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
   <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
@@ -79,14 +83,29 @@
 
     $(document).on('click', '#btnAccomodation', function(){
         $.getJSON('api_race_entry.php?id_race='+id_race+'&action=accomodation', function(data) {
-            console.log('accomodation||id_race:'+id_race+'|time:'+new Date().getTime());
+            console.log('accomodation|id_race:'+id_race+'|time:'+new Date().getTime());
         }).done(function(result) {
-            let accomodation = document.getElementById("accomodation");
-            accomodation.textContent = result.join("\n");
-            // divAccomodation.
-            console.log('accomodation||id_race:'+id_race+'|result:'+result+'|time:'+new Date().getTime());
+            let accomodation = document.getElementById("divAccomodation");
+            let entry = document.getElementById("divEntry");
+            let btnSave = document.getElementById("btnSave");
+            document.getElementById("accomodation").innerHTML = result.join("<br/>");
+
+            $( accomodation ).removeClass("hidden");
+            $( entry ).addClass("hidden");
+
+            $( btnSave).addClass("ui-button ui-widget ui-corner-all");
+            console.log('accomodation|id_race:'+id_race+'|result:'+result+'|time:'+new Date().getTime());
         })
     });
+
+    $(document).on('click', '#btnEntry', function(){
+        let accomodation = document.getElementById("divAccomodation");
+        let entry = document.getElementById("divEntry");
+
+        $( accomodation ).addClass("hidden");
+        $( entry ).removeClass("hidden");
+    });
+
 
   }); // end of inner function on document ready
   
@@ -138,17 +157,46 @@
         console.log('accomodation||id_race:'+id_race+'|result:'+result);
     })
   };
+
+  function saveDataToFile(text) {
+    // Get the data from each element on the form.
+    const data = text;        
+    // Convert the text to BLOB.
+    const textToBLOB = new Blob([data], { type: 'text/plain' });
+    const sFileName = 'ubytovani.txt'; // The file to save the data.
+
+    let newLink = document.createElement("a");
+    newLink.download = sFileName;
+
+    if (window.webkitURL != null) {
+        newLink.href = window.webkitURL.createObjectURL(textToBLOB);
+    }
+    else {
+        newLink.href = window.URL.createObjectURL(textToBLOB);
+        newLink.style.display = "none";
+        document.body.appendChild(newLink);
+    }
+
+    newLink.click(); 
+  }
   
   </script>
 </head>
 <body>
 <h2 id='title'>Nacitam data ...</h2>
-<input id="search" placeholder="filtr podle jmena"/><button id="btnAccomodation">Generuj ubytovaci list</button>
+<button id="btnAccomodation" class="ui-button ui-widget ui-corner-all">Zobraz ubytovane</button> <---||---> <button id="btnEntry" class="ui-button ui-widget ui-corner-all">Zobraz seznam</button>
+<hr/>
 
-<textarea id="accomodation" class="hidden"></textarea>
+<div id="divAccomodation" class="hidden">
+    <p id="btnSave" onclick="saveDataToFile(document.getElementById('accomodation').innerText);">Uloz</p>
+    <div id="accomodation"></div>
+</div>
 
-<div id="accordion">
-Nacitam data zavodu ...
+<div id="divEntry" class="">
+    <input id="search" placeholder="filtr podle jmena"/><br/><br/>
+    <div id="accordion">
+        Nacitam data zavodu ...
+    </div>
 </div>
 
 </body>
