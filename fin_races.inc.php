@@ -72,7 +72,7 @@ if ($num_rows > 0)
 		// $str = '<A HREF="open_win(\'./aa?d\')">Prehled</A>';
 		// .$zaznam['id'].'\',\'\')">Přehled</A>';
 		// $row[] = $str;
-		$row[] = '<A HREF="javascript:open_win(\'./race_finance_view.php?race_id='.$zaznam['id'].'\',\'\')">Přehled</A> / '."<A HREF=\"javascript:open_win('./api_race_entry.view.php?race_id=".$zaznam['id']."','')\">Na závodě</A>";
+		$row[] = '<A HREF="javascript:open_win(\'./race_finance_view.php?race_id='.$zaznam['id'].'\',\'\')">Přehled</A> / '."<A HREF=\"javascript:open_win('./api_race_entry.view.php?race_id=".$zaznam['id']."','')\">Účast</A>";
 		$row[] = isset($race_amount[$zaznam['id']])?$race_amount[$zaznam['id']]:"";
 		
 		$year = Date2Year($zaznam['datum']);
