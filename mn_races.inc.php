@@ -20,7 +20,6 @@ $query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prih
 ?>
 
 <script language="javascript">
-<!-- 
 	/* "status=yes,width=600,height=350" */
 
 	function confirm_delete() {
@@ -28,7 +27,6 @@ $query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prih
 	}
 
 	javascript:set_default_size(800,600);
-//-->
 </script>
 
 <?

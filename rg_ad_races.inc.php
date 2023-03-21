@@ -5,11 +5,9 @@ DrawPageTitle('Kalendář závodů - Přihlášky na závody');
 ?>
 <CENTER>
 <script language="javascript">
-<!-- 
 /*	"menubar=yes,status=yes,width=600,height=600"	*/
 
 	javascript:set_default_size(800,600);
-//-->
 </script>
 <?
 require_once ('./common_race.inc.php');
