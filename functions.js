@@ -133,3 +133,10 @@ function toggle_display_by_class(cls) {
         (lst[i].style.display == '')?(lst[i].style.display='none'):(lst[i].style.display='');
     }
 }
+
+function toggleDisplayByToggleClass(cls) {
+	let elems = document.getElementsByClassName(cls)
+	Array.prototype.forEach.call(elems, function(el) {
+		$( el ).toggleClass("hidden");
+	});
+}

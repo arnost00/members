@@ -19,3 +19,7 @@ div.link-top {
 div.update-categories > div#ckbx-cat{
 	padding: 2px 2px 2px 2px;
 }
+
+.hidden {
+	display: none;
+}
