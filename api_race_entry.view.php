@@ -20,6 +20,14 @@
         display: none;
     }
 
+    div.ui-accordion > h3 {
+	    min-height: 80px;
+    }
+
+    span.toolbar > button {
+        min-height: 60px;
+    }
+
   </style>
 
   <script src="https://code.jquery.com/jquery-3.6.0.js"></script>

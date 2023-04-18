@@ -15,10 +15,8 @@ $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 0;  // old races
 $fD = (IsSet($fD) && is_numeric($fD)) ? (int)$fD : 0;  // type 0
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD);
 
-$query = 'SELECT r.id, r.datum, datum2, nazev, typ0, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, '.
-		'prihlasky4, prihlasky5, vicedenni, misto, oddil, kat, termin, cancelled, if(vedouci=0, "-", concat(u.jmeno, " ", u.prijmeni)) as vedouci, r.vedouci as vedouci_id '.
-		'FROM '.TBL_RACE.' r LEFT JOIN '.TBL_ZAVXUS.' zu ON r.id = zu.id_zavod AND zu.id_user='.$usr->user_id.' left join '.TBL_USER.' u on u.id = r.vedouci '.
-		$sql_sub_query.' ORDER BY r.datum, datum2, r.id';
+
+$query = 'SELECT '.TBL_RACE.'.id, datum, datum2, nazev, typ0, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, kat, termin, vedouci, cancelled FROM '.TBL_RACE.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_RACE.'.id = '.TBL_ZAVXUS.'.id_zavod AND '.TBL_ZAVXUS.'.id_user='.$usr->user_id.$sql_sub_query.' ORDER BY datum, datum2, '.TBL_RACE.'.id';
 @$vysledek=query_db($query);
 
 @$vysledek2=query_db("SELECT * FROM ".TBL_USER." where id=$usr->user_id");
@@ -132,7 +130,16 @@ if ($num_rows > 0)
 		if($g_enable_race_boss)
 		{
 			$link_to_participation = "/<A HREF=\"javascript:open_win('./api_race_entry.view.php?race_id=".$zaznam['id']."','')\">Účast</A>";
-			$row[] = $zaznam['vedouci'].($zaznam['vedouci_id'] == $usr->user_id ? $link_to_participation : '');
+
+			$boss = '-';
+			if($zaznam['vedouci'] != 0)
+			{
+				@$vysledekU=query_db("SELECT jmeno,prijmeni FROM ".TBL_USER." WHERE id = '".$zaznam['vedouci']."' LIMIT 1");
+				@$zaznamU=mysqli_fetch_array($vysledekU);
+				if($zaznamU != FALSE)
+					$boss = $zaznamU['jmeno'].' '.$zaznamU['prijmeni'].($zaznam['vedouci'] == $usr->user_id ? $link_to_participation : '');
+			}
+			$row[] = $boss;
 		}
 		
 		if (!$brk_tbl && $zaznam['datum'] >= $curr_date)
