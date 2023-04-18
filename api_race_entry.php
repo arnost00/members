@@ -30,8 +30,6 @@ require_once ('url.inc.php');
 
 require_once ('functions.php');
 
-$curr_date = GetCurrentDate();
-
 $race_id = $_GET['id_race'];
 
 $data = array(); //variable for return in json

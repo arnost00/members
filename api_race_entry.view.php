@@ -38,7 +38,7 @@
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     var id_race = urlParams.get('race_id');
-    document.getElementById("title").innerHTML = "Zavod "+id_race;
+    // document.getElementById("title").innerHTML = "Zavod "+id_race;
     var dat = [];
     var accordion = document.getElementById("accordion");
     $.getJSON('api_race_entry.php?id_race='+id_race, function(data) {
@@ -191,7 +191,15 @@
   </script>
 </head>
 <body>
-<h2 id='title'>Nacitam data ...</h2>
+<?
+    require_once ('connect.inc.php');
+    db_Connect();
+    $race_id = $_GET['race_id'];
+    $query = "select nazev from ".TBL_RACE." where id = $race_id";
+    @$vysledek=$db_conn->query($query);
+    $zaznam=mysqli_fetch_array($vysledek)
+?>
+<h2 id='title'>Zavod <?=$zaznam['nazev']?></h2>
 <button id="btnAccomodation" class="ui-button ui-widget ui-corner-all">Zobraz ubytovane</button> <---||---> <button id="btnEntry" class="ui-button ui-widget ui-corner-all">Zobraz seznam</button>
 <hr/>
 
