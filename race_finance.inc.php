@@ -62,7 +62,7 @@ Vše<input type="checkbox" id="all-ckbx"/><div id="ckbx-cat"></div>
 <label for="in-amount">Částka&nbsp;</label><input type="number" id="in-amount"/>
 <label for="in-note">&nbsp;Poznámka&nbsp;</label><input type="text" id="in-note"/>
 <button onclick="fillInputsByCategory()">Vlož</button><br/>
-<button onclick='toggleDisplayByToggleClass("participated")'>Účastníci</button><button onclick='toggleDisplayByToggleClass("addByFin")'>Dohlášení</button>
+<button onclick='toggleDisplayByToggleClass("notParticipated")'>Účastníci</button><button onclick='toggleDisplayByToggleClass("addByFin")'>Dohlášení</button>
 </div>
 
 <script>
@@ -161,7 +161,7 @@ while ($zaznam=mysqli_fetch_assoc($vysledek_prihlaseni))
 	}
 	$row[] = ($zaznam['participated'] ? 'A' : '').($zaznam['add_by_fin'] ? 'F' : '');
 
-	$row_class = "cat-".$kat_id." ".($zaznam['participated'] ? 'participated ' : ' ').($zaznam['add_by_fin'] ? 'addByFin ' : ' ');
+	$row_class = "cat-".$kat_id." ".($zaznam['participated'] ? 'participated ' : 'notParticipated ').($zaznam['add_by_fin'] ? 'addByFin ' : 'addByUser ');
 
 	echo $data_tbl->get_new_row_arr($row, $row_class)."\n";
 	$i++;
