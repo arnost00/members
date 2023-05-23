@@ -11,6 +11,9 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 
 // HTTP/1.0 
 header("Pragma: no-cache"); 
+
+// CORS
+header("Access-Control-Allow-Origin: *");
 ?>
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
@@ -38,6 +41,7 @@ $query="SELECT id,datum,typ,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,pr
 $data = array();
 $data['Format'] = 'json';
 $data['Source'] = 'members';
+$data['Data'] = [];
 
 if (mysqli_num_rows($vysledek) > 0)
 {
