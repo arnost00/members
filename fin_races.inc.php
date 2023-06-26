@@ -14,7 +14,9 @@ $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 1;  // old races
 $fD = (IsSet($fD) && is_numeric($fD)) ? (int)$fD : 0;  // type 0
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD);
 
-$query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,nazev,oddil,ranking,typ0,typ,vicedenni,odkaz,misto,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum desc, datum2 desc, id desc';
+$sort_order = ($g_finances_race_list_sort_old) ? "asc" : "desc";
+
+$query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,nazev,oddil,ranking,typ0,typ,vicedenni,odkaz,misto,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum '.$sort_order.', datum2 '.$sort_order.', id '.$sort_order;
 @$vysledek=query_db($query);
 
 $query = "select id_zavod, sum(amount) amount from ".TBL_FINANCE." where storno is null group by id_zavod;";
