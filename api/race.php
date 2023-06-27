@@ -6,12 +6,8 @@ require_once("./__utils.php");
 require_once("./__parse.php");
 require_once("./__db.php");
 
-// require_once("../connect.inc.php");
-
 require_once("../common.inc.php");
 require_once('../cfg/enums.php');
-
-// db_Connect();
 
 $action = require_action();
 
@@ -19,13 +15,10 @@ switch ($action) {
     case "list":
         $current_date = GetCurrentDate();
 
-        // $output = query_db("SELECT * FROM " . TBL_RACE . " WHERE datum >= '$current_date' || datum2 >= '$current_date' ORDER BY datum, datum2, id") or raise_and_die("db error");
-
         $output = db_execute("SELECT * FROM " . TBL_RACE . " WHERE datum >= ? || datum2 >= ? ORDER BY datum, datum2, id", $current_date, $current_date);
 
         $result["data"] = [];
         while ($race = $output->fetch_assoc()) {
-            // $result["data"][] = $race;
             $result["data"][] = parse_race_row($race);
         }
 
@@ -37,13 +30,11 @@ switch ($action) {
         $race_id = require_race_id();
         $user_id = require_user_id();
 
-        // $output = query_db("SELECT * FROM " . TBL_RACE . " WHERE id = '$race_id' LIMIT 1");
         $output = db_execute("SELECT * FROM " . TBL_RACE . " WHERE id = ? LIMIT 1", $race_id);
         $output = $output->fetch_assoc();
         
         $result["data"] = parse_race_row($output);
 
-        // $output = query_db("SELECT zavxus.*, user.jmeno, user.prijmeni FROM "  . TBL_ZAVXUS . " as zavxus, " . TBL_USER . " as user WHERE zavxus.id_user = user.id AND id_zavod = '$race_id'") or raise_and_die("db error");
         $output = db_execute("SELECT zavxus.*, user.jmeno, user.prijmeni FROM "  . TBL_ZAVXUS . " as zavxus, " . TBL_USER . " as user WHERE zavxus.id_user = user.id AND id_zavod = ?", $race_id);
 
         $result["data"]["everyone"] = [];
@@ -109,18 +100,13 @@ switch ($action) {
         }
         
         // check whether the race already exists
-        // $output = query_db("SELECT * FROM " . TBL_ZAVXUS . " WHERE id_zavod='$race_id' and id_user='$user_id'") or raise_and_die("db error");
         $output =  db_execute("SELECT id FROM " . TBL_ZAVXUS . " WHERE id_zavod = ? and id_user = ?", $race_id, $user_id);
-        // $output = mysqli_fetch_array($output);
-
         $output = $output->fetch_assoc();
 
         if ($output == null) { // if not, create a new row with corresponding values
-            // query_db("INSERT INTO " . TBL_ZAVXUS . " (id_user, id_zavod, kat, pozn, pozn_in, termin, transport, ubytovani) VALUES ('$user_id','$race_id','$category','$note','$note_internal','$termin',$transport, $accommodation)") or raise_and_die("db error");
             db_execute("INSERT INTO " . TBL_ZAVXUS . " (id_user, id_zavod, kat, pozn, pozn_in, termin, transport, ubytovani) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", $user_id, $race_id, $category, $note, $note_internal, $termin, $transport, $accommodation);
         } else { // if yes, update the row
             $id = $output["id"];
-            // query_db("UPDATE " . TBL_ZAVXUS . " SET kat='$category', pozn='$note', pozn_in='$note_internal', termin='$termin', transport=$transport, ubytovani=$accommodation WHERE id='$id'") or raise_and_die("db error");
             db_execute("UPDATE " . TBL_ZAVXUS . " SET kat = ?, pozn = ?, pozn_in = ?, termin = ?, transport = ?, ubytovani = ? WHERE id = ?", $category, $note, $note_internal, $termin, $transport, $accommodation, $id);
         }
         
@@ -137,7 +123,6 @@ switch ($action) {
             raise_and_die("entry is locked");
         }
         
-        // query_db("DELETE FROM " . TBL_ZAVXUS . " WHERE id_zavod = '$race_id' AND id_user = '$user_id'") or raise_and_die("db error");
         db_execute("DELETE FROM " . TBL_ZAVXUS . " WHERE id_zavod = ? AND id_user = ?", $race_id, $user_id);
         
         print_and_die();
@@ -214,19 +199,6 @@ function parse_race_row($race) {
         'categories' => $categories,
     ];
 }
-
-
-// $query = "SELECT u.*, z.* FROM " . TBL_ZAVXUS . " as z, " . TBL_USER . " as u WHERE z.id_user = u.id AND z.id_zavod='" . $race_id . "' ORDER BY z.id ASC";
-// $query = "SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod=$race_id";
-// $output = query_db($query) or raise_and_die("error while communicating with database");
-
-// $result["data"] = [];
-
-// while ($row = mysqli_fetch_array($output)) {
-//     $result["data"][] = $row;
-// }
-
-// print_and_die($query);
 
 // https://stackoverflow.com/a/14701491/14900791
 function add_scheme($url, $scheme = 'http://') {
