@@ -25,7 +25,8 @@ $id_us = (IsSet($id_us) && is_numeric($id_us)) ? (int)$id_us : 0;
 
 DrawPageTitle('Přihláška na závod');
 
-@$vysledek=query_db("SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod=$id_zav ORDER BY id");
+$query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.termin, z.id_user, z.transport, z.ubytovani FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' ORDER BY z.id ASC';
+@$vysledek=query_db($query);
 
 @$vysledek_z=query_db("SELECT * FROM ".TBL_RACE." WHERE id=$id_zav");
 $zaznam_z = mysqli_fetch_array($vysledek_z);
@@ -41,7 +42,6 @@ $new = ($zaznam_rg && $zaznam_rg['kat'] != '') ? 0 : 1;
 ?>
 
 <SCRIPT LANGUAGE="JavaScript">
-<!--
 function zmen_kat(kateg)
 {
 	document.form1.kat.value=kateg;
@@ -66,7 +66,6 @@ function submit_off()
 	}
 	return false;
 }
-//-->
 </SCRIPT>
 
 <?
@@ -79,7 +78,14 @@ if (!$new)
 	RaceInfoTable($zaznam_z,$add_r,true,false,true);
 }
 else
+{
 	RaceInfoTable($zaznam_z,'',true,false,true);
+	$zaznam_rg['kat'] = '';
+	$zaznam_rg['pozn'] = '';
+	$zaznam_rg['pozn_in'] = '';
+	$zaznam_rg['transport'] = null;
+	$zaznam_rg['ubytovani'] = null;
+}
 ?>
 <BR>
 <BUTTON onclick="javascript:close_popup();">Zpět</BUTTON>
@@ -172,18 +178,15 @@ Poznámka&nbsp;<INPUT TYPE="text" name="pozn2" size="50" maxlength="250" value="
 
 <INPUT TYPE="hidden" name="id_us" value="<?echo $id_us?>">
 <INPUT TYPE="hidden" name="id_zav" value="<?echo $id_zav?>">
-<INPUT TYPE="hidden" name="novy" value="<?echo $new?>">
-<INPUT TYPE="hidden" name="id_z" value="<?echo $zaznam_rg['id']?>">
-
 <?
 if ($new)
 {
-?>
-<INPUT TYPE="submit" value="Přihlásit na závod">
-<?
+	echo ('<INPUT TYPE="hidden" name="novy" value="'.$new.'">'."\n");
+	echo ('<INPUT TYPE="submit" value="Přihlásit na závod">'."\n");
 }
 else
 {
+	echo ('<INPUT TYPE="hidden" name="id_z" value="'.$zaznam_rg['id'].'">'."\n");
 ?>
 <INPUT TYPE="submit" value="Změnit údaje">
 &nbsp;&nbsp;&nbsp;&nbsp;<BUTTON onclick="return submit_off();">Odhlásit ze závodu</BUTTON>
@@ -234,16 +237,12 @@ $trans=0;
 $ubyt=0;
 while ($zaznam=mysqli_fetch_array($vysledek))
 {
-	@$vysledek1=query_db("SELECT * FROM ".TBL_USER." WHERE id=$zaznam[id_user] LIMIT 1");
-	$zaznam1=mysqli_fetch_array($vysledek1);
-	if ($zaznam1)
-	{
 		$i++;
 
 		$row = array();
 		$row[] = $i.'<!-- '.$zaznam['id'].' -->';
-		$row[] = $zaznam1['prijmeni'];
-		$row[] = $zaznam1['jmeno'];
+		$row[] = $zaznam['prijmeni'];
+		$row[] = $zaznam['jmeno'];
 		$row[] = '<B>'.$zaznam['kat'].'</B>';
 		if($is_spol_dopr_on)
 		{
@@ -270,7 +269,6 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 		$row[] = $zaznam['pozn'];
 		$row[] = $zaznam['pozn_in'];
 		echo $data_tbl->get_new_row_arr($row)."\n";
-	}
 }
 echo $data_tbl->get_footer()."\n";
 

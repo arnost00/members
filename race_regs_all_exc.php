@@ -45,8 +45,8 @@ while ($zaznamZ=mysqli_fetch_array($vysledek))
 		$poz = correct_sql_string($pozn[$user]);
 		$poz2 = correct_sql_string($pozn2[$user]);
 		$cterm = $termin;
-		$trans = ($is_spol_dopr_on && IsSet($transport[$user])) ? 1 : null;
-		$ubyt = ($is_spol_ubyt_on && IsSet($ubytovani[$user])) ? 1 : null;
+		$trans = ($is_spol_dopr_on && IsSet($transport[$user])) ? 1 : 'NULL';
+		$ubyt = ($is_spol_ubyt_on && IsSet($ubytovani[$user])) ? 1 : 'NULL';
 		if($is_registrator_on)
 		{
 			if($is_termin_edit_on && $term[$user] != 0)
@@ -73,7 +73,7 @@ while ($zaznamZ=mysqli_fetch_array($vysledek))
 				$poz2=correct_sql_string($poz2);
 				$cterm=correct_sql_string($cterm);
 			
-				$result=query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$poz', pozn_in='$poz2', termin='$cterm', transport='$trans', ubytovani='$ubyt' WHERE id_zavod = '$id' AND id_user = '$user'")
+				$result=query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$poz', pozn_in='$poz2', termin='$cterm', transport=$trans, ubytovani=$ubyt WHERE id_zavod = '$id' AND id_user = '$user'")
 					or die("Chyba při provádění dotazu do databáze.");
 				if ($result == FALSE)
 					die ("Nepodařilo se změnit přihlášku člena.");
@@ -89,7 +89,7 @@ while ($zaznamZ=mysqli_fetch_array($vysledek))
 				$poz2=correct_sql_string($poz2);
 				$cterm=correct_sql_string($cterm);
 			
-				$result=query_db("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in, termin, transport,ubytovani) VALUES ('$user','$id','$kat','$poz','$poz2','$cterm','$trans','$ubyt')")
+				$result=query_db("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in, termin, transport,ubytovani) VALUES ('$user','$id','$kat','$poz','$poz2','$cterm',$trans,$ubyt)")
 					or die("Chyba při provádění dotazu do databáze.");
 				if ($result == FALSE)
 					die ("Nepodařilo se změnit přihlášku člena.");
@@ -101,8 +101,6 @@ while ($zaznamZ=mysqli_fetch_array($vysledek))
 }
 ?>
 <SCRIPT LANGUAGE="JavaScript">
-<!--
 	window.opener.focus();
 	window.close();
-//-->
 </SCRIPT>

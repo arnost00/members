@@ -2,9 +2,15 @@
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
 DrawPageTitle('Členská základna - ORIS');
+if (!$g_enable_oris_support)
+	exit;
 ?>
+<ul>Základní exporty:
+	<li><a href="export_directory_exc.php?oris=1">Export pro ORIS (Import členů klubu)</a><br>
+	<li><a href="export_directory_exc.php?oris=2">Export pro ORIS (Import kontaktních informací)</a><br>
+	<li><a href="export_directory_exc.php?oris=3">Export pro ORIS (Registrace)</a><br>
+</ul>
 <CENTER>
-
 <?
 $ORIS_year = (isset($ORIS_year) && is_numeric($ORIS_year)) ? $ORIS_year : date("Y");
 require_once "./common_user.inc.php";

@@ -21,7 +21,6 @@ $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 DrawPageTitle('Editace přiřazení trenéra členu');
 ?>
 <SCRIPT LANGUAGE="JavaScript">
-<!--
 function check_mng(vstup)
 {
 	if (vstup.mng.value < 0)
@@ -32,8 +31,6 @@ function check_mng(vstup)
 	else
 		return true;
 }
-
-//-->
 </SCRIPT>
 <?
 db_Connect();
@@ -63,16 +60,16 @@ echo '<FORM METHOD=POST ACTION="./mng_edit_exc.php?id='.$id.'" onsubmit="return 
 <TR><TD>
 <SELECT name="mng" size=10>
 <?
-	echo '<OPTION value="0'.(($zaznam['chief_id'] == 0) ? '" selected ':'"').'>-- bez malého trenéra --';
-
-$query = 'SELECT u.id,u.prijmeni,u.jmeno, u.hidden FROM '.TBL_USER.' as u, '.TBL_ACCOUNT.' WHERE '.TBL_ACCOUNT.'.id_users = u.id AND '.TBL_ACCOUNT.'.policy_mng = '._MNG_SMALL_INT_VALUE_." AND u.id <> $id";
+$query = 'SELECT u.id,u.prijmeni,u.jmeno, u.hidden FROM '.TBL_USER.' as u, '.TBL_ACCOUNT.' WHERE '.TBL_ACCOUNT.'.id_users = u.id AND '.TBL_ACCOUNT.'.policy_mng = '._MNG_SMALL_INT_VALUE_." AND u.id <> $id ORDER BY sort_name ASC";
 @$vysl=query_db($query);
+
+echo '<OPTION value="0'.(($zaznam['chief_id'] == 0) ? '" selected ':'"').'>-- bez malého trenéra --';
 
 while ($zazn=mysqli_fetch_array($vysl))
 {
 	if(!$zazn['hidden'])
 	{
-		echo '<OPTION value="'.$zazn['id'].(($zazn['id'] == $zaznam['chief_id']) ? '" selected ':'"').'>'.$zazn['jmeno'].' '.$zazn['prijmeni'];
+		echo '<OPTION value="'.$zazn['id'].(($zazn['id'] == $zaznam['chief_id']) ? '" selected ':'"').'>'.$zazn['prijmeni'].' '.$zazn['jmeno'];
 	}
 }
 ?>

@@ -1,16 +1,23 @@
 <?
+
+// fix the path so that it also works when importing
+$COUNTRY_ISO_CODES_FILE = dirname(__FILE__) . "/country-list-iso-codes_cz.txt";
+
 function get_county_list_array()
 {
-	$myFile = "country-list-iso-codes_cz.txt";
-	$fh = fopen($myFile, 'r');
-	$theData = fread($fh, filesize($myFile));
-	fclose($fh);
-	$data = explode("\n",$theData);
+	global $COUNTRY_ISO_CODES_FILE;
+
+	$file = fopen($COUNTRY_ISO_CODES_FILE, 'r');
+	$data = fread($file, filesize($COUNTRY_ISO_CODES_FILE));
+	fclose($file);
+	
+	$data = explode("\n", $data);
+	
 	foreach($data as $row)
 	{
-//		list($cd,$nm) = explode(':',$row);
-//		$data2[$cd] = $nm;
-		$data2[] = explode(':',$row);
+		// list($cd,$nm) = explode(':',$row);
+		// $data2[$cd] = $nm;
+		$data2[] = explode(':', trim($row)); // also trim whitespaces
 	}
 	return $data2;
 }
@@ -32,16 +39,18 @@ function generate_combobox_data($selected)
 
 function get_country_string($code)
 {
-	$myFile = "country-list-iso-codes_cz.txt";
-	$fh = fopen($myFile, 'r');
-	$theData = fread($fh, filesize($myFile));
-	fclose($fh);
-	$data = explode("\n",$theData);
+	global $COUNTRY_ISO_CODES_FILE;
+
+	$file = fopen($COUNTRY_ISO_CODES_FILE, 'r');
+	$data = fread($file, filesize($COUNTRY_ISO_CODES_FILE));
+	fclose($file);
+	
+	$data = explode("\n", $data);
+	
 	foreach($data as $row)
 	{
-		$data2 = explode(':',$row);
-		if ($data2[0] == $code)
-			return $data2[1];
+		$data2 = explode(':', trim($row)); // also trim whitespaces
+		if ($data2[0] == $code) return $data2[1];
 	}
 	return '';
 }

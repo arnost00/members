@@ -67,12 +67,11 @@ $prihlasky3 = String2DateDMY($prihlasky3);
 $prihlasky4 = String2DateDMY($prihlasky4);
 $prihlasky5 = String2DateDMY($prihlasky5);
 $prihlasky = 0;
-if($prihlasky1 != '') $prihlasky++;
-if($prihlasky2 != '') $prihlasky++;
-if($prihlasky3 != '') $prihlasky++;
-if($prihlasky4 != '') $prihlasky++;
-if($prihlasky5 != '') $prihlasky++;
-
+if($prihlasky1 != 0) $prihlasky++;
+if($prihlasky2 != 0) $prihlasky++;
+if($prihlasky3 != 0) $prihlasky++;
+if($prihlasky4 != 0) $prihlasky++;
+if($prihlasky5 != 0) $prihlasky++;
 $result=query_db("SELECT * FROM ".TBL_RACE." WHERE id='$id'");
 $item=mysqli_fetch_array($result);
 if ($item != FALSE)

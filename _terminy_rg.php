@@ -37,7 +37,6 @@ require_once ('common_race.inc.php');
 require_once ('url.inc.php');
 
 $curr_date = GetCurrentDate();
-//$curr_date = mktime (0,0,0,6,1,2010);
 
 $d1 = $curr_date;
 

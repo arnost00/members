@@ -26,7 +26,7 @@ if (IsSet($submit) or IsSet($close))
  		closeClaim($record_last_claim['id'], $payment_id);
 		echo "<script>window.close();</script>";
  	} else {
- 		if ($user_id == $record_last_claim['user_id'])
+ 		if ($record_last_claim && $user_id == $record_last_claim['user_id'])
  		{
  			updateClaim($record_last_claim['id'], $claim_text);
  		} else {
@@ -60,11 +60,12 @@ $query = "SELECT c.user_id, c.payment_id, c.text, DATE_FORMAT( c.date, '%e.%c.%Y
 @$result_claims = query_db($query);
 $record_claims = mysqli_fetch_array($result_claims);
 
-if ($record_claims != null) mysqli_data_seek ($result_claims, 0);
 $actual_text = "";
-if ($user_id == $record_claims['user_id'])
+if ($record_claims != null)
 {
-	$actual_text = $record_claims['text'];
+	mysqli_data_seek ($result_claims, 0);
+	if ($user_id == $record_claims['user_id'])
+		$actual_text = $record_claims['text'];
 }
 
 ?>

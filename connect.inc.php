@@ -40,16 +40,25 @@ function query_db($sql_query)
 {
 	global $db_query_cnt, $db_conn, $g_is_release;
 		if (!$g_is_release) {
-		echo "<code>$sql_query</code> |||| <code>pocet radku : ".$db_conn->affected_rows."</code><br/>";
+		echo "<code>$sql_query |||| pocet ovlivnenych radku : ".$db_conn->affected_rows."</code><br/>";
 		/**
 		* //log to console
-		* // $console_message = "sql query: ".$sql_query." || pocet radku :".$db_conn->affected_rows;
+		* // $console_message = "sql query: ".$sql_query." || pocet ovlivnenych radku :".$db_conn->affected_rows;
 		* // echo '<script>console.log("'.$console_message.'")</script>';
 		*/
 	}
 	$db_query_cnt++;
-	$result=$db_conn->query($sql_query);
-
+	try
+	{
+		$result=$db_conn->query($sql_query);
+	}
+	catch (mysqli_sql_exception $ex)
+	{
+		$msg = 'Popis: '.$ex->getMessage(); 
+		echo ('Chyba při provádění dotazu do databáze. '.$msg."<br />\n");
+		LogToFile(dirname(__FILE__) . '/logs/.db_errors.txt','Db query error - '.$msg.__FILE__);
+		$result = false;
+	}
 //dokud nebude pripraven db.inc.php nebo sem nepridame funkci error_db()
 //		or error_db();
 	return $result;

@@ -61,16 +61,24 @@ function GenerateInfoEmail($type,$id,$login,$heslo,$email)
 	SendEmail($g_fullname, $g_emailadr,'',$email,$full_msg,$subject);
 }
 
+function GetAccountId($user_id)
+{
+	if ($user_id == 0)	// incorrect ID
+		return null;
+
+	$vysledek=query_db("SELECT id FROM ".TBL_ACCOUNT." WHERE id_users = $user_id LIMIT 1");
+	if ($zaznam=mysqli_fetch_array($vysledek))
+	return ($zaznam["id"] == null)?null:$zaznam["id"];
+	else
+		return null;
+}
+
 db_Connect();
 require_once "./common_user.inc.php";
 
-$vysledek=query_db("SELECT id FROM ".TBL_ACCOUNT." WHERE id_users = $id LIMIT 1");
-$zaznam=mysqli_fetch_array($vysledek);
-$id2 = ($zaznam["id"] == null)?null:$zaznam["id"];
-
 if (IsLoggedSmallAdmin())
 {
-	$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+	$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0; // id from TBL_USER
 	$type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
 	$action_type = (IsSet($action_type) && is_numeric($action_type)) ? (int)$action_type : 1;
 
@@ -90,6 +98,8 @@ if (IsLoggedSmallAdmin())
 	else if ($mng == 1)
 		$mng = _MNG_SMALL_INT_VALUE_;
 
+	$acc_id = GetAccountId($id);
+
 	switch ($type)
 	{
 	case 1: // update
@@ -103,7 +113,7 @@ if (IsLoggedSmallAdmin())
  
 		if ($login=="" || $podpis=="")
 			$result=CS_EMPTY_ITEM;
-		else if (!CheckIfLoginIsValid($login,$id2))
+		else if (!CheckIfLoginIsValid($login,$acc_id))
 			$result=CS_LOGIN_EXIST;
 		else
 		{
@@ -113,7 +123,7 @@ if (IsLoggedSmallAdmin())
 				die ("Nepodařilo se upravit účet členu.");
 			else
 				$result = CS_ACC_UPDATED;
-			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id2.' login = "'.$login.'" ['.$podpis.']');
+			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$acc_id.' login = "'.$login.'" ['.$podpis.']');
 		}
 		break;
 	case 2: // new
@@ -152,7 +162,7 @@ if (IsLoggedSmallAdmin())
 			{
 				$result = CS_ACC_CREATED;
 			}
-			SaveItemToModifyLog_Add(TBL_ACCOUNT,'acc.id = '.$id2.' login = "'.$login.'" ['.$podpis.']');
+			SaveItemToModifyLog_Add(TBL_ACCOUNT,'acc.id = '.$acc_id.' login = "'.$login.'" ['.$podpis.']');
 			if ($action_type == 2 && $email != '')
 			{	// send email
 				GenerateInfoEmail(2,$id,$login,$nheslo,$email);
@@ -175,13 +185,13 @@ if (IsLoggedSmallAdmin())
 		else
 		{
 			$hheslo = password_hash(md5($nheslo), PASSWORD_DEFAULT);
-			$vysledek=query_db("UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id2'")
+			$vysledek=query_db("UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$acc_id'")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($vysledek == FALSE)
 				die ("Nepodařilo se upravit heslo člena.");
 			else
 				$result = CS_USER_PASS_UPDATED;
-			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id2.' - pass');
+			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$acc_id.' - pass');
 			if ($action_type == 2 && $email != '')
 			{	// send email
 				GenerateInfoEmail(1,$id,'',$nheslo,$email);
@@ -199,8 +209,6 @@ else if (IsLoggedManager())
 	$type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
 	$action_type = (IsSet($action_type) && is_numeric($action_type)) ? (int)$action_type : 1;
 	
-
-
 	$result="";
 
 	if (!IsSet ($news)) $news = 0;
@@ -208,6 +216,9 @@ else if (IsLoggedManager())
 		$mng2 = 0;
 	else
 		$mng2 = _MNG_SMALL_INT_VALUE_;
+
+	$acc_id = GetAccountId($id);
+
 	switch ($type)
 	{
 	case 1: // update
@@ -218,17 +229,17 @@ else if (IsLoggedManager())
 
 		if ($login=="" || $podpis=="")
 			$result=CS_EMPTY_ITEM;
-		else if (!CheckIfLoginIsValid($login,$id2))
+		else if (!CheckIfLoginIsValid($login,$acc_id))
 			$result=CS_LOGIN_EXIST;
 		else
 		{
-			$result=query_db("UPDATE ".TBL_ACCOUNT." SET login='$login', podpis='$podpis', policy_news='$news', policy_mng='$mng2' WHERE id='$id2'")
+			$result=query_db("UPDATE ".TBL_ACCOUNT." SET login='$login', podpis='$podpis', policy_news='$news', policy_mng='$mng2' WHERE id='$acc_id'")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se upravit účet členu.");
 			else
 				$result = CS_ACC_UPDATED;
-			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id2.' login = "'.$login.'" ['.$podpis.']');
+			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$acc_id.' login = "'.$login.'" ['.$podpis.']');
 		}
 		break;
 	case 2: // new
@@ -264,7 +275,7 @@ else if (IsLoggedManager())
 			{
 				$result = CS_ACC_CREATED;
 			}
-			SaveItemToModifyLog_Add(TBL_ACCOUNT,'acc.id = '.$id2.' login = "'.$login.'" ['.$podpis.']');
+			SaveItemToModifyLog_Add(TBL_ACCOUNT,'acc.id = '.$acc_id.' login = "'.$login.'" ['.$podpis.']');
 			if ($action_type == 2 && $email != '')
 			{	// send email
 				GenerateInfoEmail(2,$id,$login,$nheslo,$email);
@@ -287,13 +298,13 @@ else if (IsLoggedManager())
 		else
 		{
 			$hheslo = password_hash(md5($nheslo), PASSWORD_DEFAULT);
-			$result=query_db("UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id2'")
+			$result=query_db("UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$acc_id'")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se upravit heslo člena.");
 			else
 				$result = CS_USER_PASS_UPDATED;
-			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id2.' - pass');
+			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$acc_id.' - pass');
 			if ($action_type == 2 && $email != '')
 			{	// send email
 				GenerateInfoEmail(1,$id,'',$nheslo,$email);
@@ -311,6 +322,8 @@ else if (IsLoggedSmallManager())
 	$type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
 	
 	$result="";
+	
+	$acc_id = GetAccountId($id);
 
 	switch ($type)
 	{
@@ -324,13 +337,13 @@ else if (IsLoggedSmallManager())
 		else
 		{
 			$hheslo = password_hash(md5($nheslo), PASSWORD_DEFAULT);
-			$result=query_db("UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$id2'")
+			$result=query_db("UPDATE ".TBL_ACCOUNT." SET heslo='$hheslo' WHERE id='$acc_id'")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se upravit heslo člena.");
 			else
 				$result = CS_USER_PASS_UPDATED;
-			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$id2.' - pass');
+			SaveItemToModifyLog_Edit(TBL_ACCOUNT,'acc.id = '.$acc_id.' - pass');
 		}
 		break;
 	default:

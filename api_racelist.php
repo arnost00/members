@@ -11,6 +11,9 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 
 // HTTP/1.0 
 header("Pragma: no-cache"); 
+
+// CORS
+header("Access-Control-Allow-Origin: *");
 ?>
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
@@ -38,6 +41,7 @@ $query="SELECT id,datum,typ,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,pr
 $data = array();
 $data['Format'] = 'json';
 $data['Source'] = 'members';
+$data['Data'] = [];
 
 if (mysqli_num_rows($vysledek) > 0)
 {
@@ -114,31 +118,29 @@ if (mysqli_num_rows($vysledek) > 0)
 		}
 	}
 	
-	// enums
-	
-	foreach ( $g_racetype0 as $key => &$value )
-	{
-		$data['Enums']['Type'][$key] = $value;
-	}
-
-	for($ii=0; $ii<$g_zebricek_cnt; $ii++)
-	{
-//		$data['Enums']['Rankings'][$ii]['Value'] = $g_zebricek [$ii]['id'];
-//		$data['Enums']['Rankings'][$ii]['Name'] = $g_zebricek [$ii]['nm'];
-		$data['Enums']['Rankings'][$g_zebricek [$ii]['id']] = $g_zebricek [$ii]['nm'];
-	}
-
-	for($ii=0; $ii<$g_racetype_cnt; $ii++)
-	{
-		$data['Enums']['Sports'][$g_racetype[$ii]['enum']] = $g_racetype [$ii]['nm'];
-	}
-	
 	$data['Status'] = 'OK';
 }
 else
 {
 	$data['Status'] = 'empty';
-	// empty request
+	// empty data request
+}
+
+// enums
+
+foreach ( $g_racetype0 as $key => &$value )
+{
+	$data['Enums']['Type'][$key] = $value;
+}
+
+for($ii=0; $ii<$g_zebricek_cnt; $ii++)
+{
+	$data['Enums']['Rankings'][$g_zebricek [$ii]['id']] = $g_zebricek [$ii]['nm'];
+}
+
+for($ii=0; $ii<$g_racetype_cnt; $ii++)
+{
+	$data['Enums']['Sports'][$g_racetype[$ii]['enum']] = $g_racetype [$ii]['nm'];
 }
 
 echo (json_encode($data));
