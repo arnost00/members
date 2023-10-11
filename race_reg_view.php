@@ -96,7 +96,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 		{
 			if ($zaznam["transport"])
 			{
-				$row[] = '<B>X</B>';
+				$row[] = '<B>&#x2714;</B>';
 				$trans++;
 			}
 			else
@@ -106,7 +106,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 		{
 			if ($zaznam["ubytovani"])
 			{
-				$row[] = '<B>X</B>';
+				$row[] = '<B>&#x2714;</B>';
 				$ubyt++;
 			}
 			else
