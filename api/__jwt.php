@@ -1,5 +1,6 @@
 <?php
 require_once("./__api.php");
+require_once("../cfg/_cfg.php");
 
 $supported_alg = "HS512";
 $supported_typ = "JWT";
@@ -20,9 +21,9 @@ function generate_jwt($payload) {
 }
 
 function sign_jwt($header, $payload) {
-    // local variable key
-    $key = base64_decode("JAJA7yOFFH3qSn4VZ+uv8oJqP/NmliOkGc9ljc1EeVqJlrqfJssPKNUEODBoLEZd5ySYWgr5lEhXVMaO4DpbXA==");
-    return base64_url_encode(hash_hmac("sha512", "$header.$payload", $key, true));
+    global $jwt_secret_key;
+    
+    return base64_url_encode(hash_hmac("sha512", "$header.$payload", base64_decode($jwt_secret_key), true));
 }
 
 function parse_jwt($token) {
@@ -54,6 +55,16 @@ function require_token() {
 
     if (!isset($token)) {
         raise_and_die("token is required");
+    }
+
+    return parse_jwt($token);
+}
+
+function optional_token() {
+    $token = @$_POST["token"];
+
+    if (!isset($token)) {
+        return false;
     }
 
     return parse_jwt($token);

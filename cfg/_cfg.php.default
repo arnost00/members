@@ -26,6 +26,12 @@ $g_dbpass='root';
 $g_dbname='members';
 
 //==================================================================
+// jwt secret key
+//==================================================================
+// head -c 64 /dev/urandom | base64
+$jwt_secret_key = "DEVELOPMENT+ONLY+++GENERATE+A+SECURE+64+BYTE+KEY+IN+PRODUCTION++/uV4zp8UPeLiSXUL62Ae/w=="; // ### TREBA ZMENIT ###
+
+//==================================================================
 // http server
 //==================================================================
 // jmeno WWW serveru

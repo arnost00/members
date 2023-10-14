@@ -2,7 +2,6 @@
 
 require_once("./__api.php");
 require_once("./__jwt.php");
-require_once("./__utils.php");
 require_once("./__db.php");
 
 require_once("../common.inc.php");
@@ -10,7 +9,30 @@ require_once("../common.inc.php");
 $action = require_action();
 
 switch ($action) {
-    case "view_user_data":
+    case "managing_users":
+        $user_id = require_user_id(true);
+
+        $result["data"] = [];
+
+        // make sure the chief is on the zero index
+        $output = db_execute("SELECT id, jmeno, prijmeni, reg, si_chip FROM " . TBL_USER . " WHERE id = ? UNION SELECT id, jmeno, prijmeni, reg, si_chip FROM " . TBL_USER . " WHERE chief_id = ?", $user_id, $user_id);
+        while ($user = $output->fetch_assoc()) {
+            $result["data"][] = [
+                "user_id" => $user["id"],
+                "name" => $user["jmeno"],
+                "surname" => $user["prijmeni"],
+
+                "register_number" => $user["reg"],
+                "chip_number" => $user["si_chip"],
+
+                "chief_id" => @$user["chief_id"], // allow null
+                "chief_pay" => @$user["chief_pay"], // allow null
+            ];
+        }
+
+        print_and_die();
+        break;
+    case "user_data":
         $user_id = require_user_id(true);
 
         $output = db_execute("SELECT * FROM " . TBL_USER . " WHERE id = ?", $user_id);
@@ -36,7 +58,7 @@ switch ($action) {
             "phone_home" => $output["tel_domu"],
             "phone_work" => $output["tel_zam"],
             
-            "register_number" => $output["reg"],
+            "registration_number" => $output["reg"],
             "chip_number" => $output["si_chip"],
 
             "chief_id" => $output["chief_id"],
