@@ -89,22 +89,4 @@ function require_user_id($force_token=false) {
     $user_id = $token["user_id"];
     return $user_id;
 }
-
-// the same as require_user_id, but returns false if not specified
-function optional_user_id($accept_token=true) {
-    if (!$accept_token) {
-        @$user_id = $_POST["user_id"];
-        if (isset($user_id)) {
-            return $user_id;
-        }
-    }
-
-    $token = optional_token();
-    if (isset($token)) {
-            @$user_id = $token["user_id"];
-            return $user_id;
-    }
-
-    return false;
-}
 ?>

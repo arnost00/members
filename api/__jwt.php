@@ -60,16 +60,6 @@ function require_token() {
     return parse_jwt($token);
 }
 
-function optional_token() {
-    $token = @$_POST["token"];
-
-    if (!isset($token)) {
-        return false;
-    }
-
-    return parse_jwt($token);
-}
-
 /**
  * per https://stackoverflow.com/questions/2040240/php-function-to-generabte-v4-uuid/15875555#15875555
  */
