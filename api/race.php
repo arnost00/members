@@ -180,6 +180,9 @@ switch ($action) {
         if ($entry_lock) {
             raise_and_die("entry is locked");
         }
+        
+        $output = db_execute("SELECT cancelled FROM " . TBL_RACE . " WHERE id = ?", $race_id);
+        $output = $output->fetch_assoc();
 
         if ($output["cancelled"] == 1) {
             raise_and_die("race is cancelled");
