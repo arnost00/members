@@ -1,8 +1,9 @@
 # members
 System for handling club entries in czech orienteering.
 
-## Website
+## Website & Source code
 The website is avaible at https://members.eob.cz/.
+Source code is avaible at https://github.com/arnost00/members.
 
 ## Contributors
 - ©️ Copyright 2002-2023 Arnošt, Kenia
