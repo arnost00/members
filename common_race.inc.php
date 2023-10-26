@@ -1,7 +1,7 @@
 <?php if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
 
-require_once("cfg/enums.php");
+require_once("cfg/race_enums.php");
 
 function GetRaceTypeName($value)
 {
