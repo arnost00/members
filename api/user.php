@@ -12,12 +12,12 @@ switch ($action) {
     case "managing_users":
         $user_id = require_user_id(true);
 
-        $result["data"] = [];
+        $result = [];
 
         // make sure the chief is on the zero index
         $output = db_execute("SELECT id, jmeno, prijmeni, reg, si_chip FROM " . TBL_USER . " WHERE id = ? UNION SELECT id, jmeno, prijmeni, reg, si_chip FROM " . TBL_USER . " WHERE chief_id = ?", $user_id, $user_id);
         while ($user = $output->fetch_assoc()) {
-            $result["data"][] = [
+            $result[] = [
                 "user_id" => $user["id"],
                 "name" => $user["jmeno"],
                 "surname" => $user["prijmeni"],
@@ -38,7 +38,7 @@ switch ($action) {
         $output = db_execute("SELECT * FROM " . TBL_USER . " WHERE id = ?", $user_id);
         $output = $output->fetch_assoc();
 
-        $result["data"] = [
+        $result = [
             "user_id" => $output["id"],
             // "login" => $output["login"],
 
@@ -143,33 +143,33 @@ switch ($action) {
         print_and_die();
         break;
     case "login":
-        $username = $_POST["username"];
-        $password = $_POST["password"];
+        $username = @$_POST["username"];
+        $password = @$_POST["password"];
 
         if (!isset($username) | !isset($password)) {
-            raise_and_die("username or password is not set");
+            raise_and_die("username or password are not set");
         }
 
         $output = db_execute("SELECT id_users, login, heslo, locked FROM " . TBL_ACCOUNT . " WHERE login = ? LIMIT 1", $username);
         $output = $output->fetch_assoc();
 
         if (!$output) {
-            raise_and_die("invalid username");
+            raise_and_die("invalid username", 401);
         }
 
         if (!password_verify(md5($password), $output["heslo"])){
-            raise_and_die("invalid password");
+            raise_and_die("invalid password", 401);
         }
 
         if ($output["locked"]) {
-            raise_and_die("account is locked");
+            raise_and_die("account is locked", 401);
         }
 
         $timestamp = GetCurrentDate();
 
         db_execute("UPDATE " . TBL_ACCOUNT . " SET last_visit = ? WHERE id_users = ?", $timestamp, $output["id_users"]);
 
-        $result["data"] = generate_jwt([
+        $result = generate_jwt([
             "user_id" => $output["id_users"],
             "iat" => time(), // issused at
         ]);
@@ -177,7 +177,7 @@ switch ($action) {
         print_and_die();
         break;
     default:
-        raise_and_die("provided action is not implemented");
+        raise_and_die("provided action is not implemented", 404);
         break;
 }
 ?>

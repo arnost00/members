@@ -30,7 +30,7 @@ function db_execute($query, ...$params) {
         $output = $prepared->get_result();
         $prepared->close();
     } catch (Throwable $e) {
-        raise_and_die("db error: " . $e->getMessage());
+        raise_and_die("db error: " . $e->getMessage(), 500);
     }
 
     return $output;

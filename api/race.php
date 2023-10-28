@@ -19,9 +19,9 @@ switch ($action) {
 
         $output = db_execute("SELECT * FROM " . TBL_RACE . " WHERE datum >= ? || datum2 >= ? ORDER BY datum, datum2, id", $current_date, $current_date);
 
-        $result["data"] = [];
+        $result = [];
         while ($race = $output->fetch_assoc()) {
-            $result["data"][] = parse_race_row($race);
+            $result[] = parse_race_row($race);
         }
 
         print_and_die();
@@ -33,12 +33,12 @@ switch ($action) {
         $output = $output->fetch_assoc();
         
         // the main data about the race is here
-        $result["data"] = parse_race_row($output);
+        $result = parse_race_row($output);
 
         // provide information about signed in users
         $output = db_execute("SELECT zavxus.*, user.* FROM " . TBL_ZAVXUS . " AS zavxus, " . TBL_USER . " AS user WHERE zavxus.id_user = user.id AND id_zavod = ?", $race_id);
 
-        $result["data"]["everyone"] = [];
+        $result["everyone"] = [];
 
         while ($child = $output->fetch_assoc()) {
             $child_id = $child["id_user"];
@@ -60,7 +60,7 @@ switch ($action) {
                 "accommodation" => $child["ubytovani"], // value can be 0, 1, 2
             ];
 
-            $result["data"]["everyone"][] = $formated_output;
+            $result["everyone"][] = $formated_output;
         }
 
         print_and_die();
@@ -72,7 +72,7 @@ switch ($action) {
         // select user_id (first) and its sheeps
         $output = db_execute("SELECT * FROM " . TBL_USER . " WHERE id = ? OR chief_id = ? ORDER BY CASE WHEN id = ? THEN 1 ELSE 2 END", $user_id, $user_id, $user_id);
         
-        $result["data"] = [];
+        $result = [];
 
         while ($child = $output->fetch_assoc()) {
             $child_id = $child["id"];
@@ -99,7 +99,7 @@ switch ($action) {
                 "is_signed_in" => $zavxus != null,
             ];
 
-            $result["data"][] = $formated_output;
+            $result[] = $formated_output;
         }
 
         print_and_die();
@@ -113,7 +113,7 @@ switch ($action) {
         $race_id = require_race_id();
 
         if (!check_chief_access_to_user($chief_id, $user_id)) {
-            raise_and_die("chief has no access to the user");
+            raise_and_die("chief has no access to the user", 403);
         }
 
         // check that the required data is provided
@@ -173,7 +173,7 @@ switch ($action) {
         $race_id = require_race_id();
 
         if (!check_chief_access_to_user($chief_id, $user_id)) {
-            raise_and_die("chief has no access to the user");
+            raise_and_die("chief has no access to the user", 403);
         }
 
         $entry_lock = is_entry_locked($user_id);
@@ -196,17 +196,17 @@ switch ($action) {
         
         $output = db_execute("SELECT id_zavod FROM " . TBL_ZAVXUS . " WHERE id_user = ?", $user_id);
 
-        $result["data"] = [];
+        $result = [];
 
         while ($child = $output->fetch_assoc()) {
-            $result["data"][] = $child;
+            $result[] = $child;
         }
 
         print_and_die($query);
 
         break;
     default:
-        raise_and_die("provided action is not implemented");
+        raise_and_die("provided action is not implemented", 404);
         break;
 }
 

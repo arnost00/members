@@ -1,9 +1,5 @@
 <?php
-//===================================================================================================================//
-// This file is part of the global api (at /api_clublist.php) and is not required for the club api to work properly. //
-//===================================================================================================================//
-
-// ----- BEGIN EXCERPT FROM __api.php ----- //
+// ----- BEGIN EXTRACT FROM __api.php ----- //
 // ----- Errors -----
 
 ini_set('display_errors', '1');
@@ -21,18 +17,23 @@ header("Content-Type: application/json");
 
 // ----- Functions -----
 
-$result = [
-    "status" => "ok",
-    "message" => "",
-    "data" => "",
-];
+$result = [];
 
-function print_and_die($msg = null) {
+$method = $_SERVER['REQUEST_METHOD'];
+
+switch ($method) {
+    case "POST": // let the code logic to handle
+        break;
+    case "OPTIONS":  // preflight cors request
+        print_and_die();
+        break;
+    default:
+        raise_and_die("method is not allowed", 405);
+        break;
+}
+
+function print_and_die($response_code=200) {
     global $result, $mysqli;
-
-	if ($msg !== null) {
-		$result["message"] = $msg;
-	}
 
     if (isset($mysqli)) { // close database if is open
         $mysqli->close();
@@ -41,25 +42,28 @@ function print_and_die($msg = null) {
     $output = json_encode($result);
 
     if (json_last_error() !== JSON_ERROR_NONE) {
-        $output = json_encode(["status" => "error", "message" => json_last_error_msg(), "data" => ""]);
+        $output = '{"message": "' . json_last_error_msg() . '"}';
+        $response_code = 500;
     }
+
+    http_response_code($response_code);
 
     die($output);
 }
 
-function raise_and_die($msg = null) {
+function raise_and_die($error = null, $response_code=400) {
     global $result;
 
-    $result["status"] = "error";
+    $result = ["message" => $error];
 
-    print_and_die($msg);
+    print_and_die($response_code);
 }
 
-// ----- END EXCERPT FROM __api.php ----- //
+// ----- END EXTRACT FROM __api.php ----- //
 
-(@include_once('../../clubs.inc.php')) or raise_and_die("could not load clubs");
+(@include_once('./clubs.inc.php')) or raise_and_die("could not load clubs", 500);
 
-$result["data"] = $clubs;
+$result = $clubs;
 
 print_and_die();
 ?>

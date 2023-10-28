@@ -54,7 +54,7 @@ function require_token() {
     $token = @$_POST["token"];
 
     if (!isset($token)) {
-        raise_and_die("token is required");
+        raise_and_die("token is required", 401);
     }
 
     return parse_jwt($token);
