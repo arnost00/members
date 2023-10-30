@@ -11,7 +11,7 @@ switch ($action) {
 
         print_and_die();
     default:
-        raise_and_die("provided action is not implemented");
+        raise_and_die("provided action is not implemented", 404);
         break;
 }
 

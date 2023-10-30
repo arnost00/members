@@ -16,6 +16,7 @@ require_once('./header.inc.php'); // header obsahuje uvod html a konci <BODY>
 require_once('./common.inc.php');
 require_once('./common_race.inc.php');
 require_once('./url.inc.php');
+require_once("./xss_prevent.php");
 
 db_Connect();
 
@@ -74,7 +75,7 @@ DrawPageSubTitle('Vybraný závod');
 if (!$new)
 {
 	$add_r[0] ='Kategorie';
-	$add_r[1] ='<B>'.$zaznam_rg['kat'].'</B>';
+	$add_r[1] ='<B>'.xss_prevent($zaznam_rg['kat']).'</B>';
 	RaceInfoTable($zaznam_z,$add_r,true,false,true);
 }
 else
@@ -134,11 +135,11 @@ $kategorie=explode(';',$zaznam_z['kategorie']);
 for ($i=0; $i<count($kategorie); $i++)
 {
 	if ($kategorie[$i] != '')
-		echo "<button onclick=\"javascript:zmen_kat('".$kategorie[$i]."');return false;\">".$kategorie[$i]."</button>";
+		echo "<button onclick=\"javascript:zmen_kat('".xss_prevent($kategorie[$i])."');return false;\">".xss_prevent($kategorie[$i])."</button>";
 }
 
 echo('<BR><BR>Vybraná kategorie:&nbsp;');
-echo('<INPUT TYPE="text" NAME="kat" size=4 value="'.$zaznam_rg['kat'].'">');
+echo('<INPUT TYPE="text" NAME="kat" size=4 value="'.xss_prevent($zaznam_rg['kat']).'">');
 echo("<BR>\n");
 
 if ($g_enable_race_transport || $g_enable_race_accommodation)
@@ -171,22 +172,22 @@ if ($g_enable_race_accommodation)
 }
 ?>
 <BR><BR>
-Poznámka&nbsp;<INPUT TYPE="text" name="pozn" size="50" maxlength="250" value="<?echo $zaznam_rg['pozn']?>">&nbsp;(do&nbsp;přihlášky)
+Poznámka&nbsp;<INPUT TYPE="text" name="pozn" size="50" maxlength="250" value="<?echo xss_prevent($zaznam_rg['pozn']) ?>">&nbsp;(do&nbsp;přihlášky)
 <BR><BR>
-Poznámka&nbsp;<INPUT TYPE="text" name="pozn2" size="50" maxlength="250" value="<?echo $zaznam_rg['pozn_in']?>">&nbsp;(interní)
+Poznámka&nbsp;<INPUT TYPE="text" name="pozn2" size="50" maxlength="250" value="<?echo xss_prevent($zaznam_rg['pozn_in'])?>">&nbsp;(interní)
 <BR><BR>
 
-<INPUT TYPE="hidden" name="id_us" value="<?echo $id_us?>">
-<INPUT TYPE="hidden" name="id_zav" value="<?echo $id_zav?>">
+<INPUT TYPE="hidden" name="id_us" value="<?echo xss_prevent($id_us)?>">
+<INPUT TYPE="hidden" name="id_zav" value="<?echo xss_prevent($id_zav)?>">
 <?
 if ($new)
 {
-	echo ('<INPUT TYPE="hidden" name="novy" value="'.$new.'">'."\n");
+	echo ('<INPUT TYPE="hidden" name="novy" value="'.xss_prevent($new).'">'."\n");
 	echo ('<INPUT TYPE="submit" value="Přihlásit na závod">'."\n");
 }
 else
 {
-	echo ('<INPUT TYPE="hidden" name="id_z" value="'.$zaznam_rg['id'].'">'."\n");
+	echo ('<INPUT TYPE="hidden" name="id_z" value="'.xss_prevent($zaznam_rg['id']).'">'."\n");
 ?>
 <INPUT TYPE="submit" value="Změnit údaje">
 &nbsp;&nbsp;&nbsp;&nbsp;<BUTTON onclick="return submit_off();">Odhlásit ze závodu</BUTTON>
@@ -202,7 +203,7 @@ if(strlen($zaznam_z['poznamka']) > 0)
 ?>
 <p><b>Doplňující informace o závodě (interní)</b> :<br>
 <?
-	echo('&nbsp;&nbsp;&nbsp;'.$zaznam_z['poznamka'].'</p>');
+	echo('&nbsp;&nbsp;&nbsp;'.xss_prevent($zaznam_z['poznamka']).'</p>');
 }
 ?>
 
@@ -241,9 +242,9 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 
 		$row = array();
 		$row[] = $i.'<!-- '.$zaznam['id'].' -->';
-		$row[] = $zaznam['prijmeni'];
-		$row[] = $zaznam['jmeno'];
-		$row[] = '<B>'.$zaznam['kat'].'</B>';
+		$row[] = xss_prevent($zaznam['prijmeni']);
+		$row[] = xss_prevent($zaznam['jmeno']);
+		$row[] = '<B>'.xss_prevent($zaznam['kat']).'</B>';
 		if($is_spol_dopr_on)
 		{
 			if ($zaznam["transport"])
@@ -265,9 +266,9 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 				$row[] = '';
 		}
 		if($zaznam_z['prihlasky'] > 1)
-			$row[] = $zaznam['termin'];
-		$row[] = $zaznam['pozn'];
-		$row[] = $zaznam['pozn_in'];
+			$row[] = xss_prevent($zaznam['termin']);
+		$row[] = xss_prevent($zaznam['pozn']);
+		$row[] = xss_prevent($zaznam['pozn_in']);
 		echo $data_tbl->get_new_row_arr($row)."\n";
 }
 echo $data_tbl->get_footer()."\n";

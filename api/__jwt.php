@@ -21,9 +21,9 @@ function generate_jwt($payload) {
 }
 
 function sign_jwt($header, $payload) {
-    global $jwt_secret_key;
+    global $g_jwt_secret_key;
     
-    return base64_url_encode(hash_hmac("sha512", "$header.$payload", base64_decode($jwt_secret_key), true));
+    return base64_url_encode(hash_hmac("sha512", "$header.$payload", base64_decode($g_jwt_secret_key), true));
 }
 
 function parse_jwt($token) {
