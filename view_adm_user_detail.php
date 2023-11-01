@@ -37,7 +37,6 @@ if (IsSet($edit) && $edit=true)
 // id je z tabulky "users"
 @$vysledek=query_db("SELECT u.prijmeni, u.jmeno, u.reg, u.hidden, u.entry_locked, a.locked, a.id aid FROM ".TBL_USER." u left join ".TBL_ACCOUNT." a on a.id_users = u.id WHERE u.id = '$id' LIMIT 1");
 @$zaznam=mysqli_fetch_array($vysledek);
-print_r($zaznam);
 
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 require_once ("./common.inc.php");
