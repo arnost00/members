@@ -10,7 +10,6 @@ require_once('../cfg/race_enums.php');
 require_once('../cfg/session_enums.php');
 require_once("../cfg/_cfg.php");
 
-
 $action = require_action();
 
 switch ($action) {
@@ -112,9 +111,7 @@ switch ($action) {
         }
         $race_id = require_race_id();
 
-        if (!check_chief_access_to_user($chief_id, $user_id)) {
-            raise_and_die("chief has no access to the user", 403);
-        }
+        check_chief_access_to_user($chief_id, $user_id);
 
         // check that the required data is provided
         $required_data = [
@@ -136,19 +133,19 @@ switch ($action) {
 
         $entry_lock = is_entry_locked($user_id);
         if ($entry_lock) {
-            raise_and_die("entry is locked");
+            raise_and_die("your account is locked");
         }
 
         $termin = get_termin_from_race($race_id);
         if ($termin == 0) {
-            raise_and_die("invalid termin number");
+            raise_and_die("the deadline for entry has been exeeded");
         }
 
         $output = db_execute("SELECT cancelled FROM " . TBL_RACE . " WHERE id = ?", $race_id);
         $output = $output->fetch_assoc();
 
         if ($output["cancelled"] == 1) {
-            raise_and_die("race is cancelled");
+            raise_and_die("the race is cancelled");
         }
         
         // check whether the user is already signed in
@@ -172,20 +169,18 @@ switch ($action) {
         }
         $race_id = require_race_id();
 
-        if (!check_chief_access_to_user($chief_id, $user_id)) {
-            raise_and_die("chief has no access to the user", 403);
-        }
+        check_chief_access_to_user($chief_id, $user_id);
 
         $entry_lock = is_entry_locked($user_id);
         if ($entry_lock) {
-            raise_and_die("entry is locked");
+            raise_and_die("your account is locked");
         }
         
         $output = db_execute("SELECT cancelled FROM " . TBL_RACE . " WHERE id = ?", $race_id);
         $output = $output->fetch_assoc();
 
         if ($output["cancelled"] == 1) {
-            raise_and_die("race is cancelled");
+            raise_and_die("the race is cancelled");
         }
         
         db_execute("DELETE FROM " . TBL_ZAVXUS . " WHERE id_zavod = ? AND id_user = ?", $race_id, $user_id);
@@ -210,20 +205,22 @@ switch ($action) {
         break;
 }
 
-function check_chief_access_to_user($chief_id, $user_id) {
-    if ($chief_id == $user_id) {
+function check_chief_access_to_user($chief_id, $user_id) { // ak je jeho ovecka, vracia true, inak raise_and_die
+    if ($chief_id == $user_id) { // the chief has obviously access to itself
         return true;
     }
     
     $output = db_execute("SELECT policy_mng FROM " . TBL_ACCOUNT . " WHERE id_users = ? LIMIT 1", $chief_id);
     $output = $output->fetch_assoc();
 
-    if ($output["policy_mng"] != _MNG_SMALL_INT_VALUE_) return false; // nema pravo na maleho trenera
+    if ($output["policy_mng"] != _MNG_SMALL_INT_VALUE_) return raise_and_die("chief has to be a small manager", 403);
 
     $output = db_execute("SELECT id FROM " . TBL_USER . " WHERE id = ? AND chief_id = ? LIMIT 1", $user_id, $chief_id);
     $output = $output->fetch_assoc();
 
-    return $output != null; // je priradeny k ovecke
+    if ($output == null) return raise_and_die("chief has no access to the user", 403);
+
+    return true;
 }
 
 function parse_race_row($race) {
@@ -234,10 +231,10 @@ function parse_race_row($race) {
     if ($race["vicedenni"]) $dates[] = Date2ISO($race["datum2"]); // add second date if exists
 
     $entries = [ Date2ISO($race["prihlasky1"]) ]; // always provide entry
-    if ($race['prihlasky2'] != 0 && $race['prihlasky'] > 1 ) $dates[] = Date2ISO($race['prihlasky2']);
-    if ($race['prihlasky3'] != 0 && $race['prihlasky'] > 2 ) $dates[] = Date2ISO($race['prihlasky3']);
-    if ($race['prihlasky4'] != 0 && $race['prihlasky'] > 3 ) $dates[] = Date2ISO($race['prihlasky4']);
-    if ($race['prihlasky5'] != 0 && $race['prihlasky'] > 4 ) $dates[] = Date2ISO($race['prihlasky5']);
+    if ($race['prihlasky2'] != 0 && $race['prihlasky'] > 1 ) $entries[] = Date2ISO($race['prihlasky2']);
+    if ($race['prihlasky3'] != 0 && $race['prihlasky'] > 2 ) $entries[] = Date2ISO($race['prihlasky3']);
+    if ($race['prihlasky4'] != 0 && $race['prihlasky'] > 3 ) $entries[] = Date2ISO($race['prihlasky4']);
+    if ($race['prihlasky5'] != 0 && $race['prihlasky'] > 4 ) $entries[] = Date2ISO($race['prihlasky5']);
 
     $transport = parse_transport($race['transport']);
 
