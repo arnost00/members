@@ -1,53 +1,34 @@
 <?php
 require_once("./__api.php");
 require_once("../cfg/_cfg.php");
+require_once("../lib/jwt.php");
 
-$supported_alg = "HS512";
-$supported_typ = "JWT";
+use Jwt\JWT;
+use Jwt\JWTException;
 
-function generate_jwt($payload) {
-    global $supported_alg, $supported_typ;
-
-    $header = base64_url_encode(json_encode([
-        "alg" => $supported_alg, 
-        "typ" => $supported_typ,
-    ]));
-    
-    $payload = base64_url_encode(json_encode($payload));
-    
-    $signature = sign_jwt($header, $payload);
-    
-    return "$header.$payload.$signature";
-}
-
-function sign_jwt($header, $payload) {
+function _init_api_token() {
     global $g_jwt_secret_key;
-    
-    return base64_url_encode(hash_hmac("sha512", "$header.$payload", base64_decode($g_jwt_secret_key), true));
+
+    return new JWT(base64_decode($g_jwt_secret_key), "HS512");
 }
 
-function parse_jwt($token) {
-    global $supported_alg, $supported_typ;
-    
-    [$header, $payload, $signature] = explode(".", $token, 3);
-
-    $parsed_header = json_decode(base64_url_decode($header), true);
-    if ($parsed_header["alg"] != $supported_alg) {
-        raise_and_die("algorithm not supported");
-        return false; // make sure function exits
+function craft_api_token($user_id) {
+    try {
+        return _init_api_token()->encode([
+            "user_id" => $user_id,
+            // "exp" => time() + 3600,
+        ]);
+    } catch (JWTException $e) {
+        return raise_and_die($e->getMessage(), 401);
     }
+}
 
-    if ($parsed_header["typ"] != $supported_typ) {
-        raise_and_die("type not supported");
-        return false; // make sure function exits
+function check_api_token($token) {
+    try {
+        return _init_api_token()->decode($token);
+    } catch (JWTException $e) {
+        return raise_and_die($e->getMessage(), 401);
     }
-
-    if (sign_jwt($header, $payload) != $signature) {
-        raise_and_die("token is not valid");
-        return false;
-    }
-
-    return json_decode(base64_url_decode($payload), true);
 }
 
 function require_token() {
@@ -57,19 +38,6 @@ function require_token() {
         raise_and_die("token is required", 401);
     }
 
-    return parse_jwt($token);
-}
-
-/**
- * per https://stackoverflow.com/questions/2040240/php-function-to-generabte-v4-uuid/15875555#15875555
- */
-function base64_url_encode($text) {
-	return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($text));
-}
-
-/* handle stripped paddings in base64 url decode, by @Jurakin */
-function base64_url_decode($text) {
-	return base64_decode(str_replace(['-', '_'], ['+', '/'], $text));
-}
-   
+    return check_api_token($token);
+}   
 ?>

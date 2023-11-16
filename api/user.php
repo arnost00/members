@@ -169,10 +169,9 @@ switch ($action) {
 
         db_execute("UPDATE " . TBL_ACCOUNT . " SET last_visit = ? WHERE id_users = ?", $timestamp, $output["id_users"]);
 
-        $result = generate_jwt([
-            "user_id" => $output["id_users"],
-            "iat" => time(), // issused at
-        ]);
+        $result = [
+            "token" => craft_api_token($output["id_users"])
+        ];
 
         print_and_die();
         break;
