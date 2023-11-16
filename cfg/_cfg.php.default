@@ -29,13 +29,13 @@ $g_dbname='members';
 // jwt secret key
 //==================================================================
 // head -c 64 /dev/urandom | base64
-$jwt_secret_key = "DEVELOPMENT+ONLY+++GENERATE+A+SECURE+64+BYTE+KEY+IN+PRODUCTION++/uV4zp8UPeLiSXUL62Ae/w=="; // ### TREBA ZMENIT ###
+$g_jwt_secret_key = "DEVELOPMENT+ONLY+++GENERATE+A+SECURE+64+BYTE+KEY+IN+PRODUCTION++/uV4zp8UPeLiSXUL62Ae/w=="; // ### TREBA ZMENIT ###
 
 //==================================================================
 // api
 //==================================================================
 // api version
-$g_api_version = 2.1;
+$g_api_version = 2.11;
 
 //==================================================================
 // http server
