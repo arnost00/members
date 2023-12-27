@@ -35,7 +35,7 @@ $g_jwt_secret_key = "DEVELOPMENT+ONLY+++GENERATE+A+SECURE+64+BYTE+KEY+IN+PRODUCT
 // api
 //==================================================================
 // api version
-$g_api_version = 2.11;
+$g_api_version = 2.12;
 
 //==================================================================
 // http server

@@ -22,7 +22,7 @@ switch ($action) {
                 "name" => $user["jmeno"],
                 "surname" => $user["prijmeni"],
 
-                "register_number" => $user["reg"],
+                "registration_number" => $user["reg"],
                 "chip_number" => $user["si_chip"],
 
                 "chief_id" => @$user["chief_id"], // allow null
