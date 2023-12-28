@@ -6,7 +6,7 @@ define('SYSTEM_AUTORS','Arnošt, Kenia, LuF a Jurakin');
 
 function GetCodeVersion()
 {
-	return "v3.3.5.628";
+	return "v3.3.6.629";
 }
 
 function GetCopyright()
