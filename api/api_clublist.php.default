@@ -1,5 +1,9 @@
-<? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?php
+//===================================================================================================================//
+// This file is part of the global api (at /api_clublist.php) and is not required for the club api to work properly. //
+//===================================================================================================================//
+
+// ----- BEGIN EXTRACT FROM __api.php ----- //
 // ----- Errors -----
 
 ini_set('display_errors', '1');
@@ -18,11 +22,11 @@ header("Content-Type: application/json");
 // ----- Functions -----
 
 $result = [];
+
 $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case "POST": // let the code logic to handle
-        $_POST = json_decode(file_get_contents('php://input'), true);
         break;
     case "OPTIONS":  // preflight cors request
         print_and_die();
@@ -59,35 +63,11 @@ function raise_and_die($error = null, $response_code=400) {
     print_and_die($response_code);
 }
 
-// optional features //
+// ----- END EXTRACT FROM __api.php ----- //
 
-function require_action() {
-    @$action = $_POST["action"];
-    if (!isset($action)) {
-        raise_and_die("action is not set", 404);
-    }
-    return $action;
-}
+(@include_once('./clubs.inc.php')) or raise_and_die("could not load clubs", 500);
 
-function require_race_id() {
-    @$race_id = $_POST["race_id"];
-    if (!isset($race_id)) {
-        raise_and_die("race_id is not set");
-    }
-    return $race_id;
-}
+$result = $clubs;
 
-// if set to true, force to use token otherwise user id can be specified
-function require_user_id($force_token=false) {
-    if (!$force_token) {
-        @$user_id = $_POST["user_id"];
-        if (isset($user_id)) {
-            return $user_id;
-        }
-    }
-
-    $token = require_token();
-    $user_id = $token["user_id"];
-    return $user_id;
-}
+print_and_die();
 ?>

@@ -2,12 +2,13 @@
 
 require_once("./__api.php");
 require_once("./__jwt.php");
-require_once("./__utils.php");
-require_once("./__parse.php");
 require_once("./__db.php");
 
 require_once("../common.inc.php");
-require_once('../cfg/enums.php');
+require_once("../common_race2.inc.php");
+require_once('../cfg/race_enums.php');
+require_once('../cfg/session_enums.php');
+require_once("../cfg/_cfg.php");
 
 $action = require_action();
 
@@ -17,37 +18,40 @@ switch ($action) {
 
         $output = db_execute("SELECT * FROM " . TBL_RACE . " WHERE datum >= ? || datum2 >= ? ORDER BY datum, datum2, id", $current_date, $current_date);
 
-        $result["data"] = [];
+        $result = [];
         while ($race = $output->fetch_assoc()) {
-            $result["data"][] = parse_race_row($race);
+            $result[] = parse_race_row($race);
         }
 
         print_and_die();
-
         break;
     case "detail":
-        // additional data to list
         $race_id = require_race_id();
-        $user_id = require_user_id();
 
         $output = db_execute("SELECT * FROM " . TBL_RACE . " WHERE id = ? LIMIT 1", $race_id);
         $output = $output->fetch_assoc();
         
-        $result["data"] = parse_race_row($output);
+        // the main data about the race is here
+        $result = parse_race_row($output);
 
-        $output = db_execute("SELECT zavxus.*, user.jmeno, user.prijmeni FROM "  . TBL_ZAVXUS . " as zavxus, " . TBL_USER . " as user WHERE zavxus.id_user = user.id AND id_zavod = ?", $race_id);
+        // provide information about signed in users
+        $output = db_execute("SELECT zavxus.*, user.* FROM " . TBL_ZAVXUS . " AS zavxus, " . TBL_USER . " AS user WHERE zavxus.id_user = user.id AND id_zavod = ?", $race_id);
 
-        $result["data"]["everyone"] = [];
-        $result["data"]["myself"] = [];
-        $result["data"]["am_i_signed"] = false;
+        $result["everyone"] = [];
 
         while ($child = $output->fetch_assoc()) {
             $child_id = $child["id_user"];
 
             $formated_output = [
                 "user_id" => $child_id,
+
+                // user
                 "name" => $child["jmeno"],
                 "surname" => $child["prijmeni"],
+                "registration_number" => $child["reg"],
+                "chip_number" => $child["si_chip"],
+
+                // zavxus
                 "category" => $child["kat"],
                 "note" => $child["pozn"],
                 "note_internal" => $child["pozn_in"],
@@ -55,18 +59,59 @@ switch ($action) {
                 "accommodation" => $child["ubytovani"], // value can be 0, 1, 2
             ];
 
-            if ($child_id == $user_id) {
-                $result["data"]["am_i_signed"] = true;
-                $result["data"]["myself"] = $formated_output;
-            }
-
-            $result["data"]["everyone"][] = $formated_output;
+            $result["everyone"][] = $formated_output;
         }
 
         print_and_die();
-    case "signin":
-        $user_id = require_user_id(true);
+        break;
+    case "relations":
         $race_id = require_race_id();
+        $user_id = require_user_id(true);
+
+        // select user_id (first) and its sheeps
+        $output = db_execute("SELECT * FROM " . TBL_USER . " WHERE id = ? OR chief_id = ? ORDER BY CASE WHEN id = ? THEN 1 ELSE 2 END", $user_id, $user_id, $user_id);
+        
+        $result = [];
+
+        while ($child = $output->fetch_assoc()) {
+            $child_id = $child["id"];
+
+            $zavxus = db_execute("SELECT zavxus.* FROM " . TBL_ZAVXUS . " AS zavxus, " . TBL_USER . " AS user WHERE zavxus.id_user = user.id AND user.id = ? AND zavxus.id_zavod = ? LIMIT 1", $child_id, $race_id);
+            $zavxus = $zavxus->fetch_assoc();
+
+            $formated_output = [
+                "user_id" => $child_id,
+
+                // user
+                "name" => $child["jmeno"],
+                "surname" => $child["prijmeni"],
+                "registration_number" => $child["reg"],
+                "chip_number" => $child["si_chip"],
+
+                // zavxus
+                "category" => @$zavxus["kat"],
+                "note" => @$zavxus["pozn"],
+                "note_internal" => @$zavxus["pozn_in"],
+                "transport" => @$zavxus["transport"], // value can be 0, 1, 2
+                "accommodation" => @$zavxus["ubytovani"], // value can be 0, 1, 2
+
+                "is_signed_in" => $zavxus != null,
+            ];
+
+            $result[] = $formated_output;
+        }
+
+        print_and_die();
+        break;
+    case "signin":
+        $chief_id = require_user_id(true); // the id of who is signing someone in
+        @$user_id = $_POST["user_id"]; // the id of who is being signed in
+        if (!isset($user_id)) {
+            $user_id = $chief_id; // fallback
+        }
+        $race_id = require_race_id();
+
+        check_chief_access_to_user($chief_id, $user_id);
 
         // check that the required data is provided
         $required_data = [
@@ -83,66 +128,99 @@ switch ($action) {
         }
         extract($required_data);
 
-        // $category = correct_sql_string($category);
-        // $note = correct_sql_string($note);
-        // $note_internal = correct_sql_string($note_internal);
         $transport = $transport ? 1 : 0;
         $accommodation = $accommodation ? 1 : 0;
 
         $entry_lock = is_entry_locked($user_id);
         if ($entry_lock) {
-            raise_and_die("entry is locked");
+            raise_and_die("your account is locked");
         }
 
         $termin = get_termin_from_race($race_id);
         if ($termin == 0) {
-            raise_and_die("invalid termin number");
+            raise_and_die("the deadline for entry has been exeeded");
         }
-        
-        // check whether the race already exists
-        $output =  db_execute("SELECT id FROM " . TBL_ZAVXUS . " WHERE id_zavod = ? and id_user = ?", $race_id, $user_id);
+
+        $output = db_execute("SELECT cancelled FROM " . TBL_RACE . " WHERE id = ?", $race_id);
         $output = $output->fetch_assoc();
 
-        if ($output == null) { // if not, create a new row with corresponding values
+        if ($output["cancelled"] == 1) {
+            raise_and_die("the race is cancelled");
+        }
+        
+        // check whether the user is already signed in
+        $output = db_execute("SELECT * FROM " . TBL_ZAVXUS . " WHERE id_zavod = ? AND id_user = ? LIMIT 1", $race_id, $user_id);;
+        $output = $output->fetch_assoc();
+
+        if ($output == null) { // if not, create a new row with given values
             db_execute("INSERT INTO " . TBL_ZAVXUS . " (id_user, id_zavod, kat, pozn, pozn_in, termin, transport, ubytovani) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", $user_id, $race_id, $category, $note, $note_internal, $termin, $transport, $accommodation);
-        } else { // if yes, update the row
+        } else { // else, update the row
             $id = $output["id"];
             db_execute("UPDATE " . TBL_ZAVXUS . " SET kat = ?, pozn = ?, pozn_in = ?, termin = ?, transport = ?, ubytovani = ? WHERE id = ?", $category, $note, $note_internal, $termin, $transport, $accommodation, $id);
         }
         
         print_and_die();
-        
         break;
     case "signout":
-        $user_id = require_user_id(true);
+        $chief_id = require_user_id(true); // the id of who is signing someone in
+        @$user_id = $_POST["user_id"]; // the id of who is being signed in
+        if (!isset($user_id)) {
+            $user_id = $chief_id; // fallback
+        }
         $race_id = require_race_id();
 
+        check_chief_access_to_user($chief_id, $user_id);
+
         $entry_lock = is_entry_locked($user_id);
-        
         if ($entry_lock) {
-            raise_and_die("entry is locked");
+            raise_and_die("your account is locked");
+        }
+        
+        $output = db_execute("SELECT cancelled FROM " . TBL_RACE . " WHERE id = ?", $race_id);
+        $output = $output->fetch_assoc();
+
+        if ($output["cancelled"] == 1) {
+            raise_and_die("the race is cancelled");
         }
         
         db_execute("DELETE FROM " . TBL_ZAVXUS . " WHERE id_zavod = ? AND id_user = ?", $race_id, $user_id);
         
         print_and_die();
-    case "user_past_races":
+    case "past_races":
         $user_id = require_user_id();
         
         $output = db_execute("SELECT id_zavod FROM " . TBL_ZAVXUS . " WHERE id_user = ?", $user_id);
 
-        $result["data"] = [];
+        $result = [];
 
         while ($child = $output->fetch_assoc()) {
-            $result["data"][] = $child;
+            $result[] = $child;
         }
 
         print_and_die($query);
 
         break;
     default:
-        raise_and_die("provided action is not implemented");
+        raise_and_die("provided action is not implemented", 404);
         break;
+}
+
+function check_chief_access_to_user($chief_id, $user_id) { // ak je jeho ovecka, vracia true, inak raise_and_die
+    if ($chief_id == $user_id) { // the chief has obviously access to itself
+        return true;
+    }
+    
+    $output = db_execute("SELECT policy_mng FROM " . TBL_ACCOUNT . " WHERE id_users = ? LIMIT 1", $chief_id);
+    $output = $output->fetch_assoc();
+
+    if ($output["policy_mng"] != _MNG_SMALL_INT_VALUE_) return raise_and_die("chief has to be a small manager", 403);
+
+    $output = db_execute("SELECT id FROM " . TBL_USER . " WHERE id = ? AND chief_id = ? LIMIT 1", $user_id, $chief_id);
+    $output = $output->fetch_assoc();
+
+    if ($output == null) return raise_and_die("chief has no access to the user", 403);
+
+    return true;
 }
 
 function parse_race_row($race) {
@@ -153,10 +231,10 @@ function parse_race_row($race) {
     if ($race["vicedenni"]) $dates[] = Date2ISO($race["datum2"]); // add second date if exists
 
     $entries = [ Date2ISO($race["prihlasky1"]) ]; // always provide entry
-    if ($race['prihlasky2'] != 0 && $race['prihlasky'] > 1 ) $dates[] = Date2ISO($race['prihlasky2']);
-    if ($race['prihlasky3'] != 0 && $race['prihlasky'] > 2 ) $dates[] = Date2ISO($race['prihlasky3']);
-    if ($race['prihlasky4'] != 0 && $race['prihlasky'] > 3 ) $dates[] = Date2ISO($race['prihlasky4']);
-    if ($race['prihlasky5'] != 0 && $race['prihlasky'] > 4 ) $dates[] = Date2ISO($race['prihlasky5']);
+    if ($race['prihlasky2'] != 0 && $race['prihlasky'] > 1 ) $entries[] = Date2ISO($race['prihlasky2']);
+    if ($race['prihlasky3'] != 0 && $race['prihlasky'] > 2 ) $entries[] = Date2ISO($race['prihlasky3']);
+    if ($race['prihlasky4'] != 0 && $race['prihlasky'] > 3 ) $entries[] = Date2ISO($race['prihlasky4']);
+    if ($race['prihlasky5'] != 0 && $race['prihlasky'] > 4 ) $entries[] = Date2ISO($race['prihlasky5']);
 
     $transport = parse_transport($race['transport']);
 
@@ -177,7 +255,8 @@ function parse_race_row($race) {
     // fix scheme
     $link = add_scheme($race['odkaz']);
 
-    $categories = explode(";", $race["kategorie"]);
+    // explode returns [""] on empty list
+    $categories = $race["kategorie"] == "" ? [] : explode(";", $race["kategorie"]);
 
     return [
         "race_id" => $race_id,
@@ -200,8 +279,75 @@ function parse_race_row($race) {
     ];
 }
 
+function parse_transport($transport) {
+    // 0 = No; 1 = Yes; 2 = Auto Yes;
+
+    global $g_enable_race_transport;
+    return $g_enable_race_transport ? $transport : 0;
+}
+
+
+function parse_accommodation($accommodation) {
+    // 0 = No; 1 = Yes; 2 = Auto Yes;
+    global $g_enable_race_accommodation;
+    return $g_enable_race_accommodation ? $accommodation : 0;
+}
+
+function parse_type($type) {
+    global $g_racetype0;
+    return $g_racetype0[$type];
+}
+
+function parse_rankings($zebricek) {
+    global $g_zebricek, $g_zebricek_cnt;
+
+    $rankings = [];
+    for($i=0; $i<$g_zebricek_cnt; $i++)
+    {
+        if ($g_zebricek[$i]['id'] & $zebricek)
+        {
+            $rankings[] = $g_zebricek[$i]['nm'];
+        }
+    }
+
+    return $rankings;
+}
+
+function parse_sport($typ) {
+    global $g_racetype, $g_racetype_cnt;
+
+    for ($i=0; $i<$g_racetype_cnt; $i++)
+    {
+        if ($g_racetype[$i]["enum"] == $typ)
+        {
+            return $g_racetype[$i]["nm"];
+        }
+    }
+
+    return null;
+}
+
+function is_entry_locked($user_id) {
+    $output = db_execute("SELECT entry_locked FROM " . TBL_USER . " WHERE id = ?", $user_id);
+    $output = $output->fetch_assoc();
+
+    if ($output === null) return false;
+
+    return $output["entry_locked"];
+}
+
+
+function get_termin_from_race($race_id) {
+    $output = db_execute("SELECT datum, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5 FROM " . TBL_RACE . " WHERE id = ?", $race_id);
+    $output = $output->fetch_assoc();
+    
+    return raceterms::GetCurr4RegTerm($output);
+}
+
 // https://stackoverflow.com/a/14701491/14900791
 function add_scheme($url, $scheme = 'http://') {
+    if ($url == "") return "";
+
     $url = ltrim($url, '/'); // handle relative protocols
 
     return parse_url($url, PHP_URL_SCHEME) === null ? $scheme . $url : $url;

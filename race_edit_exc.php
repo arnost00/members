@@ -87,7 +87,7 @@ else // zavod nenalezen proto nasteven na pridani zavodu
 	$modify_flag = $g_modify_flag [1]['id'];
 
 if ($odkaz != '')
-	$odkaz = cononize_url ($odkaz);
+	$odkaz = cononize_url($odkaz, 1);
 
 if ($datum==0 || ($datum2==0 && $rtype == 1) || $nazev=='' || $id == 0)
 {
