@@ -542,7 +542,7 @@ function GetFormatedTextDel(&$text, $cancelled = false)
 }
 
 //--------------------------------------------------------
-function mb_str_pad(
+function mb_str_pad_own(
   $input,
   $pad_length,
   $pad_string=" ",

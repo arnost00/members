@@ -44,9 +44,9 @@ class CSOB_Export_Entry
 		foreach($this->data as $zaznam)
 		{
 			$str = RegNumToStr($zaznam['reg']).SPACE_CHAR;
-			$str .= mb_str_pad($zaznam['kat'],KAT_LEN,SPACE_CHAR).SPACE_CHAR;
-			$str .= mb_str_pad($zaznam['si'],SI_LEN2005,SPACE_CHAR).SPACE_CHAR;
-			$str .= mb_str_pad($zaznam['prijmeni'].' '.$zaznam['jmeno'],NAME_LEN,SPACE_CHAR).SPACE_CHAR;
+			$str .= mb_str_pad_own($zaznam['kat'],KAT_LEN,SPACE_CHAR).SPACE_CHAR;
+			$str .= mb_str_pad_own($zaznam['si'],SI_LEN2005,SPACE_CHAR).SPACE_CHAR;
+			$str .= mb_str_pad_own($zaznam['prijmeni'].' '.$zaznam['jmeno'],NAME_LEN,SPACE_CHAR).SPACE_CHAR;
 			$str .= $zaznam['lic'];
 			if($with_born_dates != false)
 			{	// datum narození (59-64) ve tvaru rrmmdd
@@ -191,9 +191,9 @@ class ORIS_Export
 			if ($female)
 				$month += 50;
 			$year = (int) $dat[0];
-			$result = mb_str_pad($year % 100,2,'0',STR_PAD_LEFT);
-			$result .= mb_str_pad($month,2,'0',STR_PAD_LEFT);
-			$result .= mb_str_pad($day,2,'0',STR_PAD_LEFT);
+			$result = mb_str_pad_own($year % 100,2,'0',STR_PAD_LEFT);
+			$result .= mb_str_pad_own($month,2,'0',STR_PAD_LEFT);
+			$result .= mb_str_pad_own($day,2,'0',STR_PAD_LEFT);
 			return $result;
 		}
 		else
