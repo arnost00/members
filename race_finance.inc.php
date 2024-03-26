@@ -2,7 +2,7 @@
 <?php /* finance -  show exact race finance */
 
 $query_prihlaseni = "
-select u.id u_id, u.sort_name, f.id, f.amount, f.note, zu.kat, zu.transport, zu.ubytovani, ft.nazev from ".TBL_USER." u inner join
+select u.id u_id, u.sort_name, f.id, f.amount, f.note, zu.kat, zu.transport, zu.ubytovani, ft.nazev, zu.participated, zu.add_by_fin from ".TBL_USER." u inner join
 ".TBL_ZAVXUS." zu on u.id = zu.id_user left join
 (select * from ".TBL_FINANCE." where id_zavod = $race_id and storno is null) f on f.id_users_user = zu.id_user
 left join ".TBL_FINANCE_TYPES." ft on ft.id = u.finance_type
@@ -61,7 +61,8 @@ $enable_fin_types = IsFinanceTypeTblFilled();
 Vše<input type="checkbox" id="all-ckbx"/><div id="ckbx-cat"></div>
 <label for="in-amount">Částka&nbsp;</label><input type="number" id="in-amount"/>
 <label for="in-note">&nbsp;Poznámka&nbsp;</label><input type="text" id="in-note"/>
-<button onclick="fillInputsByCategory()">Vlož</button>
+<button onclick="fillInputsByCategory()">Vlož</button><br/>
+<button onclick='toggleDisplayByToggleClass("notParticipated")'>Účastníci</button><button onclick='toggleDisplayByToggleClass("addByFin")'>Dohlášení</button>
 </div>
 
 <script>
@@ -78,8 +79,11 @@ function fillInputsByCategory() {
 
 	jQuery.each( cats, function( index, value ) {
 		if ($('#ckbx-'+index).is(':checked')) {
-			$("input.amount-"+index).val(amount);
-			$("input.note-"+index).val(note);
+			let elem = $("input.amount-"+index);
+			if (!$( elem ).hasClass("hidden")) {
+				$( elem ).val(amount);
+				$("input.note-"+index).val(note);
+			}
 		}
 
 	});
@@ -104,6 +108,7 @@ if ($g_enable_race_transport)
 	$data_tbl->set_header_col_with_help($col++,'Dop.',ALIGN_CENTER,'Společná doprava');
 if ($g_enable_race_accommodation)
 	$data_tbl->set_header_col_with_help($col++,'Ubyt.',ALIGN_CENTER, 'Společné ubytování');
+$data_tbl->set_header_col_with_help($col++,'Účast',ALIGN_CENTER, 'A = účast, F = přidán');
 
 
 echo $data_tbl->get_css()."\n";
@@ -131,14 +136,14 @@ while ($zaznam=mysqli_fetch_assoc($vysledek_prihlaseni))
 	$amount = $zaznam['amount'];
 	$amount>0?$sum_plus_amount+=$amount:$sum_minus_amount+=$amount;
 	
-	$input_amount = '<input class="amount-'.$kat_id.'" type="number" id="am'.$i.'" name="am'.$i.'" value="'.$amount.'" size="5" maxlength="10" />';
+	$input_amount = '<input class="amount-'.$kat_id.' '.($zaznam['participated'] ? 'participated ' : ' ').($zaznam['add_by_fin'] ? 'addByFin ' : ' ').'" type="number" id="am'.$i.'" name="am'.$i.'" value="'.$amount.'" size="5" maxlength="10" />';
 	$row[] = $input_amount;
 	
 	$note = $zaznam['note'];
-	$input_note = '<input class="note-'.$kat_id.'" type="text" id="nt'.$i.'" name="nt'.$i.'" value="'.$note.'" size="40" maxlength="200" />';
+	$input_note = '<input class="note-'.$kat_id.' '.($zaznam['participated'] ? 'participated ' : ' ').($zaznam['add_by_fin'] ? 'addByFin ' : ' ').'" type="text" id="nt'.$i.'" name="nt'.$i.'" value="'.$note.'" size="40" maxlength="200" />';
 	$row[] = $input_note;
 	
-	$row[] = "<span class=\"cat\">".$kat."</span>";
+	$row[] = '<input type="text" class="cat" id="cat'.$i.'" name="cat'.$i.'" size="10" maxlength="10" value="'.$kat.'" />';
 	if ($enable_fin_types)
 		$row[] = ($zaznam['nazev'] != null)? $zaznam['nazev'] : '-';
 
@@ -155,8 +160,9 @@ while ($zaznam=mysqli_fetch_assoc($vysledek_prihlaseni))
 		$ubyt=$zaznam['ubytovani']==1?"ANO":"&nbsp;";
 		$row[] = "<span>".$ubyt."</span>";
 	}
+	$row[] = ($zaznam['participated'] ? 'A' : '').($zaznam['add_by_fin'] ? 'F' : '');
 
-	$row_class = "cat-".$kat_id;
+	$row_class = "cat-".$kat_id." ".($zaznam['participated'] ? 'participated ' : 'notParticipated ').($zaznam['add_by_fin'] ? 'addByFin ' : 'addByUser ');
 
 	echo $data_tbl->get_new_row_arr($row, $row_class)."\n";
 	$i++;

@@ -16,7 +16,6 @@ $id_zav = (IsSet($id_zav) && is_numeric($id_zav)) ? (int)$id_zav : 0;
 db_Connect();
 
 $query = 'SELECT z.id_user, u.si_chip FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' AND u.hidden = 0';
-//$query = 'SELECT z.id_user FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' AND u.si_chip = 0 AND u.hidden = 0';
 
 @$vysledek=query_db($query);
 

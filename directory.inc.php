@@ -1,4 +1,4 @@
-<? /* adresar clenu oddilu */
+<?php /* adresar clenu oddilu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
 DrawPageTitle('Adresář členů oddílu');

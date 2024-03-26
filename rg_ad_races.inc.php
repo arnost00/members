@@ -100,7 +100,7 @@ if ($num_rows > 0)
 		}
 		else
 		{
-			$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$zaznam['id']."','',600,600)\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>";
+			$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$zaznam['id']."','',600,600)\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>/<A HREF=\"javascript:open_win('./api_race_entry.view.php?race_id=".$zaznam['id']."','')\">Účast</A>";
 		}
 
 		$row[] = $prihlasky_out;

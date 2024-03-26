@@ -131,8 +131,17 @@ if ($num_rows > 0)
 
 		if($g_enable_race_boss)
 		{
+			$link_to_participation = "/<A HREF=\"javascript:open_win('./api_race_entry.view.php?race_id=".$zaznam['id']."','')\">Účast</A>";
 
-			$row[] = $zaznam['vedouci'];
+			$boss = '-';
+			if($zaznam['vedouci'] != 0)
+			{
+				@$vysledekU=query_db("SELECT jmeno,prijmeni FROM ".TBL_USER." WHERE id = '".$zaznam['vedouci']."' LIMIT 1");
+				@$zaznamU=mysqli_fetch_array($vysledekU);
+				if($zaznamU != FALSE)
+					$boss = $zaznamU['jmeno'].' '.$zaznamU['prijmeni'].($zaznam['vedouci'] == $usr->user_id ? $link_to_participation : '');
+			}
+			$row[] = $boss;
 		}
 		
 		if (!$brk_tbl && $zaznam['datum'] >= $curr_date)

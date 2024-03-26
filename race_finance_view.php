@@ -15,7 +15,9 @@ $race_id = (IsSet($race_id) && is_numeric($race_id)) ? (int)$race_id : 0;
 
 db_Connect();
 
+require_once './functions.php';
 require_once './payment.inc.php'; // pomocne funkce a javascript pro finance
+require_once './member.class.php'; // pomocne funkce pro uzivatele
 
 if (IsSet($payment))
 {
@@ -46,6 +48,12 @@ if (IsSet($payment))
 					createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod);
 				}
 			}
+
+			$var = "cat".$i;
+			$cat = $$var;
+			
+			$user = new Member($user_id);
+			$user->updateCategoryOnRace($race_id, $cat);
 			$i++;
 			$var = "userid".$i;
 		}

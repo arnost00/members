@@ -33,9 +33,6 @@ function updateClaim($claim_id, $claim_text)
  */
 function closeClaim($claim_id, $payment_id)
 {
-//  sloupec closed neexistuje v teto tabulce - co to melo delat ?
-//	$query = "update ".TBL_CLAIM." set closed = 1 where id = $claim_id";
-//	query_db($query);
 	$query = "update ".TBL_FINANCE." set claim = 0 where id = $payment_id";
 	query_db($query);
 }

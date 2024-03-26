@@ -1,4 +1,4 @@
-<?
+<?php 
 // Date in the past 
 header("Expires: " . gmdate("D, d M Y H:i:s") . " GMT"); 
 
