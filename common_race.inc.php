@@ -279,6 +279,9 @@ function RIT_SH(divId1, divId2)
 		case 2: 
 			$transport = 'Ano - automaticky';
 			break;
+		case 3: 
+			$transport = 'Sdílená';
+			break;
 		}
 		echo $data_tbl->get_new_row('Společná doprava',$transport);
 	}

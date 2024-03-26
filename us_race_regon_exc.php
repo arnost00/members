@@ -41,6 +41,7 @@ if ($kat != '')
 		if ($termin != 0) // not process if invalid termin number
 		{
 			$transport = !isset($transport)? 'null': 1;
+			$sedadel = !isset($sedadel) || $sedadel=='' ? 'null': $sedadel;
 			$ubytovani = !isset($ubytovani)? 'null': 1;
 			$novy  = !isset($novy)? 0: (int)$novy;
 
@@ -49,16 +50,16 @@ if ($kat != '')
 				$vysledek=query_db("SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod='$id_zav' and id_user='$id_us'");
 				if ($vysledek != FALSE && ($zaznam = mysqli_fetch_array($vysledek)) != FALSE )
 				{	// latest new == update
-					query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$pozn', pozn_in='$pozn2', termin='$termin', transport=$transport, ubytovani=$ubytovani WHERE id='".$zaznam['id']."'");
+					query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$pozn', pozn_in='$pozn2', termin='$termin', transport=$transport, sedadel=$sedadel, ubytovani=$ubytovani WHERE id='".$zaznam['id']."'");
 				}
 				else
 				{	// really new
-					query_db("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in, termin, transport, ubytovani) VALUES ('$id_us','$id_zav','$kat','$pozn','$pozn2','$termin',$transport, $ubytovani)");	
+					query_db("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in, termin, transport, sedadel, ubytovani) VALUES ('$id_us','$id_zav','$kat','$pozn','$pozn2','$termin',$transport, $sedadel, $ubytovani)");	
 				}
 			}
 			else
 			{	// update
-				query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$pozn', pozn_in='$pozn2', transport=$transport, ubytovani=$ubytovani WHERE id='".$id_z."'");
+				query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$pozn', pozn_in='$pozn2', transport=$transport, sedadel=$sedadel, ubytovani=$ubytovani WHERE id='".$id_z."'");
 			}
 		}
 	}

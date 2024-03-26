@@ -73,7 +73,7 @@ echo('<FORM METHOD=POST ACTION="./race_regs_1_exc.php?gr_id='.$gr_id.'&id='.$id.
 
 $sub_query = (IsLoggedRegistrator() || IsLoggedManager()) ? '' : ' AND '.TBL_USER.'.chief_id = '.$usr->user_id.' OR '.TBL_USER.'.id = '.$usr->user_id;
 
-$query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, kat, pozn, pozn_in, termin, entry_locked, '.TBL_ZAVXUS.'.transport, '.TBL_ZAVXUS.'.ubytovani FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query.' ORDER BY sort_name ASC';
+$query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, kat, pozn, pozn_in, termin, entry_locked, '.TBL_ZAVXUS.'.transport, '.TBL_ZAVXUS.'.sedadel, '.TBL_ZAVXUS.'.ubytovani FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query.' ORDER BY sort_name ASC';
 
 @$vysledek=query_db($query);
 
@@ -85,7 +85,8 @@ echo '<TD><SELECT name="user_id" size=1 onchange="javascript:aktu_line();">'."\n
 
 $is_registrator_on = IsCalledByRegistrator($gr_id);
 $is_termin_show_on = $is_registrator_on && ($zaznam_z['prihlasky'] > 1);
-$is_spol_dopr_on = ($zaznam_z["transport"]==1) && $g_enable_race_transport;
+$is_spol_dopr_on = ($zaznam_z["transport"]==1||$zaznam_z["transport"]==3) && $g_enable_race_transport;
+$is_sdil_dopr_on = ($zaznam_z["transport"]==3) && $g_enable_race_transport;
 $is_spol_dopr_auto = ($zaznam_z["transport"]==2) && $g_enable_race_transport;
 $is_spol_ubyt_on = ($zaznam_z["ubytovani"]==1) && $g_enable_race_accommodation;
 $is_spol_ubyt_auto = ($zaznam_z["ubytovani"]==2) && $g_enable_race_accommodation;
@@ -148,6 +149,14 @@ if($is_spol_dopr_on)
 	echo '<TD width="5"></TD>';
 	echo '<TD><INPUT TYPE="checkbox" NAME="transport"></TD>';
 	echo '</TR>';
+	if($is_sdil_dopr_on)
+	{
+		echo '<TR>';
+		echo '<TD align="right">Místo</TD>';
+		echo '<TD width="5"></TD>';
+		echo '<TD><INPUT TYPE="number" NAME="sedadel" MIN="-99" max="999" style="width: 3.5em;" STEP="1"></TD>';
+		echo '</TR>';
+	}
 }
 else if ($is_spol_dopr_auto)
 {
@@ -322,6 +331,7 @@ echo $data_tbl->get_header_row()."\n";
 
 $i=0;
 $trans=0;
+$sedadel=0;
 $ubyt=0;
 while ($zaznam=mysqli_fetch_array($vysledek))
 {
@@ -338,6 +348,21 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 		{
 			$row[] = '<B>X</B>';
 			$trans++;
+		}
+		else
+			$row[] = '';
+	}
+	if($is_sdil_dopr_on)
+	{
+		if ($zaznam["transport"])
+		{
+			if ($zaznam["sedadel"]>=0)
+			{
+				$row[] = '<B>+'.$zaznam["sedadel"].'</B>';
+			}
+			else
+				$row[] = '';
+			$sedadel += $zaznam["sedadel"];
 		}
 		else
 			$row[] = '';
@@ -361,6 +386,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 echo $data_tbl->get_footer()."\n";
 
 echo $is_spol_dopr_on?"<BR>Počet přihlášených na dopravu: $trans":"";
+echo $is_sdil_dopr_on?"<BR>Počet volných sdílených míst: $sedadel":"";
 echo $is_spol_ubyt_on?"<BR>Počet přihlášených na ubytování: $ubyt":"";
 ?>
 

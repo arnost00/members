@@ -26,7 +26,7 @@ $id_us = (IsSet($id_us) && is_numeric($id_us)) ? (int)$id_us : 0;
 
 DrawPageTitle('Přihláška na závod');
 
-$query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.termin, z.id_user, z.transport, z.ubytovani FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' ORDER BY z.id ASC';
+$query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.termin, z.id_user, z.transport, z.sedadel, z.ubytovani FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' ORDER BY z.id ASC';
 @$vysledek=query_db($query);
 
 @$vysledek_z=query_db("SELECT * FROM ".TBL_RACE." WHERE id=$id_zav");
@@ -94,6 +94,21 @@ else
 <hr><BR>
 
 <?
+	// Volby pro sdilenou dopravu
+	$sdileno = array(
+		'' => "nejedu",
+		-1 => "potřebuji místo",
+		4 => "vezmu 4 osoby",
+		3 => "vezmu 3 osoby",
+		2 => "vezmu 2 osoby",
+		1 => "vezmu 1 osobu",
+		0 => "vezmu 0 osob",
+		5 => "vezmu 5 osob",
+		6 => "vezmu 6 osob",
+		7 => "vezmu 7 osob",
+		8 => "vezmu 8 osob",
+	);	
+
 if ($zaznam_u['entry_locked'] != 0)
 {
 	echo('<span class="WarningText">Máte zamknutou možnost se přihlašovat.</span>'."<br>\n");
@@ -102,11 +117,18 @@ if ($zaznam_u['entry_locked'] != 0)
 	{
 		echo('<BR><BR>Vybraná kategorie:&nbsp;'.$zaznam_rg['kat']);
 		echo "<BR>";
-		if ($zaznam_z["transport"]==1 && $g_enable_race_transport)
+		if (($zaznam_z["transport"]==1||$zaznam_z["transport"]==3) && $g_enable_race_transport)
 		{
 			echo "<BR>";
 			$trans=$zaznam_rg["transport"]?"Ano":"Ne";
-			echo 'Chci využít společnou dopravu:&nbsp;'.$trans;
+			if ($zaznam_z["transport"]==1) {
+				echo 'Chci využít společnou dopravu:&nbsp;'.$trans;
+			}
+			else {
+				echo "<BR>";
+				$trans=$zaznam_rg["transport"]?"Ano":"Ne";
+				echo 'Chci využít sdílenou dopravu:&nbsp;'.$trans.'&nbsp; Ve sdílené dopravě&nbsp;'. $sdileno[$zaznam_z["sedadel"]];
+			}
 			echo "<BR>";
 		}
 		if ($zaznam_z["ubytovani"]==1 && $g_enable_race_accommodation)
@@ -155,6 +177,24 @@ if ($g_enable_race_transport)
 	else if ($zaznam_z["transport"]==2)
 	{
 		echo 'Společná doprava je zadána automaticky.';
+	}
+	else if ($zaznam_z["transport"]==3)
+	{
+		$trans=$zaznam_rg["transport"]?"CHECKED":"";
+		echo '<label for="transport">Chci využít sdílenou dopravu</label>&nbsp;<input type="checkbox" name="transport" id="transport" '.$trans.'>';
+		echo '&nbsp;<label for="transport">Ve sdílené dopravě</label>&nbsp;<select name="sedadel" id="sedadel">';
+        // Loop through the options array and generate <option> tags
+        foreach ($sdileno as $value => $label) {
+            // Check if the current option value matches the selected value
+			$sel = ($value === '' && $zaznam_rg["sedadel"] === NULL ) || ( $value !== '' && $value === $zaznam_rg["sedadel"] ) ? "selected" : "";
+            echo "<option value='$value' $sel>$label</option>";
+		}
+		echo '</select>';
+        foreach ($sdileno as $value => $label) {
+            // Check if the current option value matches the selected value
+			$sel = ($value === '' && $zaznam_rg["sedadel"] === NULL ) || ( $value !== '' && $value === $zaznam_rg["sedadel"] ) ? "selected" : "";
+            echo ( "Value: $value ~ $sel"  );
+		}	
 	}
 	echo("<BR>\n");
 }
@@ -211,7 +251,8 @@ if(strlen($zaznam_z['poznamka']) > 0)
 <?
 DrawPageSubTitle('Přihlášení závodníci');
 
-$is_spol_dopr_on = ($zaznam_z["transport"]==1) && $g_enable_race_transport;
+$is_spol_dopr_on = ($zaznam_z["transport"]==1||$zaznam_z["transport"]==3) && $g_enable_race_transport;
+$is_sdil_dopr_on = ($zaznam_z["transport"]==3) && $g_enable_race_transport;
 $is_spol_ubyt_on = ($zaznam_z["ubytovani"]==1) && $g_enable_race_accommodation;
 
 $data_tbl = new html_table_mc();
@@ -222,6 +263,8 @@ $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
 if($is_spol_dopr_on)
 	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,'Společná doprava');
+if($is_sdil_dopr_on)
+	$data_tbl->set_header_col_with_help($col++,'&#x1F697;',ALIGN_CENTER,'Sedadla');
 if($is_spol_ubyt_on)
 	$data_tbl->set_header_col_with_help($col++,'SU',ALIGN_CENTER,'Společné ubytování');
 if($zaznam_z['prihlasky'] > 1)
@@ -235,6 +278,7 @@ echo $data_tbl->get_header_row()."\n";
 
 $i=0;
 $trans=0;
+$sedadel=0;
 $ubyt=0;
 while ($zaznam=mysqli_fetch_array($vysledek))
 {
@@ -251,6 +295,21 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 			{
 				$row[] = '<B>&#x2714;</B>';
 				$trans++;
+			}
+			else
+				$row[] = '';
+		}
+		if($is_sdil_dopr_on)
+		{
+			if ($zaznam["transport"])
+			{
+				if ($zaznam["sedadel"]>=0)
+				{
+					$row[] = '<B>+' . $zaznam["sedadel"] . '</B>';
+				}
+				else
+					$row[] = '';
+				$sedadel += $zaznam["sedadel"];
 			}
 			else
 				$row[] = '';
@@ -274,6 +333,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 echo $data_tbl->get_footer()."\n";
 
 echo $is_spol_dopr_on?"<BR>Počet přihlášených na dopravu: $trans":"";
+echo $is_sdil_dopr_on?"<BR>Počet volných sdílených míst: $sedadel":"";
 echo $is_spol_ubyt_on?"<BR>Počet přihlášených na ubytování: $ubyt":"";
 ?>
 
