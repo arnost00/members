@@ -38,4 +38,20 @@ $g_racetype0 = array(
 $g_racetype0_idx = array_keys($g_racetype0);
 $g_racetype0_cnt = count($g_racetype0_idx);
 
+// Volby pro sdilenou dopravu
+$g_sedadel_cnt = array(
+	null => "nejedu",
+	-1 => "potřebuji místo",
+	4 => "vezmu 4 osoby",
+	3 => "vezmu 3 osoby",
+	2 => "vezmu 2 osoby",
+	1 => "vezmu 1 osobu",
+	0 => "vezmu 0 osob",
+	5 => "vezmu 5 osob",
+	6 => "vezmu 6 osob",
+	7 => "vezmu 7 osob",
+	8 => "vezmu 8 osob",
+);	
+
+
 ?>

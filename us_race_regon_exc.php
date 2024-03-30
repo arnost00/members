@@ -40,8 +40,20 @@ if ($kat != '')
 
 		if ($termin != 0) // not process if invalid termin number
 		{
-			$transport = !isset($transport)? 'null': 1;
-			$sedadel = !isset($sedadel) || $sedadel=='' ? 'null': $sedadel;
+			if ( $trans_zav == 3 ) {
+				// shared transport
+				if ( !isset($sedadel) || $sedadel=='' ) {
+					// no seats no trasport
+					$sedadel = 'null';
+					$transport = 'null';
+				} else {
+					// if seats set, transport automatically
+					$transport = 1;
+				}	
+			} else {
+				$transport = !isset($transport)? 'null': 1;
+				$sedadel = 'null';
+			}
 			$ubytovani = !isset($ubytovani)? 'null': 1;
 			$novy  = !isset($novy)? 0: (int)$novy;
 

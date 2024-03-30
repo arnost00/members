@@ -85,7 +85,7 @@ echo '<TD><SELECT name="user_id" size=1 onchange="javascript:aktu_line();">'."\n
 
 $is_registrator_on = IsCalledByRegistrator($gr_id);
 $is_termin_show_on = $is_registrator_on && ($zaznam_z['prihlasky'] > 1);
-$is_spol_dopr_on = ($zaznam_z["transport"]==1||$zaznam_z["transport"]==3) && $g_enable_race_transport;
+$is_spol_dopr_on = ($zaznam_z["transport"]==1) && $g_enable_race_transport;
 $is_sdil_dopr_on = ($zaznam_z["transport"]==3) && $g_enable_race_transport;
 $is_spol_dopr_auto = ($zaznam_z["transport"]==2) && $g_enable_race_transport;
 $is_spol_ubyt_on = ($zaznam_z["ubytovani"]==1) && $g_enable_race_accommodation;
@@ -105,8 +105,9 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 				$us_rows[$i][1] = $zaznam['pozn'];
 				$us_rows[$i][2] = $zaznam['pozn_in'];
 				$us_rows[$i][3] = ($is_termin_show_on) ? $zaznam['termin'] : 0;
-				$us_rows[$i][4] = ($is_spol_dopr_on) ? $zaznam['transport'] == 1 : 0;
-				$us_rows[$i][5] = ($is_spol_ubyt_on) ? $zaznam['ubytovani'] == 1 : 0;
+				$us_rows[$i][4] = ($is_spol_dopr_on||$is_sdil_dopr_on) ? $zaznam['transport'] == 1 : 0;
+				$us_rows[$i][5] = ($is_sdil_dopr_on) ? $zaznam['sedadel'] : null;
+				$us_rows[$i][6] = ($is_spol_ubyt_on) ? $zaznam['ubytovani'] == 1 : 0;
 			}
 			else
 			{
@@ -131,7 +132,7 @@ echo'//<!--'."\n";
 echo 'us_rows = new Array('.sizeof($us_rows).');'."\n";
 foreach ($us_rows as $i => $value)
 {
-	echo 'us_rows['.$i.'] = ["'.$value[0].'","'.$value[1].'","'.$value[2].'","'.$value[3].'","'.($value[4] ? 'true' : 'false').'","'.($value[5] ? 'true' : 'false').'"];'."\n";
+	echo 'us_rows['.$i.'] = ["'.$value[0].'","'.$value[1].'","'.$value[2].'","'.$value[3].'","'.($value[4] ? 'true' : 'false').'","'.$value[5].'","'.($value[6] ? 'true' : 'false').'"];'."\n";
 }
 
 echo'//-->'."\n";
@@ -147,18 +148,19 @@ if($is_spol_dopr_on)
 	echo '<TR>';
 	echo '<TD align="right">Společná doprava</TD>';
 	echo '<TD width="5"></TD>';
-	echo '<TD><INPUT TYPE="checkbox" NAME="transport"></TD>';
-	echo '</TR>';
-	if($is_sdil_dopr_on)
-	{
-		echo '<TR>';
-		echo '<TD align="right">Místo</TD>';
-		echo '<TD width="5"></TD>';
-		echo '<TD><INPUT TYPE="number" NAME="sedadel" MIN="-99" max="999" style="width: 3.5em;" STEP="1"></TD>';
-		echo '</TR>';
-	}
+	echo '<TD><INPUT TYPE="checkbox" NAME="transport">';
+	echo '</TD></TR>';
 }
-else if ($is_spol_dopr_auto)
+if($is_sdil_dopr_on)
+{
+	echo '<TR>';
+	echo '<TD align="right">Ve sdílené dopravě</TD>';
+	echo '<TD width="5"></TD>';
+	echo '<TD>';
+	RenderSharedTransportInput( "sedadel", 0, null );
+	echo '</TD></TR>';
+}
+if ($is_spol_dopr_auto)
 {
 	echo '<TR>';
 	echo '<TD align="right">Společná doprava</TD>';
@@ -232,17 +234,26 @@ function aktu_line()
 	if (us_rows[idx] != null)
 	{
 		document.form1.kateg.value=us_rows[idx][0];
-<?
+<? 
 	if($is_spol_dopr_on)
 	{
 ?>
-		document.form1.transport.checked=us_rows[idx][4];
+		document.form1.transport.checked=(us_rows[idx][4]=="true");
+<?
+	}
+	if($is_sdil_dopr_on)
+	{
+?>
+		if ( us_rows[idx][4]) 
+			document.form1.sedadel.value=us_rows[idx][5];
+		else	
+			document.form1.sedadel.value='';
 <?
 	}
 	if($is_spol_ubyt_on)
 	{
 ?>
-		document.form1.ubytovani.checked=us_rows[idx][5];
+		document.form1.ubytovani.checked=(us_rows[idx][6]=="true");
 <?
 	}
 ?>
@@ -265,6 +276,12 @@ function aktu_line()
 	{
 ?>
 		document.form1.transport.checked=false;
+<?
+	}
+	if($is_sdil_dopr_on)
+	{
+?>
+		document.form1.sedadel.value='';
 <?
 	}
 	if($is_spol_ubyt_on)
@@ -313,8 +330,10 @@ $data_tbl->set_header_col($col++,'Poř.',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Příjmení',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
-if($is_spol_dopr_on)
+if($is_spol_dopr_on||$is_sdil_dopr_on)
 	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,'Společná doprava');
+if($is_sdil_dopr_on)
+	$data_tbl->set_header_col_with_help($col++,'&#x1F697;',ALIGN_CENTER,'Nabízených sedadel');
 if($is_spol_ubyt_on)
 	$data_tbl->set_header_col_with_help($col++,'SU',ALIGN_CENTER,'Společné ubytování');
 if($zaznam_z['prihlasky'] > 1)
@@ -342,7 +361,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	$row[] = $zaznam['jmeno'];
 	$row[] = $zaznam['prijmeni'];
 	$row[] = '<B>'.$zaznam['kat'].'</B>';
-	if($is_spol_dopr_on)
+	if($is_spol_dopr_on||$is_sdil_dopr_on)
 	{
 		if ($zaznam["transport"])
 		{
@@ -385,7 +404,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 }
 echo $data_tbl->get_footer()."\n";
 
-echo $is_spol_dopr_on?"<BR>Počet přihlášených na dopravu: $trans":"";
+echo $is_spol_dopr_on||$is_sdil_dopr_on?"<BR>Počet přihlášených na dopravu: $trans":"";
 echo $is_sdil_dopr_on?"<BR>Počet volných sdílených míst: $sedadel":"";
 echo $is_spol_ubyt_on?"<BR>Počet přihlášených na ubytování: $ubyt":"";
 ?>

@@ -418,4 +418,23 @@ function show_link_to_actual_race(&$num_rows)
 		echo('<a href="#actual_races">Jdi na aktuální závody</a><br>');
 }
 
+
+function RenderSharedTransportInput($name,$transport,$sedadel){
+
+	global $g_sedadel_cnt;
+
+	if ( $transport ) 
+		$selOpt = $sedadel=== null ?-1:intval($sedadel);
+	else 
+		$selOpt = null;
+
+	echo '<select name="'.$name.'" id="'.$name.'">';
+	// Loop through the options array and generate <option> tags
+	foreach ($g_sedadel_cnt as $value => $label) {
+		// Check if the current option value matches the selected value
+		$sel = ($value === $selOpt) ? " selected" : "";
+		echo "<option value='$value'$sel>$label</option>";
+	}
+	echo '</select>';
+}
 ?>

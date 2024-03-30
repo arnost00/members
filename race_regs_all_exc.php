@@ -31,7 +31,7 @@ $zaznam_z = mysqli_fetch_array($vysledek_z);
 
 $is_registrator_on = IsCalledByRegistrator($gr_id);
 $is_termin_edit_on = $is_registrator_on && ($zaznam_z['prihlasky'] > 1);
-$is_spol_dopr_on = ($zaznam_z["transport"]==1||$zaznam_z["transport"]==3);
+$is_spol_dopr_on = ($zaznam_z["transport"]==1);
 $is_sdil_dopr_on = ($zaznam_z["transport"]==3);
 $is_spol_ubyt_on = ($zaznam_z["ubytovani"]==1);
 
@@ -46,8 +46,21 @@ while ($zaznamZ=mysqli_fetch_array($vysledek))
 		$poz = correct_sql_string($pozn[$user]);
 		$poz2 = correct_sql_string($pozn2[$user]);
 		$cterm = $termin;
-		$trans = ($is_spol_dopr_on && IsSet($transport[$user])) ? 1 : 'NULL';
-		$sedl = ($is_spol_dopr_on && IsSet($sedadel[$user])&&is_numeric($sedadel[$user])) ? intval($sedadel[$user]) : 'NULL';
+		if ($is_spol_dopr_on) {
+			$trans = (IsSet($transport[$user])) ? 1 : 'NULL';
+			$sedl = 'NULL';
+		} else if ($is_sdil_dopr_on) {
+			if (IsSet($sedadel[$user])&&is_numeric($sedadel[$user])){
+				$trans = 1;
+				$sedl = intval($sedadel[$user]);
+			} else {
+				$trans = 'NULL';
+				$sedl = 'NULL';
+			}
+		} else {
+			$trans = 'NULL';
+			$sedl = 'NULL';
+		}
 		$ubyt = ($is_spol_ubyt_on && IsSet($ubytovani[$user])) ? 1 : 'NULL';
 		if($is_registrator_on)
 		{
@@ -104,5 +117,5 @@ while ($zaznamZ=mysqli_fetch_array($vysledek))
 ?>
 <SCRIPT LANGUAGE="JavaScript">
 	window.opener.focus();
-	window.close();
+//	window.close();
 </SCRIPT>

@@ -60,6 +60,26 @@ function select_row(row)
 	focused_row = row;
 }
 
+function update_transport(input,row)
+{
+	if ( input.type === 'checkbox') {
+		sedadel_name = 'sedadel[' + row + ']';
+		if ( input.checked ) {
+			document.form1.elements[sedadel_name].value = '-1';
+		} else {
+			document.form1.elements[sedadel_name].value = '';
+		}
+	} else {
+		trans_name = 'transport[' + row + ']';
+
+		if(input.value===''){
+			document.form1.elements[trans_name].checked = false;
+		} else {
+			document.form1.elements[trans_name].checked = true;
+		}
+	}
+}
+
 function zmen_kat(kat)
 {
 	if (focused_row != -1)
@@ -120,7 +140,7 @@ $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
 if($is_spol_dopr_on)
 	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,'Společná doprava');
 if($is_sdil_dopr_on)
-	$data_tbl->set_header_col_with_help($col++,'&#x1F697;',ALIGN_CENTER,'Sedadla');
+	$data_tbl->set_header_col_with_help($col++,'&#x1F697;',ALIGN_CENTER,'Nabízených sedadel');
 if($is_spol_ubyt_on)
 	$data_tbl->set_header_col_with_help($col++,'SU',ALIGN_CENTER,'Společné ubytování');
 if($is_termin_show_on)
@@ -157,10 +177,15 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 		if($zaznam['termin'] == $termin || $is_termin_edit_on || $zaznam_z['prihlasky'] == 1)
 		{	// aktualni termin nebo povelena komplet editace
 			$row[] = ($entry_lock) ? $zaznam['kat']:'<INPUT TYPE="text" NAME="kateg['.$u.']" SIZE=5 value="'.$zaznam['kat'].'" onfocus="javascript:select_row('.$u.');">';
-			if($is_spol_dopr_on)
-				$row[] = '<INPUT TYPE="checkbox" NAME="transport['.$u.']" '.$trans.' onfocus="javascript:select_row('.$u.');">';
+			if($is_spol_dopr_on||$is_sdil_dopr_on) {
+				$nextRow = '<INPUT TYPE="checkbox" NAME="transport['.$u.']" '.$trans.' onfocus="javascri]pt:select_row('.$u.');"';
+				if($is_sdil_dopr_on) 
+					$nextRow .= ' onchange="javascript:update_transport(this,'.$u.');"';				
+				$nextRow .= '>';				
+				$row[] = $nextRow;
+			}
 			if($is_sdil_dopr_on)
-				$row[] = '<INPUT TYPE="number" NAME="sedadel['.$u.']" value="'.$sedl.'" min="-99" max="999" style="width: 3.5em;" onfocus="javascript:select_row('.$u.');">';
+				$row[] = '<INPUT TYPE="number" NAME="sedadel['.$u.']" value="'.$sedl.'" min="-99" max="999" style="width: 3.5em;" onfocus="javascript:select_row('.$u.');" onchange="javascript:update_transport(this,'.$u.');">';
 			if($is_spol_ubyt_on)
 				$row[] = '<INPUT TYPE="checkbox" NAME="ubytovani['.$u.']" '.$ubyt.' onfocus="javascript:select_row('.$u.');">';
 			if($is_termin_edit_on)
@@ -173,7 +198,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 		else
 		{
 			$row[] = ($entry_lock) ? $zaznam['kat']:'<INPUT TYPE="text" NAME="kateg['.$u.']" SIZE=5 value="'.$zaznam['kat'].'" onfocus="javascript:select_row('.$u.');" disabled readonly>';
-			if($is_spol_dopr_on)
+			if($is_spol_dopr_on||$is_sdil_dopr_on)
 				$row[] = '<INPUT TYPE="checkbox" NAME="transport['.$u.']" '.$trans.' onfocus="javascript:select_row('.$u.');" disabled readonly>';
 			if($is_sdil_dopr_on)
 				$row[] = '<INPUT TYPE="number" NAME="sedadel['.$u.']" value="'.$sedl.'" min="-99" max="999" style="width: 3.5em;" onfocus="javascript:select_row('.$u.');" disabled readonly>';
@@ -190,10 +215,10 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	else
 	{	// neprihlasen
 		$row[] = ($entry_lock) ? '-':'<INPUT TYPE="text" NAME="kateg['.$u.']" SIZE=5 onfocus="javascript:select_row('.$u.');">';
-		if($is_spol_dopr_on)
-			$row[] = '<INPUT TYPE="checkbox" NAME="transport['.$u.']" onfocus="javascript:select_row('.$u.');">';
+		if($is_spol_dopr_on||$is_sdil_dopr_on)
+			$row[] = '<INPUT TYPE="checkbox" NAME="transport['.$u.']" onfocus="javascript:select_row('.$u.');" onchange="javascript:update_transport(this,'.$u.');">';
 		if($is_sdil_dopr_on)
-			$row[] = '<INPUT TYPE="number" NAME="sedadel['.$u.']" value="'.$sedl.'" min="-99" max="999" style="width: 3.5em;" onfocus="javascript:select_row('.$u.');">';
+			$row[] = '<INPUT TYPE="number" NAME="sedadel['.$u.']" value="'.$sedl.'" min="-99" max="999" style="width: 3.5em;" onfocus="javascript:select_row('.$u.');" onchange="javascript:update_transport(this,'.$u.');">';
 		if($is_spol_ubyt_on)
 			$row[] = '<INPUT TYPE="checkbox" NAME="ubytovani['.$u.']" onfocus="javascript:select_row('.$u.');">';
 		if($is_termin_edit_on)

@@ -41,7 +41,7 @@ RaceInfoTable($zaznam_z,'',$gr_id != _REGISTRATOR_GROUP_ID_,false,true);
 <?
 DrawPageSubTitle('Přihlášení závodníci');
 
-$is_spol_dopr_on = ($zaznam_z["transport"]==1||$zaznam_z["transport"]==3) && $g_enable_race_transport;
+$is_spol_dopr_on = ($zaznam_z["transport"]==1) && $g_enable_race_transport;
 $is_sdil_dopr_on = ($zaznam_z["transport"]==3) && $g_enable_race_transport;
 $is_spol_ubyt_on = ($zaznam_z["ubytovani"]==1) && $g_enable_race_accommodation;
 
@@ -56,10 +56,10 @@ if ($us == 0)
 	$data_tbl->set_header_col($col++,'SI čip',ALIGN_RIGHT);
 }
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
-if($is_spol_dopr_on)
+if($is_spol_dopr_on||$is_sdil_dopr_on)
 	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,'Společná doprava');
 if($is_sdil_dopr_on)
-	$data_tbl->set_header_col_with_help($col++,'&#x1F697;',ALIGN_CENTER,'Sedadla');
+	$data_tbl->set_header_col_with_help($col++,'&#x1F697;',ALIGN_CENTER,'Nabízených sedadel');
 if($is_spol_ubyt_on)
 	$data_tbl->set_header_col_with_help($col++,'SU',ALIGN_CENTER,'Společné ubytování');
 if($zaznam_z['prihlasky'] > 1)
@@ -96,7 +96,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 				$row[] = (($zaznam['t_si_chip'] != 0) ? '<span class="TemporaryChip">'.SINumToStr($zaznam['t_si_chip']).'</span>' : SINumToStr($zaznam['si_chip']));
 		}
 		$row[] = '<B>'.$zaznam['kat'].'</B>';
-		if($is_spol_dopr_on)
+		if($is_spol_dopr_on||$is_sdil_dopr_on)
 		{
 			if ($zaznam["transport"])
 			{
@@ -108,7 +108,6 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 		}
 		if($is_sdil_dopr_on)
 		{
-			echo ('Sed:'.$zaznam["sedadel"]);					
 			if ($zaznam["transport"])
 			{
 				if ($zaznam["sedadel"]>=0)
@@ -144,7 +143,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 }
 echo $data_tbl->get_footer()."\n";
 
-echo $is_spol_dopr_on?"<BR>Počet přihlášených na dopravu: $trans":"";
+echo $is_spol_dopr_on||$is_sdil_dopr_on?"<BR>Počet přihlášených na dopravu: $trans":"";
 echo $is_sdil_dopr_on?"<BR>Počet volných sdílených míst: $sedadel":"";
 echo $is_spol_ubyt_on?"<BR>Počet přihlášených na ubytování: $ubyt":"";
 ?>
