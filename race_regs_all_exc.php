@@ -117,5 +117,5 @@ while ($zaznamZ=mysqli_fetch_array($vysledek))
 ?>
 <SCRIPT LANGUAGE="JavaScript">
 	window.opener.focus();
-//	window.close();
+	window.close();
 </SCRIPT>

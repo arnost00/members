@@ -33,14 +33,14 @@ if ($kat != '')
 		$pozn=correct_sql_string($pozn);
 		$pozn2=correct_sql_string($pozn2);
 
-		@$vysledek_z=query_db("SELECT datum, vicedenni, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5 FROM ".TBL_RACE." WHERE id=$id_zav");
+		@$vysledek_z=query_db("SELECT datum, vicedenni, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, transport FROM ".TBL_RACE." WHERE id=$id_zav");
 		$zaznam_z = mysqli_fetch_array($vysledek_z);
 
 		$termin = raceterms::GetCurr4RegTerm($zaznam_z);
 
 		if ($termin != 0) // not process if invalid termin number
 		{
-			if ( $trans_zav == 3 ) {
+			if ( $zaznam_z["transport"] == 3 ) {
 				// shared transport
 				if ( !isset($sedadel) || $sedadel=='' ) {
 					// no seats no trasport

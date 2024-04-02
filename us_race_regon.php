@@ -192,7 +192,6 @@ Poznámka&nbsp;<INPUT TYPE="text" name="pozn2" size="50" maxlength="250" value="
 
 <INPUT TYPE="hidden" name="id_us" value="<?echo xss_prevent($id_us)?>">
 <INPUT TYPE="hidden" name="id_zav" value="<?echo xss_prevent($id_zav)?>">
-<INPUT TYPE="hidden" name="trans_zav" value="<?echo xss_prevent($zaznam_z['transport'])?>">
 <?
 if ($new)
 {
