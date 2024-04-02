@@ -11,7 +11,7 @@ function GetCodeVersion()
 
 function GetCopyright()
 {
-	return 'Copyright © 2002-2023 Arnošt, Kenia; 2014-2015 LuF a 2023 Jurakin';
+	return 'Copyright © 2002-2024 Arnošt, Kenia; 2014-2015 LuF a 2023-2024 Jurakin';
 }
 
 ?>

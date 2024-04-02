@@ -46,9 +46,9 @@ else
 		$data_tbl = new html_table_mc();
 		$col = 0;
 		$data_tbl->set_header_col($col++,'Id',ALIGN_CENTER);
-		$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 		$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
 		$data_tbl->set_header_col($col++,'Seznam kategorií',ALIGN_LEFT);
+		$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 
 		echo $data_tbl->get_css()."\n";
 		echo $data_tbl->get_header()."\n";
@@ -58,9 +58,9 @@ else
 		{
 			$row = array();
 			$row[] = $zaznam['id'];
-			$row[] = '<A HREF="./categ_predef_edit.php?id='.$zaznam['id'].'">Editovat</A>&nbsp;/&nbsp;<A HREF="./categ_predef_del_exc.php?id='.$zaznam['id'].'" onclick="return confirm_delete()" class="Erase">Smazat</A>';
 			$row[] = $zaznam['name'];
 			$row[] = nl2br ($zaznam['cat_list']);
+			$row[] = '<A HREF="./categ_predef_edit.php?id='.$zaznam['id'].'">Editovat</A>&nbsp;/&nbsp;<A HREF="./categ_predef_del_exc.php?id='.$zaznam['id'].'" onclick="return confirm_delete()" class="Erase">Smazat</A>';
 
 			echo $data_tbl->get_new_row_arr($row)."\n";
 		}
