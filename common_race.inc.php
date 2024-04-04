@@ -437,4 +437,20 @@ function RenderSharedTransportInput($name,$transport,$sedadel){
 	}
 	echo '</select>';
 }
+
+function GetSharedTransportValue($transport,$sedadel,&$total){
+	if ($transport)
+	{
+		$total += $sedadel;
+		if ($sedadel!==null&&$sedadel!=-1)
+		{
+			$sign = ($sedadel>=0) ? '+' : '';
+			return '<B>'.$sign.$sedadel.'</B>';
+		}
+		else
+			return '';
+	}
+	else
+		return '';
+}
 ?>

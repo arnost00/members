@@ -235,7 +235,7 @@ $data_tbl->set_header_col($col++,'Příjmení',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
 if($is_spol_dopr_on||$is_sdil_dopr_on)
-	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,'Společná doprava');
+	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER, ($is_spol_dopr_on?'Společná':'Sdílená').' doprava');
 if($is_sdil_dopr_on)
 	$data_tbl->set_header_col_with_help($col++,'&#x1F697;',ALIGN_CENTER,'Nabízených sedadel');
 if($is_spol_ubyt_on)
@@ -273,20 +273,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 				$row[] = '';
 		}
 		if($is_sdil_dopr_on)
-		{
-			if ($zaznam["transport"])
-			{
-				if ($zaznam["sedadel"]!==null && $zaznam["sedadel"]>=0)
-				{
-					$row[] = '<B>+' . $zaznam["sedadel"] . '</B>';
-				}
-				else
-					$row[] = '';
-				$sedadel += $zaznam["sedadel"];
-			}
-			else
-				$row[] = '';
-		}
+			$row[] = GetSharedTransportValue($zaznam["transport"], $zaznam["sedadel"], $sedadel );
 		if($is_spol_ubyt_on)
 		{
 			if ($zaznam["ubytovani"])

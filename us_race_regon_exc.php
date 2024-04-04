@@ -45,13 +45,14 @@ if ($kat != '')
 				if ( !isset($sedadel) || $sedadel=='' ) {
 					// no seats no trasport
 					$sedadel = 'null';
-					$transport = 'null';
+					$transport = 0;
 				} else {
 					// if seats set, transport automatically
+					$sedadel = intval($sedadel);
 					$transport = 1;
 				}	
 			} else {
-				$transport = !isset($transport)? 'null': 1;
+				$transport = !isset($transport)? 0: 1;
 				$sedadel = 'null';
 			}
 			$ubytovani = !isset($ubytovani)? 'null': 1;

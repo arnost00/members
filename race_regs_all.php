@@ -125,7 +125,7 @@ $query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, datum, kat, pozn, pozn_i
 $is_registrator_on = IsCalledByRegistrator($gr_id);
 $is_termin_show_on = ($zaznam_z['prihlasky'] > 1);
 $is_termin_edit_on = $is_registrator_on && $is_termin_show_on;
-$is_spol_dopr_on = ($zaznam_z["transport"]==1 || $zaznam_z["transport"]==3 );
+$is_spol_dopr_on = ($zaznam_z["transport"]==1);
 $is_sdil_dopr_on = ($zaznam_z["transport"]==3);
 $is_spol_ubyt_on = ($zaznam_z["ubytovani"]==1);
 
@@ -137,8 +137,8 @@ $data_tbl->set_header_col($col++,'Příjmení',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Věk',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
-if($is_spol_dopr_on)
-	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,'Společná doprava');
+if($is_spol_dopr_on||$is_sdil_dopr_on )
+	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,($is_spol_dopr_on?'Společná':'Sdílená').' doprava');
 if($is_sdil_dopr_on)
 	$data_tbl->set_header_col_with_help($col++,'&#x1F697;',ALIGN_CENTER,'Nabízených sedadel');
 if($is_spol_ubyt_on)
