@@ -20,6 +20,8 @@ AddZmenyFile('3.0.16.538');
 AddZmenyFile('3.2.0.553');
 AddZmenyFile('3.2.2.577');
 AddZmenyFile('3.3.0.590');
+AddZmenyFile('3.4.0.600');
+AddZmenyFile('3.4.0.601');
 AddZmenyFile('3.4.1.631');
 //#############################################################################
 

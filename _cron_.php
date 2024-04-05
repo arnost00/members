@@ -308,8 +308,9 @@ if (mysqli_num_rows($vysledek_m) > 0)
 */
 				$match_type = MatchRaceType($races[$ii]['typ'], $zaznam_m['type']);
 				$match_sub_type = MatchRaceSubType($races[$ii]['zebricek'], $zaznam_m['sub_type']);
-				
-				if ($new_reg[0] != 0 && $match_type && $match_sub_type)
+				$match_internal = $races[$ii]['typ0'] == 'T' && $zaznam_m['internal'] == 1;
+
+				if ($new_reg[0] != 0 && $match_type && $match_sub_type && $match_internal)
 				{
 					$diff = _DateDiffInDays($new_reg[0],$curr_date);
 //					echo('za dni: '.$diff.'<br>');
