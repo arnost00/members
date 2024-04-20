@@ -68,7 +68,6 @@ if ($zaznam == FALSE)
 	$zaznam['fin_type'] = 0;
 	$zaznam['fin_limit'] = 0;
 	$zaznam['active_news'] = 0;
-	$zaznam['interni'] = 0;
 }
 ?>
 
@@ -129,20 +128,6 @@ if ($zaznam == FALSE)
 	}
 ?>
 	</span><a href="" onclick="checkAll('zebricek',true); return false;">Vše</a> / <a href="" onclick="checkAll('zebricek',false); return false;">Nic</a>
-	</TD>
-</TR>
-<!-- Email notification for Interni/Trenink -->
-<TR name="daysbefore_hide" id="daysbefore_hide"> 
-	<TD width="40%" align="right">Interní</TD>
-	<TD width="5"></TD>
-	<TD>
-		<span id="interni">
-			<input type="checkbox" name="interni" id="interni" value="1"
-			<?=($zaznam['internal'] == 1)?'checked':''?>
-			>
-			<label for="interni">Trénink</label>
-			<br/>
-		</span>
 	</TD>
 </TR>
 <TR>
