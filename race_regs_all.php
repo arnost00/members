@@ -60,6 +60,26 @@ function select_row(row)
 	focused_row = row;
 }
 
+function update_transport(input,row)
+{
+	if ( input.type === 'checkbox') {
+		sedadel_name = 'sedadel[' + row + ']';
+		if ( input.checked ) {
+			document.form1.elements[sedadel_name].value = '-1';
+		} else {
+			document.form1.elements[sedadel_name].value = '';
+		}
+	} else {
+		trans_name = 'transport[' + row + ']';
+
+		if(input.value===''){
+			document.form1.elements[trans_name].checked = false;
+		} else {
+			document.form1.elements[trans_name].checked = true;
+		}
+	}
+}
+
 function zmen_kat(kat)
 {
 	if (focused_row != -1)
@@ -96,7 +116,7 @@ else
 
 $sub_query2 = (IsLoggedRegistrator() || IsLoggedManager()) ? '' : ' AND '.TBL_USER.'.chief_id = '.$usr->user_id.' OR '.TBL_USER.'.id = '.$usr->user_id;
 
-$query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, datum, kat, pozn, pozn_in, termin, entry_locked, '.TBL_ZAVXUS.'.transport, '.TBL_ZAVXUS.'.ubytovani FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query2.$sub_query;
+$query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, datum, kat, pozn, pozn_in, termin, entry_locked, '.TBL_ZAVXUS.'.transport, '.TBL_ZAVXUS.'.sedadel, '.TBL_ZAVXUS.'.ubytovani FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query2.$sub_query;
 
 @$vysledek=query_db($query);
 
@@ -106,6 +126,7 @@ $is_registrator_on = IsCalledByRegistrator($gr_id);
 $is_termin_show_on = ($zaznam_z['prihlasky'] > 1);
 $is_termin_edit_on = $is_registrator_on && $is_termin_show_on;
 $is_spol_dopr_on = ($zaznam_z["transport"]==1);
+$is_sdil_dopr_on = ($zaznam_z["transport"]==3);
 $is_spol_ubyt_on = ($zaznam_z["ubytovani"]==1);
 
 $data_tbl = new html_table_mc();
@@ -116,8 +137,10 @@ $data_tbl->set_header_col($col++,'Příjmení',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Věk',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
-if($is_spol_dopr_on)
-	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,'Společná doprava');
+if($is_spol_dopr_on||$is_sdil_dopr_on )
+	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,($is_spol_dopr_on?'Společná':'Sdílená').' doprava');
+if($is_sdil_dopr_on)
+	$data_tbl->set_header_col_with_help($col++,'&#x1F697;',ALIGN_CENTER,'Nabízených sedadel');
 if($is_spol_ubyt_on)
 	$data_tbl->set_header_col_with_help($col++,'SU',ALIGN_CENTER,'Společné ubytování');
 if($is_termin_show_on)
@@ -146,6 +169,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	$u=$zaznam['id'];
 	$entry_lock = ($zaznam['entry_locked'] != 0) && !$is_registrator_on;
 	$trans=$zaznam['transport']?"CHECKED":"";
+	$sedl=$zaznam['sedadel'];
 	$ubyt=$zaznam['ubytovani']?"CHECKED":"";
 
 	if ($zaznam['kat'] != NULL)
@@ -153,8 +177,15 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 		if($zaznam['termin'] == $termin || $is_termin_edit_on || $zaznam_z['prihlasky'] == 1)
 		{	// aktualni termin nebo povelena komplet editace
 			$row[] = ($entry_lock) ? $zaznam['kat']:'<INPUT TYPE="text" NAME="kateg['.$u.']" SIZE=5 value="'.$zaznam['kat'].'" onfocus="javascript:select_row('.$u.');">';
-			if($is_spol_dopr_on)
-				$row[] = '<INPUT TYPE="checkbox" NAME="transport['.$u.']" '.$trans.' onfocus="javascript:select_row('.$u.');">';
+			if($is_spol_dopr_on||$is_sdil_dopr_on) {
+				$nextRow = '<INPUT TYPE="checkbox" NAME="transport['.$u.']" '.$trans.' onfocus="javascri]pt:select_row('.$u.');"';
+				if($is_sdil_dopr_on) 
+					$nextRow .= ' onchange="javascript:update_transport(this,'.$u.');"';				
+				$nextRow .= '>';				
+				$row[] = $nextRow;
+			}
+			if($is_sdil_dopr_on)
+				$row[] = '<INPUT TYPE="number" NAME="sedadel['.$u.']" value="'.$sedl.'" min="-99" max="999" style="width: 3.5em;" onfocus="javascript:select_row('.$u.');" onchange="javascript:update_transport(this,'.$u.');">';
 			if($is_spol_ubyt_on)
 				$row[] = '<INPUT TYPE="checkbox" NAME="ubytovani['.$u.']" '.$ubyt.' onfocus="javascript:select_row('.$u.');">';
 			if($is_termin_edit_on)
@@ -167,8 +198,10 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 		else
 		{
 			$row[] = ($entry_lock) ? $zaznam['kat']:'<INPUT TYPE="text" NAME="kateg['.$u.']" SIZE=5 value="'.$zaznam['kat'].'" onfocus="javascript:select_row('.$u.');" disabled readonly>';
-			if($is_spol_dopr_on)
+			if($is_spol_dopr_on||$is_sdil_dopr_on)
 				$row[] = '<INPUT TYPE="checkbox" NAME="transport['.$u.']" '.$trans.' onfocus="javascript:select_row('.$u.');" disabled readonly>';
+			if($is_sdil_dopr_on)
+				$row[] = '<INPUT TYPE="number" NAME="sedadel['.$u.']" value="'.$sedl.'" min="-99" max="999" style="width: 3.5em;" onfocus="javascript:select_row('.$u.');" disabled readonly>';
 			if($is_spol_ubyt_on)
 				$row[] = '<INPUT TYPE="checkbox" NAME="ubytovani['.$u.']"  '.$ubyt.' onfocus="javascript:select_row('.$u.');" disabled readonly>';
 			if($is_termin_edit_on)
@@ -182,8 +215,10 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	else
 	{	// neprihlasen
 		$row[] = ($entry_lock) ? '-':'<INPUT TYPE="text" NAME="kateg['.$u.']" SIZE=5 onfocus="javascript:select_row('.$u.');">';
-		if($is_spol_dopr_on)
-			$row[] = '<INPUT TYPE="checkbox" NAME="transport['.$u.']" onfocus="javascript:select_row('.$u.');">';
+		if($is_spol_dopr_on||$is_sdil_dopr_on)
+			$row[] = '<INPUT TYPE="checkbox" NAME="transport['.$u.']" onfocus="javascript:select_row('.$u.');" onchange="javascript:update_transport(this,'.$u.');">';
+		if($is_sdil_dopr_on)
+			$row[] = '<INPUT TYPE="number" NAME="sedadel['.$u.']" value="'.$sedl.'" min="-99" max="999" style="width: 3.5em;" onfocus="javascript:select_row('.$u.');" onchange="javascript:update_transport(this,'.$u.');">';
 		if($is_spol_ubyt_on)
 			$row[] = '<INPUT TYPE="checkbox" NAME="ubytovani['.$u.']" onfocus="javascript:select_row('.$u.');">';
 		if($is_termin_edit_on)

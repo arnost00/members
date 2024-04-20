@@ -130,7 +130,8 @@ if ($g_enable_race_transport)
 	<TD>
 		<input type="radio" name="transport" value="0" id="radio_ff0" <?if ($g_race_transport_default==0) echo "checked=\"checked\"";?>><label for="radio_ff0">Bez společné dopravy</label><br>
 		<input type="radio" name="transport" value="1" id="radio_ff1" <?if ($g_race_transport_default==1) echo "checked=\"checked\"";?>><label for="radio_ff1">Společná doprava s výběrem účasti</label><br>
-		<input type="radio" name="transport" value="2" id="radio_ff2" <?if ($g_race_transport_default==2) echo "checked=\"checked\"";?>><label for="radio_ff2">Automatická společná doprava</label>
+		<input type="radio" name="transport" value="2" id="radio_ff2" <?if ($g_race_transport_default==2) echo "checked=\"checked\"";?>><label for="radio_ff2">Automatická společná doprava</label><br>
+		<input type="radio" name="transport" value="3" id="radio_ff3" <?if ($g_race_transport_default==3) echo "checked=\"checked\"";?>><label for="radio_ff3">Sdílená doprava</label>
 	</TD>
 </TR>
 <?

@@ -98,6 +98,10 @@ if (mysqli_num_rows($vysledek) > 0)
 				$transport = 'Auto Yes';
 				break;
 			}
+			case 3: 
+				$transport = 'Sdílená';
+				break;
+			}
 			$data['Data'][$race_key]['Transport'] = $transport;
 		}
 		if ($g_enable_race_accommodation)

@@ -92,7 +92,8 @@ switch ($action) {
                 "category" => @$zavxus["kat"],
                 "note" => @$zavxus["pozn"],
                 "note_internal" => @$zavxus["pozn_in"],
-                "transport" => @$zavxus["transport"], // value can be 0, 1, 2
+                "transport" => @$zavxus["transport"], // value can be 0, 1, 2, 3
+                "sedadlel" => @$zavxus["sedadel"], // value can be -1 to count
                 "accommodation" => @$zavxus["ubytovani"], // value can be 0, 1, 2
 
                 "is_signed_in" => $zavxus != null,
@@ -119,6 +120,7 @@ switch ($action) {
             "note" => $_POST["note"],
             "note_internal" => $_POST["note_internal"],
             "transport" => $_POST["transport"],
+            "sedadlel" => $_POST["sedadlel"],
             "accommodation" => $_POST["accommodation"],
         ];
         foreach ($required_data as $key => $value) {
@@ -153,10 +155,10 @@ switch ($action) {
         $output = $output->fetch_assoc();
 
         if ($output == null) { // if not, create a new row with given values
-            db_execute("INSERT INTO " . TBL_ZAVXUS . " (id_user, id_zavod, kat, pozn, pozn_in, termin, transport, ubytovani) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", $user_id, $race_id, $category, $note, $note_internal, $termin, $transport, $accommodation);
+            db_execute("INSERT INTO " . TBL_ZAVXUS . " (id_user, id_zavod, kat, pozn, pozn_in, termin, transport, sedadel, ubytovani) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", $user_id, $race_id, $category, $note, $note_internal, $termin, $transport, $sedadel, $accommodation);
         } else { // else, update the row
             $id = $output["id"];
-            db_execute("UPDATE " . TBL_ZAVXUS . " SET kat = ?, pozn = ?, pozn_in = ?, termin = ?, transport = ?, ubytovani = ? WHERE id = ?", $category, $note, $note_internal, $termin, $transport, $accommodation, $id);
+            db_execute("UPDATE " . TBL_ZAVXUS . " SET kat = ?, pozn = ?, pozn_in = ?, termin = ?, transport = ?, sedadel = ?, ubytovani = ? WHERE id = ?", $category, $note, $note_internal, $termin, $transport, $sedadel, $accommodation, $id);
         }
         
         print_and_die();
@@ -280,7 +282,7 @@ function parse_race_row($race) {
 }
 
 function parse_transport($transport) {
-    // 0 = No; 1 = Yes; 2 = Auto Yes;
+    // 0 = No; 1 = Yes; 2 = Auto Yes; 3 = Shared
 
     global $g_enable_race_transport;
     return $g_enable_race_transport ? $transport : 0;
