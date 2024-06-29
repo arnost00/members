@@ -97,7 +97,6 @@ if (mysqli_num_rows($vysledek) > 0)
 			case 2: 
 				$transport = 'Auto Yes';
 				break;
-			}
 			case 3: 
 				$transport = 'Sdílená';
 				break;
