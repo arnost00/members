@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Zavod</title>
+  <title>Účast na závodě</title>
   <link rel="stylesheet" href="./js/jquery-ui.css">
   <style>
 
@@ -49,11 +49,11 @@
         data.forEach(el => {
             var flds_entry = '<label for="checkbox-1-'+el.id_user+'">Přihlášen</label><input type="checkbox" name="checkbox-1-'+el.id_user+'" id="checkbox-1-'+el.id_user+'"><label for="checkbox-2-'+el.id_user+'">Účast</label><input type="checkbox" name="checkbox-2-'+el.id_user+'" id="checkbox-2-'+el.id_user+'">';
             var flds_kat = '<select id="cat-'+el.reg+'" class="select-cat"></select>';
-            var flds_note = '<input type="text" value="sem napis poznamku ..."></input>';
+            var flds_note = '<input type="text" value="sem napiš poznámku ..."></input>';
             
             // tlacitka na prihlaseni a ucast v headru accordionu
-            var head_span_prihlasen = '<button id="btnEntry-'+el.id_user+'" style="margin-right:2px;" onClick="tickEntry(this,\''+el.id_user+'\','+id_race+')" '+(el.add_by_fin==1?'class="active"':'class=""')+'>Prihl.</button>';
-            var head_span_ucast = '<button id="btnParticipate-'+el.id_user+'" onClick="tickParticipate(this,\''+el.id_user+'\','+id_race+')" '+(el.participated==1?'class="active"':'class=""')+' '+((el.id)?'':'hidden')+'>Ucast</button>';
+            var head_span_prihlasen = '<button id="btnEntry-'+el.id_user+'" style="margin-right:2px;" onClick="tickEntry(this,\''+el.id_user+'\','+id_race+')" '+(el.add_by_fin==1?'class="active"':'class=""')+'>Přihl.</button>';
+            var head_span_ucast = '<button id="btnParticipate-'+el.id_user+'" onClick="tickParticipate(this,\''+el.id_user+'\','+id_race+')" '+(el.participated==1?'class="active"':'class=""')+' '+((el.id)?'':'hidden')+'>Účast</button>';
             var head_span = '<span style="float:right;" class="toolbar ui-widget-header ui-corner-all">'+((el.add_by_fin!=1&&el.id)?'':head_span_prihlasen)+head_span_ucast+'</span>';
 
             $( accordion ).append('<h3 id='+el.id_user+'>'+el.reg+'::'+el.name+' '+head_span+'</h3><div id="div-'+el.reg+'"></div>');
@@ -210,20 +210,20 @@
     @$vysledek=$db_conn->query($query);
     $zaznam=mysqli_fetch_array($vysledek)
 ?>
-<h2 id='title'>Zavod <?=$zaznam['nazev']?></h2>
-<button id="btnAccomodation" class="ui-button ui-widget ui-corner-all">Zobraz ubytovane</button> <---||---> <button id="btnEntry" class="ui-button ui-widget ui-corner-all">Zobraz seznam</button>
+<h2 id='title'>Závod <?=$zaznam['nazev']?></h2>
+<button id="btnAccomodation" class="ui-button ui-widget ui-corner-all">Zobraz ubytované</button> <---||---> <button id="btnEntry" class="ui-button ui-widget ui-corner-all">Zobraz seznam</button>
 <button id="uncheckAll" class="ui-button ui-widget ui-corner-all uncheckAll">Odškrtni účast u všech</button>
 <hr/>
 
 <div id="divAccomodation" class="hidden">
-    <p id="btnSave" onclick="saveDataToFile(document.getElementById('accomodation').innerText);">Uloz</p>
+    <p id="btnSave" onclick="saveDataToFile(document.getElementById('accomodation').innerText);">Ulož</p>
     <div id="accomodation"></div>
 </div>
 
 <div id="divEntry" class="">
     <input id="search" placeholder="filtr podle jmena"/><br/><br/>
     <div id="accordion">
-        Nacitam data zavodu ...
+        Načítám data závodu ...
     </div>
 </div>
 
