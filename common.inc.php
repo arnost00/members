@@ -91,7 +91,7 @@ function CreateDate($d,$m,$y)
 function String2DateDMY($text)
 {	// dd.mm.yyyy
 	$da = explode (".",$text);
-	if (sizeof($da) == 3)
+	if (sizeof($da) == 3 && $da[2] != '')
 		$date = mktime (0,0,0,$da[1],$da[0],$da[2]);
 	else
 		$date = 0;
