@@ -2,11 +2,11 @@
 <?
 
 define('SYSTEM_NAME','members');
-define('SYSTEM_AUTORS','Arnošt, Kenia, LuF a Jurakin');
+define('SYSTEM_AUTORS','Arnošt, Kenia, LuF, Jurakin a Svatoš');
 
 function GetCodeVersion()
 {
-	return "v3.4.1.631";
+	return "v3.4.2.645";
 }
 
 function GetCopyright()
