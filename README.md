@@ -9,7 +9,7 @@ Source code is avaible at https://github.com/arnost00/members.
 - ©️ Copyright 2002-2024 Arnošt, Kenia
 - ©️ Copyright 2014-2015 LuF
 - ©️ Copyright 2023-2024 Jurakin
-- ©️ Copyright 2024 Svatos Coufal
+- ©️ Copyright 2024 Svatoš Coufal
 
 ## License
 Distributed under the `Boost Software License`, Version 1.0.
