@@ -92,15 +92,17 @@ if ($num_rows > 0)
 		$row[] = GetRaceType0($zaznam['typ0']);
 		$row[] = GetRaceTypeImg($zaznam['typ']).'</A>';
 		$row[] = GetRaceLinkHTML($zaznam['odkaz']);
+		$ucast = " / <A HREF=\"javascript:open_win('./api_race_entry.view.php?race_id=".$zaznam['id']."','')\">Účast</A>";
 		if(!$race_is_old || IsLoggedAdmin())
 		{
 			$s1 = "<A HREF=\"javascript:open_win2('./race_reg_form.php?id_zav=".$zaznam['id']."','')\">Vý.</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win2('./race_reg_chip.php?id_zav=".$zaznam['id']."','')\">SI</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_1.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$zaznam['id']."&show_ed=1','')\">P.1</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_all.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$zaznam['id']."','')\">P.V</A>&nbsp;/&nbsp;";
 			$s2 = "<A HREF=\"javascript:open_win_ex('./race_reg_view.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$zaznam['id']."','',600,600)\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
-			$row[] = $s1.$s2;
+			$s3 = (GetTimeToRace($zaznam['datum']) <= 0) ? $ucast :'';
+			$row[] = $s1.$s2.$s3;
 		}
 		else
 		{
-			$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$zaznam['id']."','',600,600)\"><span class=\"TextAlertExpLight\">Zobrazit</span></A> / <A HREF=\"javascript:open_win('./api_race_entry.view.php?race_id=".$zaznam['id']."','')\">Účast</A>";
+			$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$zaznam['id']."','',600,600)\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>".$ucast;
 		}
 
 		$row[] = $prihlasky_out;

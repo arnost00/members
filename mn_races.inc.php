@@ -71,6 +71,7 @@ if ($num_rows > 0)
 
 		$prihlasky_curr = raceterms::GetActiveRegDateArr($zaznam);
 		$prihlasky=Date2String($prihlasky_curr[0]);
+
 		if($zaznam['prihlasky'] > 1)
 			$prihlasky .= '&nbsp;/&nbsp;'.$prihlasky_curr[1];
 		$time_to_reg = GetTimeToReg($prihlasky_curr[0]);
@@ -84,13 +85,14 @@ if ($num_rows > 0)
 		$row[] = GetRaceType0($zaznam['typ0']);
 		$row[] = GetRaceTypeImg($zaznam['typ']);
 		$row[] = GetRaceLinkHTML($zaznam['odkaz']);
+		$ucast = (GetTimeToRace($zaznam['datum']) <= 0) ? " / <A HREF=\"javascript:open_win('./api_race_entry.view.php?race_id=".$zaznam['id']."','')\">Účast</A>" : '';
 		if (!$prihl_finish)
 		{
-			$row[] = "<A HREF=\"javascript:open_win('./race_regs_1.php?gr_id="._MANAGER_GROUP_ID_."&id=".$zaznam['id']."&show_ed=1','')\">Př-1</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_all.php?gr_id="._MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\">Př-V</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
+			$row[] = "<A HREF=\"javascript:open_win('./race_regs_1.php?gr_id="._MANAGER_GROUP_ID_."&id=".$zaznam['id']."&show_ed=1','')\">Př-1</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_all.php?gr_id="._MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\">Př-V</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zbr</span></A>".$ucast;
 		}
 		else
 		{
-			$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zobrazit</span></A> / <A HREF=\"javascript:open_win('./api_race_entry.view.php?race_id=".$zaznam['id']."','')\">Účast</A>";
+			$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>".$ucast;
 		}
 		$row[] = $prihlasky_out;
 
