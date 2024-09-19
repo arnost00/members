@@ -27,19 +27,19 @@ $g_modify_flag = [
 ];
 $g_modify_flag_cnt = count($g_modify_flag);
 
-$g_racetype0 = array(
+$g_racetype0 = [
 	'Z' => 'Závod',
 	'T' => 'Trénink',
 	'S' => 'Soustředění',
 	'V' => 'Sportovní vyšetření',
 	'N' => 'Nákup oblečení',
 	'J' => 'Jiné'
-);
+];
 $g_racetype0_idx = array_keys($g_racetype0);
 $g_racetype0_cnt = count($g_racetype0_idx);
 
 // Volby pro sdilenou dopravu
-$g_sedadel_cnt = array(
+$g_sedadel_cnt = [
 	null => "nejedu",
 	-1 => "potřebuji místo",
 	4 => "vezmu 4 osoby",
@@ -51,7 +51,18 @@ $g_sedadel_cnt = array(
 	6 => "vezmu 6 osob",
 	7 => "vezmu 7 osob",
 	8 => "vezmu 8 osob",
-);	
+];
 
+$g_fin_mail_flag = [
+	['id' => 1, 'nm' => 'Učet pod hranicí'],
+	['id' => 2, 'nm' => 'Účet v mínusu'],
+];
+$g_fin_mail_flag_cnt = count($g_fin_mail_flag);
+
+$g_notify_type_flag = [
+	['id' => 1, 'nm' => 'Upozornění na email'],
+	['id' => 2, 'nm' => 'Upozornění push notifikaci'],
+];
+$g_notify_type_flag_cnt = count($g_notify_type_flag);
 
 ?>

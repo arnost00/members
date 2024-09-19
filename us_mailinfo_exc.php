@@ -18,6 +18,7 @@ $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
 db_Connect();
 
+$notify_type2 = CreateNotifyTypeNumber($notify_type);
 $racetype2 = CreateRaceTypeNumber($racetype);
 $zebricek2 = CreateZebricekNumber($zebricek);
 $daysbefore = (int) $daysbefore;
@@ -48,14 +49,14 @@ else
 	if ($zaznam != NULL)
 	{	// update
 		$dbid = $zaznam['id'];
-		$result=query_db("UPDATE ".TBL_MAILINFO." SET email='$email', daysbefore='$daysbefore', type='$racetype2', sub_type='$zebricek2', active_tf='$active_tf', active_ch='$active_ch', active_rg='$active_rg', ch_data='$ch_data2', active_fin='$active_fin', active_finf='$active_finf', fin_type='$fin_type2', fin_limit='$fin_limit', active_news='$active_news' WHERE id='$dbid'")
+		$result=query_db("UPDATE ".TBL_MAILINFO." SET email='$email', daysbefore='$daysbefore', type='$racetype2', sub_type='$zebricek2', active_tf='$active_tf', active_ch='$active_ch', active_rg='$active_rg', ch_data='$ch_data2', active_fin='$active_fin', active_finf='$active_finf', fin_type='$fin_type2', fin_limit='$fin_limit', active_news='$active_news', notify_type='$notify_type2' WHERE id='$dbid'")
 			or die("Chyba při provádění dotazu do databáze. (update)");
 		if ($result == FALSE)
 			die ("Nepodařilo se změnit údaje o upozorňování.");
 	}
 	else
 	{	// insert
-		$query = "INSERT INTO ".TBL_MAILINFO." (email, daysbefore, type, sub_type, id_user, active_tf, active_ch, active_rg, ch_data, active_fin, active_finf, fin_type, fin_limit, active_news) VALUES ('$email', '$daysbefore', '$racetype2', '$zebricek2', '$id', '$active_tf', '$active_ch', '$active_rg', '$ch_data2', '$active_fin', '$active_finf', '$fin_type2', '$fin_limit', '$active_news')";
+		$query = "INSERT INTO ".TBL_MAILINFO." (email, daysbefore, type, sub_type, id_user, active_tf, active_ch, active_rg, ch_data, active_fin, active_finf, fin_type, fin_limit, active_news, notify_type) VALUES ('$email', '$daysbefore', '$racetype2', '$zebricek2', '$id', '$active_tf', '$active_ch', '$active_rg', '$ch_data2', '$active_fin', '$active_finf', '$fin_type2', '$fin_limit', '$active_news', '$notify_type2')";
 		$result=query_db($query)
 			or die("Chyba při provádění dotazu do databáze. (insert)");
 		if ($result == FALSE)
