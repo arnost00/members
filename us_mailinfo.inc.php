@@ -68,16 +68,37 @@ if ($zaznam == FALSE)
 	$zaznam['fin_type'] = 0;
 	$zaznam['fin_limit'] = 0;
 	$zaznam['active_news'] = 0;
+	$zaznam['notify_type'] = 1;
 }
 ?>
 
 <FORM METHOD=POST ACTION="./us_mailinfo_exc.php?id=<?echo $usr->user_id;?>">
 <TABLE width="90%">
 <TR>
+	<TD colspan="3"><br><hr></TD>
+</TR>
+<TR>
+	<TD width="40%" align="right">Typy upozornění</TD>
+	<TD width="5"></TD>
+	<TD><span id="notify_type">
+<?
+	echo '<input type="checkbox" name="notify_type[0]" value="1" id="nid_0"';
+	if (($zaznam['notify_type'] & $g_notify_type_flag[0]['id']) != 0)
+		echo ' checked';
+	echo ' /><label for="nid_0">' . $g_notify_type_flag[0]['nm'] . ' </label>';
+	echo '<input type="text" name="email" value="' . $zaznam["email"] . '" /><br />';
+	echo '<input type="checkbox" name="notify_type[1]" value="1" id="nid_1"';
+	if (($zaznam['notify_type'] & $g_notify_type_flag[1]['id']) != 0)
+		echo ' checked';
+	echo ' /><label for="nid_1">' . $g_notify_type_flag[1]['nm'] . "</label><br />";
+?>
+	</TD>
+</TR>
+<!-- <TR>
 	<TD width="40%" align="right">Email</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="email" SIZE=20 VALUE="<? echo $zaznam["email"]; ?>"></TD>
-</TR>
+</TR> -->
 <TR>
 	<TD colspan="3"><br><hr></TD>
 </TR>

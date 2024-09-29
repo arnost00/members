@@ -1,12 +1,7 @@
 <?php if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
 
-$g_fin_mail_flag [0]['id'] = 0x0001;
-$g_fin_mail_flag [0]['nm'] = 'Učet pod hranicí';
-$g_fin_mail_flag [1]['id'] = 0x0002;
-$g_fin_mail_flag [1]['nm'] = 'Účet v mínusu';
-
-$g_fin_mail_flag_cnt = 2;
+require_once "cfg/race_enums.php";
 
 function CreateFinMailFlag(&$mflags)
 {
