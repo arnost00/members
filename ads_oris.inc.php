@@ -6,9 +6,9 @@ if (!$g_enable_oris_support)
 	exit;
 ?>
 <ul>Základní exporty:
-	<li><a href="export_directory_exc.php?oris=1">Export pro ORIS (Import členů klubu)</a><br>
-	<li><a href="export_directory_exc.php?oris=2">Export pro ORIS (Import kontaktních informací)</a><br>
-	<li><a href="export_directory_exc.php?oris=3">Export pro ORIS (Registrace)</a><br>
+	<li><a href="javascript:open_win('./export_directory_exc.php?oris=1','')">Export pro ORIS (Import členů klubu)</a><br>
+	<li><a href="javascript:open_win('./export_directory_exc.php?oris=2','')">Export pro ORIS (Import kontaktních informací)</a><br>
+	<li><a href="javascript:open_win('./export_directory_exc.php?oris=3','')">Export pro ORIS (Registrace)</a><br>
 </ul>
 <CENTER>
 <?

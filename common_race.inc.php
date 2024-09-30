@@ -441,10 +441,11 @@ function RenderSharedTransportInput($name,$transport,$sedadel){
 function GetSharedTransportValue($transport,$sedadel,&$total){
 	if ($transport)
 	{
+		if ($sedadel == null) $sedadel = -1; //fix problem when change transport from Common to Shared
 		$total += $sedadel;
-		if ($sedadel!==null&&$sedadel!=-1)
+		if ($sedadel !== null && $sedadel != -1)
 		{
-			$sign = ($sedadel>=0) ? '+' : '';
+			$sign = ($sedadel >=0 ) ? '+' : '';
 			return '<B>'.$sign.$sedadel.'</B>';
 		}
 		else
