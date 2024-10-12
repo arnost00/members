@@ -1,4 +1,4 @@
-<?php /* zavody - zobrazeni zavodu */
+<?php /* zavody - zobrazeni zavodu - Menu malého trenéra */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
 DrawPageTitle('Hromadné přihlášky na závody');
@@ -14,7 +14,10 @@ $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 0;  // old races
 $fD = (IsSet($fD) && is_numeric($fD)) ? (int)$fD : 0;  // type 0
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD);
 
-$query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, nazev,misto,ranking,typ0,typ,vicedenni,odkaz,oddil,cancelled FROM ".TBL_RACE.$sql_sub_query." ORDER BY datum desc, datum2 desc, id desc";
+//when show all races reverse order
+$order = ($fC == 1) ? "desc" : "";
+
+$query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, nazev,misto,ranking,typ0,typ,vicedenni,odkaz,oddil,cancelled FROM ".TBL_RACE.$sql_sub_query." ORDER BY datum $order, datum2 $order, id $order";
 @$vysledek=query_db($query);
 
 ?>

@@ -1,4 +1,4 @@
-<? /* zavody - zobrazeni zavodu */
+<? /* zavody - zobrazeni zavodu - Členské menu*/
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
 DrawPageTitle('Přihlášky na závody');
@@ -15,10 +15,13 @@ $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 0;  // old races
 $fD = (IsSet($fD) && is_numeric($fD)) ? (int)$fD : 0;  // type 0
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD,'r.');
 
+//when show all races reverse order
+$order = ($fC == 1) ? "desc" : "";
+
 $query = 'SELECT r.id, r.datum, datum2, nazev, typ0, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, '.
 		'prihlasky4, prihlasky5, vicedenni, misto, oddil, kat, termin, cancelled, r.vedouci as vedouci_id, if(vedouci=0, "-", concat(u.jmeno, " ", u.prijmeni)) as vedouci '.
 		'FROM '.TBL_RACE.' r LEFT JOIN '.TBL_ZAVXUS.' zu ON r.id = zu.id_zavod AND zu.id_user='.$usr->user_id.' left join '.TBL_USER.' u on u.id = r.vedouci '.
-		$sql_sub_query.' ORDER BY r.datum, datum2, r.id';
+		$sql_sub_query." ORDER BY r.datum $order, datum2 $order, r.id $order";
 @$vysledek=query_db($query);
 
 @$vysledek2=query_db("SELECT * FROM ".TBL_USER." where id=$usr->user_id");

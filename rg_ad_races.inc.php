@@ -1,4 +1,4 @@
-<?php /* adminova stranka - editace zavodu */
+<?php /* adminova stranka - editace zavodu - Menu přihlašovatele*/
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
 DrawPageTitle('Kalendář závodů - Přihlášky na závody');
@@ -21,7 +21,10 @@ $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 0;  // old races
 $fD = (IsSet($fD) && is_numeric($fD)) ? (int)$fD : 0;  // type 0
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD);
 
-@$vysledek=query_db("SELECT id, datum, typ0, typ, datum2, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, nazev, vicedenni, odkaz, vedouci, oddil, send, misto, cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum desc, datum2 desc, id desc');
+//when show all races reverse order
+$order = ($fC == 1) ? "desc" : "";
+
+@$vysledek=query_db("SELECT id, datum, typ0, typ, datum2, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, nazev, vicedenni, odkaz, vedouci, oddil, send, misto, cancelled FROM ".TBL_RACE.$sql_sub_query." ORDER BY datum $order, datum2 $order, id $order");
 
 $num_rows = mysqli_num_rows($vysledek);
 if ($num_rows > 0)
