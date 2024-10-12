@@ -129,11 +129,13 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	}
 }
 echo $data_tbl->get_footer()."\n";
-
+if ($select == 0)
+{	// SD pouze pro vypis vsech prihlasek
 echo $is_spol_dopr_on||$is_sdil_dopr_on ? "<BR>Počet přihlášených na dopravu: $trans" : "";
 $warning_text = $sedadel < 0 ? ' <font color="red">(málo volných míst)</font>' : '';
 echo $is_sdil_dopr_on ? "<BR>Počet volných sdílených míst: $sedadel".$warning_text : "";
 echo $is_spol_ubyt_on ? "<BR>Počet přihlášených na ubytování: $ubyt" : "";
+}
 ?>
 
 <BR>
