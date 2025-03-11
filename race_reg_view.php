@@ -56,7 +56,7 @@ if ($us == 0)
 	$data_tbl->set_header_col($col++,'SI čip',ALIGN_RIGHT);
 }
 // Create category header with a clickable link
-$kat_header = '<span style="cursor:pointer; color:blue; text-decoration:underline;" onclick="toggleCategoriesAndScroll()" title="Zobrazí počet účastníků v jednotlivých kategoriích">Kategorie</span>';
+$kat_header = '<span style="cursor:pointer; text-decoration:underline;" onclick="toggleCategoriesAndScroll()" title="Zobrazí počet účastníků v jednotlivých kategoriích">Kategorie</span>';
 $data_tbl->set_header_col($col++,$kat_header,ALIGN_CENTER);
 if($is_spol_dopr_on||$is_sdil_dopr_on)
 	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,($is_spol_dopr_on?'Společná':'Sdílená').' doprava');
