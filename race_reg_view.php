@@ -147,16 +147,16 @@ echo $is_sdil_dopr_on ? "<BR>Počet volných sdílených míst: $sedadel".$warni
 echo $is_spol_ubyt_on ? "<BR>Počet přihlášených na ubytování: $ubyt" : "";
 // Add collapsible section for category counts with table formatting
 echo '<br><br><div id="category_details" style="display:none;">';
-echo '<table cellspacing="2">';
+echo '<table cellspacing="5">';
 echo '<tr><th>Kategorie</th>';
 
 foreach ($category_counts as $category => $count) {
-    echo "<td>$category</td>";
+	echo "<td>$category</td>";
 }
 echo '</tr><tr><th>Počet</th>';
 
 foreach ($category_counts as $category => $count) {
-    echo "<td style='text-align:center;'>$count</td>";
+	echo "<td style='text-align:center;'>$count</td>";
 }
 
 echo "</tr></table></div>";
@@ -171,6 +171,7 @@ function toggleCategoriesAndScroll() {
     details.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 </script>';
+}
 ?>
 
 <BR>
