@@ -10,6 +10,8 @@ require_once ("./common.inc.php");
 require_once ("./common_race.inc.php");
 require_once ('./url.inc.php');
 
+require_once ("./connectors.php");
+
 if (!IsLoggedRegistrator())
 {
 	header("location: ".$g_baseadr."error.php?code=21");
@@ -21,6 +23,23 @@ DrawPageTitle('Vytvoření nového závodu');
 
 db_Connect();
 
+$raceInfo = null;
+if (isset($ext_id)) { 
+    $connector = ConnectorFactory::create();
+
+    // Get race info by race ID
+    $raceInfo = $connector->getRaceInfo($ext_id);
+    
+print_r($raceInfo);    
+    
+    $type = $raceInfo->vicedenni;
+} 
+
+if ($raceInfo === null) {
+    // default
+    $raceInfo = new Race([]);
+}
+
 $type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
 if($type == 1)
 {	// vicedenni
@@ -30,12 +49,12 @@ if($type == 1)
 <TR>
 	<TD width="130" align="right">Datum od</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="datum" SIZE=8>&nbsp;&nbsp(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="datum" SIZE=8 <? if (isset($raceInfo->datum))echo ('value="'. Date2String($raceInfo->datum).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">Datum do</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="datum2" SIZE=8>&nbsp;&nbsp(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="datum2" SIZE=8 <? if (isset($raceInfo->datum2))echo ('value="'. Date2String($raceInfo->datum2) .'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <?
 }
@@ -47,7 +66,15 @@ else
 <TR>
 	<TD width="130" align="right">Datum</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="datum" SIZE=8>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="datum" SIZE=8 value="<? echo (Date2String($raceInfo->datum)); ?>">&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+</TR>
+<?
+}
+if ( IsSet ($connector) ) { ?>
+<TR>
+	<TD width="130" align="right"><? echo ($connector->getSystemName() );?> ID</TD>
+	<TD width="5"></TD>
+	<TD><INPUT TYPE="text" NAME="extID" SIZE=8 value="<? echo ($raceInfo->ext_id); ?>"></TD>
 </TR>
 <?
 }
@@ -55,17 +82,17 @@ else
 <TR>
 	<TD width="130" align="right">Název</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="nazev" SIZE=60 maxlength=50></TD>
+	<TD><INPUT TYPE="text" NAME="nazev" SIZE=60 maxlength=50 value="<? echo ($raceInfo->nazev); ?>"></TD>
 </TR>
 <TR>
 	<TD width="130" align="right">Místo</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="misto" SIZE=60 maxlength=50></TD>
+	<TD><INPUT TYPE="text" NAME="misto" SIZE=60 maxlength=50 value="<? echo ($raceInfo->misto); ?>"></TD>
 </TR>
 <TR>
 	<TD width="130" align="right">Pořádající oddíl</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="oddil" SIZE=9 maxlength=7>&nbsp;&nbsp;(XYZ) nebo (XYZ+ABC)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="oddil" SIZE=9 maxlength=7 value="<? echo ($raceInfo->oddil); ?>">&nbsp;&nbsp;(XYZ) nebo (XYZ+ABC)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">Typ akce</TD>
@@ -91,7 +118,8 @@ else
 		$tmp_typ = $g_racetype [0]['enum'];
 		for ($ii = 0; $ii < $g_racetype_cnt; $ii++)
 		{
-			echo("\t\t\t<option value='".$g_racetype [$ii]['enum']."'".(($tmp_typ==$g_racetype [$ii]['enum'])?' SELECTED':'').">".$g_racetype [$ii]['nm']."</option>\n");
+			$selected = ( $raceInfo->typ==$g_racetype [$ii]['enum']||$raceInfo->typ==$g_racetype [$ii]['nm'] ) ? ' SELECTED' : '';
+			echo("\t\t\t<option value='".$g_racetype [$ii]['enum']."'".$selected.">".$g_racetype [$ii]['nm']."</option>\n");
 		}
 ?>
 		</select>
@@ -115,8 +143,8 @@ else
 	<TD width="5"></TD>
 	<TD>
 		<select name='ranking'>
-			<option value='1' SELECTED>ANO</option>
-			<option value='0'>NE</option>
+			<option value='1' <? if ( $raceInfo->ranking == 1 ) echo ("SELECTED" ); ?>>ANO</option>
+			<option value='0' <? if ( $raceInfo->ranking != 1 ) echo ("SELECTED" ); ?>>NE</option>
 		</select>
 	</TD>
 </TR>
@@ -154,7 +182,7 @@ if ($g_enable_race_accommodation)
 <TR>
 	<TD width="130" align="right">Odkaz</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="odkaz" SIZE=60 maxlength=100 VALUE=""></TD>
+	<TD><INPUT TYPE="text" NAME="odkaz" SIZE=60 maxlength=100 value="<? echo ($raceInfo->odkaz); ?>"></TD>
 </TR>
 <?
 if($type == 1)
@@ -163,7 +191,7 @@ if($type == 1)
 <TR>
 	<TD width="130" align="right">Počet etap</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="etap" SIZE=2></TD>
+	<TD><INPUT TYPE="text" NAME="etap" SIZE=2  value="<? echo ($raceInfo->etap); ?>"></TD>
 </TR>
 <?
 }
@@ -172,33 +200,33 @@ if($type == 1)
 	<TD width="130" align="right" valign="top">Poznámka k závodu</TD>
 	<TD width="5"></TD>
 	<TD>
-	<TEXTAREA name="poznamka" cols="45" rows="5"></TEXTAREA>
+	<TEXTAREA name="poznamka" cols="45" rows="5" value="<? echo ($raceInfo->poznamka); ?>"></TEXTAREA>
 	</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">1. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky1" SIZE=8>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky1" SIZE=8 <? if (isset($raceInfo->prihlasky))echo ('value="'. Date2String($raceInfo->prihlasky).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">2. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky2" SIZE=8>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky2" SIZE=8 <? if (isset($raceInfo->prihlasky1))echo ('value="'. Date2String($raceInfo->prihlasky1).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">3. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky3" SIZE=8>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky3" SIZE=8 <? if (isset($raceInfo->prihlasky2))echo ('value="'. Date2String($raceInfo->prihlasky2).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">4. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky4" SIZE=8>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky4" SIZE=8 <? if (isset($raceInfo->prihlasky3))echo ('value="'. Date2String($raceInfo->prihlasky3).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">5. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky5" SIZE=8>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky5" SIZE=8 <? if (isset($raceInfo->prihlasky4))echo ('value="'. Date2String($raceInfo->prihlasky4).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD colspan="3"></TD>
@@ -210,6 +238,7 @@ if($type == 1)
 	<TD colspan="3"></TD>
 </TR>
 </TABLE>
+<input type="hidden" id="kategorie" name="kategorie" value="<? echo ($raceInfo->kategorie); ?>">
 </FORM>
 <?
 HTML_Footer();

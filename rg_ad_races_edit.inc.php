@@ -1,6 +1,9 @@
 <?php /* adminova stranka - editace zavodu */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
+require_once ("./connectors.php");
+$connector = ConnectorFactory::create();
+
 DrawPageTitle('Kalendář závodů - Editace závodů');
 ?>
 <CENTER>
@@ -15,6 +18,16 @@ DrawPageTitle('Kalendář závodů - Editace závodů');
 
 	javascript:set_default_size(800,600);
 //-->
+
+    // Function to toggle the button state based on extID field
+    function toggleButtonState() {
+        if (extID.value.trim() === "") {
+            loadRaceByIdButton.disabled = true; // Disable button if extID is empty
+        } else {
+            loadRaceByIdButton.disabled = false; // Enable button if extID has value
+        }
+    }
+
 </script>
 <?
 
@@ -111,7 +124,21 @@ echo $data_tbl->get_footer()."\n";
 echo '<BR><hr><BR>';
 
 echo("<A HREF=\"javascript:open_win('./race_new.php?type=0','')\">Vytvořit nový závod</A><br>");
-echo("<A HREF=\"javascript:open_win('./race_new.php?type=1','')\">Vytvořit nový vícedenní závod</A><br>");
+echo("<A HREF=\"javascript:open_win('./race_new.php?type=1','')\">Vytvořit nový vícedenní závod</A><br><br>");
+
+if ( isset ($connector ) ) {
+
+//echo("Načtení závodů ze zdroje " .  $connector->getSystemName() . ' od ');</script>");
+//// Get the current date
+//$today = new DateTime();
+//echo("<input type='date' id='dateFrom' value='" . $today->format('Y-m-d') . "'> do <input type='date' id='dateTo' value='" . $today->modify("+3 months")->format('Y-m-d') . "'>");
+//echo(" <button id='loadRacesButton'>Načíst</button><br>");
+
+echo('Načtení závodu ze zdroje ' .  $connector->getSystemName() . ' ');
+echo("<input type='text' id='extID' onKeyup='toggleButtonState()' placeholder='ID závodu'>");
+echo(' <button id="loadRaceByIdButton" disabled onclick="open_win(\'./race_new.php?ext_id=\'+extID.value, \'\')">Načíst</button><br>');
+}
+
 echo("<br><A HREF=\"categ_predef.php\">Editovat předdefinované seznamy kategorií</A><br>");
 
 ?>
