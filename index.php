@@ -181,7 +181,7 @@ if($g_is_system_running || IsLoggedAdmin())
 						require_once "./ads_directory.inc.php";
 						break;
 					case 2:
-						if ($g_enable_oris_support)
+						if ($g_external_is_connector === 'OrisCZConnector')
 							require_once "./ads_oris.inc.php";
 						else
 							require_once "./news.inc.php";

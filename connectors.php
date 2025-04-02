@@ -1,5 +1,9 @@
 <?php
 
+if (!isset($g_external_is_connector))
+{
+	require_once('./cfg/_cfg.php');
+}
 // Define a class to represent the race data
 class Race {
     public $ext_id;
@@ -171,14 +175,12 @@ class OrisCZConnector implements ConnectorInterface {
 
 class ConnectorFactory {
     public static function create(): ConnectorInterface {
-//        $config = require 'config.php';
-//        $connectorName = $config['connector'];
-		$connectorName = 'OrisCZConnector';
+		global $g_external_is_connector;
 
-        if (class_exists($connectorName)) {
-            return new $connectorName();
+		if ( $g_external_is_connector && class_exists( $g_external_is_connector)) {
+			return new $g_external_is_connector();
         }
 
-        throw new Exception("Connector '$connectorName' not found.");
+		return null; // Return null explicitly if no valid connector is found
     }
 }

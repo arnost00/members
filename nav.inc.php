@@ -123,7 +123,7 @@ function DrawMenuGroupHeader($name)
 	{
 		DrawMenuGroupHeader('Menu&nbsp;správce');
 		DrawMenuItem('Členská základna',_SMALL_ADMIN_GROUP_ID_,1);
-		if ($g_enable_oris_support)
+		if ($g_external_is_connector === 'OrisCZConnector')
 			DrawMenuItem('Členové vs. ORIS',_SMALL_ADMIN_GROUP_ID_,2);
 	}
 	if(IsLoggedFinance() && $g_enable_finances)
