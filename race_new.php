@@ -74,7 +74,7 @@ if ( IsSet ($connector) ) { ?>
 <TR>
 	<TD width="130" align="right"><? echo ($connector->getSystemName() );?> ID</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="extID" SIZE=8 value="<? echo ($raceInfo->ext_id); ?>"></TD>
+	<TD><INPUT TYPE="text" NAME="ext_id" SIZE=8 value="<? echo ($raceInfo->ext_id); ?>"></TD>
 </TR>
 <?
 }

@@ -18,6 +18,8 @@ if (!IsLoggedRegistrator())
 	exit;
 }
 
+require_once ("./connectors.php");
+
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 DrawPageTitle('Editace kategorií v závodu');
 
@@ -29,6 +31,7 @@ db_Connect();
 $zaznam=mysqli_fetch_array($vysledek);
 $kat_nf ='';
 $curr_kateg = $zaznam['kategorie'];
+$ext_id = $zaznam['ext_id'];
 
 DrawPageSubTitle('Vybraný závod');
 
@@ -74,6 +77,20 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	echo('<button onclick="javascript:zmen_kat_n(\''.$zaznam['cat_list'].'\'); return false;">'.$zaznam['name'].'</button>&nbsp;');
 	$cl .= $zaznam['name'].' = ('.$zaznam['cat_list'].')';
 	$cl .= "<BR>\n";
+}
+if ( isset ( $ext_id ) ) {
+
+    $connector = ConnectorFactory::create();
+
+    // Get race info by race ID
+    $raceInfo = $connector->getRaceInfo($ext_id);
+    
+    if ( isset ( $raceInfo->kategorie ) ) {
+		echo('<button onclick="javascript:zmen_kat_n(\''.$raceInfo->kategorie.'\'); return false;">'.$connector->getSystemName().'</button>&nbsp;');
+		$cl .= $connector->getSystemName().' = ('.$raceInfo->kategorie.')';
+		$cl .= "<BR>\n";
+	}
+	
 }
 ?>
 <BR>

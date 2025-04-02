@@ -15,7 +15,12 @@ if (!IsLoggedRegistrator())
 	header("location: ".$g_baseadr."error.php?code=21");
 	exit;
 }
+
+require_once ("./connectors.php");
+$connector = ConnectorFactory::create();
+
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
+
 ?>
 
 
@@ -137,8 +142,16 @@ else
 </TR>
 <?
 }
+if ( IsSet ($connector) ) {
 ?>
 <TR>
+	<TD width="130" align="right"><? echo ($connector->getSystemName() );?> ID</TD>
+	<TD width="5"></TD>
+	<TD><INPUT TYPE="text" NAME="ext_id" SIZE=8 value="<? echo $zaznam["ext_id"]?>"></TD>
+</TR>
+<?
+}
+?><TR>
 	<TD width="130" align="right">Název</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="nazev" SIZE=60 maxlength=50 value="<?echo $zaznam["nazev"]?>"></TD>
