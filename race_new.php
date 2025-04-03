@@ -24,7 +24,7 @@ DrawPageTitle('Vytvoření nového závodu');
 db_Connect();
 
 $raceInfo = null;
-if (isset($ext_id)) { 
+if (!empty($ext_id)) { 
     $connector = ConnectorFactory::create();
 
     // Get race info by race ID

@@ -130,15 +130,20 @@ db_Connect();
 @$vysledek=query_db("SELECT * FROM ".TBL_RACE." where id=$id LIMIT 1");
 $zaznam=mysqli_fetch_array($vysledek);
 $ext_id = $zaznam['ext_id'];
+$ext_id_info = '';
 
-if ( isset ( $ext_id ) ) {
+if ( !empty ( $ext_id ) ) {
 
     $connector = ConnectorFactory::create();
 
     // Get race info by race ID
     $raceInfo = $connector->getRaceInfo($ext_id);
+    if ( $raceInfo == null ) {
+		$raceInfo = new Race([]);
+		$ext_id_info = " \u{26A0}";
+	}
 } else {
-	$raceInfo = new Race();
+	$raceInfo = new Race([]);
 }
 
 if($zaznam['vicedenni'])
@@ -178,7 +183,7 @@ if ( IsSet ($connector) ) {
 <TR>
 	<TD width="130" align="right"><? echo ($connector->getSystemName() );?> ID</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="ext_id" SIZE=8 value="<? echo $zaznam["ext_id"]?>"></TD>
+	<TD><INPUT TYPE="text" NAME="ext_id" SIZE=8 value="<? echo $zaznam["ext_id"]?>"><? echo $ext_id_info?></TD>
 </TR>
 <?
 }

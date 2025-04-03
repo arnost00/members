@@ -86,7 +86,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	$cl .= $zaznam['name'].' = ('.$zaznam['cat_list'].')';
 	$cl .= "<BR>\n";
 }
-if ( isset ( $ext_id ) ) {
+if ( !empty ( $ext_id ) ) {
 
     $connector = ConnectorFactory::create();
 
