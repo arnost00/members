@@ -41,8 +41,16 @@ RaceInfoTable($zaznam,'',false,false,true);
 <SCRIPT LANGUAGE="JavaScript">
 function zmen_kat_n($str)
 {
-	
-	document.form2.kat_n.value+=$str;
+	let field = document.form2.kat_n;
+	let sep = field.value === '' || field.value.endsWith(';') ? '' : ';';
+	field.value += sep + $str;
+}
+
+function reset_kat_n($str)
+{
+	document.form2.querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
+
+	document.form2.kat_n.value=$str;
 }
 
 function zmen_kat_null()
@@ -89,6 +97,17 @@ if ( isset ( $ext_id ) ) {
 		echo('<button onclick="javascript:zmen_kat_n(\''.$raceInfo->kategorie.'\'); return false;">'.$connector->getSystemName().'</button>&nbsp;');
 		$cl .= $connector->getSystemName().' = ('.$raceInfo->kategorie.')';
 		$cl .= "<BR>\n";
+		
+		// check if the external and internal lists are the same
+		$internal = explode(';', $curr_kateg);
+		$external = explode(';', $raceInfo->kategorie);
+
+		sort($internal);
+		sort($external);
+
+		if ( $internal !== $external ) {
+			echo('<button title="Nastav kategorie podle systému '.$connector->getSystemName().'"onclick="javascript:reset_kat_n(\''.$raceInfo->kategorie.'\'); return false;">' . "\u{1F528} ".$connector->getSystemName().'</button>&nbsp;');
+		}
 	}
 	
 }

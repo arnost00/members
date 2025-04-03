@@ -132,7 +132,10 @@ if ( IsSet ($connector) ) { ?>
 <?
 	for($ii=0; $ii<$g_zebricek_cnt; $ii++)
 	{
-		echo('<input type="checkbox" name="zebricek['.$ii.']" value="1" id="id_'.$ii.'"><label for="id_'.$ii.'">'.$g_zebricek [$ii]['nm'].'</label>');
+		echo('<input type="checkbox" name="zebricek['.$ii.']" value="1" id="id_'.$ii.'"');
+		if(($raceInfo->zebricek2 & $g_zebricek [$ii]['id']) != 0)
+			echo(' checked');
+		echo('><label for="id_'.$ii.'">'.$g_zebricek [$ii]['nm'].'</label>');
 		echo('<br>');
 	}
 ?>
@@ -206,27 +209,27 @@ if($type == 1)
 <TR>
 	<TD width="130" align="right">1. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky1" SIZE=8 <? if (isset($raceInfo->prihlasky))echo ('value="'. Date2String($raceInfo->prihlasky).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky1" SIZE=8 <? if (!empty($raceInfo->prihlasky))echo ('value="'. Date2String($raceInfo->prihlasky - 86400).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">2. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky2" SIZE=8 <? if (isset($raceInfo->prihlasky1))echo ('value="'. Date2String($raceInfo->prihlasky1).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky2" SIZE=8 <? if (!empty($raceInfo->prihlasky1))echo ('value="'. Date2String($raceInfo->prihlasky1 - 86400).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">3. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky3" SIZE=8 <? if (isset($raceInfo->prihlasky2))echo ('value="'. Date2String($raceInfo->prihlasky2).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky3" SIZE=8 <? if (!empty($raceInfo->prihlasky2))echo ('value="'. Date2String($raceInfo->prihlasky2 - 86400).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">4. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky4" SIZE=8 <? if (isset($raceInfo->prihlasky3))echo ('value="'. Date2String($raceInfo->prihlasky3).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky4" SIZE=8 <? if (!empty($raceInfo->prihlasky3))echo ('value="'. Date2String($raceInfo->prihlasky3 - 86400).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">5. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky5" SIZE=8 <? if (isset($raceInfo->prihlasky4))echo ('value="'. Date2String($raceInfo->prihlasky4).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky5" SIZE=8 <? if (!empty($raceInfo->prihlasky4))echo ('value="'. Date2String($raceInfo->prihlasky4 - 86400).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD colspan="3"></TD>

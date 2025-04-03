@@ -78,6 +78,19 @@ class OrisCZConnector implements ConnectorInterface {
 	public function getRaceURL($raceId) : string {
 		return $this->sourceUrl . 'Zavod?id=' . $raceId;
 	}
+	
+	private function mapLevelToZebricek2($levelId) {
+		$map = [
+			1  => 17, // MCR
+			3  => 6,  // ZB
+			4  => 8,  // OZ
+			7  => 33, // CPS
+			8  => 1,  // CP
+			11 => 24,  // OM
+			17 => 17   // VET
+		];
+		return $map[$levelId] ?? 0x0080; // Default to 0x80 if not found
+	}
 
     // Method to get detailed race information based on race ID
     public function getRaceInfo($raceId) {
@@ -121,8 +134,7 @@ class OrisCZConnector implements ConnectorInterface {
                 'typ0' => 'Z',
 				//typ => Sport
                 'typ' => $raceData['Sport']['NameCZ'],
-				//TODO domyslet zebricek
-				'zebricek2' => 0x0080,
+				'zebricek2' => $this->mapLevelToZebricek2($raceData['Level']['ID']),
 				'ranking' => $raceData['Ranking'],
 				'odkaz' => $this->getRaceURL($raceData['ID']),
 				'prihlasky' => strtotime($raceData['EntryDate1']),
@@ -135,8 +147,6 @@ class OrisCZConnector implements ConnectorInterface {
 //				'poznamka' => $poznamka,
 				'vicedenni' => ($raceData['Stages']>1?1:0),
 				'oddil' => implode('+', $oddily),
-				//TODO vyresit druhy oddil
-				//TODO na co je modify_flag???
 				'modify_flag' => 0,
 				'kategorie' => implode(';', $classNames )
 				]);
