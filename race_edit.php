@@ -132,15 +132,16 @@ $zaznam=mysqli_fetch_array($vysledek);
 $ext_id = $zaznam['ext_id'];
 $ext_id_info = '';
 
-if ( !empty ( $ext_id ) ) {
+// need to be defined for all races
+$connector = ConnectorFactory::create();
 
-    $connector = ConnectorFactory::create();
+if ( !empty ( $ext_id ) ) {
 
     // Get race info by race ID
     $raceInfo = $connector->getRaceInfo($ext_id);
     if ( $raceInfo == null ) {
 		$raceInfo = new Race([]);
-		$ext_id_info = " \u{26A0}";
+		$ext_id_info = " \u{26A0} neplatné ID závodu";
 	}
 } else {
 	$raceInfo = new Race([]);
@@ -183,7 +184,7 @@ if ( IsSet ($connector) ) {
 <TR>
 	<TD width="130" align="right"><? echo ($connector->getSystemName() );?> ID</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="ext_id" SIZE=8 value="<? echo $zaznam["ext_id"]?>"><? echo $ext_id_info?></TD>
+	<TD class="DataError"><INPUT TYPE="text" NAME="ext_id" SIZE=8 value="<? echo $zaznam["ext_id"]?>"><? echo $ext_id_info?></TD>
 </TR>
 <?
 }
@@ -336,12 +337,12 @@ if($zaznam['vicedenni'])
 <TR>
 	<TD width="130" align="right">4. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" ID="prihlasky4" NAME="prihlasky4" SIZE=8 value=<?echo Date2String($zaznam["prihlasky4"])?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" ID="prihlasky4" NAME="prihlasky4" SIZE=8 value="<?echo Date2String($zaznam["prihlasky4"])?>">&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">5. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" ID="prihlasky5" NAME="prihlasky5" SIZE=8 value=<?echo Date2String($zaznam["prihlasky5"])?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" ID="prihlasky5" NAME="prihlasky5" SIZE=8 value="<?echo Date2String($zaznam["prihlasky5"])?>">&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD colspan="3"></TD>

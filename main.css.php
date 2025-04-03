@@ -122,6 +122,12 @@ TD.DataValue {
 	font-weight : bold;
 }
 
+TD.DataError {
+	text-align : left;
+	color : <? echo $g_colors['form_data_error']; ?>;
+	font-weight : bold;
+}
+
 .NewsAutor {
 	color : <? echo $g_colors['news_item_author']; ?>;
 	font-weight : normal;
