@@ -92,6 +92,32 @@ class OrisCZConnector implements ConnectorInterface {
 		return $map[$levelId] ?? 0x0080; // Default to 0x80 if not found
 	}
 
+	private function mapSport($sportId) {
+        //sport ID from ORIS : 1=OB, 2=LOB, 3=MTBO, 4=TRAIL
+		$map = [
+			1  => 1, // OB
+			2  => 4,  // LOB
+			3  => 2,  // MTBO
+			4  => 8, // TRAIL
+		];
+		return $map[$sportId] ?? 1; // Default is OB
+	}
+
+    // Method to get race date based on race ID
+    public function getRaceDate($raceId) {
+        $url = $this->apiUrl . '?format=json&method=getEvent&id=' . $raceId;
+        $response = $this->makeRequest($url);
+
+        if ($response && $response['Status'] == "OK") {
+            $raceData = $response['Data'];
+
+            return String2DateDMY(formatDate($raceData['Date']));
+        } else {
+            return ''; // Return null if race not found or error
+        }
+
+    }
+
     // Method to get detailed race information based on race ID
     public function getRaceInfo($raceId) {
         $url = $this->apiUrl . '?format=json&method=getEvent&id=' . $raceId;
@@ -122,18 +148,19 @@ class OrisCZConnector implements ConnectorInterface {
 			
 			sort($classNames);
             
+            // Get last Stage date if multistage event
+            $date2 = ($raceData['Stages'] > 1) ? $this->getRaceDate($raceData['Stage'.$raceData['Stages']]) : 0;
             // Use associative array to pass data to constructor
             return new Race([
                 'ext_id' => $raceData['ID'],
                 'datum' => String2DateDMY(formatDate($raceData['Date'])),
-//                'date2' => $raceData['Date2'],
+                'datum2' => $date2,
                 'nazev' => $raceData['Name'],
                 'misto' => $raceData['Place'],
 //                'category' => $raceData['Category'],
 				 //typ0 => Typ akce
                 'typ0' => 'Z',
-				//typ => Sport
-                'typ' => $raceData['Sport']['NameCZ'],
+                'typ' => $this->mapSport($raceData['Sport']['ID']), 
 				'zebricek2' => $this->mapLevelToZebricek2($raceData['Level']['ID']),
 				'ranking' => $raceData['Ranking'],
 				'odkaz' => $this->getRaceURL($raceData['ID']),

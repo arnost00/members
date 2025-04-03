@@ -113,11 +113,10 @@ if ( IsSet ($connector) ) { ?>
 	<TD>
 		<select name='typ'>
 <?
-		$tmp_typ = $g_racetype [0]['enum'];
+		$tmp_typ = $raceInfo->typ;
 		for ($ii = 0; $ii < $g_racetype_cnt; $ii++)
 		{
-			$selected = ( $raceInfo->typ==$g_racetype [$ii]['enum']||$raceInfo->typ==$g_racetype [$ii]['nm'] ) ? ' SELECTED' : '';
-			echo("\t\t\t<option value='".$g_racetype [$ii]['enum']."'".$selected.">".$g_racetype [$ii]['nm']."</option>\n");
+			echo("\t\t\t<option value='".$g_racetype [$ii]['enum']."'".(($tmp_typ==$g_racetype [$ii]['id'])?' SELECTED':'').">".$g_racetype [$ii]['nm']."</option>\n");			
 		}
 ?>
 		</select>
