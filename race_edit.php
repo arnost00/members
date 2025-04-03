@@ -15,7 +15,32 @@ if (!IsLoggedRegistrator())
 	header("location: ".$g_baseadr."error.php?code=21");
 	exit;
 }
+
+require_once ("./connectors.php");
+
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
+
+// generate table row with current set date and if system date is different a button to modify
+// the button has system date displayed, but sets date shifted by current offset in days
+function generateDateField($connector, $fieldName, $currentDate, $systemDate, $currentOfffset) {
+    $displayDate = Date2String($currentDate);
+    $buttonHtml = '';
+    if ( !empty ( $systemDate ) ) {
+		$systemDisplayDate = Date2String($systemDate);
+		$systemOffsetDate = Date2String($systemDate+$currentOfffset*86400);
+
+		if ($displayDate !== $systemOffsetDate) {
+			$buttonHtml = '<button type="button" onclick="document.getElementById(\'' . $fieldName . '\').value=\'' . $systemOffsetDate . '\'">' . "\u{21D0} " . $connector->getSystemName() .' (' . $systemDisplayDate . ')</button>';
+		}
+	}
+
+    return '<TD class="DataValue">
+                <INPUT TYPE="text" ID="' . $fieldName . '" NAME="' . $fieldName . '" SIZE=8 value="' . $displayDate . '">&nbsp;&nbsp;(DD.MM.RRRR)
+                ' . $buttonHtml . '
+            </TD>';
+}
+
+
 ?>
 
 
@@ -104,6 +129,22 @@ db_Connect();
 
 @$vysledek=query_db("SELECT * FROM ".TBL_RACE." where id=$id LIMIT 1");
 $zaznam=mysqli_fetch_array($vysledek);
+$ext_id = $zaznam['ext_id'];
+$ext_id_info = '';
+
+if ( !empty ( $ext_id ) ) {
+
+    $connector = ConnectorFactory::create();
+
+    // Get race info by race ID
+    $raceInfo = $connector->getRaceInfo($ext_id);
+    if ( $raceInfo == null ) {
+		$raceInfo = new Race([]);
+		$ext_id_info = " \u{26A0}";
+	}
+} else {
+	$raceInfo = new Race([]);
+}
 
 if($zaznam['vicedenni'])
 {	// vicedenni
@@ -115,12 +156,12 @@ if($zaznam['vicedenni'])
 <TR>
 	<TD width="130" align="right">Datum od</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" ID="datum" NAME="datum" SIZE=8 value=<?echo Date2String($zaznam["datum"])?>>&nbsp;&nbsp(DD.MM.RRRR)</TD>
+	<? echo generateDateField($connector,"datum",$zaznam["datum"],$raceInfo->datum,0)?>
 </TR>
 <TR>
 	<TD width="130" align="right">Datum do</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" ID="datum2" NAME="datum2" SIZE=8 value=<?echo Date2String($zaznam["datum2"])?>>&nbsp;&nbsp(DD.MM.RRRR)</TD>
+	<? echo generateDateField($connector,"datum2",$zaznam["datum2"],$raceInfo->datum2,0)?>
 </TR>
 <?
 }
@@ -133,12 +174,20 @@ else
 <TR>
 	<TD width="130" align="right">Datum</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" ID="datum" NAME="datum" SIZE=8 value=<?echo Date2String($zaznam["datum"])?>>&nbsp;&nbsp(DD.MM.RRRR)</TD>
+	<? echo generateDateField($connector,"datum",$zaznam["datum"],$raceInfo->datum,0)?>
 </TR>
 <?
 }
+if ( IsSet ($connector) ) {
 ?>
 <TR>
+	<TD width="130" align="right"><? echo ($connector->getSystemName() );?> ID</TD>
+	<TD width="5"></TD>
+	<TD><INPUT TYPE="text" NAME="ext_id" SIZE=8 value="<? echo $zaznam["ext_id"]?>"><? echo $ext_id_info?></TD>
+</TR>
+<?
+}
+?><TR>
 	<TD width="130" align="right">Název</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="nazev" SIZE=60 maxlength=50 value="<?echo $zaznam["nazev"]?>"></TD>
@@ -272,17 +321,17 @@ if($zaznam['vicedenni'])
 <TR>
 	<TD width="130" align="right">1. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" ID="prihlasky1" NAME="prihlasky1" SIZE=8 value=<?echo Date2String($zaznam["prihlasky1"])?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<? echo generateDateField($connector,"prihlasky1",$zaznam["prihlasky1"],$raceInfo->prihlasky,-1)?>
 </TR>
 <TR>
 	<TD width="130" align="right">2. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" ID="prihlasky2" NAME="prihlasky2" SIZE=8 value=<?echo Date2String($zaznam["prihlasky2"])?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<? echo generateDateField($connector,"prihlasky2",$zaznam["prihlasky2"],$raceInfo->prihlasky1,-1)?>
 </TR>
 <TR>
 	<TD width="130" align="right">3. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" ID="prihlasky3" NAME="prihlasky3" SIZE=8 value=<?echo Date2String($zaznam["prihlasky3"])?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<? echo generateDateField($connector,"prihlasky3",$zaznam["prihlasky3"],$raceInfo->prihlasky2,-1)?>
 </TR>
 <TR>
 	<TD width="130" align="right">4. datum přihlášek</TD>

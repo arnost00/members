@@ -61,6 +61,7 @@ else
 
 $zebricek2 = CreateZebricekNumber($zebricek);
 
+$ext_id=correct_sql_string($ext_id);
 $prihlasky1 = String2DateDMY($prihlasky1);
 $prihlasky2 = String2DateDMY($prihlasky2);
 $prihlasky3 = String2DateDMY($prihlasky3);
@@ -96,6 +97,7 @@ if ($datum==0 || ($datum2==0 && $rtype == 1) || $nazev=='' || $id == 0)
 }
 else
 {
+	$ext_id=correct_sql_string($ext_id);
 	$datum=correct_sql_string($datum);
 	$datum2=correct_sql_string($datum2);
 	$nazev=correct_sql_string($nazev);
@@ -120,7 +122,7 @@ else
 	
 	$cancelled = !isset($cancelled)? 0: 1;
 
-	$result=query_db("UPDATE ".TBL_RACE." SET datum='$datum', datum2='$datum2', nazev='$nazev', misto='$misto', typ0='$typ0', typ='$typ', zebricek='$zebricek2', ranking='$ranking', prihlasky='$prihlasky', odkaz='$odkaz', prihlasky1='$prihlasky1', prihlasky2='$prihlasky2', prihlasky3='$prihlasky3', prihlasky4='$prihlasky4', prihlasky5='$prihlasky5', etap='$etap', poznamka='$poznamka', oddil='$oddil', modify_flag='$modify_flag', transport='$transport',  ubytovani='$accommodation', cancelled='$cancelled' WHERE id='$id'")
+	$result=query_db("UPDATE ".TBL_RACE." SET ext_id='$ext_id', datum='$datum', datum2='$datum2', nazev='$nazev', misto='$misto', typ0='$typ0', typ='$typ', zebricek='$zebricek2', ranking='$ranking', prihlasky='$prihlasky', odkaz='$odkaz', prihlasky1='$prihlasky1', prihlasky2='$prihlasky2', prihlasky3='$prihlasky3', prihlasky4='$prihlasky4', prihlasky5='$prihlasky5', etap='$etap', poznamka='$poznamka', oddil='$oddil', modify_flag='$modify_flag', transport='$transport',  ubytovani='$accommodation', cancelled='$cancelled' WHERE id='$id'")
 		or die("Chyba při provádění dotazu do databáze.");
 	if ($result == FALSE)
 		die ("Nepodařilo se změnit údaje o závodě.");

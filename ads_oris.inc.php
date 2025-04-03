@@ -2,7 +2,7 @@
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
 <?
 DrawPageTitle('Členská základna - ORIS');
-if (!$g_enable_oris_support)
+if ($g_external_is_connector !== 'OrisCZConnector')
 	exit;
 ?>
 <ul>Základní exporty:

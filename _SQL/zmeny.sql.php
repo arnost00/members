@@ -24,6 +24,7 @@ AddZmenyFile('3.4.0.600');
 AddZmenyFile('3.4.1.631');
 AddZmenyFile('3.4.1.646');
 AddZmenyFile('3.4.1.647');
+AddZmenyFile('3.4.5.650');
 //#############################################################################
 
 require_once ('connect.inc.php');
