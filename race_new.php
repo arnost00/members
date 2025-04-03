@@ -30,8 +30,6 @@ if (!empty($ext_id)) {
     // Get race info by race ID
     $raceInfo = $connector->getRaceInfo($ext_id);
     
-print_r($raceInfo);    
-    
     $type = $raceInfo->vicedenni;
 } 
 
