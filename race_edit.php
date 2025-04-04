@@ -20,29 +20,7 @@ require_once ("./connectors.php");
 
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 
-// generate table row with current set date and if system date is different a button to modify
-// the button has system date displayed, but sets date shifted by current offset in days
-function generateDateField($connector, $fieldName, $currentDate, $systemDate, $currentOfffset) {
-    $displayDate = Date2String($currentDate);
-    $buttonHtml = '';
-    if ( !empty ( $systemDate ) ) {
-		$systemDisplayDate = Date2String($systemDate);
-		$systemOffsetDate = Date2String($systemDate+$currentOfffset*86400);
-
-		if ($displayDate !== $systemOffsetDate) {
-			$buttonHtml = '<button type="button" onclick="document.getElementById(\'' . $fieldName . '\').value=\'' . $systemOffsetDate . '\'">' . "\u{21D0} " . $connector->getSystemName() .' (' . $systemDisplayDate . ')</button>';
-		}
-	}
-
-    return '<TD class="DataValue">
-                <INPUT TYPE="text" ID="' . $fieldName . '" NAME="' . $fieldName . '" SIZE=8 value="' . $displayDate . '">&nbsp;&nbsp;(DD.MM.RRRR)
-                ' . $buttonHtml . '
-            </TD>';
-}
-
-
 ?>
-
 
 <SCRIPT LANGUAGE="JavaScript">
 
@@ -127,6 +105,8 @@ $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
 db_Connect();
 
+require_once ("./common_race_ed.inc.php");
+
 @$vysledek=query_db("SELECT * FROM ".TBL_RACE." where id=$id LIMIT 1");
 $zaznam=mysqli_fetch_array($vysledek);
 $ext_id = $zaznam['ext_id'];
@@ -191,17 +171,17 @@ if ( IsSet ($connector) ) {
 ?><TR>
 	<TD width="130" align="right">Název</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="nazev" SIZE=60 maxlength=50 value="<?echo $zaznam["nazev"]?>"></TD>
+	<? echo generateTextFieldWithValidator($zaznam["nazev"],60,$rc_form['name']);?>
 </TR>
 <TR>
 	<TD width="130" align="right">Místo</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="misto" SIZE=60 maxlength=50 value="<?echo $zaznam["misto"]?>"></TD>
+	<? echo generateTextFieldWithValidator($zaznam["misto"],60,$rc_form['misto']);?>
 </TR>
 <TR>
 	<TD width="130" align="right">Pořádající oddíl</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="oddil" SIZE=9 maxlength=7 value="<?echo $zaznam["oddil"]?>">&nbsp;&nbsp;(XYZ) nebo (XYZ+ABC)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="oddil" SIZE=9 maxlength=8 value="<?echo $zaznam["oddil"]?>">&nbsp;&nbsp;(XYZ) nebo (XYZ+ABC)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">Zrušeno</TD>
@@ -356,5 +336,6 @@ if($zaznam['vicedenni'])
 </TABLE>
 </FORM>
 <?
+echo(insertDocuOnLoad());
 HTML_Footer();
 ?>

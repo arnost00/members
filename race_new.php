@@ -23,6 +23,8 @@ DrawPageTitle('Vytvoření nového závodu');
 
 db_Connect();
 
+require_once ("./common_race_ed.inc.php");
+
 $raceInfo = null;
 if (!empty($ext_id)) { 
     $connector = ConnectorFactory::create();
@@ -80,17 +82,17 @@ if ( IsSet ($connector) ) { ?>
 <TR>
 	<TD width="130" align="right">Název</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="nazev" SIZE=60 maxlength=50 value="<? echo ($raceInfo->nazev); ?>"></TD>
+	<? echo generateTextFieldWithValidator($raceInfo->nazev,60,$rc_form['name']);?>
 </TR>
 <TR>
 	<TD width="130" align="right">Místo</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="misto" SIZE=60 maxlength=50 value="<? echo ($raceInfo->misto); ?>"></TD>
+	<? echo generateTextFieldWithValidator($raceInfo->misto,60,$rc_form['misto']);?>
 </TR>
 <TR>
 	<TD width="130" align="right">Pořádající oddíl</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="oddil" SIZE=9 maxlength=7 value="<? echo ($raceInfo->oddil); ?>">&nbsp;&nbsp;(XYZ) nebo (XYZ+ABC)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="oddil" SIZE=9 maxlength=8 value="<? echo ($raceInfo->oddil); ?>">&nbsp;&nbsp;(XYZ) nebo (XYZ+ABC)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">Typ akce</TD>
@@ -240,6 +242,8 @@ if($type == 1)
 </TABLE>
 <input type="hidden" id="kategorie" name="kategorie" value="<? echo ($raceInfo->kategorie); ?>">
 </FORM>
+
 <?
+echo(insertDocuOnLoad());
 HTML_Footer();
 ?>
