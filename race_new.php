@@ -26,6 +26,7 @@ db_Connect();
 require_once ("./common_race_ed.inc.php");
 
 $raceInfo = null;
+$ext_id_info = '';
 if (!empty($ext_id)) { 
     $connector = ConnectorFactory::create();
 
@@ -33,6 +34,20 @@ if (!empty($ext_id)) {
     $raceInfo = $connector->getRaceInfo($ext_id);
     
     $type = $raceInfo->vicedenni;
+
+	// check if ext_id is not yer used
+	$query_ext = 'SELECT id, datum, nazev, ext_id'.
+	' FROM '.TBL_RACE.' WHERE ext_id = '.$ext_id.
+	' ORDER BY datum, datum2, id';
+	$vysledek_ext=query_db($query_ext);
+
+	if($vysledek_ext != FALSE) {
+		while ($zaznam_ext=mysqli_fetch_array($vysledek_ext)) {
+			if ($ext_id_info != '')
+			$ext_id_info .= '<br />';
+			$ext_id_info .= " \u{26A0} ID již použito : ".Date2String($zaznam_ext['datum']).' - '.$zaznam_ext['nazev'];
+		}
+	}
 } 
 
 if ($raceInfo === null) {
@@ -74,7 +89,7 @@ if ( IsSet ($connector) ) { ?>
 <TR>
 	<TD width="130" align="right"><? echo ($connector->getSystemName() );?> ID</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="ext_id" SIZE=8 value="<? echo ($raceInfo->ext_id); ?>"></TD>
+	<TD class="DataError"><INPUT TYPE="text" NAME="ext_id" SIZE=8 value="<? echo ($raceInfo->ext_id); ?>"><? echo $ext_id_info?></TD>
 </TR>
 <?
 }
