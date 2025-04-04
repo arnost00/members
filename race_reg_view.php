@@ -145,15 +145,20 @@ echo $is_spol_dopr_on||$is_sdil_dopr_on ? "<BR>Počet přihlášených na doprav
 $warning_text = $sedadel < 0 ? ' <font color="red">(málo volných míst)</font>' : '';
 echo $is_sdil_dopr_on ? "<BR>Počet volných sdílených míst: $sedadel".$warning_text : "";
 echo $is_spol_ubyt_on ? "<BR>Počet přihlášených na ubytování: $ubyt" : "";
+
+// Sort categories alphabetically
+ksort($category_counts);
+
 // Add collapsible section for category counts with table formatting
 echo '<br><br><div id="category_details" style="display:none;">';
 echo '<table cellspacing="5">';
-echo '<tr><th>Kategorie</th>';
+echo '<tr><th style="text-align:left;">Kategorie</th>';
 
 foreach ($category_counts as $category => $count) {
 	echo "<td>$category</td>";
 }
-echo '</tr><tr><th>Počet</th>';
+
+echo '</tr><tr><th style="text-align:left;">Počet</th>';
 
 foreach ($category_counts as $category => $count) {
 	echo "<td style='text-align:center;'>$count</td>";
