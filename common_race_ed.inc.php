@@ -41,7 +41,7 @@ foreach ($rc_form as &$rc) {
 	$rc['msg'] = $rc['input'].'Msg';
 	$rc['func'] = "raceEditValidateLength('".$rc['input']."','".$rc['msg']."',".$rc['len'].");";
 }
-print_r($rc_form);
+//print_r($rc_form);
 
 ?>
 <SCRIPT LANGUAGE="JavaScript">
