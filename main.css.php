@@ -76,6 +76,10 @@ H3 {
 	text-align : left;
 }
 
+H3.center {
+	text-align : center;
+}
+
 TD.NewsItemDate, TD.NewsItemDateInt {
 	width : 100px;
 	vertical-align : top;

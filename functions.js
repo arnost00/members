@@ -39,6 +39,11 @@ function open_race_info(id)
 	nwin.focus();
 }
 
+function open_url(url)
+{
+	window.open(url, "_self");
+}
+
 function close_popup()
 {
 	if (window.opener)

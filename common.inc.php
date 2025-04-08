@@ -376,10 +376,13 @@ function DrawPageTitle($title)
 
 function DrawPageSubTitle($title, $id=null)
 {
-	echo("<H3 ID='$id'>".$title."</H3>");
+	echo("<H3 ID='$id'>".$title."</H3>\n");
 }
 
-
+function DrawPageSubTitleCenter($title)
+{
+	echo('<H3 class="center">'.$title."</H3>\n");
+}
 
 function HTML_Header($title,$style_file = '', $body_addons = '',$head_addons = '')
 {

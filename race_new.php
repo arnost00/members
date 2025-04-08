@@ -27,15 +27,16 @@ require_once ("./common_race_ed.inc.php");
 
 $raceInfo = null;
 $ext_id_info = '';
+
 if (!empty($ext_id)) { 
-    $connector = ConnectorFactory::create();
+	$connector = ConnectorFactory::create();
 
-    // Get race info by race ID
-    $raceInfo = $connector->getRaceInfo($ext_id);
-    
-    $type = $raceInfo->vicedenni;
+	// Get race info by race ID
+	$raceInfo = $connector->getRaceInfo($ext_id);
 
-	// check if ext_id is not yer used
+	$type = $raceInfo->vicedenni;
+
+	// check if ext_id is not yet used
 	$query_ext = 'SELECT id, datum, nazev, ext_id'.
 	' FROM '.TBL_RACE.' WHERE ext_id = '.$ext_id.
 	' ORDER BY datum, datum2, id';

@@ -75,6 +75,43 @@ Nestandartní kategorie&nbsp;&nbsp;
 
 <span class="WarningText">Zadávej jako text bez uvozovek, každou kategorii ukonči středníkem, vše bez mezer</span>
 
+<?
+if ($g_external_is_connector === 'OrisCZConnector')
+{
+	if ( !empty ( $ext_id ) ) {
+
+		$connector = ConnectorFactory::create();
+		// Get race info by race ID
+		$raceInfo = $connector->getRaceInfo($ext_id);
+
+		echo('<BR/><BR/>Kategorie ze systému '.$connector->getSystemName().' :<BR/>');
+	
+		if ( isset ( $raceInfo->kategorie ) ) {
+			$ext_cl = $connector->getSystemName().' = ('.$raceInfo->kategorie.')';
+			$ext_cl .= "<BR>\n";
+			
+			echo('<button onclick="javascript:zmen_kat_n(\''.$raceInfo->kategorie.'\'); return false;">['.$connector->getSystemName().'] Přidat do seznamu</button>&nbsp;');
+			// check if the external and internal lists are the same
+			$internal = explode(';', $curr_kateg);
+			$external = explode(';', $raceInfo->kategorie);
+			
+			sort($internal);
+			sort($external);
+	
+			if ( $internal !== $external ) {
+				echo('<button title="Nastav kategorie jen podle systému '.$connector->getSystemName().'"onclick="javascript:reset_kat_n(\''.$raceInfo->kategorie.'\'); return false;">['.$connector->getSystemName().'] Přepsat komplet kategorie</button>&nbsp;');
+			}
+
+			echo('<br/><span class="kategory_small_list">');
+			echo($ext_cl);
+			echo('</span>');
+
+		}
+		
+	}
+}
+?>
+
 <BR><BR>Předdefinované kategorie :
 
 <?
@@ -86,31 +123,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	$cl .= $zaznam['name'].' = ('.$zaznam['cat_list'].')';
 	$cl .= "<BR>\n";
 }
-if ( !empty ( $ext_id ) ) {
 
-    $connector = ConnectorFactory::create();
-
-    // Get race info by race ID
-    $raceInfo = $connector->getRaceInfo($ext_id);
-    
-    if ( isset ( $raceInfo->kategorie ) ) {
-		echo('<button onclick="javascript:zmen_kat_n(\''.$raceInfo->kategorie.'\'); return false;">'.$connector->getSystemName().'</button>&nbsp;');
-		$cl .= $connector->getSystemName().' = ('.$raceInfo->kategorie.')';
-		$cl .= "<BR>\n";
-		
-		// check if the external and internal lists are the same
-		$internal = explode(';', $curr_kateg);
-		$external = explode(';', $raceInfo->kategorie);
-
-		sort($internal);
-		sort($external);
-
-		if ( $internal !== $external ) {
-			echo('<button title="Nastav kategorie podle systému '.$connector->getSystemName().'"onclick="javascript:reset_kat_n(\''.$raceInfo->kategorie.'\'); return false;">' . "\u{1F528} ".$connector->getSystemName().'</button>&nbsp;');
-		}
-	}
-	
-}
 ?>
 <BR>
 <BR>
@@ -121,7 +134,7 @@ echo($cl);
 </span>
 <BR>
 
-<br><INPUT TYPE="submit" VALUE="Odeslat změny kategorií">
+<br><INPUT TYPE="submit" VALUE=">> Odeslat změny kategorií <<">
 </FORM><br />
 
 <BUTTON onclick="javascript:close_popup();">Zpět</BUTTON>

@@ -42,12 +42,14 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 
 if (!$g_is_release)
 {	// pri debug zobrazit
-	@$vysledek=query_db("SELECT id,datum,typ,typ0,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto,modify_flag,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum , datum2, id');
+	@$vysledek=query_db("SELECT id,datum,typ,typ0,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto,modify_flag,cancelled,ext_id FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum , datum2, id');
 }
 else
 {
-	@$vysledek=query_db("SELECT id,datum,typ,typ0,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto,cancelled FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
+	@$vysledek=query_db("SELECT id,datum,typ,typ0,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto,cancelled,ext_id FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
 }
+
+$ext_id_active_oris = ($g_external_is_connector === 'OrisCZConnector');
 
 $data_tbl = new html_table_mc();
 $col = 0;
@@ -55,6 +57,8 @@ $data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
 $data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
 $data_tbl->set_header_col_with_help($col++,'Poř.',ALIGN_CENTER,"Pořadatel");
+if ($ext_id_active_oris)
+	$data_tbl->set_header_col_with_help($col++,'O',ALIGN_CENTER,"závod v ORISu");
 $data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ akce");
 $data_tbl->set_header_col_with_help($col++,'S',ALIGN_CENTER,"Sport");
 $data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web závodu");
@@ -93,6 +97,11 @@ if($vysledek && ($num_rows = mysqli_num_rows($vysledek)) > 0)
 		$row[] = "<A href=\"javascript:open_race_info(".$zaznam['id'].")\" class=\"adr_name\">".$prefix.GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']).$suffix."</A>";
 		$row[] = $prefix.GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']).$suffix;
 		$row[] = $prefix.$zaznam['oddil'].$suffix;
+		if ($ext_id_active_oris)
+		{
+			$ext_id = $zaznam['ext_id'];
+			$row[] = (!empty ($ext_id)) ? 'A' : '-';
+		}		
 		$row[] = GetRaceType0($zaznam['typ0']);
 		$row[] = GetRaceTypeImg($zaznam['typ']);
 		$row[] = GetRaceLinkHTML($zaznam['odkaz']);
@@ -122,23 +131,26 @@ if($vysledek && ($num_rows = mysqli_num_rows($vysledek)) > 0)
 echo $data_tbl->get_footer()."\n";
 
 echo '<BR><hr><BR>';
+DrawPageSubTitleCenter('Vytváření nových závodů');
 
 echo("<A HREF=\"javascript:open_win('./race_new.php?type=0','')\">Vytvořit nový závod</A><br>");
-echo("<A HREF=\"javascript:open_win('./race_new.php?type=1','')\">Vytvořit nový vícedenní závod</A><br><br>");
-
+echo("<A HREF=\"javascript:open_win('./race_new.php?type=1','')\">Vytvořit nový vícedenní závod</A><br><br>\n");
 if ( isset ($connector ) ) {
 
-//echo("Načtení závodů ze zdroje " .  $connector->getSystemName() . ' od ');</script>");
-//// Get the current date
-//$today = new DateTime();
-//echo("<input type='date' id='dateFrom' value='" . $today->format('Y-m-d') . "'> do <input type='date' id='dateTo' value='" . $today->modify("+3 months")->format('Y-m-d') . "'>");
-//echo(" <button id='loadRacesButton'>Načíst</button><br>");
+	DrawPageSubTitleCenter('Import závodu ze systému '.$connector->getSystemName());
 
-echo('Načtení závodu ze zdroje ' .  $connector->getSystemName() . ' ');
-echo("<input type='text' id='extID' onKeyup='toggleButtonState()' placeholder='ID závodu'>");
-echo(' <button id="loadRaceByIdButton" disabled onclick="open_win(\'./race_new.php?ext_id=\'+extID.value, \'\')">Načíst</button><br>');
+	echo("Načtení seznamu závodů ze zdroje " .  $connector->getSystemName() . ' od ');
+	// Get the current date
+	$today = new DateTime();
+	echo("<input type='date' id='dateFrom' value='" . $today->format('Y-m-d') . "'> do <input type='date' id='dateTo' value='" . $today->modify("+3 months")->format('Y-m-d') . "'>");
+	echo(' <button id="loadRacesButton" onclick="javascript:open_url(\'./race_imports.php?from=\'+dateFrom.value+\'&to=\'+dateTo.value)">Zobrazit</button><br>');
+
+	echo('Rychlé načtení závodu ze zdroje ' .  $connector->getSystemName() . ' ');
+	echo("<input type='text' id='extID' onKeyup='toggleButtonState()' placeholder='ID závodu'>");
+	echo(' <button id="loadRaceByIdButton" disabled onclick="javascript:open_win(\'./race_new.php?ext_id=\'+extID.value, \'\')">Načíst</button><br>');
 }
 
+DrawPageSubTitleCenter('Ostatní editace');
 echo("<br><A HREF=\"categ_predef.php\">Editovat předdefinované seznamy kategorií</A><br>");
 
 ?>
