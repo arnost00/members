@@ -151,8 +151,6 @@ class OrisCZConnector implements ConnectorInterface {
 			sort($classNames);
 
 			$oddily = $this->getClubs($raceData);
-
-			sort($classNames);
 			
 			// Get last Stage date if multistage event
 			$date2 = ($raceData['Stages'] > 1) ? $this->getRaceDate($raceData['Stage'.$raceData['Stages']]) : 0;
@@ -181,7 +179,7 @@ class OrisCZConnector implements ConnectorInterface {
 				'vicedenni' => ($raceData['Stages']>1?1:0),
 				'oddil' => $oddily,
 				'modify_flag' => 0,
-				'kategorie' => $oddily
+				'kategorie' => implode(';', $classNames )
 				]);
 		} else {
 			return null; // Return null if race not found or error
