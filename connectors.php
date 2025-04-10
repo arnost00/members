@@ -214,7 +214,8 @@ class OrisCZConnector implements ConnectorInterface {
 	}
 
 	function getRacesList($fromDate, $toDate) {
-		$url = $this->apiUrl.'?format=json&method=getEventList&all=1&datefrom='.$fromDate.'&dateTo'.$toDate;
+		$url = $this->apiUrl.'?format=json&method=getEventList&all=1&datefrom='.$fromDate.'&dateto='.$toDate;
+//		echo($url.'<BR/>');
 		$response = $this->makeRequest($url);
 
 		if ($response && $response['Status'] == "OK") {

@@ -102,6 +102,8 @@ function checkDates()
 DrawPageTitle('Editace parametrů závodu');
 
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+$ext_id = (IsSet($ext_id)) ? $ext_id : '';
+$ext_id_info = '';
 
 db_Connect();
 
@@ -109,8 +111,11 @@ require_once ("./common_race_ed.inc.php");
 
 @$vysledek=query_db("SELECT * FROM ".TBL_RACE." where id=$id LIMIT 1");
 $zaznam=mysqli_fetch_array($vysledek);
-$ext_id = $zaznam['ext_id'];
-$ext_id_info = '';
+if (!empty($zaznam['ext_id']))
+	$ext_id =  $zaznam['ext_id'];
+else
+	$ext_id_info = " ID závodu ještě není uloženo";
+
 
 // need to be defined for all races
 $connector = ConnectorFactory::create();
@@ -164,7 +169,27 @@ if ( IsSet ($connector) ) {
 <TR>
 	<TD width="130" align="right"><? echo ($connector->getSystemName() );?> ID</TD>
 	<TD width="5"></TD>
-	<TD class="DataError"><INPUT TYPE="text" NAME="ext_id" SIZE=8 value="<? echo $zaznam["ext_id"]?>"><? echo $ext_id_info?></TD>
+<?
+	if ( empty ( $ext_id ) ) {
+?>
+<script language="javascript">
+    // Function to toggle the button state based on ext_id field
+    function toggleButtonState() {
+        if (ext_id.value.trim() === "") {
+            loadRaceByIdButton.disabled = true; // Disable button if ext_id is empty
+        } else {
+            loadRaceByIdButton.disabled = false; // Enable button if ext_id has value
+        }
+    }
+</script>
+<?
+		echo('<TD class="DataError"><INPUT TYPE="text" NAME="ext_id" id="ext_id" SIZE=8 value="'.$ext_id.'" onKeyup=\'toggleButtonState()\' placeholder=\'ID závodu\'>');
+		echo(' <button type="button" id="loadRaceByIdButton" disabled onclick="javascript:open_url(\'./race_edit.php?id='.$id.'&ext_id=\'+ext_id.value, \'\')">Náhrat informace</button><br>');
+		echo('</TD>');
+	} else {
+		echo('<TD class="DataError"><INPUT TYPE="text" NAME="ext_id" SIZE=8 value="'.$ext_id.'">'.$ext_id_info.'</TD>');
+	}
+?>
 </TR>
 <?
 }
