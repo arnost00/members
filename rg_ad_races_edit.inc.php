@@ -130,11 +130,13 @@ if($vysledek && ($num_rows = mysqli_num_rows($vysledek)) > 0)
 
 echo $data_tbl->get_footer()."\n";
 
-echo '<BR><hr><BR>';
+echo '<BR /><hr><BR />';
 DrawPageSubTitleCenter('Vytváření nových závodů');
 
 echo("<A HREF=\"javascript:open_win('./race_new.php?type=0','')\">Vytvořit nový závod</A><br>");
-echo("<A HREF=\"javascript:open_win('./race_new.php?type=1','')\">Vytvořit nový vícedenní závod</A><br><br>\n");
+echo("<A HREF=\"javascript:open_win('./race_new.php?type=1','')\">Vytvořit nový vícedenní závod</A>");
+echo("<BR /><BR />\n");
+
 if ( isset ($connector ) ) {
 
 	DrawPageSubTitleCenter('Import závodu ze systému '.$connector->getSystemName());
@@ -144,14 +146,17 @@ if ( isset ($connector ) ) {
 	$today = new DateTime();
 	echo("<input type='date' id='dateFrom' value='" . $today->format('Y-m-d') . "'> do <input type='date' id='dateTo' value='" . $today->modify("+3 months")->format('Y-m-d') . "'>");
 	echo(' <button id="loadRacesButton" onclick="javascript:open_url(\'./race_imports.php?from=\'+dateFrom.value+\'&to=\'+dateTo.value)">Zobrazit</button><br>');
-
+	echo('<BR />');
 	echo('Rychlé načtení závodu ze zdroje ' .  $connector->getSystemName() . ' ');
 	echo("<input type='text' id='extID' onKeyup='toggleButtonState()' placeholder='ID závodu'>");
-	echo(' <button id="loadRaceByIdButton" disabled onclick="javascript:open_win(\'./race_new.php?ext_id=\'+extID.value, \'\')">Načíst</button><br>');
+	echo(' <button id="loadRaceByIdButton" disabled onclick="javascript:open_win(\'./race_new.php?ext_id=\'+extID.value, \'\')">Načíst</button>');
+	echo("<BR /><BR />\n");
 }
 
 DrawPageSubTitleCenter('Ostatní editace');
-echo("<br><A HREF=\"categ_predef.php\">Editovat předdefinované seznamy kategorií</A><br>");
+echo("<A HREF=\"categ_predef.php\">Editovat předdefinované seznamy kategorií</A>");
+echo("<BR /><BR />\n");
 
 ?>
+<BR/>
 </CENTER>
