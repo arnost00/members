@@ -60,7 +60,7 @@ function GetLicenceComboBox($lic_name, $lic_value)
 	return $value;
 }
 
-function GetFinTypeLine($data_tbl, $type_name, $type_value) 
+function GetFinTypeLine($data_tbl, $update, $field_name, $type_value) 
 {
     $finTypesList = query_db("SELECT id, nazev FROM " . TBL_FINANCE_TYPES);
 
@@ -70,9 +70,16 @@ function GetFinTypeLine($data_tbl, $type_name, $type_value)
 		// only when types defined
         $displayValue = null;
         $selectOptions = '';
+        $isDefined = 0;
 
         while ($displayType = MySQLi_Fetch_Array($finTypesList)) {
-            $selected = ($displayType['id'] == $type_value) ? ' selected' : '';
+			if ( $displayType['id'] == $type_value ) {
+				$isDefined = 1;
+				$selected = ' selected';
+			} else {
+				$selected = '';
+			}
+
             $selectOptions .= '<option value="' . $displayType['id'] . '"' . $selected . '>' . htmlspecialchars($displayType['nazev']) . '</option>';
 
             if ($displayType['id'] == $type_value) {
@@ -80,9 +87,13 @@ function GetFinTypeLine($data_tbl, $type_name, $type_value)
             }
         }
 
-        if (IsLoggedFinance()) // or may be in february for everyone
+		// row undefined - 0
+        $selectOptions .= '<option value="0"' . ( $isDefined ? '' : ' selected' ) . '>Není definováno</option>';
+
+		// the same check is done in user_new_exc.php unify if changed
+        if (IsLoggedFinance() || !IsSet($update)) // or may be in february for everyone
         {
-            $input = '<select name="' . $type_name . '">' . $selectOptions . '</select>';
+            $input = '<select name="' . $field_name . '">' . $selectOptions . '</select>';
         } else {
             $input = '<input type="text" value="' . htmlspecialchars($displayValue ?? 'nezadán') . '" readonly />';
         }
@@ -153,7 +164,7 @@ else
 echo $data_tbl->get_new_row('Licence OB', GetLicenceComboBox('lic',$zaznam["lic"]));
 echo $data_tbl->get_new_row('Licence MTBO', GetLicenceComboBox('lic_mtbo',$zaznam["lic_mtbo"]));
 echo $data_tbl->get_new_row('Licence LOB', GetLicenceComboBox('lic_lob',$zaznam["lic_lob"]));
-echo GetFinTypeLine($data_tbl,'finance_type',$zaznam["finance_type"]);
+echo GetFinTypeLine($data_tbl, $update, 'finance_type',$zaznam["finance_type"]);
 
 if (IsLoggedSmallAdmin())
 {
