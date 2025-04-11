@@ -20,7 +20,7 @@ $type = (isset($type)&& is_numeric($type)) ? (int)$type : 0;
 $result=query_db("UPDATE ".TBL_USER." SET finance_type='$type' WHERE id='$user_id'")
 	or die("Chyba při provádění dotazu do databáze.");
 if ($result == FALSE)
-	die ("Nepodařilo se změnit údaje o závodě.");
+	die ("Nepodařilo se změnit údaje o člena.");
 
 header('location: '.$g_baseadr.'?id='._FINANCE_GROUP_ID_.'&subid=1');
 
