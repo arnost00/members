@@ -42,9 +42,6 @@ $lic_lob=correct_sql_string($lic_lob);
 $fin=correct_sql_string($fin);
 $rc=correct_sql_string($rc);
 $narodnost=correct_sql_string($narodnost);
-if ( IsSet ($finance_type) ) {
-	$finance_type=correct_sql_string($finance_type);
-}
 
 if (IsLoggedSmallAdmin())
 {
@@ -52,7 +49,7 @@ if (IsLoggedSmallAdmin())
 	{
 		$update = (isset($update) && is_numeric($update)) ? (int)$update : 0;
 
-		$result=query_db("UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic='$lic', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin', rc='$rc', narodnost='$narodnost', finance_type='$finance_type' WHERE id='$update'")
+		$result=query_db("UPDATE ".TBL_USER." SET prijmeni='$prijmeni', jmeno='$jmeno', datum='$datum', adresa='$adresa', mesto='$mesto', psc='$psc', tel_domu='$domu', tel_zam='$zam', tel_mobil='$mobil', email='$email', reg='$reg', si_chip='$si' , hidden='$hidden', sort_name='$name2', poh='$poh', lic='$lic', lic_mtbo='$lic_mtbo', lic_lob='$lic_lob', fin='$fin', rc='$rc', narodnost='$narodnost' WHERE id='$update'")
 				or die("Chyba při provádění dotazu do databáze.");
 		if ($result == FALSE)
 			die ("Nepodařilo se změnit údaje člena.");
@@ -60,7 +57,7 @@ if (IsLoggedSmallAdmin())
 	}
 	else
 	{
-		$result=query_db("INSERT INTO ".TBL_USER." (id,prijmeni,jmeno,datum,adresa,mesto,psc,tel_domu,tel_zam,tel_mobil,email,reg,si_chip,hidden,sort_name,poh,lic,lic_mtbo,lic_lob,fin,rc,narodnost,finance_type) VALUES (null,'$prijmeni','$jmeno','$datum','$adresa','$mesto','$psc','$domu','$zam','$mobil','$email','$reg','$si','$hidden','$name2','$poh','$lic','$lic_mtbo','$lic_lob','$fin','$rc','$narodnost','$finance_type')")
+		$result=query_db("INSERT INTO ".TBL_USER." (id,prijmeni,jmeno,datum,adresa,mesto,psc,tel_domu,tel_zam,tel_mobil,email,reg,si_chip,hidden,sort_name,poh,lic,lic_mtbo,lic_lob,fin,rc,narodnost) VALUES (null,'$prijmeni','$jmeno','$datum','$adresa','$mesto','$psc','$domu','$zam','$mobil','$email','$reg','$si','$hidden','$name2','$poh','$lic','$lic_mtbo','$lic_lob','$fin','$rc','$narodnost')")
 			or die("Chyba při provádění dotazu do databáze.");
 		if ($result == FALSE)
 			die ("Nepodařilo se vložit člena.");
@@ -84,7 +81,7 @@ else if ((IsLoggedManager() || IsLoggedSmallManager()) && !$self_edit)
 	}
 	else
 	{
-		$result=query_db("INSERT INTO ".TBL_USER." (id,prijmeni,jmeno,datum,adresa,mesto,psc,tel_domu,tel_zam,tel_mobil,email,reg,si_chip,hidden,sort_name,poh,lic,lic_mtbo,lic_lob,fin,rc,narodnost,finance_type) VALUES (null,'$prijmeni','$jmeno','$datum','$adresa','$mesto','$psc','$domu','$zam','$mobil','$email','$reg','$si','$hidden','$name2','$poh','$lic','$lic_mtbo','$lic_lob','$fin','$rc','$narodnost','$finance_type')")
+		$result=query_db("INSERT INTO ".TBL_USER." (id,prijmeni,jmeno,datum,adresa,mesto,psc,tel_domu,tel_zam,tel_mobil,email,reg,si_chip,hidden,sort_name,poh,lic,lic_mtbo,lic_lob,fin,rc,narodnost) VALUES (null,'$prijmeni','$jmeno','$datum','$adresa','$mesto','$psc','$domu','$zam','$mobil','$email','$reg','$si','$hidden','$name2','$poh','$lic','$lic_mtbo','$lic_lob','$fin','$rc','$narodnost')")
 			or die("Chyba při provádění dotazu do databáze.");
 		if ($result == FALSE)
 			die ("Nepodařilo se vložit člena.");

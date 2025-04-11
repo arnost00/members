@@ -69,34 +69,14 @@ function GetFinTypeLine($data_tbl, $update, $field_name, $type_value)
     if ($finTypesList !== FALSE && $finTypesList !== null) {
 		// only when types defined
         $displayValue = null;
-        $selectOptions = '';
-        $isDefined = 0;
 
         while ($displayType = MySQLi_Fetch_Array($finTypesList)) {
-			if ( $displayType['id'] == $type_value ) {
-				$isDefined = 1;
-				$selected = ' selected';
-			} else {
-				$selected = '';
-			}
-
-            $selectOptions .= '<option value="' . $displayType['id'] . '"' . $selected . '>' . htmlspecialchars($displayType['nazev']) . '</option>';
-
             if ($displayType['id'] == $type_value) {
                 $displayValue = $displayType['nazev'];
             }
         }
 
-		// row undefined - 0
-        $selectOptions .= '<option value="0"' . ( $isDefined ? '' : ' selected' ) . '>Není definováno</option>';
-
-		// the same check is done in user_new_exc.php unify if changed
-        if (IsLoggedFinance() || !IsSet($update)) // or may be in february for everyone
-        {
-            $input = '<select name="' . $field_name . '">' . $selectOptions . '</select>';
-        } else {
-            $input = '<input type="text" value="' . htmlspecialchars($displayValue ?? 'nezadán') . '" readonly />';
-        }
+        $input = '<input type="text" value="' . htmlspecialchars($displayValue ?? 'nezadán') . '" readonly />';
         $value = $data_tbl->get_new_row('Typ příspěvku', $input);
     }
 
