@@ -26,19 +26,17 @@ function confirm_entry_unlock(name) {
 }
 </script>
 
+<?
+	if (!isset($_GET["dateTo"]))
+		$dateTo = '';
+?>
+
 <form action="">
 <input type="hidden" name="id" value="<? echo _FINANCE_GROUP_ID_;?>"/>
 <input type="hidden" name="subid" value="1"/>
-<input type="text" class="tiny-date-picker" name="dateTo" id="dateTo" value="<?=isset($_GET['dateTo'])?$_GET['dateTo']:""?>"/>
+<input type='date' name="dateTo" id='dateTo' value='<?echo($dateTo);?>'>
 <input type="submit" value="Zobraz zůstatky k datu"/>
 </form><br />
-<script src="tiny-date-picker.js"></script>
-<script>
-      TinyDatePicker('.tiny-date-picker', {
-        mode: 'dp-below',
-      });
-</script>
-
 
 <?
 require_once "./common_user.inc.php";
