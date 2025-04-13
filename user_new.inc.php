@@ -39,7 +39,6 @@ if (IsLogged())
 		$zaznam['fin'] = '';
 		$zaznam['rc'] = '';
 		$zaznam['narodnost'] = GC_DEFAULT_NATIONALITY;
-		$zaznam['finance_type'] = 0;
 	}
 	$self_edit = IsSet($self_edit) ? (bool)$self_edit : false;
 
@@ -60,28 +59,22 @@ function GetLicenceComboBox($lic_name, $lic_value)
 	return $value;
 }
 
-function GetFinTypeLine($data_tbl, $update, $field_name, $type_value) 
+function GetFinTypeLine($data_tbl, $type_value) 
 {
-    $finTypesList = query_db("SELECT id, nazev FROM " . TBL_FINANCE_TYPES);
+	$finTypesList = query_db("SELECT id, nazev FROM " . TBL_FINANCE_TYPES." WHERE id='".$type_value."' LIMIT 1");
+	$displayValue = null;
 
-    $value = '';
-
-    if ($finTypesList !== FALSE && $finTypesList !== null) {
+	if ($finTypesList !== FALSE && $finTypesList !== null) {
 		// only when types defined
-        $displayValue = null;
 
-        while ($displayType = MySQLi_Fetch_Array($finTypesList)) {
-            if ($displayType['id'] == $type_value) {
-                $displayValue = $displayType['nazev'];
-            }
-        }
+		if ($displayType = MySQLi_Fetch_Array($finTypesList)) {
+			$displayValue = $displayType['nazev'];
+		}
+	}
 
-        $input = '<input type="text" value="' . htmlspecialchars($displayValue ?? 'nezadán') . '" readonly />';
-        $value = $data_tbl->get_new_row('Typ příspěvku', $input);
-    }
-
-    return $value;
+	return $data_tbl->get_new_row('Typ příspěvku', htmlspecialchars($displayValue ?? 'nezadán'));
 }
+
 $data_tbl = new html_table_form("createUser");
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
@@ -144,7 +137,7 @@ else
 echo $data_tbl->get_new_row('Licence OB', GetLicenceComboBox('lic',$zaznam["lic"]));
 echo $data_tbl->get_new_row('Licence MTBO', GetLicenceComboBox('lic_mtbo',$zaznam["lic_mtbo"]));
 echo $data_tbl->get_new_row('Licence LOB', GetLicenceComboBox('lic_lob',$zaznam["lic_lob"]));
-echo GetFinTypeLine($data_tbl, $update, 'finance_type',$zaznam["finance_type"]);
+echo GetFinTypeLine($data_tbl,$zaznam["finance_type"]);
 
 if (IsLoggedSmallAdmin())
 {
