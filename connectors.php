@@ -56,8 +56,20 @@ class Race {
 
 interface ConnectorInterface {
 	public function getSystemName(): string;
-	public function getRaceURL(string $id);
+	public function getRaceURL(string $id): string;
 	public function getRaceInfo(string $id);
+}
+
+class EmptyConnector implements ConnectorInterface {
+	public function getSystemName(): string {
+		return 'empty';
+	}
+	public function getRaceURL(string $id): string {
+		return '';
+	}
+	public function getRaceInfo(string $id) {
+		return null;
+	}
 }
 
 class OrisCZConnector implements ConnectorInterface {
@@ -246,6 +258,6 @@ class ConnectorFactory {
 			return new $g_external_is_connector();
 		}
 
-		return null; // Return null explicitly if no valid connector is found
+		return new EmptyConnector(); // ???
 	}
 }

@@ -27,6 +27,7 @@ require_once ("./common_race_ed.inc.php");
 
 $raceInfo = null;
 $ext_id_info = '';
+$ext_id_active_oris = ($g_external_is_connector === 'OrisCZConnector');
 
 if (!empty($ext_id)) { 
 	$connector = ConnectorFactory::create();
@@ -86,7 +87,7 @@ else
 </TR>
 <?
 }
-if ( IsSet ($connector) ) { ?>
+if ($ext_id_active_oris && IsSet ($connector) ) { ?>
 <TR>
 	<TD width="130" align="right"><? echo ($connector->getSystemName() );?> ID</TD>
 	<TD width="5"></TD>
