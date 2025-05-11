@@ -70,7 +70,8 @@ function submit_off()
 </SCRIPT>
 
 <?
-DrawPageSubTitle('Vybraný závod');
+$kapacita = $zaznam_z['kapacita'];
+DrawPageRaceTitle('Vybraný závod',$kapacita,mysqli_num_rows($vysledek));
 
 if (!$new)
 {
@@ -288,7 +289,11 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 			$row[] = xss_prevent($zaznam['termin']);
 		$row[] = xss_prevent($zaznam['pozn']);
 		$row[] = xss_prevent($zaznam['pozn_in']);
-		echo $data_tbl->get_new_row_arr($row)."\n";
+		if ( $i <= $kapacita ) {
+			echo $data_tbl->get_new_row_arr($row)."\n";
+		} else {
+			echo $data_tbl->get_new_row_arr($row,'spare')."\n";
+		}
 }
 echo $data_tbl->get_footer()."\n";
 

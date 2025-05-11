@@ -19,7 +19,7 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 $order = ($fC == 1) ? "desc" : "";
 
 $query = 'SELECT r.id, r.datum, datum2, nazev, typ0, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, '.
-		'prihlasky4, prihlasky5, vicedenni, misto, oddil, kat, termin, cancelled, r.vedouci as vedouci_id, if(vedouci=0, "-", concat(u.jmeno, " ", u.prijmeni)) as vedouci '.
+		'prihlasky4, prihlasky5, vicedenni, misto, oddil,  kapacita, kat, termin, cancelled, r.vedouci as vedouci_id, if(vedouci=0, "-", concat(u.jmeno, " ", u.prijmeni)) as vedouci '.
 		'FROM '.TBL_RACE.' r LEFT JOIN '.TBL_ZAVXUS.' zu ON r.id = zu.id_zavod AND zu.id_user='.$usr->user_id.' left join '.TBL_USER.' u on u.id = r.vedouci '.
 		$sql_sub_query." ORDER BY r.datum $order, datum2 $order, r.id $order";
 @$vysledek=query_db($query);
@@ -106,7 +106,8 @@ if ($num_rows > 0)
 		{	// neni prihlasen
 			if (!$prihl_finish && !$entry_lock)
 			{
-				$row[] = "<A HREF=\"javascript:open_win('./us_race_regon.php?id_zav=".$zaznam["id"]."&id_us=".$usr->user_id."','')\">Přihl.</A> / ".$zbr;
+				$restricted = $zaznam['kapacita']>0 ? "\u{1F512}" : '';
+				$row[] = $restricted . "<A HREF=\"javascript:open_win('./us_race_regon.php?id_zav=".$zaznam["id"]."&id_us=".$usr->user_id."','')\">Přihl.</A> / ".$zbr;
 			}
 			else
 			{

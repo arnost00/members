@@ -318,6 +318,14 @@ if($zaznam['vicedenni'])
 }
 ?>
 <TR>
+	<TD width="130" align="right">Limit účastníků</TD>
+	<TD width="5"></TD>
+	<TD>
+		<INPUT TYPE="number" NAME="kapacita" MIN="1" STEP="1"
+		value="<?php echo ($zaznam["kapacita"] > 0 ? (int)$zaznam["kapacita"] : ''); ?>">
+	</TD>
+</TR>
+<TR>
 	<TD width="130" align="right" valign="top">Poznámka k závodu</TD>
 	<TD width="5"></TD>
 	<TD>

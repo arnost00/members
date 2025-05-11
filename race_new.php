@@ -199,6 +199,13 @@ if ($g_enable_race_accommodation)
 }
 ?>	
 <TR>
+	<TD width="130" align="right">Limit účastníků</TD>
+	<TD width="5"></TD>
+	<TD>
+		<INPUT TYPE="number" NAME="kapacita" MIN="1" STEP="1">
+	</TD>
+</TR>
+<TR>
 	<TD width="130" align="right">Odkaz</TD>
 	<TD width="5"></TD>
 	<TD><INPUT TYPE="text" NAME="odkaz" SIZE=60 maxlength=100 value="<? echo ($raceInfo->odkaz); ?>"></TD>
