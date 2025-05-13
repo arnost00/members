@@ -120,7 +120,7 @@ else
 // need to be defined for all races
 $connector = ConnectorFactory::create();
 
-if ( !empty ( $ext_id ) ) {
+if ( !empty ( $ext_id ) && $connector!== null ) {
 
     // Get race info by race ID
     $raceInfo = $connector->getRaceInfo($ext_id);
@@ -164,7 +164,7 @@ else
 </TR>
 <?
 }
-if ( IsSet ($connector) ) {
+if ( $connector !== null ) {
 ?>
 <TR>
 	<TD width="130" align="right"><? echo ($connector->getSystemName() );?> ID</TD>

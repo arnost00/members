@@ -27,6 +27,7 @@ require_once ("./common_race_ed.inc.php");
 
 $raceInfo = null;
 $ext_id_info = '';
+$connector = null;
 
 if (!empty($ext_id)) { 
 	$connector = ConnectorFactory::create();
@@ -86,7 +87,7 @@ else
 </TR>
 <?
 }
-if ( IsSet ($connector) ) { ?>
+if ( $connector !== null ) { ?>
 <TR>
 	<TD width="130" align="right"><? echo ($connector->getSystemName() );?> ID</TD>
 	<TD width="5"></TD>

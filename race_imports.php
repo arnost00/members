@@ -17,7 +17,7 @@ require_once ("ctable.inc.php");
 require_once ("./connectors.php");
 $connector = ConnectorFactory::create();
 
-if (!isset($connector))
+if ($connector === null )
 {
 	echo('Chyba v nastavení, nenalezen žádny connector, kontaktuje administrátora.<br>');
 	exit;

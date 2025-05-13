@@ -239,7 +239,7 @@ class OrisCZConnector implements ConnectorInterface {
 }
 
 class ConnectorFactory {
-	public static function create(): ConnectorInterface {
+	public static function create(): ?ConnectorInterface {
 		global $g_external_is_connector;
 
 		if ( $g_external_is_connector && class_exists( $g_external_is_connector)) {

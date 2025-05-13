@@ -137,7 +137,7 @@ echo("<A HREF=\"javascript:open_win('./race_new.php?type=0','')\">Vytvořit nov�
 echo("<A HREF=\"javascript:open_win('./race_new.php?type=1','')\">Vytvořit nový vícedenní závod</A>");
 echo("<BR /><BR />\n");
 
-if ( isset ($connector ) ) {
+if ( $connector !== null ) {
 
 	DrawPageSubTitleCenter('Import závodu ze systému '.$connector->getSystemName());
 
