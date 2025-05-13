@@ -119,7 +119,6 @@ else
 
 // need to be defined for all races
 $connector = ConnectorFactory::create();
-$ext_id_active_oris = ($g_external_is_connector === 'OrisCZConnector');
 
 if ( !empty ( $ext_id ) ) {
 
@@ -165,7 +164,7 @@ else
 </TR>
 <?
 }
-if ( $ext_id_active_oris && IsSet ($connector) ) {
+if ( IsSet ($connector) ) {
 ?>
 <TR>
 	<TD width="130" align="right"><? echo ($connector->getSystemName() );?> ID</TD>
