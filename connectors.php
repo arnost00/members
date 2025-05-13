@@ -56,7 +56,7 @@ class Race {
 
 interface ConnectorInterface {
 	public function getSystemName(): string;
-	public function getRaceURL(string $id);
+	public function getRaceURL(string $id): string;
 	public function getRaceInfo(string $id);
 }
 
