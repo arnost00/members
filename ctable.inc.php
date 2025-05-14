@@ -14,7 +14,7 @@ class html_table_base
 {	// common table class
 	protected $class_name ='ctbl';
 	protected $bgc_header;
-	protected $bgc_row_select, $bgc_row1, $bgc_row1_spare, $bgc_row2, $bgc_row2_spare,$bgc_row_hglt;
+	protected $bgc_row_select, $bgc_row1, $bgc_row2, $bgc_row_hglt;
 	protected $cellpadding, $cellspacing;
 	public $table_width;
 	protected $enable_row_select;
@@ -31,9 +31,7 @@ class html_table_base
 		$this->bgc_header = $g_colors["table_header"];
 		$this->bgc_row_select = $g_colors['table_row_select'];
 		$this->bgc_row1 = $g_colors['table_row1'];
-		$this->bgc_row1_spare = $g_colors['table_row1_spare'];
 		$this->bgc_row2 = $g_colors['table_row2'];
-		$this->bgc_row2_spare = $g_colors['table_row2_spare'];
 		$this->bgc_row_hglt = $g_colors['table_row_highlight'];
 		$this->tc_normal = $g_colors['table_text'];
 		$this->tc_header = $g_colors['table_text_header'];
@@ -86,9 +84,7 @@ class html_table_base
 		'table.'.$this->class_name.' tr.head { background: '.$this->bgc_header.'; } '.
 		'table.'.$this->class_name.' tr:hover.head { background: '.$this->bgc_header.'; } '.
 		'table.'.$this->class_name.' tr.r1 { background: '.$this->bgc_row1.'; } '.
-		'table.'.$this->class_name.' tr.r1.spare { background: '.$this->bgc_row1_spare.'; } '.
 		'table.'.$this->class_name.' tr.r2 { background: '.$this->bgc_row2.'; } '.
-		'table.'.$this->class_name.' tr.r2.spare { background: '.$this->bgc_row2_spare.'; } '.
 		'table.'.$this->class_name.' tr.highlight { background: '.$this->bgc_row_hglt.'; } '.
 		(($this->enable_row_select)? ('table.'.$this->class_name.' tr:hover { background: '.$this->bgc_row_select.'; } '):'').
 		'</style>';

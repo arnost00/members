@@ -82,10 +82,6 @@ if (!defined('PHP_GLOBAL_COLORS_INCLUDED'))
 	$g_colors['table_text_header'] = '#333300';
 	$g_colors['table_text_highlight'] = '#FF66FF';
 
-	$g_colors['table_row1_spare'] = '#000920';
-	$g_colors['table_row2_spare'] = '#001030';
-	$g_colors['table_text_spare'] = '#996600'; // warm brown/orange for contrast
-
 	$g_colors['table_cal_border'] = '#AAAA33';
 	$g_colors['table_cal_weekend'] = '#777700';
 	$g_colors['table_cal_race'] = '#AA6600';
