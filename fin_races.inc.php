@@ -7,6 +7,7 @@ DrawPageTitle('Přehled závodů pro finance');
 <?
 require_once ("./common_race.inc.php");
 require_once ('./url.inc.php');
+require_once ('./ct_renderer_races.inc.php');
 
 $fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
 $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
@@ -30,11 +31,54 @@ while ($rec=mysqli_fetch_array($result_amount)) $race_amount[$rec["id_zavod"]]=$
 </script>
 
 <?
+
+// Fetch all rows into array
+$zaznamy = [];
+while ($zaznam = mysqli_fetch_array($vysledek, MYSQLI_ASSOC)) {
+    $zaznamy[] = $zaznam;
+}
+
 $num_rows = mysqli_num_rows($vysledek);
 if ($num_rows > 0)
 {
+	// Break between years
+	class YearExpanderDetector implements IBreakRowDetector {
+		public function needsBreak(array $prev, array $curr): bool {
+			return Date2Year($prev['datum']) !== Date2Year($curr['datum']);
+		}
+
+		public function renderBreak(html_table_mc $tbl, array $record): string {
+// TODO: shall be done with TBODY
+			$year = Date2Year($record['datum']);
+			$odkaz = "<button onclick='toggle_display_by_class(\"$year\")'>Histore závodů pro rok $year</button>";
+			return $tbl->get_info_row($odkaz)."\n";
+		}
+	}
+
 	show_link_to_actual_race($num_rows);
 
+	$curr_date = GetCurrentDate();
+	$renderer_option['curr_date'] = $curr_date;
+
+	// define table
+	$tbl_renderer = new RacesRenderedTable();
+	$tbl_renderer->addColumns('datum','nazev','misto','oddil','typ0','typ');
+	$tbl_renderer->addColumns(['moznosti',new FormatFieldRenderer ( 'id', function ( $id ) : string {
+		return '<A HREF="javascript:open_win(\'./race_finance_view.php?race_id='.$id.'\',\'\')">Přehled</A>';
+	})]);
+	$tbl_renderer->addColumns([new DefaultHeaderRenderer('Platba',ALIGN_CENTER),
+		new FormatFieldRenderer ( 'id', function ( $id ) use ($race_amount) : string {
+        	return isset($race_amount[$id]) ? $race_amount[$id] : '';	
+	})]);
+
+	$tbl_renderer->setRowTextPainter ( new GreyOldPainter() );
+
+	// TODO: breaks are necessary only by some filters
+	$tbl_renderer->addBreak(new YearExpanderDetector());
+	$tbl_renderer->addBreak(new FutureRaceBreakDetector());
+
+	echo $tbl_renderer->render( new html_table_mc(), $zaznamy, $renderer_option );
+/*
 	$data_tbl = new html_table_mc();
 	$col = 0;
 	$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
@@ -54,7 +98,7 @@ if ($num_rows > 0)
 	$brk_tbl = false;
 	$old_year = 0;
 	$year = 0;
-	while ($zaznam=mysqli_fetch_array($vysledek))
+	foreach ($zaznamy as $zaznam)
 	{
 		$prefix = ($zaznam['datum'] < GetCurrentDate()) ? '<span class="TextAlertExp">' : '';
 		$suffix = ($zaznam['datum'] < GetCurrentDate()) ? '</span>' : '';
@@ -96,6 +140,7 @@ if ($num_rows > 0)
 		$old_year = $year;
 	}
 	echo $data_tbl->get_footer()."\n";
+*/
 }
 ?>
 

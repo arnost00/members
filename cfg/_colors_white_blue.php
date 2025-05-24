@@ -84,10 +84,6 @@ if (!defined('PHP_GLOBAL_COLORS_INCLUDED'))
 	$g_colors['table_text_header'] = '#330000';//'#CCCC33';
 	$g_colors['table_text_highlight'] = '#FF66FF';
 
-	$g_colors['table_row1_spare'] = '#FFF5E6'; // soft peach
-	$g_colors['table_row2_spare'] = '#FFF9ED'; // even lighter peach
-	$g_colors['table_text_spare'] = '#996600'; // warm brown/orange for contrast
-
 	$g_colors['table_cal_border'] = '#AAAA33';
 	$g_colors['table_cal_weekend'] = '#777700';
 	$g_colors['table_cal_race'] = '#AA6600';

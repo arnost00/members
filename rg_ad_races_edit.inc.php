@@ -33,6 +33,7 @@ DrawPageTitle('Kalendář závodů - Editace závodů');
 
 require_once ('./common_race.inc.php');
 require_once ('./url.inc.php');
+require_once ('./ct_renderer_races.inc.php');
 
 $fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
 $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
@@ -51,84 +52,41 @@ else
 
 $ext_id_active_oris = ($g_external_is_connector === 'OrisCZConnector');
 
-$data_tbl = new html_table_mc();
-$col = 0;
-$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
-$data_tbl->set_header_col_with_help($col++,'Poř.',ALIGN_CENTER,"Pořadatel");
+// Fetch all rows into array
+$zaznamy = [];
+while ($zaznam = mysqli_fetch_array($vysledek, MYSQLI_ASSOC)) {
+	$zaznamy[] = $zaznam;
+}
+
+$renderer_option['curr_date'] = GetCurrentDate();
+
+// define table
+$tbl_renderer = new RacesRenderedTable();
+$tbl_renderer->addColumns('datum','nazev','misto','oddil');
 if ($ext_id_active_oris)
-	$data_tbl->set_header_col_with_help($col++,'O',ALIGN_CENTER,"závod v ORISu");
-$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ akce");
-$data_tbl->set_header_col_with_help($col++,'S',ALIGN_CENTER,"Sport");
-$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web závodu");
-$data_tbl->set_header_col_with_help($col++,'Kat',ALIGN_CENTER,"Zadané kategorie");
-$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
+	$tbl_renderer->addColumns('ext_id');
+$tbl_renderer->addColumns('typ0','typ','odkaz', ['kategorie', new FormatFieldRenderer ('kategorie', function ($kategorie) {
+		return (strlen($kategorie) > 0) ? 'A' :'<span class="TextAlertBold">N</span>';	
+	})]);
+// // if ($g_enable_race_capacity)
+// 	$tbl_renderer->addColumns('ucast');
+$tbl_renderer->addColumns(['moznosti', new FormatFieldRenderer ( 'id', function ( $id ) : string {
+	return "<A HREF=\"javascript:open_win('./race_edit.php?id=".$id."','')\">Edit</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_kat.php?id=".$id."','')\">Kategorie</A>&nbsp;/&nbsp;<A HREF=\"./race_del_exc.php?id=".$id."\" onclick=\"return confirm_delete();\" class=\"Erase\">Smazat</A>";
+	})]);
 if (!$g_is_release)
 {	// pri debug zobrazit
-	$data_tbl->set_header_col($col++,'Změny',ALIGN_CENTER);
-}
-echo $data_tbl->get_css()."\n";
-echo $data_tbl->get_header()."\n";
-echo $data_tbl->get_header_row()."\n";
-
-$i = 1;
-$brk_tbl = false;
-$old_year = 0;
-if($vysledek && ($num_rows = mysqli_num_rows($vysledek)) > 0)
-{
-	show_link_to_actual_race($num_rows);
-
-	while ($zaznam=mysqli_fetch_array($vysledek))
-	{
-		$row = array();
-		
-		$race_is_old = (GetTimeToRace($zaznam['datum']) == -1);
-
-		$prefix = ($race_is_old) ? '<span class="TextAlertExpLight">' : '';
-		$suffix = ($race_is_old) ? '</span>' : '';
-
-		if($zaznam['vicedenni'])
-			$datum=Date2StringFT($zaznam['datum'],$zaznam['datum2']);
-		else
-			$datum=Date2String($zaznam['datum']);
-
-		$row[] = $prefix.$datum.$suffix;
-		$row[] = "<A href=\"javascript:open_race_info(".$zaznam['id'].")\" class=\"adr_name\">".$prefix.GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']).$suffix."</A>";
-		$row[] = $prefix.GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']).$suffix;
-		$row[] = $prefix.$zaznam['oddil'].$suffix;
-		if ($ext_id_active_oris)
-		{
-			$ext_id = $zaznam['ext_id'];
-			$row[] = (!empty ($ext_id)) ? 'A' : '-';
-		}		
-		$row[] = GetRaceType0($zaznam['typ0']);
-		$row[] = GetRaceTypeImg($zaznam['typ']);
-		$row[] = GetRaceLinkHTML($zaznam['odkaz']);
-		$row[] = (strlen($zaznam['kategorie']) > 0) ? 'A' :'<span class="TextAlertBold">N</span>';
-		$row [] = "<A HREF=\"javascript:open_win('./race_edit.php?id=".$zaznam['id']."','')\">Edit</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_kat.php?id=".$zaznam['id']."','')\">Kategorie</A>&nbsp;/&nbsp;<A HREF=\"./race_del_exc.php?id=".$zaznam["id"]."\" onclick=\"return confirm_delete();\" class=\"Erase\">Smazat</A>";
-		if (!$g_is_release)
-		{	// pri debug zobrazit
-			$row[] = GetModifyFlagDesc($zaznam['modify_flag']);
-		}
-		if (!$brk_tbl && $zaznam['datum'] >= GetCurrentDate())
-		{
-			if($i != 1)
-				echo $data_tbl->get_break_row()."\n";
-			$brk_tbl = true;
-		}
-		else if($i != 1 && Date2Year($zaznam['datum']) != $old_year)
-		{
-				echo $data_tbl->get_break_row(true)."\n";
-		}
-
-		echo $data_tbl->get_new_row_arr($row)."\n";
-		$i++;
-		$old_year = Date2Year($zaznam['datum']);
-	}
+	$tbl_renderer->addColumns([
+		new DefaultHeaderRenderer ( 'Změny',ALIGN_CENTER ),
+		new FormatFieldRenderer ( 'modify_flag', 'GetModifyFlagDesc' )
+	]);
 }
 
-echo $data_tbl->get_footer()."\n";
+$tbl_renderer->setRowTextPainter ( new GreyOldPainter() );
+
+$tbl_renderer->addBreak(new YearBreakDetector());
+$tbl_renderer->addBreak(new FutureRaceBreakDetector());
+
+echo $tbl_renderer->render( new html_table_mc(), $zaznamy, $renderer_option );
 
 echo '<BR /><hr><BR />';
 DrawPageSubTitleCenter('Vytváření nových závodů');

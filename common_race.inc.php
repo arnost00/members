@@ -2,6 +2,7 @@
 <?
 
 require_once("cfg/race_enums.php");
+require_once("cfg/_cfg.php");
 
 function GetRaceTypeName($value)
 {
