@@ -8,6 +8,7 @@ DrawPageTitle('Přihlášky na závody');
 <?
 require_once ("./common_race.inc.php");
 require_once ('./url.inc.php');
+require_once ('./ct_renderer_races.inc.php');
 
 $fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
 $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
