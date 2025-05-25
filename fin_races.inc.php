@@ -48,9 +48,8 @@ if ($num_rows > 0)
 		}
 
 		public function renderBreak(html_table_mc $tbl, array $record): string {
-// TODO: shall be done with TBODY
 			$year = Date2Year($record['datum']);
-			$odkaz = "<button onclick='toggle_display_by_class(\"$year\")'>Histore závodů pro rok $year</button>";
+			$odkaz = "<button onclick='toggle_display_by_group(\"$year\")'>Histore závodů pro rok $year</button>";
 			return $tbl->get_info_row($odkaz)."\n";
 		}
 	}
@@ -72,75 +71,19 @@ if ($num_rows > 0)
 	})]);
 
 	$tbl_renderer->setRowTextPainter ( new GreyOldPainter() );
+	$tbl_renderer->setRowAttrsExt ( function ( array $record ) : array  {
+		$year = Date2Year($record['datum']);
+		$attrs = [ 'data-group' => $year ];
+		if ($year < date("Y"))
+		  $attrs['style'] = "display:none";
+		return $attrs;
+	});
 
 	// TODO: breaks are necessary only by some filters
 	$tbl_renderer->addBreak(new YearExpanderDetector());
 	$tbl_renderer->addBreak(new FutureRaceBreakDetector());
 
 	echo $tbl_renderer->render( new html_table_mc(), $zaznamy, $renderer_option );
-/*
-	$data_tbl = new html_table_mc();
-	$col = 0;
-	$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
-	$data_tbl->set_header_col_with_help($col++,'Poř.',ALIGN_CENTER,"Pořadatel");
-	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ akce");
-	$data_tbl->set_header_col_with_help($col++,'S',ALIGN_CENTER,"Sport");
-	$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Platba',ALIGN_CENTER);
-	
-	echo $data_tbl->get_css()."\n";
-	echo $data_tbl->get_header()."\n";
-	echo $data_tbl->get_header_row()."\n";
-
-	$i = 1;
-	$brk_tbl = false;
-	$old_year = 0;
-	$year = 0;
-	foreach ($zaznamy as $zaznam)
-	{
-		$prefix = ($zaznam['datum'] < GetCurrentDate()) ? '<span class="TextAlertExp">' : '';
-		$suffix = ($zaznam['datum'] < GetCurrentDate()) ? '</span>' : '';
-		$row = array();
-		//----------------------------
-		if($zaznam['vicedenni'])
-			$datum=Date2StringFT($zaznam['datum'],$zaznam['datum2']);
-		else
-			$datum=Date2String($zaznam['datum']);
-		//----------------------------
-		$row[] = $prefix.$datum.$suffix;
-		$row[] = "<A href=\"javascript:open_race_info(".$zaznam['id'].")\" class=\"adr_name\">".$prefix.GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']).$suffix."</A>";
-		$row[] = $prefix.GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']).$suffix;
-		$row[] = $prefix.$zaznam['oddil'].$suffix;
-		$row[] = GetRaceType0($zaznam['typ0']);
-		$row[] = GetRaceTypeImg($zaznam['typ']).'</A>';
-		$row[] = '<A HREF="javascript:open_win(\'./race_finance_view.php?race_id='.$zaznam['id'].'\',\'\')">Přehled</A>';
-		$row[] = isset($race_amount[$zaznam['id']])?$race_amount[$zaznam['id']]:"";
-		
-		$year = Date2Year($zaznam['datum']);
-		
-		if (!$brk_tbl && $zaznam['datum'] >= GetCurrentDate())
-		{
-			if($i != 1)
-				echo $data_tbl->get_break_row()."\n";
-			$brk_tbl = true;
-		}
-		else if($i != 1 && $year != $old_year)
-		{
-				$odkaz = "<button onclick='toggle_display_by_class(\"$year\")'>Histore závodů pro rok $year</button>";
-				echo $data_tbl->get_info_row($odkaz)."\n";
-		}
-
-		//prasacky schovane radky krome posledniho roku
-		($year < date("Y"))?($class = $year."\" style=\"display:none") : ($class = $year);
-
-		echo $data_tbl->get_new_row_arr($row, $class)."\n";
-		$i++;
-		$old_year = $year;
-	}
-	echo $data_tbl->get_footer()."\n";
-*/
 }
 ?>
 

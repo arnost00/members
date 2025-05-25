@@ -132,9 +132,9 @@ function changeParameterValueInURL(currentUrl, parameter, value)
 	return url.href;
 }
 
-function toggle_display_by_class(cls) {
-    var lst = document.getElementsByClassName(cls);
-    for(var i = 0; i < lst.length; ++i) {
+function toggle_display_by_group(group) {
+    var lst = document.querySelectorAll('[data-group="' + group + '"]');
+	for(var i = 0; i < lst.length; ++i) {
         (lst[i].style.display == '')?(lst[i].style.display='none'):(lst[i].style.display='');
     }
 }

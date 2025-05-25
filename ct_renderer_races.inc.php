@@ -237,7 +237,11 @@ class RacesRenderedTable {
     /** @var IBreakRowDetector[] */
     private array $breakRowDetectors = [];
 
+    // text painter add prefic=x and suffix to palin text in row
     private ?IRowTextPainter $rowTextPainter = null;
+
+    // row class/attributes extender
+    private $rowAttrsExt = null;
 
     public function addColumns(string|array ...$coldefs) {
         foreach ($coldefs as $coldef) {
@@ -263,6 +267,12 @@ class RacesRenderedTable {
 
     public function setRowTextPainter(IRowTextPainter $painter): void {
         $this->rowTextPainter = $painter;
+    }
+
+    // define row class/attr extender
+    // the function must return name/value pairs
+    public function setRowAttrsExt ( callable $fn ) {
+        $this->rowAttrsExt = $fn;
     }
 
     public function render( html_table_mc $tbl, array $records, array $options = []): string {
@@ -310,7 +320,9 @@ class RacesRenderedTable {
                 }
                 $row[] = $rowValue;
             }
-            $rnd .= $tbl->get_new_row_arr($row) . "\n";
+
+            $row_add_attrs = ( $this->rowAttrsExt !== null ) ? ($this->rowAttrsExt) ( $record ) : [];
+            $rnd .= $tbl->get_new_row_arr($row,$row_add_attrs) . "\n";
             $prev = $record;
         }
 

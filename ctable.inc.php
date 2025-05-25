@@ -267,15 +267,25 @@ class html_table_mc extends html_table_base
 	}
 
 	//__________________________________________________________________
-	function get_new_row_arr($row_arr, $row_class="")// pole sloupcu
-	{
+	function get_new_row_arr($row_arr, $row_attrs=[])
+	{ // pole sloupcu with optional attributes
+		$row_add_class = '';
+		$row_add_attrs = '';
+
+		foreach ($row_attrs as $key => $value) {
+			if ( $key === 'class')
+			  $row_add_class = ' ' . $value;
+			else 
+			  $row_add_attrs .= ' ' . htmlspecialchars($key) . '="' . htmlspecialchars($value) . '"';
+		}
+
 		$cols = count ($row_arr);
 		if ($cols == 0) return '';
 		if ($this->highlighted_next_row)
 			$rc = 'highlight';
 		else
 			$rc= ((++$this->row_idx % 2) == 0) ? 'r1' : 'r2';
-		$row = '<TR class="'.$rc.' '.$row_class.'" valign="top">';
+		$row = '<TR class="'.$rc.$row_add_class.'"'.$row_add_attrs.' valign="top">';
 		for($i = 0; $i < $cols; $i++)
 		{
 			$row .= '<TD class="'.$this->class_name.$this->cols_align[$i].'"';
