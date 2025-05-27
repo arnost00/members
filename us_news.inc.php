@@ -103,7 +103,7 @@ if ($num_rows > 0)
 	}
 
 	// define table
-	$tbl_renderer = new RacesRenderedTable();
+	$tbl_renderer = RacesRendererFactory::createTable();
 	$tbl_renderer->addColumns('datum','nazev','misto','oddil','typ0','typ','odkaz');
 	if ($g_enable_race_capacity)
 		$tbl_renderer->addColumns('ucast');

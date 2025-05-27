@@ -109,4 +109,152 @@ interface IBreakRowDetector {
     public function renderBreak(html_table_mc $tbl, array $record): string;
 }
 
+class TableColumn {
+    public IColumnHeaderRenderer $header;
+    public IColumnContentRenderer $content;
+
+    public function __construct(
+        public IColumnHeaderRenderer $headerDef,
+        public IColumnContentRenderer $contentDef
+    ) {
+        $this->header = $headerDef;
+        $this->content = $contentDef;
+    }
+}
+
+abstract class AColumnRendererFactory {
+    abstract public static function createColRenderer(string $column_name): IColumnContentRenderer;
+    abstract public static function createHeaderRenderer(string $column_name): IColumnHeaderRenderer;
+
+    public static function createTable () : RenderedTable {
+        return new RenderedTable(static::class);
+    }
+
+    public static function create(string $column_name) {
+        return [
+            static::createHeaderRenderer($column_name),
+            static::createColRenderer($column_name)
+        ];
+    }
+
+    public static function createColumn(
+        string|IColumnHeaderRenderer $headerDef,
+        IColumnContentRenderer $contentDef
+    ): TableColumn {
+        if (is_string($headerDef)) {
+            $headerDef = static::createHeaderRenderer($headerDef);
+        }
+
+        return new TableColumn($headerDef, $contentDef);
+    }
+}
+
+class RenderedTable {
+    /** @var TableColumn[] */
+    private array $columns = [];
+    /** @var IBreakRowDetector[] */
+    private array $breakRowDetectors = [];
+
+    // text painter add prefic=x and suffix to palin text in row
+    private ?IRowTextPainter $rowTextPainter = null;
+
+    // row class/attributes extender
+    private $rowAttrsExt = null;
+
+    // mandatory renderer factory for column creation
+    private string $rendererFactoryClass;
+
+    public function __construct(string $rendererFactoryClass) {
+        $this->rendererFactoryClass = $rendererFactoryClass;
+    }
+
+    public function addColumns(string|array ...$coldefs) {
+        foreach ($coldefs as $coldef) {
+            if (is_string($coldef)) {
+                $arr = call_user_func ( [$this->rendererFactoryClass, 'create'], $coldef);
+                $this->addColumn( call_user_func ( [$this->rendererFactoryClass, 'createColumn'], $arr[0], $arr[1] ) );
+            } elseif (is_array($coldef)) {
+                if ( count ($coldef) > 1 ) 
+                    $this->addColumn( call_user_func ( [$this->rendererFactoryClass, 'createColumn'], $coldef[0], $coldef[1] ) );
+                else
+                    $this->addColumn( call_user_func ( [$this->rendererFactoryClass, 'createColumn'],
+                         new DefaultHeaderRenderer('undef'), new NoRenderer('undef') ) );
+            }
+        }
+    }
+
+    public function addBreak(IBreakRowDetector $detector) {
+        $this->breakRowDetectors[] = $detector;
+    }
+
+    public function addColumn(TableColumn $col): void {
+        $this->columns[] = $col;
+    }
+
+    public function setRowTextPainter(IRowTextPainter $painter): void {
+        $this->rowTextPainter = $painter;
+    }
+
+    // define row class/attr extender
+    // the function must return name/value pairs
+    public function setRowAttrsExt ( callable $fn ) {
+        $this->rowAttrsExt = $fn;
+    }
+
+    public function render( html_table_mc $tbl, array $records, array $options = []): string {
+
+        // Render headers
+        $col = 0;
+        foreach ($this->columns as $column) {
+            // get all defined headers
+            if ( $column->header instanceof HelpHeaderRenderer )
+                $tbl->set_header_col_with_help ($col++,$column->header->label,$column->header->align,$column->header->help);
+            else
+                $tbl->set_header_col($col++,$column->header->label,$column->header->align);
+        }
+
+        $rnd = $tbl->get_css()."\n";
+        $rnd .= $tbl->get_header()."\n";
+        $rnd .= $tbl->get_header_row()."\n";
+
+        $prev = null;
+        foreach ($records as $record) {
+            if ($prev !== null) {
+                // create first break between $prev and $record
+                foreach ($this->breakRowDetectors as $detector) {
+                    if ($detector->needsBreak($prev, $record)) {
+                        $rnd .= $detector->renderBreak($tbl,$record) . "\n";
+                        break; // only first one
+                    }
+                }
+            }
+
+            if ( isset($this->rowTextPainter) ) {
+                // evaluate once per record
+                $ps = $this->rowTextPainter->getPrefixSuffix($record,$options);
+                $prefix = $ps[0] ?? '';
+                $suffix = $ps[1] ?? '';
+            }
+
+            $row = [];
+            foreach ($this->columns as $column) {
+                // get all defined cells
+                $rowValue = $column->content->render($record,$options);
+                if ( isset($this->rowTextPainter) ) {
+                    // apply on each value
+                    $rowValue = preg_replace ( '/(\>|^)([^<]+)(\<|$)/', '${1}' . $prefix . '${2}' . $suffix . '${3}', $rowValue);
+                }
+                $row[] = $rowValue;
+            }
+
+            $row_add_attrs = ( $this->rowAttrsExt !== null ) ? ($this->rowAttrsExt) ( $record ) : [];
+            $rnd .= $tbl->get_new_row_arr($row,$row_add_attrs) . "\n";
+            $prev = $record;
+        }
+
+        return $rnd . $tbl->get_footer() . "\n";
+    }
+}
+
+
 ?>

@@ -124,7 +124,7 @@ class ParticipantsRenderer implements IColumnContentRenderer {
     }
 }
 
-class RacesColumnRendererFactory {
+class RacesRendererFactory extends AColumnRendererFactory {
     public static function createColRenderer(string $column_name): IColumnContentRenderer {
         return match ($column_name) {
             'datum' => new DatumRenderer($column_name),
@@ -158,10 +158,6 @@ class RacesColumnRendererFactory {
             'vedouci' => new DefaultHeaderRenderer('Vedoucí',ALIGN_CENTER),
             default => new DefaultHeaderRenderer($column_name),
         };
-    }
-    public static function create(string $column_name) {
-        return [RacesColumnRendererFactory::createHeaderRenderer($column_name),
-                RacesColumnRendererFactory::createColRenderer($column_name)];
     }
 }
 
@@ -215,118 +211,4 @@ class FutureRaceBreakDetector implements IBreakRowDetector {
     }
 }
 
-class RacesTableColumn {
-    public IColumnHeaderRenderer $header;
-    public IColumnContentRenderer $content;
-
-    public function __construct(
-        public string|IColumnHeaderRenderer $headerDef,
-        public IColumnContentRenderer $contentDef
-    ) {
-        if ( is_string ($headerDef) ) 
-            $this->header = RacesColumnRendererFactory::createHeaderRenderer($headerDef);
-        else
-            $this->header = $headerDef;
-        $this->content = $contentDef;
-    }
-}
-
-class RacesRenderedTable {
-    /** @var RacesTableColumn[] */
-    private array $columns = [];
-    /** @var IBreakRowDetector[] */
-    private array $breakRowDetectors = [];
-
-    // text painter add prefic=x and suffix to palin text in row
-    private ?IRowTextPainter $rowTextPainter = null;
-
-    // row class/attributes extender
-    private $rowAttrsExt = null;
-
-    public function addColumns(string|array ...$coldefs) {
-        foreach ($coldefs as $coldef) {
-            if (is_string($coldef)) {
-                $arr = RacesColumnRendererFactory::create($coldef);
-                $this->addColumn( new RacesTableColumn ( $arr[0], $arr[1] ) );
-            } elseif (is_array($coldef)) {
-                if ( count ($coldef) > 1 ) 
-                    $this->addColumn( new RacesTableColumn( $coldef[0], $coldef[1] ) );
-                else
-                    $this->addColumn( new RacesTableColumn( new DefaultHeaderRenderer('undef'), new NoRenderer('undef') ) );
-            }
-        }
-    }
-
-    public function addBreak(IBreakRowDetector $detector) {
-        $this->breakRowDetectors[] = $detector;
-    }
-
-    public function addColumn(RacesTableColumn $col): void {
-        $this->columns[] = $col;
-    }
-
-    public function setRowTextPainter(IRowTextPainter $painter): void {
-        $this->rowTextPainter = $painter;
-    }
-
-    // define row class/attr extender
-    // the function must return name/value pairs
-    public function setRowAttrsExt ( callable $fn ) {
-        $this->rowAttrsExt = $fn;
-    }
-
-    public function render( html_table_mc $tbl, array $records, array $options = []): string {
-
-        // Render headers
-        $col = 0;
-        foreach ($this->columns as $column) {
-            // get all defined headers
-            if ( $column->header instanceof HelpHeaderRenderer )
-                $tbl->set_header_col_with_help ($col++,$column->header->label,$column->header->align,$column->header->help);
-            else
-                $tbl->set_header_col($col++,$column->header->label,$column->header->align);
-        }
-
-        $rnd = $tbl->get_css()."\n";
-        $rnd .= $tbl->get_header()."\n";
-        $rnd .= $tbl->get_header_row()."\n";
-
-        $prev = null;
-        foreach ($records as $record) {
-            if ($prev !== null) {
-                // create first break between $prev and $record
-                foreach ($this->breakRowDetectors as $detector) {
-                    if ($detector->needsBreak($prev, $record)) {
-                        $rnd .= $detector->renderBreak($tbl,$record) . "\n";
-                        break; // only first one
-                    }
-                }
-            }
-
-            if ( isset($this->rowTextPainter) ) {
-                // evaluate once per record
-                $ps = $this->rowTextPainter->getPrefixSuffix($record,$options);
-                $prefix = $ps[0] ?? '';
-                $suffix = $ps[1] ?? '';
-            }
-
-            $row = [];
-            foreach ($this->columns as $column) {
-                // get all defined cells
-                $rowValue = $column->content->render($record,$options);
-                if ( isset($this->rowTextPainter) ) {
-                    // apply on each value
-                    $rowValue = preg_replace ( '/(\>|^)([^<]+)(\<|$)/', '${1}' . $prefix . '${2}' . $suffix . '${3}', $rowValue);
-                }
-                $row[] = $rowValue;
-            }
-
-            $row_add_attrs = ( $this->rowAttrsExt !== null ) ? ($this->rowAttrsExt) ( $record ) : [];
-            $rnd .= $tbl->get_new_row_arr($row,$row_add_attrs) . "\n";
-            $prev = $record;
-        }
-
-        return $rnd . $tbl->get_footer() . "\n";
-    }
-}
 ?>

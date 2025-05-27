@@ -43,7 +43,7 @@ if ($num_rows > 0)
 	}
 
 	// define table
-	$tbl_renderer = new RacesRenderedTable();
+	$tbl_renderer = RacesRendererFactory::createTable();
 	$tbl_renderer->addColumns('datum','nazev','misto','oddil');
 	if ($ext_id_active_oris)
 		$tbl_renderer->addColumns('ext_id');

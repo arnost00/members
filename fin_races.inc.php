@@ -60,7 +60,7 @@ if ($num_rows > 0)
 	$renderer_option['curr_date'] = $curr_date;
 
 	// define table
-	$tbl_renderer = new RacesRenderedTable();
+	$tbl_renderer = RacesRendererFactory::createTable();
 	$tbl_renderer->addColumns('datum','nazev','misto','oddil','typ0','typ');
 	$tbl_renderer->addColumns(['moznosti',new FormatFieldRenderer ( 'id', function ( $id ) : string {
 		return '<A HREF="javascript:open_win(\'./race_finance_view.php?race_id='.$id.'\',\'\')">Přehled</A>';
