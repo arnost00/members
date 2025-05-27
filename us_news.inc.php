@@ -92,27 +92,8 @@ while ($zaznam = mysqli_fetch_array($vysledek, MYSQLI_ASSOC)) {
     $zaznamy[] = $zaznam;
 }
 
-$count_registered = [];
-if ($g_enable_race_capacity && $num_rows > 0) {
-	// collect counts of register members
-	$race_ids = [];
-
-	foreach ($zaznamy as $zaznam ) {	
-		$race_ids[] = (int)$zaznam['id'];
-	}
-
-	if (!empty($race_ids)) {
-		$ids_csv = implode(',', $race_ids);
-		$count_query = "SELECT id_zavod, COUNT(*) AS prihlaseno FROM ".TBL_ZAVXUS." WHERE id_zavod IN ($ids_csv) GROUP BY id_zavod";
-		$count_result = query_db($count_query);
-	
-		while ($row = mysqli_fetch_assoc($count_result)) {
-			$count_registered[$row['id_zavod']] = $row['prihlaseno'];
-		}
-	}	
-
-	$renderer_option['count_registered'] = $count_registered;
-}
+$count_registered = GetCountRegistered ($zaznamy);
+$renderer_option['count_registered'] = $count_registered;
 
 if ($num_rows > 0)
 {

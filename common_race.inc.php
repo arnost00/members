@@ -469,4 +469,31 @@ function GetSharedTransportValue($transport,$sedadel,&$total){
 	else
 		return '';
 }
+
+// get count of registered members for each race in records
+function GetCountRegistered ( array $records ) {
+	global $g_enable_race_capacity;
+	
+	$count_registered = [];
+
+	if ($g_enable_race_capacity && count($records) > 0) {
+		$race_ids = [];
+
+		foreach ($records as $record ) {	
+			$race_ids[] = (int)$record['id'];
+		}
+
+		if (!empty($race_ids)) {
+			$ids_csv = implode(',', $race_ids);
+			$count_query = "SELECT id_zavod, COUNT(*) AS prihlaseno FROM ".TBL_ZAVXUS." WHERE id_zavod IN ($ids_csv) GROUP BY id_zavod";
+			$count_result = query_db($count_query);
+		
+			while ($row = mysqli_fetch_assoc($count_result)) {
+				$count_registered[$row['id_zavod']] = $row['prihlaseno'];
+			}
+		}	
+
+	}
+	return $count_registered;
+}
 ?>
