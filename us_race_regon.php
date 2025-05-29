@@ -17,6 +17,7 @@ require_once('./common.inc.php');
 require_once('./common_race.inc.php');
 require_once('./url.inc.php');
 require_once("./xss_prevent.php");
+require_once('./ct_renderer_race.inc.php');
 
 db_Connect();
 
@@ -229,77 +230,55 @@ $is_spol_dopr_on = ($zaznam_z["transport"]==1) && $g_enable_race_transport;
 $is_sdil_dopr_on = ($zaznam_z["transport"]==3) && $g_enable_race_transport;
 $is_spol_ubyt_on = ($zaznam_z["ubytovani"]==1) && $g_enable_race_accommodation;
 
-$data_tbl = new html_table_mc();
-$col = 0;
-$data_tbl->set_header_col($col++,'Poř.',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Příjmení',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
-if($is_spol_dopr_on||$is_sdil_dopr_on)
-	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER, ($is_spol_dopr_on?'Společná':'Sdílená').' doprava');
-if($is_sdil_dopr_on)
-	$data_tbl->set_header_col_with_help($col++,'&#x1F697;',ALIGN_CENTER,'Nabízených sedadel');
-if($is_spol_ubyt_on)
-	$data_tbl->set_header_col_with_help($col++,'SU',ALIGN_CENTER,'Společné ubytování');
-if($zaznam_z['prihlasky'] > 1)
-	$data_tbl->set_header_col($col++,'Termín',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Pozn.',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Pozn.(i)',ALIGN_LEFT);
-
-echo $data_tbl->get_css()."\n";
-echo $data_tbl->get_header()."\n";
-echo $data_tbl->get_header_row()."\n";
-
-$i=0;
+$renderer_option=[];
+$zaznamy = [];
 $trans=0;
 $sedadel=0;
 $ubyt=0;
-while ($zaznam=mysqli_fetch_array($vysledek))
-{
-		$i++;
+$category_counts = [];
+while ($zaznam = mysqli_fetch_array($vysledek, MYSQLI_ASSOC)) {
+    $zaznamy[] = $zaznam;
 
-		$row = array();
-		$row[] = $i.'<!-- '.$zaznam['id'].' -->';
-		$row[] = xss_prevent($zaznam['prijmeni']);
-		$row[] = xss_prevent($zaznam['jmeno']);
-		$row[] = '<B>'.xss_prevent($zaznam['kat']).'</B>';
-		if($is_spol_dopr_on||$is_sdil_dopr_on)
-		{
-			if ($zaznam["transport"])
-			{
-				$row[] = '<B>&#x2714;</B>';
-				$trans++;
-			}
-			else
-				$row[] = '';
-		}
-		if($is_sdil_dopr_on)
-			$row[] = GetSharedTransportValue($zaznam["transport"], $zaznam["sedadel"], $sedadel );
-		if($is_spol_ubyt_on)
-		{
-			if ($zaznam["ubytovani"])
-			{
-				$row[] = '<B>&#x2714;</B>';
-				$ubyt++;
-			}
-			else
-				$row[] = '';
-		}
-		if($zaznam_z['prihlasky'] > 1)
-			$row[] = xss_prevent($zaznam['termin']);
-		$row[] = xss_prevent($zaznam['pozn']);
-		$row[] = xss_prevent($zaznam['pozn_in']);
-		echo $data_tbl->get_new_row_arr($row)."\n";
-		if ( $i == $kapacita ) {
-			echo $data_tbl->get_break_row(true)."\n";
-		}
+	// Count category occurrences
+	$kat = $zaznam['kat'];
+	$category_counts[$kat] = ($category_counts[$kat] ?? 0) + 1;
+
+	if ($zaznam["transport"])
+		$trans++;
+	if ($zaznam["ubytovani"])
+		$ubyt++;
+	if ( $is_sdil_dopr_on ) {
+		//fix problem when change transport from Common to Shared
+		$sedadel += ($zaznam["sedadel"] == null) ? -1 : $zaznam["sedadel"];
+	}
 }
-echo $data_tbl->get_footer()."\n";
+
+// define table
+$tbl_renderer = RaceRendererFactory::createTable();
+$tbl_renderer->addColumns('id','jmeno','prijmeni','kat');
+if($is_spol_dopr_on||$is_sdil_dopr_on)
+	$tbl_renderer->addColumns('transport');
+if($is_sdil_dopr_on)
+	$tbl_renderer->addColumns('sedadel');
+if($is_spol_ubyt_on)
+	$tbl_renderer->addColumns('ubytovani');
+if($zaznam_z['prihlasky'] > 1)
+	$tbl_renderer->addColumns('termin');
+$tbl_renderer->addColumns('pozn','pozn_in');
+
+if ($g_enable_race_capacity && isSet ($zaznam_z['kapacita']) ) {
+	$tbl_renderer->addBreak(new LimitBreakDetector($zaznam_z['kapacita']));
+	$tbl_renderer->setRowTextPainter ( new GreyLastNPainter($zaznam_z['kapacita']) );	
+}
+
+echo $tbl_renderer->render( new html_table_mc(), $zaznamy, $renderer_option );
 
 echo $is_spol_dopr_on||$is_sdil_dopr_on ? "<BR>Počet přihlášených na dopravu: $trans" : "";
 $warning_text = $sedadel < 0 ? ' <font color="red">(málo volných míst)</font>' : '';
 echo $is_sdil_dopr_on ? "<BR>Počet volných sdílených míst: $sedadel".$warning_text : "";
 echo $is_spol_ubyt_on ? "<BR>Počet přihlášených na ubytování: $ubyt" : "";
+
+RenderCategoryCounts ( $category_counts );
 ?>
 
 <BR>

@@ -470,6 +470,39 @@ function GetSharedTransportValue($transport,$sedadel,&$total){
 		return '';
 }
 
+function RenderCategoryCounts ( array $category_counts ) {
+	// Sort categories alphabetically
+	ksort($category_counts);
+
+	// Add collapsible section for category counts with table formatting
+	echo '<br><br><div id="category_details" style="display:none;">';
+	echo '<table cellspacing="5">';
+	echo '<tr><th style="text-align:left;">Kategorie</th>';
+
+	foreach ($category_counts as $category => $count) {
+		echo "<td>$category</td>";
+	}
+
+	echo '</tr><tr><th style="text-align:left;">Počet</th>';
+
+	foreach ($category_counts as $category => $count) {
+		echo "<td style='text-align:center;'>$count</td>";
+	}
+
+	echo "</tr></table></div>";
+
+	// JavaScript to expand list and scroll
+	echo '<script>
+	function toggleCategoriesAndScroll() {
+		var details = document.getElementById("category_details");
+		details.style.display = "block";
+		
+		// Scroll to the category list
+		details.scrollIntoView({ behavior: "smooth", block: "start" });
+	}
+	</script>';
+}
+
 // get count of registered members for each race in records
 function GetCountRegistered ( array $records ) {
 	global $g_enable_race_capacity;

@@ -43,12 +43,12 @@ if ($num_rows > 0)
 {
 	// Break between years
 	class YearExpanderDetector implements IBreakRowDetector {
-		public function needsBreak(array $prev, array $curr): bool {
-			return Date2Year($prev['datum']) !== Date2Year($curr['datum']);
+		public function needsBreak(array $prev, RowData $curr): bool {
+			return Date2Year($prev['datum']) !== Date2Year($curr->rec['datum']);
 		}
 
-		public function renderBreak(html_table_mc $tbl, array $record): string {
-			$year = Date2Year($record['datum']);
+		public function renderBreak(html_table_mc $tbl, RowData $row): string {
+			$year = Date2Year($row->rec['datum']);
 			$odkaz = "<button onclick='toggle_display_by_group(\"$year\")'>Histore závodů pro rok $year</button>";
 			return $tbl->get_info_row($odkaz)."\n";
 		}
@@ -71,8 +71,8 @@ if ($num_rows > 0)
 	})]);
 
 	$tbl_renderer->setRowTextPainter ( new GreyOldPainter() );
-	$tbl_renderer->setRowAttrsExt ( function ( array $record ) : array  {
-		$year = Date2Year($record['datum']);
+	$tbl_renderer->setRowAttrsExt ( function ( RowData $row ) : array  {
+		$year = Date2Year($row->rec['datum']);
 		$attrs = [ 'data-group' => $year ];
 		if ($year < date("Y"))
 		  $attrs['style'] = "display:none";

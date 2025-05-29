@@ -6,11 +6,11 @@ require_once("ctable.inc.php");
 require_once("common_race.inc.php");
 
 interface IColumnHeaderRenderer {
-    public function render(html_table_mc $tbl, int &$col): void;
+    public function render(html_table_mc $tbl, int $col): void;
 }
 
 interface IColumnContentRenderer {
-    public function render(array $record, array $options = []): string;
+    public function render(RowData $row, array $options = []): string;
 }
 
 class DefaultHeaderRenderer implements IColumnHeaderRenderer {
@@ -19,7 +19,7 @@ class DefaultHeaderRenderer implements IColumnHeaderRenderer {
         public string $align = ALIGN_LEFT
     ) {}
 
-    public function render(html_table_mc $tbl, int &$col): void {
+    public function render(html_table_mc $tbl, int $col): void {
         $tbl->set_header_col($col, $this->label, $this->align);
     }
 }
@@ -31,15 +31,15 @@ class HelpHeaderRenderer implements IColumnHeaderRenderer {
         public string $help
     ) {}
 
-    public function render(html_table_mc $tbl, int &$col): void {
-        $tbl->set_header_col_with_help($col++, $this->label, $this->align, $this->help);
+    public function render(html_table_mc $tbl, int $col): void {
+        $tbl->set_header_col_with_help($col, $this->label, $this->align, $this->help);
     }
 }
 
 class NoRenderer implements IColumnContentRenderer {
     public function __construct(private string $field) {}
 
-    public function render(array $record, array $options = []): string {
+    public function render(RowData $row, array $options = []): string {
         return htmlspecialchars((string)($this->field ?? ''));
     }
 }
@@ -47,8 +47,8 @@ class NoRenderer implements IColumnContentRenderer {
 class DefaultRenderer implements IColumnContentRenderer {
     public function __construct(private string $field) {}
 
-    public function render(array $record, array $options = []): string {
-        return htmlspecialchars((string)($record[$this->field] ?? ''));
+    public function render(RowData $row, array $options = []): string {
+        return htmlspecialchars((string)($row->rec[$this->field] ?? ''));
     }
 }
 
@@ -56,16 +56,16 @@ class DefaultRenderer implements IColumnContentRenderer {
 class FieldRenderer implements IColumnContentRenderer {
     public function __construct(private string $field) {}
 
-    public function render(array $record, array $options = []): string {
-        return htmlspecialchars((string)($record[$this->field] ?? ''));
+    public function render(RowData $row, array $options = []): string {
+        return htmlspecialchars((string)($row->rec[$this->field] ?? ''));
     }
 }
 
 // Field renderer with visualised cancelation
 class CancelableRenderer extends FieldRenderer {
-    public function render(array $record, array $options = []): string {
-        $value = parent::render($record) ?? '';
-        return GetFormatedTextDel ( $value, $record['cancelled'] );
+    public function render(RowData $row, array $options = []): string {
+        $value = parent::render($row) ?? '';
+        return GetFormatedTextDel ( $value, $row->rec['cancelled'] );
     }
 }
 
@@ -79,8 +79,8 @@ class FormatFieldRenderer implements IColumnContentRenderer {
         $this->field = $field;
     }
 
-    public function render(array $record, array $options = []): string {
-        $val = $record[$this->field] ?? '';
+    public function render(RowData $row, array $options = []): string {
+        $val = $row->rec[$this->field] ?? '';
         return ($this->fn)( $val );
     }
 }
@@ -93,22 +93,23 @@ class CallbackRenderer implements IColumnContentRenderer {
         $this->fn = $fn;
     }
 
-    public function render(array $record, array $options = []): string {
-        return ($this->fn)( $record, $options );
+    public function render(RowData $row, array $options = []): string {
+        return ($this->fn)( $row, $options );
     }
 }
 
 // modifies plain texts on row, evaluated once per row
 interface IRowTextPainter {
-    public function getPrefixSuffix(array $record, array $options = [] ): array;
+    public function getPrefixSuffix(RowData $row, array $options = [] ): array;
 }
 
 // Checks and creates table break
 interface IBreakRowDetector {
-    public function needsBreak(array $prev, array $curr): bool;
-    public function renderBreak(html_table_mc $tbl, array $record): string;
+    public function needsBreak(array $prev, RowData $curr): bool;
+    public function renderBreak(html_table_mc $tbl, RowData $row): string;
 }
 
+// table column descriptor, holds header and content rendered
 class TableColumn {
     public IColumnHeaderRenderer $header;
     public IColumnContentRenderer $content;
@@ -120,6 +121,19 @@ class TableColumn {
         $this->header = $headerDef;
         $this->content = $contentDef;
     }
+}
+
+// row information for renderig
+class RowData {
+    public int $number;// current line
+    public int $count; // total count of lines
+    public array $rec; // record
+
+    public function __construct(int $count) {
+        $this->number = 0;
+        $this->count = $count;
+        $this->rec = [];
+    }    
 }
 
 abstract class AColumnRendererFactory {
@@ -158,8 +172,11 @@ class RenderedTable {
     // text painter add prefic=x and suffix to palin text in row
     private ?IRowTextPainter $rowTextPainter = null;
 
-    // row class/attributes extender
+    // row class/attributes extender function ( RowData row ) : array
     private $rowAttrsExt = null;
+
+    // row filter function ( RowData row ) : bool
+    private $rowFilter = null;
 
     // mandatory renderer factory for column creation
     private string $rendererFactoryClass;
@@ -201,16 +218,18 @@ class RenderedTable {
         $this->rowAttrsExt = $fn;
     }
 
+    public function setRowFilter ( callable $fn ) {
+        $this->rowFilter = $fn;
+    }
+
+
     public function render( html_table_mc $tbl, array $records, array $options = []): string {
 
         // Render headers
         $col = 0;
         foreach ($this->columns as $column) {
             // get all defined headers
-            if ( $column->header instanceof HelpHeaderRenderer )
-                $tbl->set_header_col_with_help ($col++,$column->header->label,$column->header->align,$column->header->help);
-            else
-                $tbl->set_header_col($col++,$column->header->label,$column->header->align);
+            $column->header->render ( $tbl, $col++ );
         }
 
         $rnd = $tbl->get_css()."\n";
@@ -218,38 +237,50 @@ class RenderedTable {
         $rnd .= $tbl->get_header_row()."\n";
 
         $prev = null;
+        $row = new RowData( count($records) );
         foreach ($records as $record) {
+            $row->rec = $record;
+
+            if ( $this->rowFilter !== null ) {
+                if ( ! ($this->rowFilter) ( $row ) ) {
+                    // filtered
+                    continue;
+                }
+            }
+
             if ($prev !== null) {
                 // create first break between $prev and $record
                 foreach ($this->breakRowDetectors as $detector) {
-                    if ($detector->needsBreak($prev, $record)) {
-                        $rnd .= $detector->renderBreak($tbl,$record) . "\n";
+                    if ($detector->needsBreak($prev, $row)) {
+                        $rnd .= $detector->renderBreak($tbl,$row) . "\n";
                         break; // only first one
                     }
                 }
             }
 
-            if ( isset($this->rowTextPainter) ) {
+            if ( $this->rowTextPainter !== null ) {
                 // evaluate once per record
-                $ps = $this->rowTextPainter->getPrefixSuffix($record,$options);
+                $ps = $this->rowTextPainter->getPrefixSuffix($row,$options);
                 $prefix = $ps[0] ?? '';
                 $suffix = $ps[1] ?? '';
             }
 
-            $row = [];
+            $rowCells = [];
             foreach ($this->columns as $column) {
                 // get all defined cells
-                $rowValue = $column->content->render($record,$options);
-                if ( isset($this->rowTextPainter) ) {
+                $rowValue = $column->content->render($row,$options);
+
+                if ( $this->rowTextPainter !== null ) {
                     // apply on each value
                     $rowValue = preg_replace ( '/(\>|^)([^<]+)(\<|$)/', '${1}' . $prefix . '${2}' . $suffix . '${3}', $rowValue);
                 }
-                $row[] = $rowValue;
+                $rowCells[] = $rowValue;
             }
 
-            $row_add_attrs = ( $this->rowAttrsExt !== null ) ? ($this->rowAttrsExt) ( $record ) : [];
-            $rnd .= $tbl->get_new_row_arr($row,$row_add_attrs) . "\n";
+            $row_add_attrs = ( $this->rowAttrsExt !== null ) ? ($this->rowAttrsExt) ( $row ) : [];
+            $rnd .= $tbl->get_new_row_arr($rowCells,$row_add_attrs) . "\n";
             $prev = $record;
+            $row->number++;
         }
 
         return $rnd . $tbl->get_footer() . "\n";

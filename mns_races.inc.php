@@ -56,19 +56,19 @@ if ($num_rows > 0)
 	$tbl_renderer->addColumns('datum','nazev','misto','oddil','typ0','typ','odkaz');
 	// if ($g_enable_race_capacity)
 	// 	$tbl_renderer->addColumns('ucast');
-	$tbl_renderer->addColumns(['moznosti', new CallbackRenderer ( function ( array $record, array $options ) : string {
-		$race_is_old = (GetTimeToRace($record['datum']) == -1);
-		$prihlasky_curr = raceterms::GetActiveRegDateArr($record);
+	$tbl_renderer->addColumns(['moznosti', new CallbackRenderer ( function ( RowData $row, array $options ) : string {
+		$race_is_old = (GetTimeToRace($row->rec['datum']) == -1);
+		$prihlasky_curr = raceterms::GetActiveRegDateArr($row->rec);
 		$time_to_reg = GetTimeToReg($prihlasky_curr[0]);
 		$prihl_finish = (($time_to_reg == -1 && $prihlasky_curr[0] != 0) || $race_is_old);
 
 		if (!$prihl_finish)
 		{
-			return "<A HREF=\"javascript:open_win('./race_regs_1.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$record['id']."&show_ed=1','')\">Př-1</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_all.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$record['id']."','')\">Př-V</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$record['id']."&select=1','')\"><span class=\"TextAlertExpLight\">Zč</span></A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$record['id']."','')\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
+			return "<A HREF=\"javascript:open_win('./race_regs_1.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$row->rec['id']."&show_ed=1','')\">Př-1</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_all.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$row->rec['id']."','')\">Př-V</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$row->rec['id']."&select=1','')\"><span class=\"TextAlertExpLight\">Zč</span></A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$row->rec['id']."','')\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
 		}
 		else
 		{
-			return "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$record['id']."&select=1','')\"><span class=\"TextAlertExpLight\">Zbr.čl.</span></A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$record['id']."','')\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>";
+			return "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$row->rec['id']."&select=1','')\"><span class=\"TextAlertExpLight\">Zbr.čl.</span></A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$row->rec['id']."','')\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>";
 		}
 	})]);
 	$tbl_renderer->addColumns('prihlasky');

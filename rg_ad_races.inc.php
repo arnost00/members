@@ -50,26 +50,26 @@ if ($num_rows > 0)
 	$tbl_renderer->addColumns('typ0','typ','odkaz');
 	// if ($g_enable_race_capacity)
 	// 	$tbl_renderer->addColumns('ucast');
-	$tbl_renderer->addColumns(['moznosti', new CallbackRenderer ( function ( array $record, array $options ) : string {
-			$race_is_old = (GetTimeToRace($record['datum']) == -1);
-			$ucast = " / <A HREF=\"javascript:open_win('./api_race_entry.view.php?race_id=".$record['id']."','')\">Účast</A>";
+	$tbl_renderer->addColumns(['moznosti', new CallbackRenderer ( function ( RowData $row, array $options ) : string {
+			$race_is_old = (GetTimeToRace($row->rec['datum']) == -1);
+			$ucast = " / <A HREF=\"javascript:open_win('./api_race_entry.view.php?race_id=".$row->rec['id']."','')\">Účast</A>";
 			if(!$race_is_old || IsLoggedAdmin())
 			{
-				$s1 = "<A HREF=\"javascript:open_win2('./race_reg_form.php?id_zav=".$record['id']."','')\">Vý.</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win2('./race_reg_chip.php?id_zav=".$record['id']."','')\">SI</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_1.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$record['id']."&show_ed=1','')\">P.1</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_all.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$record['id']."','')\">P.V</A>&nbsp;/&nbsp;";
-				$s2 = "<A HREF=\"javascript:open_win_ex('./race_reg_view.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$record['id']."','',600,600)\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
-				$s3 = (GetTimeToRace($record['datum']) <= 0) ? $ucast :'';
+				$s1 = "<A HREF=\"javascript:open_win2('./race_reg_form.php?id_zav=".$row->rec['id']."','')\">Vý.</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win2('./race_reg_chip.php?id_zav=".$row->rec['id']."','')\">SI</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_1.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$row->rec['id']."&show_ed=1','')\">P.1</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_all.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$row->rec['id']."','')\">P.V</A>&nbsp;/&nbsp;";
+				$s2 = "<A HREF=\"javascript:open_win_ex('./race_reg_view.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$row->rec['id']."','',600,600)\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
+				$s3 = (GetTimeToRace($row->rec['datum']) <= 0) ? $ucast :'';
 				return $s1.$s2.$s3;
 			}
 			else
 			{
-				return "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$record['id']."','',600,600)\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>".$ucast;
+				return "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._REGISTRATOR_GROUP_ID_."&id=".$row->rec['id']."','',600,600)\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>".$ucast;
 			}
 		})]);
-	$tbl_renderer->addColumns(['prihlasky', new CallbackRenderer ( function ( array $record, array $options ) : string {
-			$race_is_old = (GetTimeToRace($record['datum']) == -1);
-			$prihlasky_curr = raceterms::GetActiveRegDateArr($record);
+	$tbl_renderer->addColumns(['prihlasky', new CallbackRenderer ( function ( RowData $row, array $options ) : string {
+			$race_is_old = (GetTimeToRace($row->rec['datum']) == -1);
+			$prihlasky_curr = raceterms::GetActiveRegDateArr($row->rec);
 			$prihlasky=Date2String($prihlasky_curr[0]);
-			if($record['prihlasky'] > 1)
+			if($row->rec['prihlasky'] > 1)
 				$prihlasky .= '&nbsp;/&nbsp;'.$prihlasky_curr[1];
 
 			if ($race_is_old)
@@ -79,9 +79,9 @@ if ($num_rows > 0)
 			else
 				$prihlasky_out = $prihlasky;
 
-			if($record['prihlasky'] > 1 && !$race_is_old)
+			if($row->rec['prihlasky'] > 1 && !$race_is_old)
 			{	// insert before - previous term.
-				$prihlasky_prev = raceterms::GetActiveRegDateArrPrev($record);
+				$prihlasky_prev = raceterms::GetActiveRegDateArrPrev($row->rec);
 
 				if ($prihlasky_prev[0] != 0)
 					$prihlasky_out = '<span class="TextAlert">'.Date2String($prihlasky_prev[0]).'&nbsp;/&nbsp;'.$prihlasky_prev[1].'</span><br>'.$prihlasky_out;
@@ -89,14 +89,14 @@ if ($num_rows > 0)
 			return $prihlasky_out;
 		} )]);
 	if($g_enable_race_boss)
-		$tbl_renderer->addColumns(['vedouci', new CallbackRenderer ( function ( array $record, array $options ) : string {
-			return (($record['vedouci'] != 0) ? 'A&nbsp;/&nbsp;': '')."<A HREF=\"javascript:open_win('./race_boss.php?id=".$record['id']."','')\">Edit</A>";
+		$tbl_renderer->addColumns(['vedouci', new CallbackRenderer ( function ( RowData $row, array $options ) : string {
+			return (($row->rec['vedouci'] != 0) ? 'A&nbsp;/&nbsp;': '')."<A HREF=\"javascript:open_win('./race_boss.php?id=".$row->rec['id']."','')\">Edit</A>";
 		})]);
 	$tbl_renderer->addColumns([
 		new HelpHeaderRenderer ( 'OP',ALIGN_CENTER,"Stav odeslání přihlášky" ),
-		new CallbackRenderer ( function ( array $record, array $options ) : string {
-			if($record['send'] > 0)
-				return ($record['prihlasky'] > 1) ? $record['send'].'.t.' : 'Ano';
+		new CallbackRenderer ( function ( RowData $row, array $options ) : string {
+			if($row->rec['send'] > 0)
+				return ($row->rec['prihlasky'] > 1) ? $row->rec['send'].'.t.' : 'Ano';
 			else
 				return 'Ne';
 		} )

@@ -9,34 +9,34 @@ require_once("ct_renderer.inc.php");
 class DatumRenderer implements IColumnContentRenderer {
     public function __construct(private string $field) {}
 
-    public function render(array $record, array $options = []): string {
-        if($record['vicedenni'])
-			return Date2StringFT($record['datum'],$record['datum2']);
+    public function render(RowData $row, array $options = []): string {
+        if($row->rec['vicedenni'])
+			return Date2StringFT($row->rec['datum'],$row->rec['datum2']);
 		else
-			return Date2String($record['datum']);
+			return Date2String($row->rec['datum']);
     }
 }
 
 // Field renderer with visualised cancelation
 class NameLinkRenderer extends CancelableRenderer {
-    public function render(array $record, array $options = [] ): string {
-        $value = parent::render($record) ?? '';
-		return '<A href="javascript:open_race_info('.$record['id'].')" class="adr_name">'.$value.'</A>';
+    public function render(RowData $row, array $options = [] ): string {
+        $value = parent::render($row) ?? '';
+		return '<A href="javascript:open_race_info('.$row->rec['id'].')" class="adr_name">'.$value.'</A>';
     }
 }
 
 class BossRenderer implements IColumnContentRenderer {
 
-    public function render(array $record, array $options = []): string {
+    public function render(RowData $row, array $options = []): string {
 
         global $usr;
 
-        $link_to_participation = " / <A HREF=\"javascript:open_win('./api_race_entry.view.php?race_id=".$record['id']."','')\">Účast</A>";
-        $show_link = ($record['vedouci'] == $usr->user_id) && (GetTimeToRace($record['datum']) <= 0);
+        $link_to_participation = " / <A HREF=\"javascript:open_win('./api_race_entry.view.php?race_id=".$row->rec['id']."','')\">Účast</A>";
+        $show_link = ($row->rec['vedouci'] == $usr->user_id) && (GetTimeToRace($row->rec['datum']) <= 0);
         $boss = '-';
-        if($record['vedouci_jmeno'] != '-')
+        if($row->rec['vedouci_jmeno'] != '-')
         {
-            $boss = $record['vedouci_jmeno'].($show_link ? $link_to_participation : '');
+            $boss = $row->rec['vedouci_jmeno'].($show_link ? $link_to_participation : '');
         }
         return $boss;
     }
@@ -44,11 +44,11 @@ class BossRenderer implements IColumnContentRenderer {
 
 class RegistrationRenderer implements IColumnContentRenderer {
 
-    public function render(array $record, array $options = []): string {
+    public function render(RowData $row, array $options = []): string {
 
-		$prihlasky_curr = raceterms::GetActiveRegDateArr($record);
+		$prihlasky_curr = raceterms::GetActiveRegDateArr($row->rec);
 		$prihlasky_out_term = Date2String($prihlasky_curr[0]);
-		if($record['prihlasky'] > 1)
+		if($row->rec['prihlasky'] > 1)
 			$prihlasky_out_term .= '&nbsp;/&nbsp;'.$prihlasky_curr[1];
 		$time_to_reg = GetTimeToReg($prihlasky_curr[0]);
 
@@ -58,7 +58,7 @@ class RegistrationRenderer implements IColumnContentRenderer {
 
 class ActivityRenderer implements IColumnContentRenderer {
 
-    public function render(array $record, array $options = []): string {
+    public function render(RowData $row, array $options = []): string {
 
         global $usr;
 
@@ -68,37 +68,37 @@ class ActivityRenderer implements IColumnContentRenderer {
         }
         $curr_date = $options['curr_date'] ?? GetCurrentDate();
 
-        $prihlasky_curr = raceterms::GetActiveRegDateArr($record);
+        $prihlasky_curr = raceterms::GetActiveRegDateArr($row->rec);
 		$time_to_reg = GetTimeToReg($prihlasky_curr[0]);
 
-		$prihl_finish = ($time_to_reg == -1 && $prihlasky_curr[0] != 0) || ($prihlasky_curr[0] == 0 && $record['datum'] <= $curr_date);
-		$zbr = "<A HREF=\"javascript:open_win('./race_reg_view.php?id=".$record['id']."','')\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
+		$prihl_finish = ($time_to_reg == -1 && $prihlasky_curr[0] != 0) || ($prihlasky_curr[0] == 0 && $row->rec['datum'] <= $curr_date);
+		$zbr = "<A HREF=\"javascript:open_win('./race_reg_view.php?id=".$row->rec['id']."','')\"><span class=\"TextAlertExpLight\">Zbr</span></A>";
 
-		if($record['kat'] == NULL)
+		if($row->rec['kat'] == NULL)
 		{	// neni prihlasen
 			if (!$prihl_finish && !$entry_lock)
 			{
-				return "<A HREF=\"javascript:open_win('./us_race_regon.php?id_zav=".$record["id"]."&id_us=".$usr->user_id."','')\">Přihl.</A> / ".$zbr;
+				return "<A HREF=\"javascript:open_win('./us_race_regon.php?id_zav=".$row->rec["id"]."&id_us=".$usr->user_id."','')\">Přihl.</A> / ".$zbr;
 			}
 			else
 			{
-				return "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._USER_GROUP_ID_."&id=".$record["id"]."&us=1','')\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>";
+				return "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._USER_GROUP_ID_."&id=".$row->rec["id"]."&us=1','')\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>";
 			}
 		}
 		else
 		{	// je prihlasen
-			$prihl_finish2 = $prihl_finish || ( $prihlasky_curr[0] != 0 && $prihlasky_curr[1] != $record['termin']);
+			$prihl_finish2 = $prihl_finish || ( $prihlasky_curr[0] != 0 && $prihlasky_curr[1] != $row->rec['termin']);
 			if($prihl_finish2 != $prihl_finish)
 			{
-				return "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._USER_GROUP_ID_.'&id='.$record['id']."&us=1','')\"><span class=\"Highlight\">".$record['kat'].'</span></A> / '.$record['termin'];
+				return "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._USER_GROUP_ID_.'&id='.$row->rec['id']."&us=1','')\"><span class=\"Highlight\">".$row->rec['kat'].'</span></A> / '.$row->rec['termin'];
 			}
 			else if (!$prihl_finish && !$entry_lock)
 			{
-				return "<A HREF=\"javascript:open_win('./us_race_regon.php?id_zav=".$record['id']."&id_us=".$usr->user_id."','')\" class=\"Highlight\">".$record['kat']."</A> / <A HREF=\"javascript:open_win('./us_race_regoff_exc.php?id_zav=".$record['id']."&id_us=".$usr->user_id."','')\" onclick=\"return confirm_delete();\" class=\"Erase\">Od.</A>";
+				return "<A HREF=\"javascript:open_win('./us_race_regon.php?id_zav=".$row->rec['id']."&id_us=".$usr->user_id."','')\" class=\"Highlight\">".$row->rec['kat']."</A> / <A HREF=\"javascript:open_win('./us_race_regoff_exc.php?id_zav=".$row->rec['id']."&id_us=".$usr->user_id."','')\" onclick=\"return confirm_delete();\" class=\"Erase\">Od.</A>";
 			}
 			else
 			{
-				return "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._USER_GROUP_ID_.'&id='.$record['id']."&us=1','')\"><span class=\"Highlight\">".$record['kat'].'</span></A>';
+				return "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._USER_GROUP_ID_.'&id='.$row->rec['id']."&us=1','')\"><span class=\"Highlight\">".$row->rec['kat'].'</span></A>';
 			}
 		}
 
@@ -108,12 +108,12 @@ class ActivityRenderer implements IColumnContentRenderer {
 
 class ParticipantsRenderer implements IColumnContentRenderer {
 
-    public function render(array $record, array $options = []): string {
+    public function render(RowData $row, array $options = []): string {
 
         $count_registered = $options['count_registered'] ?? [];
 
-        $registered = isset($count_registered[$record['id']]) ? $count_registered[$record['id']] : 0;
-        $kapacita = (int)$record['kapacita'];
+        $registered = isset($count_registered[$row->rec['id']]) ? $count_registered[$row->rec['id']] : 0;
+        $kapacita = (int)$row->rec['kapacita'];
         $alert = $kapacita - $registered < 10 ? 'class="TextAlert7"' : '';
     
         if ($kapacita > 0) {
@@ -163,8 +163,8 @@ class RacesRendererFactory extends AColumnRendererFactory {
 
 // modifies plain texts on row, evaluated once per row
 class GreyOldPainter implements IRowTextPainter {
-	public function getPrefixSuffix(array $record, array $options = [] ): array {
-		$race_is_old = (GetTimeToRace($record['datum']) == -1);
+	public function getPrefixSuffix(RowData $row, array $options = [] ): array {
+		$race_is_old = (GetTimeToRace($row->rec['datum']) == -1);
 
 		return [ ($race_is_old) ? '<span class="TextAlertExpLight">' : '', ($race_is_old) ? '</span>' : ''	];
 	}
@@ -172,11 +172,11 @@ class GreyOldPainter implements IRowTextPainter {
 
 // Break between years
 class YearBreakDetector implements IBreakRowDetector {
-    public function needsBreak(array $prev, array $curr): bool {
-        return Date2Year($prev['datum']) !== Date2Year($curr['datum']);
+    public function needsBreak(array $prev, RowData $curr): bool {
+        return Date2Year($prev['datum']) !== Date2Year($curr->rec['datum']);
     }
 
-    public function renderBreak(html_table_mc $tbl, array $record): string {
+    public function renderBreak(html_table_mc $tbl, RowData $row): string {
         return $tbl->get_break_row(true);
     }
 }
@@ -186,18 +186,18 @@ class FutureRaceBreakDetector implements IBreakRowDetector {
     private ?bool $descending = null; // order unknown at start
     private bool $alreadyBroken = false;
 
-    public function needsBreak(array $prev, array $curr): bool {
+    public function needsBreak(array $prev, RowData $curr): bool {
         if ($this->alreadyBroken) return false;
 
         if ( !isset( $this->descending ) ) {
-            if ( $prev['datum'] < $curr['datum'] ) $this->descending = false;
-            if ( $prev['datum'] > $curr['datum'] ) $this->descending = true;
+            if ( $prev['datum'] < $curr->rec['datum'] ) $this->descending = false;
+            if ( $prev['datum'] > $curr->rec['datum'] ) $this->descending = true;
         }
 
         if ( isset( $this->descending ) ) {
             $now = GetCurrentDate();
-            if ( $this->descending && ( $prev['datum'] > $now && $curr['datum'] <= $now ) || 
-                 !$this->descending && ( $prev['datum'] <= $now && $curr['datum'] > $now) )
+            if ( $this->descending && ( $prev['datum'] > $now && $curr->rec['datum'] <= $now ) || 
+                 !$this->descending && ( $prev['datum'] <= $now && $curr->rec['datum'] > $now) )
             {
                     $this->alreadyBroken = true;
                     return true;
@@ -206,7 +206,7 @@ class FutureRaceBreakDetector implements IBreakRowDetector {
         return false;
     }
 
-    public function renderBreak(html_table_mc $tbl, array $record): string {
+    public function renderBreak(html_table_mc $tbl, RowData $row): string {
         return $tbl->get_break_row();
     }
 }
