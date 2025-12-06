@@ -2,14 +2,14 @@
 
 * naklonuj [repo](https://github.com/arnost00/members) do pracovního adresáře ( můžeš potřebovat [git windows klient](https://git-scm.com/downloads/win) )
 * nainstaluj docker composer - např. [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-* do pracovního adresáře rozpakuj soubory pro docker [members_development_files.zip](https://drive.google.com/file/d/1c_JVYLujrJ-RBVMeQIZFR8fcdf34aC0l/view?usp=drive_link)
+* do pracovního adresáře rozpakuj soubory pro docker [members_development_files.zip](Docs/members_development_files.zip)
 
 * konfigurace
-  * zkopíruj soubor members/cfg/_cfg.php.default do members/cfg/_cfg.php a uprav nebo použij připravený [_cfg.php](https://drive.google.com/file/d/11nkISJdLrl9_t4FozFOgOiijqJBmhAIY/view?usp=drive_link)
+  * zkopíruj soubor members/cfg/_cfg.php.default do members/cfg/_cfg.php a uprav nebo použij připravený [_cfg.php](Docs/_cfg.php)
 
-  * zkopíruj soubor members/cfg/_globals.php.default do members/cfg/_globals.php a uprav nebo použij připravený [_globals.php](https://drive.google.com/file/d/1ZGUzue-S6uKR9Tv25kjuwLfDZNUmpyB2/view?usp=drive_link)
+  * zkopíruj soubor members/cfg/_globals.php.default do members/cfg/_globals.php a uprav nebo použij připravený [_globals.php]hDocs/_globals.php)
 
-  * zkopíruj soubor members/cfg/_tables.php.default do members/cfg/_tables.php a uprav nebo použij připravený [_tables.php](https://drive.google.com/file/d/1QJemFI7jXyCR11kXv-wBJOEq93lECrf3/view?usp=drive_link)
+  * zkopíruj soubor members/cfg/_tables.php.default do members/cfg/_tables.php a uprav nebo použij připravený [_tables.php](Docs/_tables.php)
 
   Výsledek:
   ```
