@@ -5,11 +5,11 @@
 * do pracovního adresáře rozpakuj soubory pro docker [members_development_files.zip](Docs/members_development_files.zip)
 
 * konfigurace
-  * zkopíruj soubor members/cfg/_cfg.php.default do members/cfg/_cfg.php a uprav nebo použij připravený [_cfg.php](Docs/_cfg.php)
+  * zkopíruj soubor members/cfg/_cfg.php.default do members/cfg/_cfg.php a uprav nebo použij připravený [_cfg.php](Docs/X_cfg.php)
 
-  * zkopíruj soubor members/cfg/_globals.php.default do members/cfg/_globals.php a uprav nebo použij připravený [_globals.php]hDocs/_globals.php)
+  * zkopíruj soubor members/cfg/_globals.php.default do members/cfg/_globals.php a uprav nebo použij připravený [_globals.php]hDocs/X_globals.php)
 
-  * zkopíruj soubor members/cfg/_tables.php.default do members/cfg/_tables.php a uprav nebo použij připravený [_tables.php](Docs/_tables.php)
+  * zkopíruj soubor members/cfg/_tables.php.default do members/cfg/_tables.php a uprav nebo použij připravený [_tables.php](Docs/X_tables.php)
 
   Výsledek:
   ```
