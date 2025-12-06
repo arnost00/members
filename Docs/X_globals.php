@@ -1,0 +1,51 @@
+<?
+
+/*
+
+	Configuration data
+	Copy this file as '_globals.php' and set your real data for running members
+
+*/
+
+//==================================================================
+// global values file
+//==================================================================
+
+// pocet dni pro zobrazeni zavodu ve vyhledu
+define ('GC_SHOW_RACE_DAYS',60);
+
+// pocet dni pro zobrazeni prihlasek ve vyhledu
+define ('GC_SHOW_REG_DAYS',60);
+
+// pocet dni pro zobrazeni zavodu a prihlasek ve vyhledu
+define ('GC_SHOW_RACE_AND_REG_DAYS',60);
+
+// pocet internich novinek ve vyhledu
+define ('GC_INTERNAL_NEWS_CNT_LIMIT',3);	// limit poctu
+define ('CG_INTERNAL_NEWS_DAYS_LIMIT',60);	// limit stari
+
+// pocet zobrazenych novinek
+define ('GC_NEWS_LIMIT',20);
+
+// maximalni delka textu novinky
+define ('GC_NEWS_MAX_TEXT_LENGTH',2500);
+
+// minimalni nezobrazeny vek
+define ('GC_SHOW_AGE_LIMIT',21);
+
+// minimalni pocet zavodu pro zobrazeni odkazu na aktualni zavody
+define ('GC_MIN_RACES_2_SHOW_LINK',25);
+
+// cron - define only when debug (block email send)
+// define('_CRON_DEBUG_SEND_',1);
+
+// bez prihlaseni neni nic videt
+define ('GC_NOTHING_VISIBLE_WO_LOGIN', 1);
+
+// kategorie zacina na 
+define ('GC_KATEG_W', 'D');
+define ('GC_KATEG_M', 'H');
+
+define ('GC_DEFAULT_NATIONALITY', 'CZ');
+
+?>
