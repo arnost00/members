@@ -38,6 +38,7 @@ if (IsLogged())
 		$zaznam['hidden'] = 0;
 		$zaznam['fin'] = '';
 		$zaznam['rc'] = '';
+    $zaznam['bank_account'] = '';
 		$zaznam['narodnost'] = GC_DEFAULT_NATIONALITY;
 	}
 	$self_edit = IsSet($self_edit) ? (bool)$self_edit : false;
@@ -121,6 +122,7 @@ echo $data_tbl->get_new_row('Email', '<INPUT TYPE="text" NAME="email" SIZE=60 MA
 echo $data_tbl->get_new_row('Tel. domů', '<INPUT TYPE="text" NAME="domu" SIZE=20 MAXLENGTH=25 VALUE="'.$zaznam["tel_domu"].'">');
 echo $data_tbl->get_new_row('Tel. zaměstnání', '<INPUT TYPE="text" NAME="zam" SIZE=20 MAXLENGTH=25 VALUE="'.$zaznam["tel_zam"].'">');
 echo $data_tbl->get_new_row('Mobil', '<INPUT TYPE="text" NAME="mobil" SIZE=20 MAXLENGTH=25 VALUE="'.$zaznam["tel_mobil"].'">');
+echo $data_tbl->get_new_row('Bankovní účet', '<INPUT TYPE="text" NAME="bank_account" SIZE=30 MAXLENGTH=50 VALUE="'.$zaznam["bank_account"].'">');
 if ($self_edit)
 {
 	echo $data_tbl->get_new_row('Pohlavi', $zaznam["poh"]);
