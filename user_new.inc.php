@@ -38,7 +38,8 @@ if (IsLogged())
 		$zaznam['hidden'] = 0;
 		$zaznam['fin'] = '';
 		$zaznam['rc'] = '';
-    $zaznam['bank_account'] = '';
+		$zaznam['bank_account'] = '';
+		$zaznam['finance_type'] = 0;
 		$zaznam['narodnost'] = GC_DEFAULT_NATIONALITY;
 	}
 	$self_edit = IsSet($self_edit) ? (bool)$self_edit : false;
