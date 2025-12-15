@@ -15,31 +15,34 @@
 // db server
 //==================================================================
 // adresa db serveru
-$g_dbserver='localhost';
+$g_dbserver='db';
 $g_dbport='3306';
 
 // uzivatelske informace
 $g_dbuser='root';
-$g_dbpass='root';
+$g_dbpass='dev4password';
 
 // jmeno databaze
-$g_dbname='members';
+$g_dbname='d235220_members';
+
+//==================================================================
+// jwt secret key
+//==================================================================
+// head -c 64 /dev/urandom | base64
+$g_jwt_secret_key = "DEVELOPMENT+ONLY+++GENERATE+A+SECURE+64+BYTE+KEY+IN+PRODUCTION++/uV4zp8UPeLiSXUL62Ae/w=="; // ### TREBA ZMENIT ###
 
 //==================================================================
 // api
 //==================================================================
-// allows sending notification for this club
-$g_enable_notify = true;
-// a secret key used for signing jwt tokens
-// head -c 64 /dev/urandom | base64
-$g_jwt_secret_key = "DEVELOPMENT+ONLY+++GENERATE+A+SECURE+64+BYTE+KEY+IN+PRODUCTION++/uV4zp8UPeLiSXUL62Ae/w==";
+// api version
+$g_api_version = 2.12;
 
 //==================================================================
 // http server
 //==================================================================
 // jmeno WWW serveru
 $g_shortcut='ZBM';
-$g_fullname='SK Žabovřesky Brno';
+$g_fullname='DEV SK Žabovřesky Brno';
 $g_www_title= $g_shortcut.' :: '.$g_fullname;
 $g_www_name= $g_shortcut.' - '.$g_fullname;
 
@@ -47,31 +50,17 @@ $g_www_meta_description = "Stránky oddílu orientačního běhu ".$g_fullname;
 $g_www_meta_keyword = $g_shortcut.", Žabovřesky, Zabovresky";
 
 // zakladni URL adresa WWW serveru (ukoncen "/" !!)
-$g_baseadr='http://localhost/members/';
+$g_baseadr='http://127.0.0.1/members/';
 
 // adresa hlavnich stranek oddilu
 $g_mainwww='http://localhost/';
 
+// e-mailove adresy
+$g_emailadr='email@eob.cz';
 // Logovat informace o neuspesnem prihlaseni
 $g_log_loginfailed=true;
 
 $g_is_release = true;
-
-//==================================================================
-// mail server
-//==================================================================
-// e-mailove adresa pre uzivatelov
-$g_emailadr='email@eob.cz';
-// adresa, kam a odkial posielat informacie z cron
-$g_mail_reply_to = "web@eob.cz";
-$g_mail_from = "web@eob.cz";
-// prihlasovacie udaje na mailovy server
-$g_mail_smtp_host = "smtp-domena.wedos.net";
-$g_mail_smtp_user = "web@eob.cz";
-$g_mail_smtp_pswd = "smtp-heslo";
-$g_mail_smtp_port = 587;
-$g_mail_smtp_auth = true;
-$g_mail_smtp_secure = "tls";
 
 //==================================================================
 // customization
@@ -106,9 +95,9 @@ $g_enable_race_capacity = true;
 
 // Externi informacni system - podporovane hodnoty 'OrisCZConnector' a ''
 $g_external_is_connector = 'OrisCZConnector';
-$g_oris_club_key = 'orisClubKey';
+// Identifikator oddilu v informacnim systemu
+$g_external_is_club_id = '205';
 
 $g_custom_entry_list_text = '';
-
 
 ?>

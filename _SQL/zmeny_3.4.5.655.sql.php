@@ -1,10 +1,10 @@
-<?php
+<?
 
 //#############################################################################
 //	vychozi verze
 //#############################################################################
 
-$version_upd = '3.4.5.652';
+$version_upd = '3.4.5.655';
 
 //#############################################################################
 
@@ -14,9 +14,8 @@ require_once ('prepare.inc.php');
 //	SQL dotazy pro zmenu db. na novejsi verzi
 //#############################################################################
 
-
-# *** pridani sloupce pro bankovni ucet
-$sql[1] = "ALTER TABLE `".TBL_USER."` ADD `bank_account` VARCHAR(255) NULL  DEFAULT NULL AFTER `fin`;";
+# *** pridani sloupcu pro dopravu
+$sql[1] = 'ALTER TABLE `'.TBL_RACE.'` ADD 'kapacita` SMALLINT NULL DEFAULT NULL AFTER `ubytovani`';
 
 //#############################################################################
 
