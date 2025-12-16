@@ -9,8 +9,6 @@ DrawPageTitle('Přihlášky na závody');
 require_once ("./common_race.inc.php");
 require_once ('./url.inc.php');
 
-$g_enable_race_capacity = true;
-
 $fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
 $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
 $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 0;  // old races
