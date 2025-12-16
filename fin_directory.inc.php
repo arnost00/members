@@ -50,7 +50,7 @@ $sub_query = $sc->get_sql_string();
 
 $finance_dateTo_condition = isset($_GET["dateTo"])?' and date <= "'.$_GET["dateTo"].'"':"";
 
-$query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,entry_locked, ifnull(f.sum_amount,0) sum_amount, (n.amount+f.sum_amount) total_amount, u.chief_pay, ft.nazev, ft.popis FROM '.TBL_USER.' u 
+$query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,entry_locked, ifnull(f.sum_amount,0) sum_amount, (n.amount+f.sum_amount) total_amount, u.chief_pay, ft.nazev, ft.popis, u.bank_account FROM '.TBL_USER.' u 
 		left join (select sum(fin.amount) sum_amount, id_users_user from '.TBL_FINANCE.' fin where (fin.storno is null '.$finance_dateTo_condition.') group by fin.id_users_user) f on u.id=f.id_users_user 
 		left join (select ui.chief_pay payer_id, ifnull(sum(fi.amount),0) amount from '.TBL_USER.' ui 
 		left join '.TBL_FINANCE.' fi on fi.id_users_user = ui.id where ui.chief_pay is not null and (fi.storno is null or fi.storno != 1) group by ui.chief_pay) n on u.id=n.payer_id 
@@ -72,6 +72,7 @@ if ($vysledek != FALSE && mysqli_num_rows($vysledek) > 0)
 	$data_tbl->set_header_col_with_help($col++,'Reg.č.',ALIGN_CENTER,"Registrační číslo");
 	$data_tbl->set_header_col_with_help($col++,'Fin.st.',ALIGN_CENTER,"Aktuální finanční stav\n* znamená že má platícího trenéra\n1. údaj je za člena, 2. za rodinu");
 	$data_tbl->set_header_col_with_help($col++,'Přihl.',ALIGN_CENTER,"Možnost přihlašování se člena na závody");
+	$data_tbl->set_header_col_with_help($col++,'Bank. účet.',ALIGN_CENTER,"Bankovní účet člena");
 	if ($enable_fin_types)
 		$data_tbl->set_header_col_with_help($col++,'Typ o.p.',ALIGN_CENTER,"Typ oddílových příspěvků");
 	$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
@@ -108,6 +109,7 @@ if ($vysledek != FALSE && mysqli_num_rows($vysledek) > 0)
 				$row[] = '<span class="WarningText">Ne</span>';
 			else
 				$row[] = '';
+			$row[] = $zaznam['bank_account'] != '' ? $zaznam['bank_account'] : '-';
 			if ($enable_fin_types)
 			{
 				if ($zaznam['nazev'] != null)
