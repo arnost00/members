@@ -21,6 +21,7 @@ define ('TBL_MODLOG','tst_modify_log');
 define ('TBL_MAILINFO','tst_mailinfo');
 define ('TBL_FINANCE','tst_finance');
 define ('TBL_CLAIM','tst_claim');
+define ('TBL_TOKENS','tokens');
 define ('TBL_FINANCE_TYPES','tst_finance_types');
 define ('TBL_CATEGORIES_PREDEF','tst_categories_predef');
 

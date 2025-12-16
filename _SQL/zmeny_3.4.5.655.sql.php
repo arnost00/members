@@ -15,7 +15,7 @@ require_once ('prepare.inc.php');
 //#############################################################################
 
 # *** pridani sloupcu pro dopravu
-$sql[1] = 'ALTER TABLE `'.TBL_RACE.'` ADD 'kapacita` SMALLINT NULL DEFAULT NULL AFTER `ubytovani`';
+$sql[1] = 'ALTER TABLE `'.TBL_RACE.'` ADD `kapacita` SMALLINT NULL DEFAULT NULL AFTER `ubytovani`';
 
 //#############################################################################
 
