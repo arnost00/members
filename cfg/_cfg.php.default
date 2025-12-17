@@ -96,6 +96,9 @@ $g_color_profile = '_colors_black_blue.php';
 $g_enable_finances = true;
 $g_enable_finances_claim = true;
 $g_finances_race_list_sort_old = false;
+// IBAN účtu pro členské platby (QR code) e.g. CZ6855000000004067843369
+$g_finance_payement_IBAN = '';
+
 
 // doprava & ubytovani 
 $g_enable_race_transport = true;

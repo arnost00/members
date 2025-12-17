@@ -7,7 +7,7 @@
 		where fin.id_users_user = ".$user_id." and fin.storno is null order by fin.date desc, fin.id desc");
 
 //vytazeni jmena uzivatele a typu prispevku
-$vysledek_user_name=query_db("select us.sort_name name, ft.nazev ft_nazev from ".TBL_USER." us LEFT JOIN ".TBL_FINANCE_TYPES." ft ON us.finance_type = ft.id where us.id = ".$user_id);
+$vysledek_user_name=query_db("select us.sort_name name, us.reg reg, ft.nazev ft_nazev from ".TBL_USER." us LEFT JOIN ".TBL_FINANCE_TYPES." ft ON us.finance_type = ft.id where us.id = ".$user_id);
 $zaznam_user_name=mysqli_fetch_array($vysledek_user_name);
 
 DrawPageSubTitle('Historie účtu pro člena: '.$zaznam_user_name['name']);
@@ -115,6 +115,70 @@ $return_url = full_url();
 $return_url = parse_url($return_url, PHP_URL_QUERY);
 require_once 'user_finance_transfer_form.inc.php';
 
-
-
 ?>
+<?php if (!empty($g_finance_payement_IBAN)) : ?>
+<hr>
+<h3>Platební příkaz</h3>
+
+<form id="payForm" onsubmit="return false;">
+
+<?php
+$data_tbl = new html_table_form();
+echo $data_tbl->get_css()."\n";
+echo $data_tbl->get_header()."\n";
+echo $data_tbl->get_new_row('<label for="qraccount">Účet</label>', htmlspecialchars($g_finance_payement_IBAN, ENT_QUOTES));
+echo $data_tbl->get_new_row('<label for="qrvs">VS</label>', '<input type="text" id="qrvs" value="' . htmlspecialchars($zaznam_user_name['reg'], ENT_QUOTES) . '" size="4" readonly required>');
+echo $data_tbl->get_new_row('<label for="qramount">Částka</label>', '<input type="number" id="qramount" step="1" required size="5" maxlength="10" oninput="clearQR()">');
+echo $data_tbl->get_new_row('<label for="qrnote">Poznámka</label>', '<input type="text" id="qrnote" oninput="this.value = this.value.replace(/[^\x20-\x29\x2B-\x7E]/g, \'\'); clearQR()" size="20" maxlength="40" >');
+
+echo $data_tbl->get_empty_row();
+echo $data_tbl->get_new_row('','<button type="button" onclick="createQR()"">Vytvoř QR kód</button>');
+echo $data_tbl->get_footer()."\n";
+?>
+</form>
+
+<div id="qrcode" style="margin-top:15px;"></div>
+
+<script>
+function loadQrLib(callback) {
+    if (window.QRCode) {
+        callback();
+        return;
+    }
+    const s = document.createElement('script');
+    s.src = 'thirdparty/qrcode.min.js';
+    s.onload = callback;
+    document.head.appendChild(s);
+}
+
+function createQR() {
+    const amount = document.getElementById('qramount').value;
+    const note   = document.getElementById('qrnote').value;
+
+    if (!amount) return;
+
+    loadQrLib(() => {
+        document.getElementById('qrcode').innerHTML = '';
+
+		var payementInfo = `SPD*1.0*ACC:<?php echo $g_finance_payement_IBAN; ?>*AM:${amount}*X-VS:<?php echo $zaznam_user_name['reg']; ?>*CC:CZK*`;
+		if (note) {
+			payementInfo += `MSG:${note}*`;
+		}
+
+		var qrcode = new QRCode("qrcode", {
+            text: `${payementInfo}`,
+            width: 256,
+            height: 256,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+    });
+}
+
+function clearQR() {
+    const qr = document.getElementById('qrcode');
+    if (qr) qr.innerHTML = '';
+}
+</script>
+<?php endif; ?>
