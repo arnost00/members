@@ -379,6 +379,20 @@ function DrawPageSubTitle($title, $id=null)
 	echo("<H3 ID='$id'>".$title."</H3>\n");
 }
 
+function DrawPageRaceTitle($title, $kapacita, $prihlaseno, $id=null) {
+	if (isset($kapacita) && $kapacita > 0) {
+		if ($prihlaseno > $kapacita) {
+			$title .= ' (náhradník)';
+		} elseif ($prihlaseno < $kapacita) {
+			$zbyva = $kapacita - $prihlaseno;
+			$title .= " (ještě $zbyva míst)";
+		}
+	}
+
+	DrawPageSubTitle($title,$id);
+}
+
+
 function DrawPageSubTitleCenter($title)
 {
 	echo('<H3 class="center">'.$title."</H3>\n");

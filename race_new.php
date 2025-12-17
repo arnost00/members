@@ -197,6 +197,17 @@ if ($g_enable_race_accommodation)
 </TR>
 <?
 }
+if ($g_enable_race_capacity) {
+?>	
+<TR>
+	<TD width="130" align="right">Limit účastníků</TD>
+	<TD width="5"></TD>
+	<TD>
+		<INPUT TYPE="number" NAME="kapacita" MIN="1" STEP="1">
+	</TD>
+</TR>
+<?
+}
 ?>	
 <TR>
 	<TD width="130" align="right">Odkaz</TD>

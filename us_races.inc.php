@@ -19,10 +19,40 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 $order = ($fC == 1) ? "desc" : "";
 
 $query = 'SELECT r.id, r.datum, datum2, nazev, typ0, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, '.
-		'prihlasky4, prihlasky5, vicedenni, misto, oddil, kat, termin, cancelled, r.vedouci as vedouci_id, if(vedouci=0, "-", concat(u.jmeno, " ", u.prijmeni)) as vedouci '.
+		'prihlasky4, prihlasky5, vicedenni, misto, oddil,  kapacita, kat, termin, cancelled, r.vedouci as vedouci_id, if(vedouci=0, "-", concat(u.jmeno, " ", u.prijmeni)) as vedouci '.
 		'FROM '.TBL_RACE.' r LEFT JOIN '.TBL_ZAVXUS.' zu ON r.id = zu.id_zavod AND zu.id_user='.$usr->user_id.' left join '.TBL_USER.' u on u.id = r.vedouci '.
 		$sql_sub_query." ORDER BY r.datum $order, datum2 $order, r.id $order";
+
 @$vysledek=query_db($query);
+
+// prepare records data
+$num_rows = ($vysledek) ? mysqli_num_rows($vysledek) : 0;
+
+// Fetch all rows into array
+$zaznamy = [];
+while ($zaznam = mysqli_fetch_array($vysledek, MYSQLI_ASSOC)) {
+    $zaznamy[] = $zaznam;
+}
+
+
+$count_registered = [];
+if ($g_enable_race_capacity && $num_rows > 0) {
+	$race_ids = [];
+
+	foreach ($zaznamy as $zaznam ) {	
+		$race_ids[] = (int)$zaznam['id'];
+	}
+
+	if (!empty($race_ids)) {
+		$ids_csv = implode(',', $race_ids);
+		$count_query = "SELECT id_zavod, COUNT(*) AS prihlaseno FROM ".TBL_ZAVXUS." WHERE id_zavod IN ($ids_csv) GROUP BY id_zavod";
+		$count_result = query_db($count_query);
+	
+		while ($row = mysqli_fetch_assoc($count_result)) {
+			$count_registered[$row['id_zavod']] = $row['prihlaseno'];
+		}
+	}	
+}
 
 @$vysledek2=query_db("SELECT * FROM ".TBL_USER." where id=$usr->user_id");
 $entry_lock = false;
@@ -65,6 +95,9 @@ if ($num_rows > 0)
 	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ akce");
 	$data_tbl->set_header_col_with_help($col++,'S',ALIGN_CENTER,"Sport");
 	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web závodu");
+	if ($g_enable_race_capacity) {
+		$data_tbl->set_header_col_with_help($col++,'Účast',ALIGN_CENTER,"Přihlášeno/Kapacita");
+	}
 	$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
 	$data_tbl->set_header_col($col++,'Přihlášky',ALIGN_CENTER);
 	if($g_enable_race_boss)
@@ -77,7 +110,7 @@ if ($num_rows > 0)
 	$i = 1;
 	$brk_tbl = false;
 	$old_year = 0;
-	while ($zaznam=mysqli_fetch_array($vysledek))
+	foreach ($zaznamy as $zaznam)
 	{
 		$row = array();
 		if($zaznam['vicedenni'])
@@ -91,7 +124,19 @@ if ($num_rows > 0)
 		$row[] = GetRaceType0($zaznam['typ0']);
 		$row[] = GetRaceTypeImg($zaznam['typ']);
 		$row[] = GetRaceLinkHTML($zaznam['odkaz']);
+
+		if ($g_enable_race_capacity) {
+			$registered = isset($count_registered[$zaznam['id']]) ? $count_registered[$zaznam['id']] : 0;
+			$kapacita = (int)$zaznam['kapacita'];
+			$alert = $kapacita - $registered < 10 ? 'class="TextAlert7"' : '';
 		
+			if ($kapacita > 0) {
+				$row[] = '<span '.$alert.'>' .$registered . '/' . $kapacita . '</span>';
+			} else {
+				$row[] = $registered ?: ''; // show nothing if zero
+			}
+		}
+
 		$prihlasky_curr = raceterms::GetActiveRegDateArr($zaznam);
 		$prihlasky_out_term = Date2String($prihlasky_curr[0]);
 		if($zaznam['prihlasky'] > 1)

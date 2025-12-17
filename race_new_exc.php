@@ -80,8 +80,10 @@ else
 		$transport=0;
 	if (!isset($accommodation))
 		$accommodation=0;
+	$kapacita= (IsSet($kapacita) && is_numeric($kapacita)) ? (int)$kapacita: 0;
+
 	
-	$result=query_db("INSERT INTO ".TBL_RACE." (ext_id, datum, datum2, nazev, misto, typ0, typ, zebricek, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, etap, poznamka, vicedenni, oddil, modify_flag, transport, ubytovani, kategorie, vedouci, poslano) VALUES ( '$ext_id', '$datum', '$datum2', '$nazev', '$misto', '$typ0', '$typ', '$zebricek2', '$ranking', '$odkaz', '$prihlasky', '$prihlasky1', '$prihlasky2', '$prihlasky3', '$prihlasky4', '$prihlasky5', '$etap', '$poznamka', '$vicedenni', '$oddil', '$modify_flag', '$transport', '$accommodation','$kategorie', 0, 0)")
+	$result=query_db("INSERT INTO ".TBL_RACE." (ext_id, datum, datum2, nazev, misto, typ0, typ, zebricek, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, etap, poznamka, vicedenni, oddil, modify_flag, transport, ubytovani, kapacita, kategorie, vedouci, poslano) VALUES ( '$ext_id', '$datum', '$datum2', '$nazev', '$misto', '$typ0', '$typ', '$zebricek2', '$ranking', '$odkaz', '$prihlasky', '$prihlasky1', '$prihlasky2', '$prihlasky3', '$prihlasky4', '$prihlasky5', '$etap', '$poznamka', '$vicedenni', '$oddil', '$modify_flag', '$transport', '$accommodation', $kapacita,'$kategorie', 0, 0)")
 		or die("Chyba při provádění dotazu do databáze.");
 	if ($result == FALSE)
 		die ("Nepodařilo se vložit údaje o závodě.");

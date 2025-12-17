@@ -14,7 +14,7 @@ class html_table_base
 {	// common table class
 	protected $class_name ='ctbl';
 	protected $bgc_header;
-	protected $bgc_row_select, $bgc_row1, $bgc_row2,$bgc_row_hglt;
+	protected $bgc_row_select, $bgc_row1, $bgc_row2, $bgc_row_hglt;
 	protected $cellpadding, $cellspacing;
 	public $table_width;
 	protected $enable_row_select;

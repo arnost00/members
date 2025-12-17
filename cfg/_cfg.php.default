@@ -102,9 +102,13 @@ $g_enable_race_transport = true;
 $g_race_transport_default = 1;
 $g_enable_race_accommodation = true;
 $g_race_accommodation_default = 1;
+$g_enable_race_capacity = true;
 
 // Externi informacni system - podporovane hodnoty 'OrisCZConnector' a ''
 $g_external_is_connector = 'OrisCZConnector';
+// Identifikator oddilu v informacnim systemu e.g. 205
+$g_external_is_club_id = '';
+
 $g_oris_club_key = 'orisClubKey';
 
 $g_custom_entry_list_text = '';
