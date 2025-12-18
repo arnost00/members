@@ -211,4 +211,31 @@ class FutureRaceBreakDetector implements IBreakRowDetector {
     }
 }
 
+// Button Break between years
+class YearExpanderDetector implements IBreakRowDetector {
+    public function needsBreak(array $prev, RowData $curr): bool {
+        return Date2Year($prev['datum']) !== Date2Year($curr->rec['datum']);
+    }
+
+    public function renderBreak(html_table_mc $tbl, RowData $row): string {
+        $year = Date2Year($row->rec['datum']);
+        $odkaz = "<button onclick='toggle_display_by_group(\"$year\")'>Histore závodů pro rok $year</button>";
+        return $tbl->get_info_row($odkaz)."\n";
+    }
+
+    // helper function for attribute setting
+    public static function yearGroupRowAttrsExtender(RowData $row): array
+    {
+        $year = Date2Year($row->rec['datum']);
+
+        $attrs = ['data-group' => $year];
+
+        if ($year < date('Y')) {
+            $attrs['style'] = 'display:none';
+        }
+
+        return $attrs;
+    }
+}
+
 ?>

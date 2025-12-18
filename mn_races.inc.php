@@ -18,7 +18,7 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 //when show all races reverse order
 $order = ($fC == 1) ? "desc" : "";
 
-$query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, nazev,oddil,ranking,typ0,typ,vicedenni,odkaz,misto,cancelled FROM ".TBL_RACE.$sql_sub_query." ORDER BY datum $order, datum2 $order, id $order";
+$query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, nazev,oddil,ranking,typ0,typ,vicedenni,odkaz,misto,kapacita,cancelled FROM ".TBL_RACE.$sql_sub_query." ORDER BY datum $order, datum2 $order, id $order";
 @$vysledek=query_db($query);
 
 ?>
@@ -36,16 +36,14 @@ $query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prih
 </script>
 
 <?
-$num_rows = ($vysledek != FALSE) ? mysqli_num_rows($vysledek) : 0;
-
 // Fetch all rows into array
-$zaznamy = [];
-while ($zaznam = mysqli_fetch_array($vysledek, MYSQLI_ASSOC)) {
-    $zaznamy[] = $zaznam;
-}
+$zaznamy  = $vysledek ? mysqli_fetch_all($vysledek, MYSQLI_ASSOC) : [];
+$num_rows = count ($zaznamy);
 
-$curr_date = GetCurrentDate();
-$renderer_option['curr_date'] = $curr_date;
+$renderer_option['curr_date'] = GetCurrentDate();
+if ($g_enable_race_capacity)
+	$renderer_option['count_registered'] = GetCountRegistered ($zaznamy);
+
 
 if ($num_rows > 0)
 {
@@ -54,8 +52,8 @@ if ($num_rows > 0)
 	// define table
 	$tbl_renderer = RacesRendererFactory::createTable();
 	$tbl_renderer->addColumns('datum','nazev','misto','oddil','typ0','typ','odkaz');
-	// if ($g_enable_race_capacity)
-	// 	$tbl_renderer->addColumns('ucast');
+	if ($g_enable_race_capacity)
+	 	$tbl_renderer->addColumns('ucast');
 	$tbl_renderer->addColumns(['moznosti', new CallbackRenderer ( function ( RowData $row, array $options ) : string {
 		$race_is_old = (GetTimeToRace($row->rec['datum']) == -1);
 		$prihlasky_curr = raceterms::GetActiveRegDateArr($row->rec);
@@ -77,9 +75,16 @@ if ($num_rows > 0)
 
 	$tbl_renderer->setRowTextPainter ( new GreyOldPainter() );
 
-	// TODO: breaks are necessary only by some filters
-	$tbl_renderer->addBreak(new YearBreakDetector());
-	$tbl_renderer->addBreak(new FutureRaceBreakDetector());
+	if ($fC == 1) {
+		// old races - add breaks
+		$tbl_renderer->addBreak(new YearExpanderDetector());
+		$tbl_renderer->setRowAttrsExt ( YearExpanderDetector::yearGroupRowAttrsExtender(...));
+	}
+	else {
+		// TODO: breaks are necessary only by some filters
+		$tbl_renderer->addBreak(new YearBreakDetector());
+		$tbl_renderer->addBreak(new FutureRaceBreakDetector());
+	}
 
 	echo $tbl_renderer->render( new html_table_mc(), $zaznamy, $renderer_option );
 }

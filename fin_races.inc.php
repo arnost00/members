@@ -33,31 +33,13 @@ while ($rec=mysqli_fetch_array($result_amount)) $race_amount[$rec["id_zavod"]]=$
 <?
 
 // Fetch all rows into array
-$zaznamy = [];
-while ($zaznam = mysqli_fetch_array($vysledek, MYSQLI_ASSOC)) {
-    $zaznamy[] = $zaznam;
-}
-
-$num_rows = mysqli_num_rows($vysledek);
+$zaznamy  = $vysledek ? mysqli_fetch_all($vysledek, MYSQLI_ASSOC) : [];
+$num_rows = count ($zaznamy);
 if ($num_rows > 0)
 {
-	// Break between years
-	class YearExpanderDetector implements IBreakRowDetector {
-		public function needsBreak(array $prev, RowData $curr): bool {
-			return Date2Year($prev['datum']) !== Date2Year($curr->rec['datum']);
-		}
-
-		public function renderBreak(html_table_mc $tbl, RowData $row): string {
-			$year = Date2Year($row->rec['datum']);
-			$odkaz = "<button onclick='toggle_display_by_group(\"$year\")'>Histore závodů pro rok $year</button>";
-			return $tbl->get_info_row($odkaz)."\n";
-		}
-	}
-
 	show_link_to_actual_race($num_rows);
 
-	$curr_date = GetCurrentDate();
-	$renderer_option['curr_date'] = $curr_date;
+	$renderer_option['curr_date'] = GetCurrentDate();
 
 	// define table
 	$tbl_renderer = RacesRendererFactory::createTable();
@@ -71,13 +53,7 @@ if ($num_rows > 0)
 	})]);
 
 	$tbl_renderer->setRowTextPainter ( new GreyOldPainter() );
-	$tbl_renderer->setRowAttrsExt ( function ( RowData $row ) : array  {
-		$year = Date2Year($row->rec['datum']);
-		$attrs = [ 'data-group' => $year ];
-		if ($year < date("Y"))
-		  $attrs['style'] = "display:none";
-		return $attrs;
-	});
+	$tbl_renderer->setRowAttrsExt ( YearExpanderDetector::yearGroupRowAttrsExtender(...));
 
 	// TODO: breaks are necessary only by some filters
 	$tbl_renderer->addBreak(new YearExpanderDetector());

@@ -43,22 +43,21 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 
 if (!$g_is_release)
 {	// pri debug zobrazit
-	@$vysledek=query_db("SELECT id,datum,typ,typ0,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto,modify_flag,cancelled,ext_id FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum , datum2, id');
+	@$vysledek=query_db("SELECT id,datum,typ,typ0,datum2,odkaz,nazev,vicedenni,kategorie,oddil,kapacita,misto,modify_flag,cancelled,ext_id FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum , datum2, id');
 }
 else
 {
-	@$vysledek=query_db("SELECT id,datum,typ,typ0,datum2,odkaz,nazev,vicedenni,kategorie,oddil,misto,cancelled,ext_id FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
+	@$vysledek=query_db("SELECT id,datum,typ,typ0,datum2,odkaz,nazev,vicedenni,kategorie,oddil,kapacita,misto,cancelled,ext_id FROM ".TBL_RACE.$sql_sub_query.' ORDER BY datum, datum2, id');
 }
 
 $ext_id_active_oris = ($g_external_is_connector === 'OrisCZConnector');
 
 // Fetch all rows into array
-$zaznamy = [];
-while ($zaznam = mysqli_fetch_array($vysledek, MYSQLI_ASSOC)) {
-	$zaznamy[] = $zaznam;
-}
+$zaznamy  = $vysledek ? mysqli_fetch_all($vysledek, MYSQLI_ASSOC) : [];
 
 $renderer_option['curr_date'] = GetCurrentDate();
+if ($g_enable_race_capacity)
+	$renderer_option['count_registered'] = GetCountRegistered ($zaznamy);
 
 // define table
 $tbl_renderer = RacesRendererFactory::createTable();
@@ -68,8 +67,8 @@ if ($ext_id_active_oris)
 $tbl_renderer->addColumns('typ0','typ','odkaz', ['kategorie', new FormatFieldRenderer ('kategorie', function ($kategorie) {
 		return (strlen($kategorie) > 0) ? 'A' :'<span class="TextAlertBold">N</span>';	
 	})]);
-// // if ($g_enable_race_capacity)
-// 	$tbl_renderer->addColumns('ucast');
+if ($g_enable_race_capacity)
+ 	$tbl_renderer->addColumns('ucast');
 $tbl_renderer->addColumns(['moznosti', new FormatFieldRenderer ( 'id', function ( $id ) : string {
 	return "<A HREF=\"javascript:open_win('./race_edit.php?id=".$id."','')\">Edit</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_kat.php?id=".$id."','')\">Kategorie</A>&nbsp;/&nbsp;<A HREF=\"./race_del_exc.php?id=".$id."\" onclick=\"return confirm_delete();\" class=\"Erase\">Smazat</A>";
 	})]);
@@ -83,8 +82,15 @@ if (!$g_is_release)
 
 $tbl_renderer->setRowTextPainter ( new GreyOldPainter() );
 
-$tbl_renderer->addBreak(new YearBreakDetector());
-$tbl_renderer->addBreak(new FutureRaceBreakDetector());
+if ($fC == 1) {
+	// old races - add breaks
+	$tbl_renderer->addBreak(new YearExpanderDetector());
+	$tbl_renderer->setRowAttrsExt ( YearExpanderDetector::yearGroupRowAttrsExtender(...));
+}
+else {
+	$tbl_renderer->addBreak(new YearBreakDetector());
+	$tbl_renderer->addBreak(new FutureRaceBreakDetector());
+}
 
 echo $tbl_renderer->render( new html_table_mc(), $zaznamy, $renderer_option );
 

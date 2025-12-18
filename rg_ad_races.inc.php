@@ -25,22 +25,22 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 //when show all races reverse order
 $order = ($fC == 1) ? "desc" : "";
 
-@$vysledek=query_db("SELECT id, datum, typ0, typ, datum2, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, nazev, vicedenni, odkaz, vedouci, oddil, send, misto, cancelled, ext_id FROM ".TBL_RACE.$sql_sub_query." ORDER BY datum $order, datum2 $order, id $order");
+@$vysledek=query_db("SELECT id, datum, typ0, typ, datum2, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, nazev, vicedenni, odkaz, vedouci, oddil, kapacita, send, misto, cancelled, ext_id FROM ".TBL_RACE.$sql_sub_query." ORDER BY datum $order, datum2 $order, id $order");
 
 $ext_id_active_oris = ($g_external_is_connector === 'OrisCZConnector');
 
 $renderer_option['curr_date'] = GetCurrentDate();
 
-$num_rows = mysqli_num_rows($vysledek);
+// Fetch all rows into array
+$zaznamy  = $vysledek ? mysqli_fetch_all($vysledek, MYSQLI_ASSOC) : [];
+$num_rows = count ($zaznamy);
+
+if ($g_enable_race_capacity)
+	$renderer_option['count_registered'] = GetCountRegistered ($zaznamy);
+
 if ($num_rows > 0)
 {
 	show_link_to_actual_race($num_rows);
-
-	// Fetch all rows into array
-	$zaznamy = [];
-	while ($zaznam = mysqli_fetch_array($vysledek, MYSQLI_ASSOC)) {
-		$zaznamy[] = $zaznam;
-	}
 
 	// define table
 	$tbl_renderer = RacesRendererFactory::createTable();
@@ -48,8 +48,8 @@ if ($num_rows > 0)
 	if ($ext_id_active_oris)
 		$tbl_renderer->addColumns('ext_id');
 	$tbl_renderer->addColumns('typ0','typ','odkaz');
-	// if ($g_enable_race_capacity)
-	// 	$tbl_renderer->addColumns('ucast');
+	if ($g_enable_race_capacity)
+	 	$tbl_renderer->addColumns('ucast');
 	$tbl_renderer->addColumns(['moznosti', new CallbackRenderer ( function ( RowData $row, array $options ) : string {
 			$race_is_old = (GetTimeToRace($row->rec['datum']) == -1);
 			$ucast = " / <A HREF=\"javascript:open_win('./api_race_entry.view.php?race_id=".$row->rec['id']."','')\">Účast</A>";
@@ -104,8 +104,15 @@ if ($num_rows > 0)
 
 	$tbl_renderer->setRowTextPainter ( new GreyOldPainter() );
 
-	$tbl_renderer->addBreak(new YearBreakDetector());
-	$tbl_renderer->addBreak(new FutureRaceBreakDetector());
+	if ($fC == 1) {
+		// old races - add breaks
+		$tbl_renderer->addBreak(new YearExpanderDetector());
+		$tbl_renderer->setRowAttrsExt ( YearExpanderDetector::yearGroupRowAttrsExtender(...));
+	}
+	else {
+		$tbl_renderer->addBreak(new YearBreakDetector());
+		$tbl_renderer->addBreak(new FutureRaceBreakDetector());
+	}
 
 	echo $tbl_renderer->render( new html_table_mc(), $zaznamy, $renderer_option );
 }

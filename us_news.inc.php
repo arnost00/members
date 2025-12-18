@@ -83,17 +83,12 @@ $query = 'SELECT r.id, r.datum, datum2, nazev, typ0, typ, ranking, odkaz, prihla
 
 @$vysledek=query_db($query);
 
-// prepare records data
-$num_rows = ($vysledek) ? mysqli_num_rows($vysledek) : 0;
-
 // Fetch all rows into array
-$zaznamy = [];
-while ($zaznam = mysqli_fetch_array($vysledek, MYSQLI_ASSOC)) {
-    $zaznamy[] = $zaznam;
-}
+$zaznamy  = $vysledek ? mysqli_fetch_all($vysledek, MYSQLI_ASSOC) : [];
+$num_rows = count ($zaznamy);
 
-$count_registered = GetCountRegistered ($zaznamy);
-$renderer_option['count_registered'] = $count_registered;
+if ($g_enable_race_capacity)
+	$renderer_option['count_registered'] = GetCountRegistered ($zaznamy);
 
 if ($num_rows > 0)
 {

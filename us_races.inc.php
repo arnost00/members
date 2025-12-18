@@ -26,17 +26,12 @@ $query = 'SELECT r.id, r.datum, datum2, nazev, typ0, typ, ranking, odkaz, prihla
 
 @$vysledek=query_db($query);
 
-// prepare records data
-$num_rows = ($vysledek) ? mysqli_num_rows($vysledek) : 0;
-
 // Fetch all rows into array
-$zaznamy = [];
-while ($zaznam = mysqli_fetch_array($vysledek, MYSQLI_ASSOC)) {
-    $zaznamy[] = $zaznam;
-}
+$zaznamy  = $vysledek ? mysqli_fetch_all($vysledek, MYSQLI_ASSOC) : [];
+$num_rows = count ($zaznamy);
 
-$count_registered = GetCountRegistered ($zaznamy);
-$renderer_option['count_registered'] = $count_registered;
+if ($g_enable_race_capacity)
+	$renderer_option['count_registered'] = GetCountRegistered ($zaznamy);
 
 @$vysledek2=query_db("SELECT * FROM ".TBL_USER." where id=$usr->user_id");
 $entry_lock = false;
@@ -60,11 +55,8 @@ $renderer_option['entry_lock'] = $entry_lock;
 
 <?
 
-$curr_date = GetCurrentDate();
-$renderer_option['curr_date'] = $curr_date;
+$renderer_option['curr_date'] = GetCurrentDate();
 
-
-$num_rows = ($vysledek) ? mysqli_num_rows($vysledek) : 0;
 if ($num_rows > 0)
 {
 	if ($entry_lock)
@@ -82,9 +74,15 @@ if ($num_rows > 0)
 	$tbl_renderer->addColumns('moznosti','prihlasky');
 	if($g_enable_race_boss)
 		$tbl_renderer->addColumns('vedouci');
-	// TODO: breaks are necessary only by some filters
-	$tbl_renderer->addBreak(new YearBreakDetector());
-	$tbl_renderer->addBreak(new FutureRaceBreakDetector());
+	if ($fC == 1) {
+		// old races - add breaks
+		$tbl_renderer->addBreak(new YearExpanderDetector());
+		$tbl_renderer->setRowAttrsExt ( YearExpanderDetector::yearGroupRowAttrsExtender(...));
+	}
+	else {
+		$tbl_renderer->addBreak(new YearBreakDetector());
+		$tbl_renderer->addBreak(new FutureRaceBreakDetector());
+	}
 
 	echo $tbl_renderer->render( new html_table_mc(), $zaznamy, $renderer_option );
 }
