@@ -61,7 +61,7 @@ while ($zaznam=mysqli_fetch_array($vysledek_historie))
 	$row_date = substr($zaznam['date'],0,4);
 	if ($year != $row_date) {
 		$year = $row_date;
-		$odkaz = "<button onclick='toggle_display_by_group(\"$year\")'>Histore transakcí pro rok $year</button>";
+		$odkaz = "<button onclick='toggle_expand_by_group(\"$year\",this)'>Histore transakcí pro rok $year</button>";
 		echo $data_tbl->get_info_row($odkaz)."\n";
 	}
 

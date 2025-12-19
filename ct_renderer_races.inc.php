@@ -219,7 +219,9 @@ class YearExpanderDetector implements IBreakRowDetector {
 
     public function renderBreak(html_table_mc $tbl, RowData $row): string {
         $year = Date2Year($row->rec['datum']);
-        $odkaz = "<button onclick='toggle_display_by_group(\"$year\")'>Histore závodů pro rok $year</button>";
+        $odkaz = '<span class="year-expander"
+            onclick="toggle_expand_by_group(\''. $year . '\', this)">' .
+            ($year < date('Y') ? '▼' : '▲') . ' '. $year . '</span>';
         return $tbl->get_info_row($odkaz)."\n";
     }
 
