@@ -24,14 +24,16 @@ DrawPageTitle('Seznam závodníků přihlášených na závod');
 db_Connect();
 
 $query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.termin, z.si_chip as t_si_chip, z.id_user, z.transport transport, z.sedadel, z.ubytovani ubytovani FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id.' ORDER BY z.termin ASC, z.id ASC';
-
 @$vysledek=query_db($query);
+// Fetch all rows into array
+$zaznamy = $vysledek ? mysqli_fetch_all($vysledek, MYSQLI_ASSOC) : [];
+$num_rows = count ($zaznamy);
 
 @$vysledek_z=query_db('SELECT * FROM '.TBL_RACE." WHERE `id`='$id' LIMIT 1");
 $zaznam_z = mysqli_fetch_array($vysledek_z);
 
-
-DrawPageSubTitle('Vybraný závod');
+$kapacita = $zaznam_z['kapacita'];
+DrawPageRaceTitle('Vybraný závod',$kapacita,$num_rows);
 
 RaceInfoTable($zaznam_z,'',$gr_id != _REGISTRATOR_GROUP_ID_,false,true);
 ?>
@@ -45,29 +47,6 @@ DrawPageSubTitle('Přihlášení závodníci');
 $is_spol_dopr_on = ($zaznam_z["transport"]==1) && $g_enable_race_transport;
 $is_sdil_dopr_on = ($zaznam_z["transport"]==3) && $g_enable_race_transport;
 $is_spol_ubyt_on = ($zaznam_z["ubytovani"]==1) && $g_enable_race_accommodation;
-
-$renderer_option=[];
-$zaznamy = [];
-$trans=0;
-$sedadel=0;
-$ubyt=0;
-$category_counts = [];
-while ($zaznam = mysqli_fetch_array($vysledek, MYSQLI_ASSOC)) {
-    $zaznamy[] = $zaznam;
-
-	// Count category occurrences
-	$kat = $zaznam['kat'];
-	$category_counts[$kat] = ($category_counts[$kat] ?? 0) + 1;
-
-	if ($zaznam["transport"])
-		$trans++;
-	if ($zaznam["ubytovani"])
-		$ubyt++;
-	if ( $is_sdil_dopr_on ) {
-		//fix problem when change transport from Common to Shared
-		$sedadel += ($zaznam["sedadel"] == null) ? -1 : $zaznam["sedadel"];
-	}
-}
 
 // define table
 $tbl_renderer = RaceRendererFactory::createTable();
@@ -95,16 +74,17 @@ $tbl_renderer->setRowFilter ( function ( RowData $row ) use ( $select, $usr ) : 
 	return (($select == 0 || $row->rec['chief_id'] == $usr->user_id || $row->rec['id_user'] == $usr->user_id) && $row->rec['hidden'] == 0);
 });
 
-echo $tbl_renderer->render( new html_table_mc(), $zaznamy, $renderer_option );
+echo $tbl_renderer->render( new html_table_mc(), $zaznamy, [] );
 
 if ($select == 0)
 {	// SD pouze pro vypis vsech prihlasek
-echo $is_spol_dopr_on||$is_sdil_dopr_on ? "<BR>Počet přihlášených na dopravu: $trans" : "";
-$warning_text = $sedadel < 0 ? ' <font color="red">(málo volných míst)</font>' : '';
-echo $is_sdil_dopr_on ? "<BR>Počet volných sdílených míst: $sedadel".$warning_text : "";
-echo $is_spol_ubyt_on ? "<BR>Počet přihlášených na ubytování: $ubyt" : "";
-
-RenderCategoryCounts ( $category_counts );
+	$stats = countRaceStats($zaznamy, $is_sdil_dopr_on);
+	RenderRaceStats(
+		$stats,
+		$is_spol_dopr_on,
+		$is_sdil_dopr_on,
+		$is_spol_ubyt_on
+	);
 }
 ?>
 

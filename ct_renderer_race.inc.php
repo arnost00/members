@@ -22,6 +22,17 @@ class LimitBreakDetector implements IBreakRowDetector {
     }
 }
 
+// Break between termin
+class TerminBreakDetector implements IBreakRowDetector {
+    public function needsBreak(array $prev, RowData $curr): bool {
+        return $prev['termin'] !== $curr->rec['termin'];
+    }
+
+    public function renderBreak(html_table_mc $tbl, RowData $row): string {
+        return $tbl->get_break_row(false);
+    }
+}
+
 class GreyLastNPainter implements IRowTextPainter {
     private int $limit;
 
