@@ -123,10 +123,39 @@ require_once 'user_finance_transfer_form.inc.php';
 <form id="payForm" onsubmit="return false;">
 
 <?php
+
+function ibanToCzAccount(string $iban): ?array
+{
+    $iban = strtoupper(str_replace(' ', '', $iban));
+
+    if (!preg_match('/^CZ\d{22}$/', $iban)) {
+        return null;
+    }
+
+    $bank   = substr($iban, 4, 4);
+    $prefix = ltrim(substr($iban, 8, 6), '0');
+    $account = ltrim(substr($iban, 14, 10), '0');
+
+    return [
+        'bank'    => $bank,
+        'prefix'  => $prefix ?: '0',
+        'account' => $account,
+    ];
+}
+
+$data = ibanToCzAccount($g_finance_payement_IBAN);
+
+$ibanRendering = $g_finance_payement_IBAN;
+if ($data) {
+    $prefix = !empty($data['prefix']) ? $data['prefix'].'-' : '';
+    $ibanRendering = "{$prefix}{$data['account']}/{$data['bank']}";
+}
+
+
 $data_tbl = new html_table_form();
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
-echo $data_tbl->get_new_row('<label for="qraccount">Účet</label>', htmlspecialchars($g_finance_payement_IBAN, ENT_QUOTES));
+echo $data_tbl->get_new_row('<label for="qraccount">Účet</label>', htmlspecialchars($ibanRendering, ENT_QUOTES));
 echo $data_tbl->get_new_row('<label for="qrvs">VS</label>', '<input type="text" id="qrvs" value="' . htmlspecialchars($zaznam_user_name['reg'], ENT_QUOTES) . '" size="4" readonly required>');
 echo $data_tbl->get_new_row('<label for="qramount">Částka</label>', '<input type="number" id="qramount" step="1" required size="5" maxlength="10" oninput="clearQR()">');
 echo $data_tbl->get_new_row('<label for="qrnote">Poznámka</label>', '<input type="text" id="qrnote" oninput="this.value = this.value.replace(/[^\x20-\x29\x2B-\x7E]/g, \'\'); clearQR()" size="20" maxlength="40" >');
