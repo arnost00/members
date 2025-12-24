@@ -166,7 +166,8 @@ echo $data_tbl->get_footer()."\n";
 ?>
 </form>
 
-<div id="qrcode" style="margin-top:15px;"></div>
+<div id="qrcode" style="margin-top:15px; background:#ffffff; display:inline-block; width:272px; height:272px; align-items:center;
+        justify-content:center; display:flex;"></div>
 
 <script>
 function loadQrLib(callback) {
