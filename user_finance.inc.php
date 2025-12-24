@@ -156,7 +156,7 @@ $data_tbl = new html_table_form();
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_new_row('<label for="qraccount">Účet</label>', htmlspecialchars($ibanRendering, ENT_QUOTES));
-echo $data_tbl->get_new_row('<label for="qrvs">VS</label>', '<input type="text" id="qrvs" value="' . htmlspecialchars($zaznam_user_name['reg'], ENT_QUOTES) . '" size="4" readonly required>');
+echo $data_tbl->get_new_row('<label for="qrvs">VS</label>', ($g_finance_payement_VS ?? '' ). '<input type="text" id="qrvs" value="' . htmlspecialchars($zaznam_user_name['reg'], ENT_QUOTES) . '" size="4" readonly required>');
 echo $data_tbl->get_new_row('<label for="qramount">Částka</label>', '<input type="number" id="qramount" step="1" required size="5" maxlength="10" oninput="clearQR()">');
 echo $data_tbl->get_new_row('<label for="qrnote">Poznámka</label>', '<input type="text" id="qrnote" oninput="this.value = this.value.replace(/[^\x20-\x29\x2B-\x7E]/g, \'\'); clearQR()" size="20" maxlength="40" >');
 
@@ -176,7 +176,7 @@ function loadQrLib(callback) {
         return;
     }
     const s = document.createElement('script');
-    s.src = 'thirdparty/qrcode.min.js';
+    s.src = 'js/qrcode.min.js';
     s.onload = callback;
     document.head.appendChild(s);
 }
@@ -190,7 +190,7 @@ function createQR() {
     loadQrLib(() => {
         document.getElementById('qrcode').innerHTML = '';
 
-		var payementInfo = `SPD*1.0*ACC:<?php echo $g_finance_payement_IBAN; ?>*AM:${amount}*X-VS:<?php echo $zaznam_user_name['reg']; ?>*CC:CZK*`;
+		var payementInfo = `SPD*1.0*ACC:<?php echo $g_finance_payement_IBAN; ?>*AM:${amount}*X-VS:<?php echo ($g_finance_payement_VS ?? '') . $zaznam_user_name['reg']; ?>*CC:CZK*`;
 		if (note) {
 			payementInfo += `MSG:${note}*`;
 		}
