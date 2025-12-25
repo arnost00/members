@@ -25,7 +25,7 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 //when show all races reverse order
 $order = ($fC == 1) ? "desc" : "";
 
-@$vysledek=query_db("SELECT id, datum, typ0, typ, datum2, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, nazev, vicedenni, odkaz, vedouci, oddil, kapacita, send, misto, cancelled, ext_id FROM ".TBL_RACE.$sql_sub_query." ORDER BY datum $order, datum2 $order, id $order");
+@$vysledek=query_db("SELECT id, datum, typ0, typ, datum2, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, nazev, vicedenni, odkaz, vedouci, oddil, kapacita, prihlasenych, send, misto, cancelled, ext_id FROM ".TBL_RACE.$sql_sub_query." ORDER BY datum $order, datum2 $order, id $order");
 
 $ext_id_active_oris = ($g_external_is_connector === 'OrisCZConnector');
 
@@ -34,9 +34,6 @@ $renderer_option['curr_date'] = GetCurrentDate();
 // Fetch all rows into array
 $zaznamy  = $vysledek ? mysqli_fetch_all($vysledek, MYSQLI_ASSOC) : [];
 $num_rows = count ($zaznamy);
-
-if ($g_enable_race_capacity)
-	$renderer_option['count_registered'] = GetCountRegistered ($zaznamy);
 
 if ($num_rows > 0)
 {

@@ -77,7 +77,7 @@ $renderer_option['curr_date'] = $curr_date;
 $d1 = $curr_date;
 $d2 = IncDate($curr_date,GC_SHOW_REG_DAYS);
 $query = 'SELECT r.id, r.datum, datum2, nazev, typ0, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4,'
-	.' prihlasky5, vicedenni, misto, oddil, kapacita, '. $user_fields .' vedouci, cancelled, concat(u.jmeno, \' \', u.prijmeni) as vedouci_jmeno '
+	.' prihlasky5, vicedenni, misto, oddil, kapacita, prihlasenych, '. $user_fields .' vedouci, cancelled, concat(u.jmeno, \' \', u.prijmeni) as vedouci_jmeno '
 	.' FROM '.TBL_RACE.' r left join '.TBL_USER.' u on r.vedouci = u.id ' . $user_join
 	.' WHERE (((prihlasky1 >= '.$d1.' && prihlasky1 <= '.$d2.') || (prihlasky2 >= '.$d1.' && prihlasky2 <= '.$d2.') || (prihlasky3 >= '.$d1.' && prihlasky3 <= '.$d2.') || (prihlasky4 >= '.$d1.' && prihlasky4 <= '.$d2.') || (prihlasky5 >= '.$d1.' && prihlasky5 <= '.$d2.')) || ( r.datum >= '.$d1.' AND r.datum <= '.$d2.')) ORDER BY datum, datum2, r.id';
 
@@ -86,9 +86,6 @@ $query = 'SELECT r.id, r.datum, datum2, nazev, typ0, typ, ranking, odkaz, prihla
 // Fetch all rows into array
 $zaznamy  = $vysledek ? mysqli_fetch_all($vysledek, MYSQLI_ASSOC) : [];
 $num_rows = count ($zaznamy);
-
-if ($g_enable_race_capacity)
-	$renderer_option['count_registered'] = GetCountRegistered ($zaznamy);
 
 if ($num_rows > 0)
 {

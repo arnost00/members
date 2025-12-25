@@ -110,9 +110,7 @@ class ParticipantsRenderer implements IColumnContentRenderer {
 
     public function render(RowData $row, array $options = []): string {
 
-        $count_registered = $options['count_registered'] ?? [];
-
-        $registered = isset($count_registered[$row->rec['id']]) ? $count_registered[$row->rec['id']] : 0;
+        $registered = (int)$row->rec['prihlasenych'];
         $kapacita = (int)$row->rec['kapacita'];
         $alert = $kapacita - $registered < 10 ? 'class="TextAlert7"' : '';
     

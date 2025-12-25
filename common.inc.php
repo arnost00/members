@@ -379,9 +379,9 @@ function DrawPageSubTitle($title, $id=null)
 	echo("<H3 ID='$id'>".$title."</H3>\n");
 }
 
-function DrawPageRaceTitle($title, $kapacita, $prihlaseno, $id=null) {
+function DrawPageRaceTitle($title, $kapacita, $prihlasenych, $id=null) {
     if ($kapacita > 0) {
-        $zbyva = $kapacita - $prihlaseno;
+        $zbyva = $kapacita - $prihlasenych;
 
         if ($zbyva <= 0) { 
             $title .= ' (náhradník)';
