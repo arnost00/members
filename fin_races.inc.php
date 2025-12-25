@@ -7,6 +7,7 @@ DrawPageTitle('Přehled závodů pro finance');
 <?
 require_once ("./common_race.inc.php");
 require_once ('./url.inc.php');
+require_once ('./ct_renderer_races.inc.php');
 
 $fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
 $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
@@ -30,72 +31,35 @@ while ($rec=mysqli_fetch_array($result_amount)) $race_amount[$rec["id_zavod"]]=$
 </script>
 
 <?
-$num_rows = mysqli_num_rows($vysledek);
+
+// Fetch all rows into array
+$zaznamy  = $vysledek ? mysqli_fetch_all($vysledek, MYSQLI_ASSOC) : [];
+$num_rows = count ($zaznamy);
 if ($num_rows > 0)
 {
 	show_link_to_actual_race($num_rows);
 
-	$data_tbl = new html_table_mc();
-	$col = 0;
-	$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
-	$data_tbl->set_header_col_with_help($col++,'Poř.',ALIGN_CENTER,"Pořadatel");
-	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ akce");
-	$data_tbl->set_header_col_with_help($col++,'S',ALIGN_CENTER,"Sport");
-	$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Platba',ALIGN_CENTER);
-	
-	echo $data_tbl->get_css()."\n";
-	echo $data_tbl->get_header()."\n";
-	echo $data_tbl->get_header_row()."\n";
+	$renderer_option['curr_date'] = GetCurrentDate();
 
-	$i = 1;
-	$brk_tbl = false;
-	$old_year = 0;
-	$year = 0;
-	while ($zaznam=mysqli_fetch_array($vysledek))
-	{
-		$prefix = ($zaznam['datum'] < GetCurrentDate()) ? '<span class="TextAlertExp">' : '';
-		$suffix = ($zaznam['datum'] < GetCurrentDate()) ? '</span>' : '';
-		$row = array();
-		//----------------------------
-		if($zaznam['vicedenni'])
-			$datum=Date2StringFT($zaznam['datum'],$zaznam['datum2']);
-		else
-			$datum=Date2String($zaznam['datum']);
-		//----------------------------
-		$row[] = $prefix.$datum.$suffix;
-		$row[] = "<A href=\"javascript:open_race_info(".$zaznam['id'].")\" class=\"adr_name\">".$prefix.GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']).$suffix."</A>";
-		$row[] = $prefix.GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']).$suffix;
-		$row[] = $prefix.$zaznam['oddil'].$suffix;
-		$row[] = GetRaceType0($zaznam['typ0']);
-		$row[] = GetRaceTypeImg($zaznam['typ']).'</A>';
-		$row[] = '<A HREF="javascript:open_win(\'./race_finance_view.php?race_id='.$zaznam['id'].'\',\'\')">Přehled</A>';
-		$row[] = isset($race_amount[$zaznam['id']])?$race_amount[$zaznam['id']]:"";
-		
-		$year = Date2Year($zaznam['datum']);
-		
-		if (!$brk_tbl && $zaznam['datum'] >= GetCurrentDate())
-		{
-			if($i != 1)
-				echo $data_tbl->get_break_row()."\n";
-			$brk_tbl = true;
-		}
-		else if($i != 1 && $year != $old_year)
-		{
-				$odkaz = "<button onclick='toggle_display_by_class(\"$year\")'>Histore závodů pro rok $year</button>";
-				echo $data_tbl->get_info_row($odkaz)."\n";
-		}
+	// define table
+	$tbl_renderer = RacesRendererFactory::createTable();
+	$tbl_renderer->addColumns('datum','nazev','misto','oddil','typ0','typ');
+	$tbl_renderer->addColumns(['moznosti',new FormatFieldRenderer ( 'id', function ( $id ) : string {
+		return '<A HREF="javascript:open_win(\'./race_finance_view.php?race_id='.$id.'\',\'\')">Přehled</A>';
+	})]);
+	$tbl_renderer->addColumns([new DefaultHeaderRenderer('Platba',ALIGN_CENTER),
+		new FormatFieldRenderer ( 'id', function ( $id ) use ($race_amount) : string {
+        	return isset($race_amount[$id]) ? $race_amount[$id] : '';	
+	})]);
 
-		//prasacky schovane radky krome posledniho roku
-		($year < date("Y"))?($class = $year."\" style=\"display:none") : ($class = $year);
+	$tbl_renderer->setRowTextPainter ( new GreyOldPainter() );
+	$tbl_renderer->setRowAttrsExt ( YearExpanderDetector::yearGroupRowAttrsExtender(...));
 
-		echo $data_tbl->get_new_row_arr($row, $class)."\n";
-		$i++;
-		$old_year = $year;
-	}
-	echo $data_tbl->get_footer()."\n";
+	// TODO: breaks are necessary only by some filters
+	$tbl_renderer->addBreak(new YearExpanderDetector());
+	$tbl_renderer->addBreak(new FutureRaceBreakDetector());
+
+	echo $tbl_renderer->render( new html_table_mc(), $zaznamy, $renderer_option );
 }
 ?>
 

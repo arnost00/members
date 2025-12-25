@@ -380,14 +380,19 @@ function DrawPageSubTitle($title, $id=null)
 }
 
 function DrawPageRaceTitle($title, $kapacita, $prihlaseno, $id=null) {
-	if (isset($kapacita) && $kapacita > 0) {
-		if ($prihlaseno > $kapacita) {
-			$title .= ' (náhradník)';
-		} elseif ($prihlaseno < $kapacita) {
-			$zbyva = $kapacita - $prihlaseno;
-			$title .= " (ještě $zbyva míst)";
-		}
-	}
+    if ($kapacita > 0) {
+        $zbyva = $kapacita - $prihlaseno;
+
+        if ($zbyva <= 0) { 
+            $title .= ' (náhradník)';
+        } elseif ($zbyva === 1) {
+            $title .= ' (zbývá 1 volné místo)';
+        } elseif ($zbyva <= 4) {
+            $title .= " (zbývá $zbyva volných míst)";
+        } else {
+            $title .= " ($zbyva volných míst)";
+        }
+    }
 
 	DrawPageSubTitle($title,$id);
 }
@@ -583,4 +588,62 @@ function Date2ISO($date)
 	return $text;
 }
 
+function countRaceStats(array $zaznamy, bool $is_sdil_dopr_on): array
+{
+    $stats = [
+        'category_counts' => [],
+        'trans'   => 0,
+        'ubyt'    => 0,
+        'sedadel' => 0,
+    ];
+
+    foreach ($zaznamy as $zaznam) {
+        // category count
+        $kat = $zaznam['kat'] ?? null;
+        if ($kat !== null) {
+            $stats['category_counts'][$kat] =
+                ($stats['category_counts'][$kat] ?? 0) + 1;
+        }
+
+        if (!empty($zaznam['transport'])) {
+            $stats['trans']++;
+        }
+
+        if (!empty($zaznam['ubytovani'])) {
+            $stats['ubyt']++;
+        }
+
+        if ($is_sdil_dopr_on) {
+            // fix when changing transport from Common to Shared
+            $stats['sedadel'] +=
+                ($zaznam['sedadel'] === null) ? -1 : (int)$zaznam['sedadel'];
+        }
+    }
+
+    return $stats;
+}
+
+function RenderRaceStats(
+    array $stats,
+    bool $is_spol_dopr_on,
+    bool $is_sdil_dopr_on,
+    bool $is_spol_ubyt_on
+): void {
+    if ($is_spol_dopr_on || $is_sdil_dopr_on) {
+        echo "<br>Počet přihlášených na dopravu: {$stats['trans']}";
+    }
+
+    if ($is_sdil_dopr_on) {
+        $warning = $stats['sedadel'] < 0
+            ? ' <span style="color:red">(málo volných míst)</span>'
+            : '';
+        echo "<br>Počet volných sdílených míst: {$stats['sedadel']}{$warning}";
+    }
+
+    if ($is_spol_ubyt_on) {
+        echo "<br>Počet přihlášených na ubytování: {$stats['ubyt']}";
+    }
+
+    RenderCategoryCounts($stats['category_counts']);
+}
 ?>

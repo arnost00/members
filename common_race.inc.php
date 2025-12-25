@@ -2,6 +2,7 @@
 <?
 
 require_once("cfg/race_enums.php");
+require_once("cfg/_cfg.php");
 
 function GetRaceTypeName($value)
 {
@@ -467,5 +468,65 @@ function GetSharedTransportValue($transport,$sedadel,&$total){
 	}
 	else
 		return '';
+}
+
+function RenderCategoryCounts ( array $category_counts ) {
+	// Sort categories alphabetically
+	ksort($category_counts);
+
+	// Add collapsible section for category counts with table formatting
+	echo '<br><br><div id="category_details" style="display:none;">';
+	echo '<table cellspacing="5">';
+	echo '<tr><th style="text-align:left;">Kategorie</th>';
+
+	foreach ($category_counts as $category => $count) {
+		echo "<td>$category</td>";
+	}
+
+	echo '</tr><tr><th style="text-align:left;">Počet</th>';
+
+	foreach ($category_counts as $category => $count) {
+		echo "<td style='text-align:center;'>$count</td>";
+	}
+
+	echo "</tr></table></div>";
+
+	// JavaScript to expand list and scroll
+	echo '<script>
+	function toggleCategoriesAndScroll() {
+		var details = document.getElementById("category_details");
+		details.style.display = "block";
+		
+		// Scroll to the category list
+		details.scrollIntoView({ behavior: "smooth", block: "start" });
+	}
+	</script>';
+}
+
+// get count of registered members for each race in records
+function GetCountRegistered ( array $records ) {
+	global $g_enable_race_capacity;
+	
+	$count_registered = [];
+
+	if ($g_enable_race_capacity && count($records) > 0) {
+		$race_ids = [];
+
+		foreach ($records as $record ) {	
+			$race_ids[] = (int)$record['id'];
+		}
+
+		if (!empty($race_ids)) {
+			$ids_csv = implode(',', $race_ids);
+			$count_query = "SELECT id_zavod, COUNT(*) AS prihlaseno FROM ".TBL_ZAVXUS." WHERE id_zavod IN ($ids_csv) GROUP BY id_zavod";
+			$count_result = query_db($count_query);
+		
+			while ($row = mysqli_fetch_assoc($count_result)) {
+				$count_registered[$row['id_zavod']] = $row['prihlaseno'];
+			}
+		}	
+
+	}
+	return $count_registered;
 }
 ?>

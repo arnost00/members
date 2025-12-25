@@ -12,6 +12,7 @@ require_once ("./common.inc.php");
 require_once ("./common_race.inc.php");
 require_once ("./common_user.inc.php");
 require_once ('./url.inc.php');
+require_once ('./ct_renderer_race.inc.php');
 
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 $us = (int)((IsSet($us) && is_numeric($us)) ? (($us > 0) ? 1 : 0) : 0);
@@ -23,14 +24,16 @@ DrawPageTitle('Seznam závodníků přihlášených na závod');
 db_Connect();
 
 $query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.termin, z.si_chip as t_si_chip, z.id_user, z.transport transport, z.sedadel, z.ubytovani ubytovani FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id.' ORDER BY z.termin ASC, z.id ASC';
-
 @$vysledek=query_db($query);
+// Fetch all rows into array
+$zaznamy = $vysledek ? mysqli_fetch_all($vysledek, MYSQLI_ASSOC) : [];
+$num_rows = count ($zaznamy);
 
 @$vysledek_z=query_db('SELECT * FROM '.TBL_RACE." WHERE `id`='$id' LIMIT 1");
 $zaznam_z = mysqli_fetch_array($vysledek_z);
 
-
-DrawPageSubTitle('Vybraný závod');
+$kapacita = $zaznam_z['kapacita'];
+DrawPageRaceTitle('Vybraný závod',$kapacita,$num_rows);
 
 RaceInfoTable($zaznam_z,'',$gr_id != _REGISTRATOR_GROUP_ID_,false,true);
 ?>
@@ -45,137 +48,43 @@ $is_spol_dopr_on = ($zaznam_z["transport"]==1) && $g_enable_race_transport;
 $is_sdil_dopr_on = ($zaznam_z["transport"]==3) && $g_enable_race_transport;
 $is_spol_ubyt_on = ($zaznam_z["ubytovani"]==1) && $g_enable_race_accommodation;
 
-$data_tbl = new html_table_mc();
-$col = 0;
-$data_tbl->set_header_col($col++,'Poř.',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Příjmení',ALIGN_LEFT);
-if ($us == 0)
-{
-	$data_tbl->set_header_col_with_help($col++,'Reg.č.',ALIGN_CENTER,"Registrační číslo");
-	$data_tbl->set_header_col($col++,'SI čip',ALIGN_RIGHT);
-}
-// Create category header with a clickable link
-$kat_header = '<span style="cursor:pointer; text-decoration:underline;" onclick="toggleCategoriesAndScroll()" title="Zobrazí počet účastníků v jednotlivých kategoriích">Kategorie</span>';
-$data_tbl->set_header_col($col++,$kat_header,ALIGN_CENTER);
+// define table
+$tbl_renderer = RaceRendererFactory::createTable();
+$tbl_renderer->addColumns('id','jmeno','prijmeni');
+if ($us == 0) 
+	$tbl_renderer->addColumns('reg','si_chip');
+$tbl_renderer->addColumns('kat');
 if($is_spol_dopr_on||$is_sdil_dopr_on)
-	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,($is_spol_dopr_on?'Společná':'Sdílená').' doprava');
+	$tbl_renderer->addColumns('transport');
 if($is_sdil_dopr_on)
-	$data_tbl->set_header_col_with_help($col++,'&#x1F697;',ALIGN_CENTER,'Nabízených sedadel');
+	$tbl_renderer->addColumns('sedadel');
 if($is_spol_ubyt_on)
-	$data_tbl->set_header_col_with_help($col++,'SU',ALIGN_CENTER,'Společné ubytování');
+	$tbl_renderer->addColumns('ubytovani');
 if($zaznam_z['prihlasky'] > 1)
-	$data_tbl->set_header_col($col++,'Termín',ALIGN_CENTER);
+	$tbl_renderer->addColumns('termin');
 if (IsLogged())
-{
-	$data_tbl->set_header_col($col++,'Pozn.',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Pozn.(i)',ALIGN_LEFT);
+	$tbl_renderer->addColumns('pozn','pozn_in');
+
+if ($g_enable_race_capacity && isSet ($zaznam_z['kapacita']) ) {
+	$tbl_renderer->addBreak(new LimitBreakDetector($zaznam_z['kapacita']));
+	$tbl_renderer->setRowTextPainter ( new GreyLastNPainter($zaznam_z['kapacita']) );	
 }
-echo $data_tbl->get_css()."\n";
-echo $data_tbl->get_header()."\n";
-echo $data_tbl->get_header_row()."\n";
 
-$i=0;
-$trans=0;
-$sedadel=0;
-$ubyt=0;
-$category_counts = [];
-while ($zaznam=mysqli_fetch_array($vysledek))
-{
-	if(($select == 0 || $zaznam['chief_id'] == $usr->user_id || $zaznam['id_user'] == $usr->user_id) && $zaznam['hidden'] == 0)
-	{
-		$i++;
+$tbl_renderer->setRowFilter ( function ( RowData $row ) use ( $select, $usr ) : bool  {
+	return (($select == 0 || $row->rec['chief_id'] == $usr->user_id || $row->rec['id_user'] == $usr->user_id) && $row->rec['hidden'] == 0);
+});
 
-		// Count category occurrences
-		$kat = $zaznam['kat'];
-		if (!isset($category_counts[$kat])) {
-			$category_counts[$kat] = 0;
-		}
-		$category_counts[$kat]++;
+echo $tbl_renderer->render( new html_table_mc(), $zaznamy, [] );
 
-		$row = array();
-		$row[] = $i.'<!-- '.$zaznam['id'].' -->';
-		$row[] = $zaznam['jmeno'];
-		$row[] = $zaznam['prijmeni'];
-		if ($us == 0)
-		{
-			$row[] = $g_shortcut.RegNumToStr($zaznam['reg']);
-			if ($zaznam['si_chip'] == 0)
-				$row[] = (($zaznam['t_si_chip'] != 0) ? '<span class="TemporaryChip">'.SINumToStr($zaznam['t_si_chip']).'</span>' : '');
-			else
-				$row[] = (($zaznam['t_si_chip'] != 0) ? '<span class="TemporaryChip">'.SINumToStr($zaznam['t_si_chip']).'</span>' : SINumToStr($zaznam['si_chip']));
-		}
-		$row[] = '<B>'.$zaznam['kat'].'</B>';
-		if($is_spol_dopr_on||$is_sdil_dopr_on)
-		{
-			if ($zaznam["transport"])
-			{
-				$row[] = '<B>&#x2714;</B>';
-				$trans++;
-			}
-			else
-				$row[] = '';
-		}
-		if($is_sdil_dopr_on)
-			$row[] = GetSharedTransportValue($zaznam["transport"], $zaznam["sedadel"], $sedadel );
-		if($is_spol_ubyt_on)
-		{
-			if ($zaznam["ubytovani"])
-			{
-				$row[] = '<B>&#x2714;</B>';
-				$ubyt++;
-			}
-			else
-				$row[] = '';
-		}
-		if($zaznam_z['prihlasky'] > 1)
-			$row[] = $zaznam['termin'];
-		if(IsLogged())
-		{
-			$row[] = $zaznam['pozn'];
-			$row[] = $zaznam['pozn_in'];
-		}
-		echo $data_tbl->get_new_row_arr($row)."\n";
-	}
-}
-echo $data_tbl->get_footer()."\n";
 if ($select == 0)
 {	// SD pouze pro vypis vsech prihlasek
-echo $is_spol_dopr_on||$is_sdil_dopr_on ? "<BR>Počet přihlášených na dopravu: $trans" : "";
-$warning_text = $sedadel < 0 ? ' <font color="red">(málo volných míst)</font>' : '';
-echo $is_sdil_dopr_on ? "<BR>Počet volných sdílených míst: $sedadel".$warning_text : "";
-echo $is_spol_ubyt_on ? "<BR>Počet přihlášených na ubytování: $ubyt" : "";
-
-// Sort categories alphabetically
-ksort($category_counts);
-
-// Add collapsible section for category counts with table formatting
-echo '<br><br><div id="category_details" style="display:none;">';
-echo '<table cellspacing="5">';
-echo '<tr><th style="text-align:left;">Kategorie</th>';
-
-foreach ($category_counts as $category => $count) {
-	echo "<td>$category</td>";
-}
-
-echo '</tr><tr><th style="text-align:left;">Počet</th>';
-
-foreach ($category_counts as $category => $count) {
-	echo "<td style='text-align:center;'>$count</td>";
-}
-
-echo "</tr></table></div>";
-
-// JavaScript to expand list and scroll
-echo '<script>
-function toggleCategoriesAndScroll() {
-    var details = document.getElementById("category_details");
-    details.style.display = "block";
-    
-    // Scroll to the category list
-    details.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-</script>';
+	$stats = countRaceStats($zaznamy, $is_sdil_dopr_on);
+	RenderRaceStats(
+		$stats,
+		$is_spol_dopr_on,
+		$is_sdil_dopr_on,
+		$is_spol_ubyt_on
+	);
 }
 ?>
 

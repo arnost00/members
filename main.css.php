@@ -488,6 +488,13 @@ TABLE.calendar TD.today
     margin-left: 50px;
 }
 
+.year-expander {
+    cursor: pointer;
+    user-select: none;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
 <?
 if (!$g_is_release)
 {
