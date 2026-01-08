@@ -58,6 +58,9 @@ if (IsSet($payment))
 			$var = "userid".$i;
 		}
 	}
+	//nutno obnovit stranku ale tentokrat bez payment=pay, jinak se z podoken vola refresh teto stranky a ten pusobi duplicity plateb
+	header("Location: ?race_id=$race_id");
+	exit;
 }
 
 
