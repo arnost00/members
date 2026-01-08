@@ -76,6 +76,10 @@ H3 {
 	text-align : left;
 }
 
+H3.center {
+	text-align : center;
+}
+
 TD.NewsItemDate, TD.NewsItemDateInt {
 	width : 100px;
 	vertical-align : top;
@@ -119,6 +123,12 @@ TD.MemberText {
 TD.DataValue {
 	text-align : left;
 	color : <? echo $g_colors['form_data_value']; ?>;
+	font-weight : bold;
+}
+
+TD.DataError {
+	text-align : left;
+	color : <? echo $g_colors['form_data_error']; ?>;
 	font-weight : bold;
 }
 

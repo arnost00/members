@@ -39,6 +39,11 @@ function open_race_info(id)
 	nwin.focus();
 }
 
+function open_url(url)
+{
+	window.open(url, "_self");
+}
+
 function close_popup()
 {
 	if (window.opener)
@@ -132,4 +137,11 @@ function toggle_display_by_class(cls) {
     for(var i = 0; i < lst.length; ++i) {
         (lst[i].style.display == '')?(lst[i].style.display='none'):(lst[i].style.display='');
     }
+}
+
+function toggleDisplayByToggleClass(cls) {
+	let elems = document.getElementsByClassName(cls)
+	Array.prototype.forEach.call(elems, function(el) {
+		$( el ).toggleClass("hidden");
+	});
 }

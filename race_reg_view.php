@@ -55,7 +55,9 @@ if ($us == 0)
 	$data_tbl->set_header_col_with_help($col++,'Reg.č.',ALIGN_CENTER,"Registrační číslo");
 	$data_tbl->set_header_col($col++,'SI čip',ALIGN_RIGHT);
 }
-$data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
+// Create category header with a clickable link
+$kat_header = '<span style="cursor:pointer; text-decoration:underline;" onclick="toggleCategoriesAndScroll()" title="Zobrazí počet účastníků v jednotlivých kategoriích">Kategorie</span>';
+$data_tbl->set_header_col($col++,$kat_header,ALIGN_CENTER);
 if($is_spol_dopr_on||$is_sdil_dopr_on)
 	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,($is_spol_dopr_on?'Společná':'Sdílená').' doprava');
 if($is_sdil_dopr_on)
@@ -77,11 +79,19 @@ $i=0;
 $trans=0;
 $sedadel=0;
 $ubyt=0;
+$category_counts = [];
 while ($zaznam=mysqli_fetch_array($vysledek))
 {
 	if(($select == 0 || $zaznam['chief_id'] == $usr->user_id || $zaznam['id_user'] == $usr->user_id) && $zaznam['hidden'] == 0)
 	{
 		$i++;
+
+		// Count category occurrences
+		$kat = $zaznam['kat'];
+		if (!isset($category_counts[$kat])) {
+			$category_counts[$kat] = 0;
+		}
+		$category_counts[$kat]++;
 
 		$row = array();
 		$row[] = $i.'<!-- '.$zaznam['id'].' -->';
@@ -135,6 +145,37 @@ echo $is_spol_dopr_on||$is_sdil_dopr_on ? "<BR>Počet přihlášených na doprav
 $warning_text = $sedadel < 0 ? ' <font color="red">(málo volných míst)</font>' : '';
 echo $is_sdil_dopr_on ? "<BR>Počet volných sdílených míst: $sedadel".$warning_text : "";
 echo $is_spol_ubyt_on ? "<BR>Počet přihlášených na ubytování: $ubyt" : "";
+
+// Sort categories alphabetically
+ksort($category_counts);
+
+// Add collapsible section for category counts with table formatting
+echo '<br><br><div id="category_details" style="display:none;">';
+echo '<table cellspacing="5">';
+echo '<tr><th style="text-align:left;">Kategorie</th>';
+
+foreach ($category_counts as $category => $count) {
+	echo "<td>$category</td>";
+}
+
+echo '</tr><tr><th style="text-align:left;">Počet</th>';
+
+foreach ($category_counts as $category => $count) {
+	echo "<td style='text-align:center;'>$count</td>";
+}
+
+echo "</tr></table></div>";
+
+// JavaScript to expand list and scroll
+echo '<script>
+function toggleCategoriesAndScroll() {
+    var details = document.getElementById("category_details");
+    details.style.display = "block";
+    
+    // Scroll to the category list
+    details.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+</script>';
 }
 ?>
 

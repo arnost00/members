@@ -38,6 +38,8 @@ if (IsLogged())
 		$zaznam['hidden'] = 0;
 		$zaznam['fin'] = '';
 		$zaznam['rc'] = '';
+		$zaznam['bank_account'] = '';
+		$zaznam['finance_type'] = 0;
 		$zaznam['narodnost'] = GC_DEFAULT_NATIONALITY;
 	}
 	$self_edit = IsSet($self_edit) ? (bool)$self_edit : false;
@@ -57,6 +59,22 @@ function GetLicenceComboBox($lic_name, $lic_value)
 	$value .= '<option value=\'-\''.(($lic_value=='-') ? ' SELECTED' : '').'>-</option>';
 	$value .= '</select>';
 	return $value;
+}
+
+function GetFinTypeLine($data_tbl, $type_value) 
+{
+	$finTypesList = query_db("SELECT id, nazev FROM " . TBL_FINANCE_TYPES." WHERE id='".$type_value."' LIMIT 1");
+	$displayValue = null;
+
+	if ($finTypesList !== FALSE && $finTypesList !== null) {
+		// only when types defined
+
+		if ($displayType = MySQLi_Fetch_Array($finTypesList)) {
+			$displayValue = $displayType['nazev'];
+		}
+	}
+
+	return $data_tbl->get_new_row('Typ příspěvku', htmlspecialchars($displayValue ?? 'nezadán'));
 }
 
 $data_tbl = new html_table_form("createUser");
@@ -105,6 +123,7 @@ echo $data_tbl->get_new_row('Email', '<INPUT TYPE="text" NAME="email" SIZE=60 MA
 echo $data_tbl->get_new_row('Tel. domů', '<INPUT TYPE="text" NAME="domu" SIZE=20 MAXLENGTH=25 VALUE="'.$zaznam["tel_domu"].'">');
 echo $data_tbl->get_new_row('Tel. zaměstnání', '<INPUT TYPE="text" NAME="zam" SIZE=20 MAXLENGTH=25 VALUE="'.$zaznam["tel_zam"].'">');
 echo $data_tbl->get_new_row('Mobil', '<INPUT TYPE="text" NAME="mobil" SIZE=20 MAXLENGTH=25 VALUE="'.$zaznam["tel_mobil"].'">');
+echo $data_tbl->get_new_row('Bankovní účet', '<INPUT TYPE="text" NAME="bank_account" SIZE=30 MAXLENGTH=50 VALUE="'.$zaznam["bank_account"].'">');
 if ($self_edit)
 {
 	echo $data_tbl->get_new_row('Pohlavi', $zaznam["poh"]);
@@ -121,6 +140,7 @@ else
 echo $data_tbl->get_new_row('Licence OB', GetLicenceComboBox('lic',$zaznam["lic"]));
 echo $data_tbl->get_new_row('Licence MTBO', GetLicenceComboBox('lic_mtbo',$zaznam["lic_mtbo"]));
 echo $data_tbl->get_new_row('Licence LOB', GetLicenceComboBox('lic_lob',$zaznam["lic_lob"]));
+echo GetFinTypeLine($data_tbl,$zaznam["finance_type"]);
 
 if (IsLoggedSmallAdmin())
 {

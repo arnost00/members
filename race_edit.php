@@ -15,9 +15,12 @@ if (!IsLoggedRegistrator())
 	header("location: ".$g_baseadr."error.php?code=21");
 	exit;
 }
-require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
-?>
 
+require_once ("./connectors.php");
+
+require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
+
+?>
 
 <SCRIPT LANGUAGE="JavaScript">
 
@@ -99,11 +102,35 @@ function checkDates()
 DrawPageTitle('Editace parametrů závodu');
 
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+$ext_id = (IsSet($ext_id)) ? $ext_id : '';
+$ext_id_info = '';
 
 db_Connect();
 
+require_once ("./common_race_ed.inc.php");
+
 @$vysledek=query_db("SELECT * FROM ".TBL_RACE." where id=$id LIMIT 1");
 $zaznam=mysqli_fetch_array($vysledek);
+if (!empty($zaznam['ext_id']))
+	$ext_id =  $zaznam['ext_id'];
+else
+	$ext_id_info = " ID závodu ještě není uloženo";
+
+
+// need to be defined for all races
+$connector = ConnectorFactory::create();
+
+if ( !empty ( $ext_id ) && $connector!== null ) {
+
+    // Get race info by race ID
+    $raceInfo = $connector->getRaceInfo($ext_id);
+    if ( $raceInfo == null ) {
+		$raceInfo = new Race([]);
+		$ext_id_info = " \u{26A0} neplatné ID závodu";
+	}
+} else {
+	$raceInfo = new Race([]);
+}
 
 if($zaznam['vicedenni'])
 {	// vicedenni
@@ -115,12 +142,12 @@ if($zaznam['vicedenni'])
 <TR>
 	<TD width="130" align="right">Datum od</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" ID="datum" NAME="datum" SIZE=8 value=<?echo Date2String($zaznam["datum"])?>>&nbsp;&nbsp(DD.MM.RRRR)</TD>
+	<? echo generateDateField($connector,"datum",$zaznam["datum"],$raceInfo->datum,0)?>
 </TR>
 <TR>
 	<TD width="130" align="right">Datum do</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" ID="datum2" NAME="datum2" SIZE=8 value=<?echo Date2String($zaznam["datum2"])?>>&nbsp;&nbsp(DD.MM.RRRR)</TD>
+	<? echo generateDateField($connector,"datum2",$zaznam["datum2"],$raceInfo->datum2,0)?>
 </TR>
 <?
 }
@@ -133,25 +160,53 @@ else
 <TR>
 	<TD width="130" align="right">Datum</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" ID="datum" NAME="datum" SIZE=8 value=<?echo Date2String($zaznam["datum"])?>>&nbsp;&nbsp(DD.MM.RRRR)</TD>
+	<? echo generateDateField($connector,"datum",$zaznam["datum"],$raceInfo->datum,0)?>
 </TR>
 <?
 }
+if ( $connector !== null ) {
 ?>
 <TR>
+	<TD width="130" align="right"><? echo ($connector->getSystemName() );?> ID</TD>
+	<TD width="5"></TD>
+<?
+	if ( empty ( $ext_id ) ) {
+?>
+<script language="javascript">
+    // Function to toggle the button state based on ext_id field
+    function toggleButtonState() {
+        if (ext_id.value.trim() === "") {
+            loadRaceByIdButton.disabled = true; // Disable button if ext_id is empty
+        } else {
+            loadRaceByIdButton.disabled = false; // Enable button if ext_id has value
+        }
+    }
+</script>
+<?
+		echo('<TD class="DataError"><INPUT TYPE="text" NAME="ext_id" id="ext_id" SIZE=8 value="'.$ext_id.'" onKeyup=\'toggleButtonState()\' placeholder=\'ID závodu\'>');
+		echo(' <button type="button" id="loadRaceByIdButton" disabled onclick="javascript:open_url(\'./race_edit.php?id='.$id.'&ext_id=\'+ext_id.value, \'\')">Náhrat informace</button><br>');
+		echo('</TD>');
+	} else {
+		echo('<TD class="DataError"><INPUT TYPE="text" NAME="ext_id" SIZE=8 value="'.$ext_id.'">'.$ext_id_info.'</TD>');
+	}
+?>
+</TR>
+<?
+}
+?><TR>
 	<TD width="130" align="right">Název</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="nazev" SIZE=60 maxlength=50 value="<?echo $zaznam["nazev"]?>"></TD>
+	<? echo generateTextFieldWithValidator($zaznam["nazev"],60,$rc_form['name']);?>
 </TR>
 <TR>
 	<TD width="130" align="right">Místo</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="misto" SIZE=60 maxlength=50 value="<?echo $zaznam["misto"]?>"></TD>
+	<? echo generateTextFieldWithValidator($zaznam["misto"],60,$rc_form['misto']);?>
 </TR>
 <TR>
 	<TD width="130" align="right">Pořádající oddíl</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="oddil" SIZE=9 maxlength=7 value="<?echo $zaznam["oddil"]?>">&nbsp;&nbsp;(XYZ) nebo (XYZ+ABC)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="oddil" SIZE=9 maxlength=8 value="<?echo $zaznam["oddil"]?>">&nbsp;&nbsp;(XYZ) nebo (XYZ+ABC)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">Zrušeno</TD>
@@ -261,6 +316,19 @@ if($zaznam['vicedenni'])
 </TR>
 <?
 }
+if ($g_enable_race_capacity)
+{
+?>
+<TR>
+	<TD width="130" align="right">Limit účastníků</TD>
+	<TD width="5"></TD>
+	<TD>
+		<INPUT TYPE="number" NAME="kapacita" MIN="1" STEP="1"
+		value="<?php echo ($zaznam["kapacita"] > 0 ? (int)$zaznam["kapacita"] : ''); ?>">
+	</TD>
+</TR>
+<?
+}
 ?>
 <TR>
 	<TD width="130" align="right" valign="top">Poznámka k závodu</TD>
@@ -272,27 +340,27 @@ if($zaznam['vicedenni'])
 <TR>
 	<TD width="130" align="right">1. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" ID="prihlasky1" NAME="prihlasky1" SIZE=8 value=<?echo Date2String($zaznam["prihlasky1"])?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<? echo generateDateField($connector,"prihlasky1",$zaznam["prihlasky1"],$raceInfo->prihlasky,-1)?>
 </TR>
 <TR>
 	<TD width="130" align="right">2. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" ID="prihlasky2" NAME="prihlasky2" SIZE=8 value=<?echo Date2String($zaznam["prihlasky2"])?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<? echo generateDateField($connector,"prihlasky2",$zaznam["prihlasky2"],$raceInfo->prihlasky1,-1)?>
 </TR>
 <TR>
 	<TD width="130" align="right">3. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" ID="prihlasky3" NAME="prihlasky3" SIZE=8 value=<?echo Date2String($zaznam["prihlasky3"])?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<? echo generateDateField($connector,"prihlasky3",$zaznam["prihlasky3"],$raceInfo->prihlasky2,-1)?>
 </TR>
 <TR>
 	<TD width="130" align="right">4. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" ID="prihlasky4" NAME="prihlasky4" SIZE=8 value=<?echo Date2String($zaznam["prihlasky4"])?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" ID="prihlasky4" NAME="prihlasky4" SIZE=8 value="<?echo Date2String($zaznam["prihlasky4"])?>">&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">5. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" ID="prihlasky5" NAME="prihlasky5" SIZE=8 value=<?echo Date2String($zaznam["prihlasky5"])?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" ID="prihlasky5" NAME="prihlasky5" SIZE=8 value="<?echo Date2String($zaznam["prihlasky5"])?>">&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD colspan="3"></TD>
@@ -306,5 +374,6 @@ if($zaznam['vicedenni'])
 </TABLE>
 </FORM>
 <?
+echo(insertDocuOnLoad());
 HTML_Footer();
 ?>

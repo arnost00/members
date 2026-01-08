@@ -115,7 +115,7 @@ Způsob výpisu:<input type="radio" name="ff" value="0" id="radio_ff0" checked="
 <? } ?>
 <BUTTON onclick="submit_form_reg(1); return false;">Výpis pro centrální registraci (ObHana)</BUTTON>
 <?
-	if ($g_enable_oris_support)
+	if ($g_external_is_connector === 'OrisCZConnector')
 	{
 ?>
 <BUTTON onclick="submit_form_reg(2); return false;">Výpis pro centrální registraci (ORIS)</BUTTON>

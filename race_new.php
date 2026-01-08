@@ -10,6 +10,8 @@ require_once ("./common.inc.php");
 require_once ("./common_race.inc.php");
 require_once ('./url.inc.php');
 
+require_once ("./connectors.php");
+
 if (!IsLoggedRegistrator())
 {
 	header("location: ".$g_baseadr."error.php?code=21");
@@ -21,6 +23,40 @@ DrawPageTitle('Vytvoření nového závodu');
 
 db_Connect();
 
+require_once ("./common_race_ed.inc.php");
+
+$raceInfo = null;
+$ext_id_info = '';
+$connector = null;
+
+if (!empty($ext_id)) { 
+	$connector = ConnectorFactory::create();
+
+	// Get race info by race ID
+	$raceInfo = $connector->getRaceInfo($ext_id);
+
+	$type = $raceInfo->vicedenni;
+
+	// check if ext_id is not yet used
+	$query_ext = 'SELECT id, datum, nazev, ext_id'.
+	' FROM '.TBL_RACE.' WHERE ext_id = '.$ext_id.
+	' ORDER BY datum, datum2, id';
+	$vysledek_ext=query_db($query_ext);
+
+	if($vysledek_ext != FALSE) {
+		while ($zaznam_ext=mysqli_fetch_array($vysledek_ext)) {
+			if ($ext_id_info != '')
+			$ext_id_info .= '<br />';
+			$ext_id_info .= " \u{26A0} ID již použito : ".Date2String($zaznam_ext['datum']).' - '.$zaznam_ext['nazev'];
+		}
+	}
+} 
+
+if ($raceInfo === null) {
+    // default
+    $raceInfo = new Race([]);
+}
+
 $type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
 if($type == 1)
 {	// vicedenni
@@ -30,12 +66,12 @@ if($type == 1)
 <TR>
 	<TD width="130" align="right">Datum od</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="datum" SIZE=8>&nbsp;&nbsp(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="datum" SIZE=8 <? if (isset($raceInfo->datum))echo ('value="'. Date2String($raceInfo->datum).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">Datum do</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="datum2" SIZE=8>&nbsp;&nbsp(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="datum2" SIZE=8 <? if (isset($raceInfo->datum2))echo ('value="'. Date2String($raceInfo->datum2) .'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <?
 }
@@ -47,7 +83,15 @@ else
 <TR>
 	<TD width="130" align="right">Datum</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="datum" SIZE=8>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="datum" SIZE=8 value="<? echo (Date2String($raceInfo->datum)); ?>">&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+</TR>
+<?
+}
+if ( $connector !== null ) { ?>
+<TR>
+	<TD width="130" align="right"><? echo ($connector->getSystemName() );?> ID</TD>
+	<TD width="5"></TD>
+	<TD class="DataError"><INPUT TYPE="text" NAME="ext_id" SIZE=8 value="<? echo ($raceInfo->ext_id); ?>"><? echo $ext_id_info?></TD>
 </TR>
 <?
 }
@@ -55,17 +99,17 @@ else
 <TR>
 	<TD width="130" align="right">Název</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="nazev" SIZE=60 maxlength=50></TD>
+	<? echo generateTextFieldWithValidator($raceInfo->nazev,60,$rc_form['name']);?>
 </TR>
 <TR>
 	<TD width="130" align="right">Místo</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="misto" SIZE=60 maxlength=50></TD>
+	<? echo generateTextFieldWithValidator($raceInfo->misto,60,$rc_form['misto']);?>
 </TR>
 <TR>
 	<TD width="130" align="right">Pořádající oddíl</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="oddil" SIZE=9 maxlength=7>&nbsp;&nbsp;(XYZ) nebo (XYZ+ABC)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="oddil" SIZE=9 maxlength=8 value="<? echo ($raceInfo->oddil); ?>">&nbsp;&nbsp;(XYZ) nebo (XYZ+ABC)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">Typ akce</TD>
@@ -88,10 +132,10 @@ else
 	<TD>
 		<select name='typ'>
 <?
-		$tmp_typ = $g_racetype [0]['enum'];
+		$tmp_typ = $raceInfo->typ;
 		for ($ii = 0; $ii < $g_racetype_cnt; $ii++)
 		{
-			echo("\t\t\t<option value='".$g_racetype [$ii]['enum']."'".(($tmp_typ==$g_racetype [$ii]['enum'])?' SELECTED':'').">".$g_racetype [$ii]['nm']."</option>\n");
+			echo("\t\t\t<option value='".$g_racetype [$ii]['enum']."'".(($tmp_typ==$g_racetype [$ii]['id'])?' SELECTED':'').">".$g_racetype [$ii]['nm']."</option>\n");			
 		}
 ?>
 		</select>
@@ -104,7 +148,10 @@ else
 <?
 	for($ii=0; $ii<$g_zebricek_cnt; $ii++)
 	{
-		echo('<input type="checkbox" name="zebricek['.$ii.']" value="1" id="id_'.$ii.'"><label for="id_'.$ii.'">'.$g_zebricek [$ii]['nm'].'</label>');
+		echo('<input type="checkbox" name="zebricek['.$ii.']" value="1" id="id_'.$ii.'"');
+		if(($raceInfo->zebricek2 & $g_zebricek [$ii]['id']) != 0)
+			echo(' checked');
+		echo('><label for="id_'.$ii.'">'.$g_zebricek [$ii]['nm'].'</label>');
 		echo('<br>');
 	}
 ?>
@@ -115,8 +162,8 @@ else
 	<TD width="5"></TD>
 	<TD>
 		<select name='ranking'>
-			<option value='1' SELECTED>ANO</option>
-			<option value='0'>NE</option>
+			<option value='1' <? if ( $raceInfo->ranking == 1 ) echo ("SELECTED" ); ?>>ANO</option>
+			<option value='0' <? if ( $raceInfo->ranking != 1 ) echo ("SELECTED" ); ?>>NE</option>
 		</select>
 	</TD>
 </TR>
@@ -150,11 +197,22 @@ if ($g_enable_race_accommodation)
 </TR>
 <?
 }
+if ($g_enable_race_capacity) {
+?>	
+<TR>
+	<TD width="130" align="right">Limit účastníků</TD>
+	<TD width="5"></TD>
+	<TD>
+		<INPUT TYPE="number" NAME="kapacita" MIN="1" STEP="1">
+	</TD>
+</TR>
+<?
+}
 ?>	
 <TR>
 	<TD width="130" align="right">Odkaz</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="odkaz" SIZE=60 maxlength=100 VALUE=""></TD>
+	<TD><INPUT TYPE="text" NAME="odkaz" SIZE=60 maxlength=100 value="<? echo ($raceInfo->odkaz); ?>"></TD>
 </TR>
 <?
 if($type == 1)
@@ -163,7 +221,7 @@ if($type == 1)
 <TR>
 	<TD width="130" align="right">Počet etap</TD>
 	<TD width="5"></TD>
-	<TD><INPUT TYPE="text" NAME="etap" SIZE=2></TD>
+	<TD><INPUT TYPE="text" NAME="etap" SIZE=2  value="<? echo ($raceInfo->etap); ?>"></TD>
 </TR>
 <?
 }
@@ -172,33 +230,33 @@ if($type == 1)
 	<TD width="130" align="right" valign="top">Poznámka k závodu</TD>
 	<TD width="5"></TD>
 	<TD>
-	<TEXTAREA name="poznamka" cols="45" rows="5"></TEXTAREA>
+	<TEXTAREA name="poznamka" cols="45" rows="5" value="<? echo ($raceInfo->poznamka); ?>"></TEXTAREA>
 	</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">1. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky1" SIZE=8>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky1" SIZE=8 <? if (!empty($raceInfo->prihlasky))echo ('value="'. Date2String($raceInfo->prihlasky - 86400).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">2. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky2" SIZE=8>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky2" SIZE=8 <? if (!empty($raceInfo->prihlasky1))echo ('value="'. Date2String($raceInfo->prihlasky1 - 86400).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">3. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky3" SIZE=8>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky3" SIZE=8 <? if (!empty($raceInfo->prihlasky2))echo ('value="'. Date2String($raceInfo->prihlasky2 - 86400).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">4. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky4" SIZE=8>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky4" SIZE=8 <? if (!empty($raceInfo->prihlasky3))echo ('value="'. Date2String($raceInfo->prihlasky3 - 86400).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD width="130" align="right">5. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky5" SIZE=8>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky5" SIZE=8 <? if (!empty($raceInfo->prihlasky4))echo ('value="'. Date2String($raceInfo->prihlasky4 - 86400).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
 </TR>
 <TR>
 	<TD colspan="3"></TD>
@@ -210,7 +268,10 @@ if($type == 1)
 	<TD colspan="3"></TD>
 </TR>
 </TABLE>
+<input type="hidden" id="kategorie" name="kategorie" value="<? echo ($raceInfo->kategorie); ?>">
 </FORM>
+
 <?
+echo(insertDocuOnLoad());
 HTML_Footer();
 ?>

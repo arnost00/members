@@ -24,7 +24,9 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 //when show all races reverse order
 $order = ($fC == 1) ? "desc" : "";
 
-@$vysledek=query_db("SELECT id, datum, typ0, typ, datum2, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, nazev, vicedenni, odkaz, vedouci, oddil, send, misto, cancelled FROM ".TBL_RACE.$sql_sub_query." ORDER BY datum $order, datum2 $order, id $order");
+@$vysledek=query_db("SELECT id, datum, typ0, typ, datum2, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, nazev, vicedenni, odkaz, vedouci, oddil, send, misto, cancelled, ext_id FROM ".TBL_RACE.$sql_sub_query." ORDER BY datum $order, datum2 $order, id $order");
+
+$ext_id_active_oris = ($g_external_is_connector === 'OrisCZConnector');
 
 $num_rows = mysqli_num_rows($vysledek);
 if ($num_rows > 0)
@@ -37,6 +39,8 @@ if ($num_rows > 0)
 	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
 	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
 	$data_tbl->set_header_col_with_help($col++,'Poř.',ALIGN_CENTER,"Pořadatel");
+	if ($ext_id_active_oris)
+		$data_tbl->set_header_col_with_help($col++,'O',ALIGN_CENTER,"závod v ORISu");
 	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ akce");
 	$data_tbl->set_header_col_with_help($col++,'S',ALIGN_CENTER,"Sport");
 	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web závodu");
@@ -92,6 +96,11 @@ if ($num_rows > 0)
 		$row[] = "<A href=\"javascript:open_race_info(".$zaznam['id'].")\" class=\"adr_name\">".$prefix.GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']).$suffix."</A>";
 		$row[] = $prefix.GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']).$suffix;
 		$row[] = $prefix.$zaznam['oddil'].$suffix;
+		if ($ext_id_active_oris)
+		{
+			$ext_id = $zaznam['ext_id'];
+			$row[] = (!empty ($ext_id)) ? 'A' : '-';
+		}
 		$row[] = GetRaceType0($zaznam['typ0']);
 		$row[] = GetRaceTypeImg($zaznam['typ']).'</A>';
 		$row[] = GetRaceLinkHTML($zaznam['odkaz']);

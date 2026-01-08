@@ -56,6 +56,7 @@ if ($datum=='' || ($datum2=='' && $rtype == 1) || $nazev=='')
 }
 else
 {
+	$ext_id=correct_sql_string($ext_id);
 	$datum=correct_sql_string($datum);
 	$datum2=correct_sql_string($datum2);
 	$nazev=correct_sql_string($nazev);
@@ -73,13 +74,16 @@ else
 	$etap=correct_sql_string($etap);
 	$oddil=correct_sql_string($oddil);
 	$modify_flag=correct_sql_string($modify_flag);
+	$kategorie=correct_sql_string($kategorie);
 	
 	if (!isset($transport))
 		$transport=0;
 	if (!isset($accommodation))
 		$accommodation=0;
+	$kapacita= (IsSet($kapacita) && is_numeric($kapacita)) ? (int)$kapacita: 0;
+
 	
-	$result=query_db("INSERT INTO ".TBL_RACE." (datum, datum2, nazev, misto, typ0, typ, zebricek, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, etap, poznamka, vicedenni, oddil, modify_flag, transport, ubytovani, kategorie, vedouci, poslano) VALUES ('$datum', '$datum2', '$nazev', '$misto', '$typ0', '$typ', '$zebricek2', '$ranking', '$odkaz', '$prihlasky', '$prihlasky1', '$prihlasky2', '$prihlasky3', '$prihlasky4', '$prihlasky5', '$etap', '$poznamka', '$vicedenni', '$oddil', '$modify_flag', '$transport', '$accommodation','', 0, 0)")
+	$result=query_db("INSERT INTO ".TBL_RACE." (ext_id, datum, datum2, nazev, misto, typ0, typ, zebricek, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, etap, poznamka, vicedenni, oddil, modify_flag, transport, ubytovani, kapacita, kategorie, vedouci, poslano) VALUES ( '$ext_id', '$datum', '$datum2', '$nazev', '$misto', '$typ0', '$typ', '$zebricek2', '$ranking', '$odkaz', '$prihlasky', '$prihlasky1', '$prihlasky2', '$prihlasky3', '$prihlasky4', '$prihlasky5', '$etap', '$poznamka', '$vicedenni', '$oddil', '$modify_flag', '$transport', '$accommodation', $kapacita,'$kategorie', 0, 0)")
 		or die("Chyba při provádění dotazu do databáze.");
 	if ($result == FALSE)
 		die ("Nepodařilo se vložit údaje o závodě.");

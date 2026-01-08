@@ -101,6 +101,20 @@ function CreateZebricekNumber(&$zebricek)
 	return $result;
 }
 
+function CreateNotifyTypeNumber(&$notify)
+{
+	global $g_notify_type_flag;
+	global $g_notify_type_flag_cnt;
+
+	$result = 0;
+	for($ii=0; $ii<$g_notify_type_flag_cnt; $ii++)
+	{
+		if (isset($notify[$ii]) && $notify[$ii] == 1)
+			$result |= $g_notify_type_flag[$ii]['id'];
+	}
+	return $result;
+}
+
 function CreateRaceTypeNumber(&$racetype)
 {
 	global $g_racetype_cnt;

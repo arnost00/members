@@ -40,6 +40,7 @@ if (!defined('PHP_GLOBAL_COLORS_INCLUDED'))
 	$g_colors['nav_member_text'] = '#99CCFF';
 
 	$g_colors['form_data_value'] = '#FF66FF';
+	$g_colors['form_data_error'] = '#FF6666';
 
 	$g_colors['body_link'] = '#AF1F1F';
 	$g_colors['body_link_visited'] = '#6F4F4F';

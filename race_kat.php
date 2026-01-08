@@ -18,6 +18,8 @@ if (!IsLoggedRegistrator())
 	exit;
 }
 
+require_once ("./connectors.php");
+
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 DrawPageTitle('Editace kategorií v závodu');
 
@@ -29,6 +31,7 @@ db_Connect();
 $zaznam=mysqli_fetch_array($vysledek);
 $kat_nf ='';
 $curr_kateg = $zaznam['kategorie'];
+$ext_id = $zaznam['ext_id'];
 
 DrawPageSubTitle('Vybraný závod');
 
@@ -38,8 +41,16 @@ RaceInfoTable($zaznam,'',false,false,true);
 <SCRIPT LANGUAGE="JavaScript">
 function zmen_kat_n($str)
 {
-	
-	document.form2.kat_n.value+=$str;
+	let field = document.form2.kat_n;
+	let sep = field.value === '' || field.value.endsWith(';') ? '' : ';';
+	field.value += sep + $str;
+}
+
+function reset_kat_n($str)
+{
+	document.form2.querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
+
+	document.form2.kat_n.value=$str;
 }
 
 function zmen_kat_null()
@@ -64,6 +75,43 @@ Nestandartní kategorie&nbsp;&nbsp;
 
 <span class="WarningText">Zadávej jako text bez uvozovek, každou kategorii ukonči středníkem, vše bez mezer</span>
 
+<?
+if ($g_external_is_connector === 'OrisCZConnector')
+{
+	if ( !empty ( $ext_id ) ) {
+
+		$connector = ConnectorFactory::create();
+		// Get race info by race ID
+		$raceInfo = $connector->getRaceInfo($ext_id);
+
+		echo('<BR/><BR/>Kategorie ze systému '.$connector->getSystemName().' :<BR/>');
+	
+		if ( isset ( $raceInfo->kategorie ) ) {
+			$ext_cl = $connector->getSystemName().' = ('.$raceInfo->kategorie.')';
+			$ext_cl .= "<BR>\n";
+			
+			echo('<button onclick="javascript:zmen_kat_n(\''.$raceInfo->kategorie.'\'); return false;">['.$connector->getSystemName().'] Přidat do seznamu</button>&nbsp;');
+			// check if the external and internal lists are the same
+			$internal = explode(';', $curr_kateg);
+			$external = explode(';', $raceInfo->kategorie);
+			
+			sort($internal);
+			sort($external);
+	
+			if ( $internal !== $external ) {
+				echo('<button title="Nastav kategorie jen podle systému '.$connector->getSystemName().'"onclick="javascript:reset_kat_n(\''.$raceInfo->kategorie.'\'); return false;">['.$connector->getSystemName().'] Přepsat komplet kategorie</button>&nbsp;');
+			}
+
+			echo('<br/><span class="kategory_small_list">');
+			echo($ext_cl);
+			echo('</span>');
+
+		}
+		
+	}
+}
+?>
+
 <BR><BR>Předdefinované kategorie :
 
 <?
@@ -75,6 +123,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	$cl .= $zaznam['name'].' = ('.$zaznam['cat_list'].')';
 	$cl .= "<BR>\n";
 }
+
 ?>
 <BR>
 <BR>
@@ -85,7 +134,7 @@ echo($cl);
 </span>
 <BR>
 
-<br><INPUT TYPE="submit" VALUE="Odeslat změny kategorií">
+<br><INPUT TYPE="submit" VALUE=">> Odeslat změny kategorií <<">
 </FORM><br />
 
 <BUTTON onclick="javascript:close_popup();">Zpět</BUTTON>

@@ -376,10 +376,27 @@ function DrawPageTitle($title)
 
 function DrawPageSubTitle($title, $id=null)
 {
-	echo("<H3 ID='$id'>".$title."</H3>");
+	echo("<H3 ID='$id'>".$title."</H3>\n");
+}
+
+function DrawPageRaceTitle($title, $kapacita, $prihlaseno, $id=null) {
+	if (isset($kapacita) && $kapacita > 0) {
+		if ($prihlaseno > $kapacita) {
+			$title .= ' (náhradník)';
+		} elseif ($prihlaseno < $kapacita) {
+			$zbyva = $kapacita - $prihlaseno;
+			$title .= " (ještě $zbyva míst)";
+		}
+	}
+
+	DrawPageSubTitle($title,$id);
 }
 
 
+function DrawPageSubTitleCenter($title)
+{
+	echo('<H3 class="center">'.$title."</H3>\n");
+}
 
 function HTML_Header($title,$style_file = '', $body_addons = '',$head_addons = '')
 {
@@ -395,8 +412,6 @@ function HTML_Header($title,$style_file = '', $body_addons = '',$head_addons = '
 	<link rel="alternate" type="application/rss+xml" title="RSS export" href="rss.php" />
 	<link rel="icon" href="favicon.ico" type="image/x-icon" />
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-	
-	<link rel="StyleSheet" href="tiny-date-picker.css" type="text/css">
 	
 	<title><? echo($title); ?></title>
 <?
