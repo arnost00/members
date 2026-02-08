@@ -35,6 +35,7 @@ if (IsLogged())
 		$zaznam['lic'] = 'C';
 		$zaznam['lic_mtbo'] = '-';
 		$zaznam['lic_lob'] = '-';
+		$zaznam['finance_type'] = '-';
 		$zaznam['hidden'] = 0;
 		$zaznam['fin'] = '';
 		$zaznam['rc'] = '';

@@ -56,6 +56,10 @@ if ($userSelected) {
 				$query="DELETE FROM ".TBL_ZAVXUS." WHERE id_user = (select id from ".TBL_USER." where id = '$id_user') and id_zavod = '$race_id' and add_by_fin = 1;";
 				@$result=$db_conn->query($query);
 				$data = 'deleted:'.$db_conn->affected_rows;
+				if ($result !== false && mysqli_affected_rows($db_conn) > 0) {
+					query_db("UPDATE ".TBL_RACE." SET prihlasenych = GREATEST(0, prihlasenych - 1) WHERE id = '$race_id'");
+				}
+
 			} else {
 				$kat = isset($_GET['kat']) ? $_GET['kat'] : '';
 				$pozn = '';
@@ -68,6 +72,9 @@ if ($userSelected) {
 				$query="INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in, termin, transport, ubytovani, participated, add_by_fin) VALUES ((select id from ".TBL_USER." where id = '$id_user'), '$race_id', '$kat', '$pozn', '$pozn2', '$termin', '$transport', '$ubytovani', '$participated', '$addByFin');";
 				@$result=$db_conn->query($query);
 				$data = 'inserted:'.$db_conn->affected_rows;
+				if ($result !== false && mysqli_affected_rows($db_conn) > 0) {
+					$db_conn->query("UPDATE ".TBL_RACE." SET prihlasenych = prihlasenych + 1 WHERE id = '$race_id'");
+				}
 			}
 			break;
 		case 'detail':

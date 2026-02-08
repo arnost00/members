@@ -151,11 +151,13 @@ switch ($action) {
         }
         
         // check whether the user is already signed in
-        $output = db_execute("SELECT * FROM " . TBL_ZAVXUS . " WHERE id_zavod = ? AND id_user = ? LIMIT 1", $race_id, $user_id);;
+        $output = db_execute("SELECT * FROM " . TBL_ZAVXUS . " WHERE id_zavod = ? AND id_user = ? LIMIT 1", $race_id, $user_id);
         $output = $output->fetch_assoc();
 
         if ($output == null) { // if not, create a new row with given values
             db_execute("INSERT INTO " . TBL_ZAVXUS . " (id_user, id_zavod, kat, pozn, pozn_in, termin, transport, sedadel, ubytovani) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", $user_id, $race_id, $category, $note, $note_internal, $termin, $transport, $sedadel, $accommodation);
+            // db_execute zde patrne nema navratovou hodnotu
+            db_execute("UPDATE " .TBL_RACE . " SET prihlasenych = prihlasenych + 1 WHERE id = ?", $race_id);
         } else { // else, update the row
             $id = $output["id"];
             db_execute("UPDATE " . TBL_ZAVXUS . " SET kat = ?, pozn = ?, pozn_in = ?, termin = ?, transport = ?, sedadel = ?, ubytovani = ? WHERE id = ?", $category, $note, $note_internal, $termin, $transport, $sedadel, $accommodation, $id);
@@ -186,7 +188,9 @@ switch ($action) {
         }
         
         db_execute("DELETE FROM " . TBL_ZAVXUS . " WHERE id_zavod = ? AND id_user = ?", $race_id, $user_id);
-        
+        // db_execute zde patrne nema navratovou hodnotu
+        db_execute("Update " . TBL_RACE . " SET prihlasenych = GREATEST(0, prihlasenych -1 ) WHERE id = ?", $race_id);
+
         print_and_die();
     case "past_races":
         $user_id = require_user_id();

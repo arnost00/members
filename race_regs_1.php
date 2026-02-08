@@ -18,6 +18,7 @@ require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 require_once ("./common_user.inc.php");
 require_once ("./common_race.inc.php");
 require_once ('./url.inc.php');
+require_once('./ct_renderer_race.inc.php');
 
 DrawPageTitle('Přihláška člena na závody');
 ?>
@@ -45,7 +46,14 @@ db_Connect();
 @$vysledek_z=query_db("SELECT * FROM ".TBL_RACE." WHERE id=$id");
 $zaznam_z = mysqli_fetch_array($vysledek_z);
 
-DrawPageSubTitle('Vybraný závod');
+$query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.termin, z.id_user, z.transport, z.sedadel, z.ubytovani FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id.' ORDER BY z.id ASC';
+$vysledek=query_db($query);
+// Fetch all rows into array
+$zaznamy  = $vysledek ? mysqli_fetch_all($vysledek, MYSQLI_ASSOC) : [];
+$num_rows = count ($zaznamy);
+
+$kapacita = $zaznam_z['kapacita'];
+DrawPageRaceTitle('Vybraný závod',$kapacita,$num_rows);
 
 RaceInfoTable($zaznam_z,'',$gr_id != _REGISTRATOR_GROUP_ID_,false,true);
 ?>
@@ -324,77 +332,34 @@ if(strlen($zaznam_z['poznamka']) > 0)
 <?
 DrawPageSubTitle('Přihlášení závodníci');
 
-$data_tbl = new html_table_mc();
-$col = 0;
-$data_tbl->set_header_col($col++,'Poř.',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Jméno',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Příjmení',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Kategorie',ALIGN_CENTER);
+// define table
+$tbl_renderer = RaceRendererFactory::createTable();
+$tbl_renderer->addColumns('id','jmeno','prijmeni','kat');
 if($is_spol_dopr_on||$is_sdil_dopr_on)
-	$data_tbl->set_header_col_with_help($col++,'SD',ALIGN_CENTER,($is_spol_dopr_on?'Společná':'Sdílená').' doprava');
+	$tbl_renderer->addColumns('transport');
 if($is_sdil_dopr_on)
-	$data_tbl->set_header_col_with_help($col++,'&#x1F697;',ALIGN_CENTER,'Nabízených sedadel');
+	$tbl_renderer->addColumns('sedadel');
 if($is_spol_ubyt_on)
-	$data_tbl->set_header_col_with_help($col++,'SU',ALIGN_CENTER,'Společné ubytování');
+	$tbl_renderer->addColumns('ubytovani');
 if($zaznam_z['prihlasky'] > 1)
-	$data_tbl->set_header_col($col++,'Termín',ALIGN_CENTER);
-$data_tbl->set_header_col($col++,'Pozn.',ALIGN_LEFT);
-$data_tbl->set_header_col($col++,'Pozn.(i)',ALIGN_LEFT);
+	$tbl_renderer->addColumns('termin');
+$tbl_renderer->addColumns('pozn','pozn_in');
 
-echo $data_tbl->get_css()."\n";
-echo $data_tbl->get_header()."\n";
-echo $data_tbl->get_header_row()."\n";
-
-@$vysledek=query_db("SELECT z.*, u.jmeno, u.prijmeni FROM ".TBL_ZAVXUS." z, ".TBL_USER." u WHERE z.id_zavod=$id AND z.id_user = u.id ORDER BY id");
-//SELECT zavxus.*, users.jmeno, users.prijmeni FROM zavxus, users WHERE id_zavod=1 AND zavxus.id_user = users.id ORDER BY id
-
-$i=0;
-$trans=0;
-$sedadel=0;
-$ubyt=0;
-while ($zaznam=mysqli_fetch_array($vysledek))
-{
-	$i++;
-
-	$row = array();
-	$row[] = $i.'<!-- '.$zaznam['id'].' -->';
-	$row[] = $zaznam['jmeno'];
-	$row[] = $zaznam['prijmeni'];
-	$row[] = '<B>'.$zaznam['kat'].'</B>';
-	if($is_spol_dopr_on||$is_sdil_dopr_on)
-	{
-		if ($zaznam["transport"])
-		{
-			$row[] = '<B>&#x2714;</B>';
-			$trans++;
-		}
-		else
-			$row[] = '';
-	}
-	if($is_sdil_dopr_on)
-		$row[] = GetSharedTransportValue($zaznam["transport"], $zaznam["sedadel"], $sedadel );
-	if($is_spol_ubyt_on)
-	{
-		if ($zaznam["ubytovani"])
-		{
-			$row[] = '<B>&#x2714;</B>';
-			$ubyt++;
-		}
-		else
-			$row[] = '';
-	}
-	if($zaznam_z['prihlasky'] > 1)
-		$row[] = $zaznam['termin'];
-	$row[] = $zaznam['pozn'];
-	$row[] = $zaznam['pozn_in'];
-	echo $data_tbl->get_new_row_arr($row)."\n";
+if ($g_enable_race_capacity && isSet ($zaznam_z['kapacita']) ) {
+	$tbl_renderer->addBreak(new LimitBreakDetector($zaznam_z['kapacita']));
+	$tbl_renderer->setRowTextPainter ( new GreyLastNPainter($zaznam_z['kapacita']) );	
 }
-echo $data_tbl->get_footer()."\n";
 
-echo $is_spol_dopr_on||$is_sdil_dopr_on ? "<BR>Počet přihlášených na dopravu: $trans" : "";
-$warning_text = $sedadel < 0 ? ' <font color="red">(málo volných míst)</font>' : '';
-echo $is_sdil_dopr_on ? "<BR>Počet volných sdílených míst: $sedadel".$warning_text : "";
-echo $is_spol_ubyt_on ? "<BR>Počet přihlášených na ubytování: $ubyt" : "";
+echo $tbl_renderer->render( new html_table_mc(), $zaznamy, [] );
+
+$stats = countRaceStats($zaznamy, $is_sdil_dopr_on);
+RenderRaceStats(
+    $stats,
+    $is_spol_dopr_on,
+    $is_sdil_dopr_on,
+    $is_spol_ubyt_on
+);
+
 ?>
 
 <BR>

@@ -132,10 +132,21 @@ function changeParameterValueInURL(currentUrl, parameter, value)
 	return url.href;
 }
 
-function toggle_display_by_class(cls) {
-    var lst = document.getElementsByClassName(cls);
-    for(var i = 0; i < lst.length; ++i) {
-        (lst[i].style.display == '')?(lst[i].style.display='none'):(lst[i].style.display='');
+function toggle_expand_by_group(group,el) {
+    var lst = document.querySelectorAll('[data-group="' + group + '"]');
+	var hidden = true;
+	for(var i = 0; i < lst.length; ++i) {
+		hidden = (lst[i].style.display == '');
+        lst[i].style.display=hidden?'none':''
+    }
+	
+	// toggle arrow
+	const groupText = el.textContent;
+    if (groupText.includes('▲') || groupText.includes('▼')) {
+   		 el.textContent =
+            hidden
+                ? groupText.replace('▲', '▼')
+                : groupText.replace('▼', '▲');
     }
 }
 

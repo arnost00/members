@@ -67,7 +67,10 @@ if ($kat != '')
 				}
 				else
 				{	// really new
-					query_db("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in, termin, transport, sedadel, ubytovani) VALUES ('$id_us','$id_zav','$kat','$pozn','$pozn2','$termin',$transport, $sedadel, $ubytovani)");	
+					$vysledek = query_db("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in, termin, transport, sedadel, ubytovani) VALUES ('$id_us','$id_zav','$kat','$pozn','$pozn2','$termin',$transport, $sedadel, $ubytovani)");	
+					if ($vysledek !== false && mysqli_affected_rows($db_conn) > 0) {
+						query_db("UPDATE ".TBL_RACE." SET prihlasenych = prihlasenych + 1 WHERE id = '$id_zav'");
+					}
 				}
 			}
 			else

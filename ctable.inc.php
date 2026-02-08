@@ -137,33 +137,39 @@ class html_table_mc extends html_table_base
 	}
 
 	//__________________________________________________________________
-	function set_header_col ($col,$text,$align,$width = 0,$ex_td='')
+	function set_header_col ($col,$text,$align,$width = 0)
 	{
 		if (is_array($this->header_row))
 		{
 			$this->header_row[$col]['text'] = $text;
 			$this->header_row[$col]['class'] = $align;
 			$this->header_row[$col]['width'] = $width;
-			$this->header_row[$col]['ex_td'] = $ex_td;
 			$this->header_row[$col]['help'] = '';
 			$this->cols_align[$col] = $align;
 			$this->sort_row[$col] = '';
 		}
 	}
 
-	function set_header_col_with_help ($col,$text,$align,$help,$width = 0,$ex_td='')
+	function set_header_col_with_help ($col,$text,$align,$help,$width = 0)
 	{
 		if (is_array($this->header_row))
 		{
 			$this->header_row[$col]['text'] = $text;
 			$this->header_row[$col]['class'] = $align;
 			$this->header_row[$col]['width'] = $width;
-			$this->header_row[$col]['ex_td'] = $ex_td;
 			$this->header_row[$col]['help'] = $help;
 			$this->cols_align[$col] = $align;
 			$this->sort_row[$col] = '';
 		}
 	}
+
+	function mod_header_col_onclick ($col,$onclick)
+	{
+		if (is_array($this->header_row) && $col < count($this->header_row))
+		{
+			$this->header_row[$col]['onclick'] = $onclick;
+		}
+	}	
 
 	function set_sort_col ($col,$text)
 	{
@@ -187,6 +193,32 @@ class html_table_mc extends html_table_base
 		}
 	}
 
+	private function get_header_row_start( array $col ) : string {
+		$row = '';
+		$row .= '<TD class="'.$this->class_name.'_header_'.$col['class'].'"';
+		if ($col['width'] != 0)
+			$row .= ' width="'.$col['width'].'"';
+		// I have not found any usage for this, if so add a mod function like onclick
+		// if ($col['ex_td'] != '')
+		// 	$row .= ' '.$col['ex_td'];
+		
+		$row .= '>';
+		if ($col['help'] != '' || isSet ( $col['onclick'])) {
+			$row .='<span style=';
+			if ( isSet ( $col['onclick']) )
+				$row .= '"cursor:pointer; text-decoration:underline;" onclick="'.$col['onclick'].'"';
+			else 
+				$row .='"cursor:help"'; // help only
+			if ($col['help'] != '')
+				$row .= ' title="'.$col['help'].'"';
+			$row .= '>';
+		}
+		$row .= $col['text'];
+		if ($col['help'] != '' || isSet ( $col['onclick']))
+			$row .='</span>';
+		return $row;
+	}
+
 	//__________________________________________________________________
 	function get_header_row()
 	{	// pri prvnim prubehu vytvori z pole 'header_row' string. Pri dalsich ho jen vraci.
@@ -195,18 +227,7 @@ class html_table_mc extends html_table_base
 		$row = '<TR class="head" height="20">';
 		foreach($this->header_row as $col)
 		{
-			$row .= '<TD class="'.$this->class_name.'_header_'.$col['class'].'"';
-			if ($col['width'] != 0)
-				$row .= ' width="'.$col['width'].'"';
-			if ($col['ex_td'] != '')
-				$row .= ' '.$col['ex_td'];
-			
-			$row .= '>';
-			if ($col['help'] != '')
-				$row .='<span style="cursor:help" title="'.$col['help'].'">';
-			$row .= $col['text'];
-			if ($col['help'] != '')
-				$row .='</span>';
+			$row .= $this->get_header_row_start ( $col );
 			$row .= '</TD>';
 			$this->cols++;
 		}
@@ -235,17 +256,7 @@ class html_table_mc extends html_table_base
 		$row = '<TR class="head" height="20">';
 		foreach($this->header_row as $idx => $col)
 		{
-			$row .= '<TD class="'.$this->class_name.'_header_'.$col['class'].'"';
-			if ($col['width'] != 0)
-				$row .= ' width="'.$col['width'].'"';
-			if ($col['ex_td'] != '')
-				$row .= ' '.$col['ex_td'];
-			$row .= '>';
-			if ($col['help'] != '')
-				$row .='<span style="cursor:help" title="'.$col['help'].'">';
-			$row .= $col['text'];
-			if ($col['help'] != '')
-				$row .='</span>';
+			$row .= $this->get_header_row_start($col);
 			if ($this->sort_row[$idx] != '')
 				$row .= ' '.$this->sort_row[$idx];
 			$row .= '</TD>';
@@ -267,15 +278,25 @@ class html_table_mc extends html_table_base
 	}
 
 	//__________________________________________________________________
-	function get_new_row_arr($row_arr, $row_class="")// pole sloupcu
-	{
+	function get_new_row_arr($row_arr, $row_attrs=[])
+	{ // pole sloupcu with optional attributes
+		$row_add_class = '';
+		$row_add_attrs = '';
+
+		foreach ($row_attrs as $key => $value) {
+			if ( $key === 'class')
+			  $row_add_class = ' ' . $value;
+			else 
+			  $row_add_attrs .= ' ' . htmlspecialchars($key) . '="' . htmlspecialchars($value) . '"';
+		}
+
 		$cols = count ($row_arr);
 		if ($cols == 0) return '';
 		if ($this->highlighted_next_row)
 			$rc = 'highlight';
 		else
 			$rc= ((++$this->row_idx % 2) == 0) ? 'r1' : 'r2';
-		$row = '<TR class="'.$rc.' '.$row_class.'" valign="top">';
+		$row = '<TR class="'.$rc.$row_add_class.'"'.$row_add_attrs.' valign="top">';
 		for($i = 0; $i < $cols; $i++)
 		{
 			$row .= '<TD class="'.$this->class_name.$this->cols_align[$i].'"';
