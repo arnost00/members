@@ -6,10 +6,10 @@ The website is avaible at https://members.eob.cz/.
 Source code is avaible at https://github.com/arnost00/members.
 
 ## Contributors
-- ©️ Copyright 2002-2025 Arnošt, Kenia
+- ©️ Copyright 2002-2026 Arnošt, Kenia
 - ©️ Copyright 2014-2015 LuF
 - ©️ Copyright 2023-2025 Jurakin
-- ©️ Copyright 2024-2025 Svatoš Coufal
+- ©️ Copyright 2024-2026 Svatoš Coufal
 - ©️ Copyright 2025 Jenda Zháňal
 
 
