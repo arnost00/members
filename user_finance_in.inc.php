@@ -15,7 +15,8 @@ $race_sel .= '<option value=null>---</option>';
 @$vysledek_zavody=query_db("select id, nazev, from_unixtime(datum,'%Y-%c-%e') datum_text from ".TBL_RACE." order by datum desc");
 while ($zaznam=mysqli_fetch_array($vysledek_zavody))
 {
-	$race_sel .= "<option value=".$zaznam["id"].">".$zaznam["nazev"]."&nbsp;-&nbsp;".formatDate($zaznam["datum_text"])."</option>";
+	$selected = (isset($race_id) && $zaznam["id"] == $race_id) ? ' selected' : '';
+	$race_sel .= "<option value=".$zaznam["id"].$selected.">".$zaznam["nazev"]."&nbsp;-&nbsp;".formatDate($zaznam["datum_text"])."</option>";
 }
 $race_sel .= '</select>&nbsp;&nbsp;nepovinná položka';
 
