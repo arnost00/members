@@ -125,11 +125,11 @@ if ( !empty ( $ext_id ) && $connector!== null ) {
     // Get race info by race ID
     $raceInfo = $connector->getRaceInfo($ext_id);
     if ( $raceInfo == null ) {
-		$raceInfo = new Race([]);
+		$raceInfo = new RaceInfo([]);
 		$ext_id_info = " \u{26A0} neplatné ID závodu";
 	}
 } else {
-	$raceInfo = new Race([]);
+	$raceInfo = new RaceInfo([]);
 }
 
 if($zaznam['vicedenni'])

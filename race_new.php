@@ -54,7 +54,7 @@ if (!empty($ext_id)) {
 
 if ($raceInfo === null) {
     // default
-    $raceInfo = new Race([]);
+    $raceInfo = new RaceInfo([]);
 }
 
 $type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;

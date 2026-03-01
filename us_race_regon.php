@@ -152,7 +152,7 @@ for ($i=0; $i<count($kategorie); $i++)
 }
 
 echo('<BR><BR>Vybraná kategorie:&nbsp;');
-echo('<INPUT TYPE="text" NAME="kat" size=4 value="'.xss_prevent($zaznam_rg['kat']).'">');
+echo('<INPUT TYPE="text" NAME="kat" size=6 value="'.xss_prevent($zaznam_rg['kat']).'">');
 echo("<BR>\n");
 
 if ($g_enable_race_transport || $g_enable_race_accommodation)

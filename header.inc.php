@@ -18,9 +18,8 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 // HTTP/1.0 
 header("Pragma: no-cache"); 
 
-$head_addons = '';
+if (!isset($head_addons)) $head_addons = '';
 $head_addons .="\t".'<script src="functions.js" type="text/javascript"></script>'."\n";
-$head_addons .="\t".'<script src="./js/jquery-3.7.1.min.js"></script>'."\n";
 $head_addons .="\t".'<script language="javascript">'."\n";
 $head_addons .="\t".'<!-- '."\n";
 $head_addons .="\t\t".'javascript:set_default_race_url(\''.$g_baseadr.'race_info_show.php?id_zav=\');'."\n";
