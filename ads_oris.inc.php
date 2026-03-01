@@ -127,7 +127,14 @@ else
 			$row[] = $arr_oris["user"][$fullreg]->getReg();
 			$row[] = $arr_oris["user"][$fullreg]->getLastName()." ".$arr_oris["user"][$fullreg]->getFirstName();
 			$oris_si = $arr_oris["user"][$fullreg]->getSI();
-			if ($oris_si != $zaznam['si']) $oris_si = "<font style='color:red'>".$oris_si."</font>";
+			if ($oris_si != $zaznam['si'])
+			{
+				$oris_si = "<font style='color:red'>".$oris_si."</font>";
+				$oris_user_id = $arr_oris["user"][$fullreg]->getUserId();
+				$local_si = $zaznam['si'];
+				$local_id = $zaznam['id'];
+				$oris_si .= "&nbsp;<a href=\"ads_oris_si_sync.php?oris_id=$oris_user_id&id=$local_id\" title=\"Synchronizovat SI do ORISu (nastavit na $local_si)\">[<<]</a>";
+			}
 			$row[] = $oris_si;
 			$arr_oris["members"][$fullreg]=1;
 		}

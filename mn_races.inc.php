@@ -7,6 +7,7 @@ DrawPageTitle('Hromadné přihlášky na závody');
 <?
 require_once ("./common_race.inc.php");
 require_once ('./url.inc.php');
+require_once ('./ct_renderer_races.inc.php');
 
 $fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
 $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
@@ -17,7 +18,7 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 //when show all races reverse order
 $order = ($fC == 1) ? "desc" : "";
 
-$query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, nazev,oddil,ranking,typ0,typ,vicedenni,odkaz,misto,cancelled FROM ".TBL_RACE.$sql_sub_query." ORDER BY datum $order, datum2 $order, id $order";
+$query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, nazev,oddil,ranking,typ0,typ,vicedenni,odkaz,misto,kapacita,prihlasenych,cancelled FROM ".TBL_RACE.$sql_sub_query." ORDER BY datum $order, datum2 $order, id $order";
 @$vysledek=query_db($query);
 
 ?>
@@ -35,86 +36,54 @@ $query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prih
 </script>
 
 <?
-$num_rows = ($vysledek != FALSE) ? mysqli_num_rows($vysledek) : 0;
+// Fetch all rows into array
+$zaznamy  = $vysledek ? mysqli_fetch_all($vysledek, MYSQLI_ASSOC) : [];
+$num_rows = count ($zaznamy);
+
+$renderer_option['curr_date'] = GetCurrentDate();
+
 if ($num_rows > 0)
 {
 	show_link_to_actual_race($num_rows);
 
-	$data_tbl = new html_table_mc();
-	$col = 0;
-	$data_tbl->set_header_col($col++,'Datum',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Název',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Místo',ALIGN_LEFT);
-	$data_tbl->set_header_col_with_help($col++,'Poř.',ALIGN_CENTER,"Pořadatel");
-	$data_tbl->set_header_col_with_help($col++,'T',ALIGN_CENTER,"Typ akce");
-	$data_tbl->set_header_col_with_help($col++,'S',ALIGN_CENTER,"Sport");
-	$data_tbl->set_header_col_with_help($col++,'W',ALIGN_CENTER,"Web závodu");
-	$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Přihlášky',ALIGN_CENTER);
+	// define table
+	$tbl_renderer = RacesRendererFactory::createTable();
+	$tbl_renderer->addColumns('datum','nazev','misto','oddil','typ0','typ','odkaz');
+	if ($g_enable_race_capacity)
+	 	$tbl_renderer->addColumns('ucast');
+	$tbl_renderer->addColumns(['moznosti', new CallbackRenderer ( function ( RowData $row, array $options ) : string {
+		$race_is_old = (GetTimeToRace($row->rec['datum']) == -1);
+		$prihlasky_curr = raceterms::GetActiveRegDateArr($row->rec);
 
-	echo $data_tbl->get_css()."\n";
-	echo $data_tbl->get_header()."\n";
-	echo $data_tbl->get_header_row()."\n";
-
-	$i = 1;
-	$brk_tbl = false;
-	$old_year = 0;
-	while ($zaznam=mysqli_fetch_array($vysledek))
-	{
-		$race_is_old = (GetTimeToRace($zaznam['datum']) == -1);
-
-		$prefix = ($zaznam['datum'] < GetCurrentDate()) ? '<span class="TextAlertExp">' : '';
-		$suffix = ($zaznam['datum'] < GetCurrentDate()) ? '</span>' : '';
-		$row = array();
-		//----------------------------
-		if($zaznam['vicedenni'])
-			$datum=Date2StringFT($zaznam['datum'],$zaznam['datum2']);
-		else
-			$datum=Date2String($zaznam['datum']);
-
-		$prihlasky_curr = raceterms::GetActiveRegDateArr($zaznam);
-		$prihlasky=Date2String($prihlasky_curr[0]);
-
-		if($zaznam['prihlasky'] > 1)
-			$prihlasky .= '&nbsp;/&nbsp;'.$prihlasky_curr[1];
 		$time_to_reg = GetTimeToReg($prihlasky_curr[0]);
-		$prihlasky_out = raceterms::ColorizeTermUser($time_to_reg,$prihlasky_curr,$prihlasky);
 		$prihl_finish = (($time_to_reg == -1 && $prihlasky_curr[0] != 0) || $race_is_old);
-		//----------------------------
-		$row[] = $prefix.$datum.$suffix;
-		$row[] = "<A href=\"javascript:open_race_info(".$zaznam['id'].")\" class=\"adr_name\">".$prefix.GetFormatedTextDel($zaznam['nazev'], $zaznam['cancelled']).$suffix."</A>";
-		$row[] = $prefix.GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']).$suffix;
-		$row[] = $prefix.$zaznam['oddil'].$suffix;
-		$row[] = GetRaceType0($zaznam['typ0']);
-		$row[] = GetRaceTypeImg($zaznam['typ']);
-		$row[] = GetRaceLinkHTML($zaznam['odkaz']);
-		$ucast = (GetTimeToRace($zaznam['datum']) <= 0) ? " / <A HREF=\"javascript:open_win('./api_race_entry.view.php?race_id=".$zaznam['id']."','')\">Účast</A>" : '';
+		$ucast = (GetTimeToRace($row->rec['datum']) <= 0) ? " / <A HREF=\"javascript:open_win('./api_race_entry.view.php?race_id=".$row->rec['id']."','')\">Účast</A>" : '';
 		if (!$prihl_finish)
 		{
-			$row[] = "<A HREF=\"javascript:open_win('./race_regs_1.php?gr_id="._MANAGER_GROUP_ID_."&id=".$zaznam['id']."&show_ed=1','')\">Př-1</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_all.php?gr_id="._MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\">Př-V</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zbr</span></A>".$ucast;
+			return "<A HREF=\"javascript:open_win('./race_regs_1.php?gr_id="._MANAGER_GROUP_ID_."&id=".$row->rec['id']."&show_ed=1','')\">Př-1</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_regs_all.php?gr_id="._MANAGER_GROUP_ID_."&id=".$row->rec['id']."','')\">Př-V</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._MANAGER_GROUP_ID_."&id=".$row->rec['id']."','')\"><span class=\"TextAlertExpLight\">Zbr</span></A>".$ucast;
 		}
 		else
 		{
-			$row[] = "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._MANAGER_GROUP_ID_."&id=".$zaznam['id']."','')\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>".$ucast;
+			return "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._MANAGER_GROUP_ID_."&id=".$row->rec['id']."','')\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>".$ucast;
 		}
-		$row[] = $prihlasky_out;
+ 
+	})]);
+	$tbl_renderer->addColumns('prihlasky');
 
-		if (!$brk_tbl && $zaznam['datum'] >= GetCurrentDate())
-		{
-			if($i != 1)
-				echo $data_tbl->get_break_row()."\n";
-			$brk_tbl = true;
-		}
-		else if($i != 1 && Date2Year($zaznam['datum']) != $old_year)
-		{
-				echo $data_tbl->get_break_row(true)."\n";
-		}
+	$tbl_renderer->setRowTextPainter ( new GreyOldPainter() );
 
-		echo $data_tbl->get_new_row_arr($row)."\n";
-		$i++;
-		$old_year = Date2Year($zaznam['datum']);
+	if ($fC == 1) {
+		// old races - add breaks
+		$tbl_renderer->addBreak(new YearExpanderDetector());
+		$tbl_renderer->setRowAttrsExt ( YearExpanderDetector::yearGroupRowAttrsExtender(...));
 	}
-	echo $data_tbl->get_footer()."\n";
+	else {
+		// TODO: breaks are necessary only by some filters
+		$tbl_renderer->addBreak(new YearBreakDetector());
+		$tbl_renderer->addBreak(new FutureRaceBreakDetector());
+	}
+
+	echo $tbl_renderer->render( new html_table_mc(), $zaznamy, $renderer_option );
 }
 ?>
 <p>

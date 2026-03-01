@@ -26,6 +26,9 @@ if ($zaznam2=mysqli_fetch_array($vysledek2))
 if (!$entry_lock)
 {
 	@$vysledek=query_db("DELETE FROM ".TBL_ZAVXUS." WHERE id_zavod = '$id_zav' AND id_user = '$id_us'");
+	if ($vysledek !== false && mysqli_affected_rows($db_conn) > 0) {
+		query_db("UPDATE ".TBL_RACE." SET prihlasenych = GREATEST(0, prihlasenych - 1) WHERE id = '$id_zav'");
+	}
 }
 ?>
 

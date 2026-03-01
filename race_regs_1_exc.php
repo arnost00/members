@@ -85,6 +85,9 @@ if($termin != 0)
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se změnit přihlášku člena.");
+			if ($result !== false && mysqli_affected_rows($db_conn) > 0) {
+				query_db("UPDATE ".TBL_RACE." SET prihlasenych = GREATEST(0, prihlasenych - 1) WHERE id = '$id'");
+			}
 		}
 		else
 		{	// update
@@ -114,6 +117,9 @@ if($termin != 0)
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se změnit přihlášku člena.");
+			if ($result !== false && mysqli_affected_rows($db_conn) > 0) {
+				query_db("UPDATE ".TBL_RACE." SET prihlasenych = prihlasenych + 1 WHERE id = '$id'");
+			}
 		}
 	}
 }

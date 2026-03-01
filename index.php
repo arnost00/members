@@ -76,12 +76,13 @@ if($g_is_system_running || IsLoggedAdmin())
 		case 1: //adresar
 			require_once "./directory.inc.php";
 			break;
-		case 2: //terminovka
-			if (!IsLogged())
-				require_once './racelist.inc.php';
-			else
-				require_once "./news.inc.php";
-			break;
+		// newer comes here ?
+		// case 2: //terminovka
+		// 	if (!IsLogged())
+		// 		require_once './racelist.inc.php';
+		// 	else
+		// 		require_once "./news.inc.php";
+		// 	break;
 		case 3: //prihlasky clena
 			if (IsLogged())
 				require_once './users_races.inc.php';

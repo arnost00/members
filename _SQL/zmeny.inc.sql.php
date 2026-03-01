@@ -69,6 +69,14 @@ function _list_sql_queries_copy_paste (&$qlist)
 	echo '<BUTTON type="button" onclick="window.location = \'./'.$this_file_name.'?action=0\'">Vypiš normálně</BUTTON>';
 }
 
+function _echo_db_error(&$db_conn, $exception)
+{
+	echo '<span class="ErrorText"><B>Chyba</B>'.(($exception) ? ' (vyhozena vyjímka)':'').'<BR>'."\n";
+	echo 'Nepodařilo se provést změnu v databázi.<BR>'."\n";
+	echo 'Error - '.mysqli_errno($db_conn).': '.mysqli_error($db_conn).'</span><BR>'."\n"; 
+	echo '----------<BR>'."\n";
+}
+
 function _run_sql_queries (&$qlist)
 {
 	global $db_conn;
@@ -83,23 +91,26 @@ function _run_sql_queries (&$qlist)
 	{
 		echo '<B>SQL QUERY</B> = "'.$line.'"';
 		echo "<BR>\n";
-
-		$result=mysqli_query($db_conn, $line);
-		echo '&nbsp;\-------- ';
-		if ($result == FALSE)
+		try
 		{
-			echo '<span class="ErrorText"><B>Chyba</B><BR>'."\n";
-			echo 'Nepodařilo se provést změnu v databázi.<BR>'."\n";
-			echo 'Error - '.mysqli_errno($db_conn).': '.mysqli_error($db_conn).'</span><BR>'."\n"; 
-			echo '----------<BR>'."\n";
+			echo '&nbsp;\-------- ';
+			$result=mysqli_query($db_conn, $line);
+			if ($result == FALSE)
+			{
+				_echo_db_error($db_conn, false);
+				$db_err ++;
+			}
+			else
+			{
+				echo '<B>OK</B><BR>'."\n";
+				$db_ok ++;
+			}
+		}
+		catch (Exception $e)
+		{
+			_echo_db_error($db_conn, true);
 			$db_err ++;
 		}
-		else
-		{
-			echo '<B>OK</B><BR>'."\n";
-			$db_ok ++;
-		}
-
 	}
 	echo '</code>'."\n";
 	echo '<HR>'."\n";
