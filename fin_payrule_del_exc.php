@@ -1,4 +1,4 @@
-<?php /* novinky - mazani novinek */
+<?php /* definice plateb - mazani */
 @extract($_REQUEST);
 
 require_once ("connect.inc.php");

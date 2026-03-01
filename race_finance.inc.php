@@ -23,9 +23,9 @@ if ($vysledek_all === FALSE )
 	die('Chyba v databázi, kontaktuje administrátora.<br>');
 }
 
+//vytazeni informaci o zavode
 DrawPageSubTitle('Vybraný závod');
 
-//vytazeni informaci o zavode
 @$vysledek_z=query_db('SELECT * FROM '.TBL_RACE." WHERE `id`='$race_id' LIMIT 1");
 $zaznam_z = mysqli_fetch_array($vysledek_z);
 
@@ -446,7 +446,6 @@ if ($g_enable_race_accommodation)
 	$data_tbl->set_header_col_with_help($col++,'Ubyt.',ALIGN_CENTER, 'Společné ubytování');
 $data_tbl->set_header_col_with_help($col++,'Účast',ALIGN_CENTER, 'A = účast, F = přidán');
 
-
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
 echo $data_tbl->get_header_row()."\n";
@@ -458,6 +457,7 @@ $i = 1;
 $zaznam=null; // inicializace for hand over between loops
 
 echo $data_tbl->get_subheader_row("Přihlášení")."\n";
+
 while ($zaznam=mysqli_fetch_assoc($vysledek_all))
 {
 	if ( !isset($zaznam['zu_id'])) {
@@ -465,7 +465,14 @@ while ($zaznam=mysqli_fetch_assoc($vysledek_all))
 	}
 
 	$kat = $zaznam['kat'];
+	if ( empty ($kat ) && !empty ( $ext_id ) && $connector!== null ) {
+		$kat = getOrisClass($zaznam['reg']);
+	}
+
 	$kat_id = $checkBoxRows['cat']->addEntry($kat,null,$kat,false,true);
+	if ( !empty($kat_id) ) {
+		$attrs['data-cat'] = $kat_id;
+	}
 	
 	$id = $zaznam['id'];
 
@@ -485,7 +492,6 @@ while ($zaznam=mysqli_fetch_assoc($vysledek_all))
 				$regFees['fee'] += $regFees['fee'] * $raceInfo->koeficient2 / 100;
 			}
 		}
-
 	}		
 
 	$row = array();
@@ -515,8 +521,6 @@ while ($zaznam=mysqli_fetch_assoc($vysledek_all))
 	if ( isset ( $regFees ) ) {
 		// render startovne z Orisu
 		$row[] = renderOrisFee($regFees);
-	} else {
-		$row[] = '';
 	}
 
 	// startovne
@@ -573,6 +577,7 @@ do  {
 		'data-accommodation' => 0 ]
 		; // other payer
 
+	$kat = '';
 	if ( !empty ( $ext_id ) && $connector!== null ) {
 		$kat = getOrisClass($zaznam['reg']);
 		$kat_id = $checkBoxRows['cat']->addEntry($kat,null,$kat,false,true);
@@ -595,9 +600,7 @@ do  {
 	$input_note = '<input type="text" id="nt'.$i.'" name="nt'.$i.'" value="'.$note.'" size="40" maxlength="200" data-col="note" data-init="'.$note.'" />';
 	$row[] = $input_note;
 
-	if ( !empty ( $ext_id ) && $connector!== null ) {
-		$row[] = $kat;
-	}
+	$row[] = $kat;
 
 	if ($enable_fin_types) {
 		$fintype = $zaznam['finance_type'] ?? 0; 
@@ -664,6 +667,13 @@ do {
 		'data-accommodation' => 0
 		]; // other non-payer
 
+	$kat = '';
+	if ( !empty ( $ext_id ) && $connector!== null ) {
+		$kat = getOrisClass($zaznam['reg']);
+		$kat_id = $checkBoxRows['cat']->addEntry($kat,null,$kat,false,true);
+		$attrs['data-cat'] = $kat_id;
+	}
+
 	$id = $zaznam['id'];
 	
 	$row = array();
@@ -678,7 +688,7 @@ do {
 	$input_note = '<input type="text" id="nt'.$i.'" name="nt'.$i.'" value="'.$note.'" size="40" maxlength="200" data-col="note" data-init="'.$note.'" />';
 	$row[] = $input_note;
 	
-	$row[] = $zaznam['kat'];
+	$row[] = $kat;
 
 	if ($enable_fin_types) {
 		$fintype = $zaznam['finance_type'] ?? 0; 

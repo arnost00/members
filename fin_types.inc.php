@@ -95,12 +95,12 @@ else
 			if ( array_key_exists ('', $records) ) {
 				// generic type configuration in column
 				$id = $records[''][0]['id'];
-				$data_tbl->set_header_col($col++,'<A HREF="./fin_payrule_edit.php?id='.$id.'" title="Editovat platby">&#9997;</A>&nbsp;/&nbsp;<A HREF="./fin_payrule_del_exc.php?id='.$id.'" onclick="return confirm_delete_pay()" class="Erase" title="Smazat platby">&#10799;</A>',ALIGN_CENTER);
+				$data_tbl->set_header_col($col++,'<A HREF="./fin_payrule_edit.php?id='.$id.'" title="Editovat platby" style="color:inherit;">&#9997;</A>&nbsp;/&nbsp;<A HREF="./fin_payrule_del_exc.php?id='.$id.'" onclick="return confirm_delete_pay()" class="Erase" title="Smazat platby">&#10799;</A>',ALIGN_CENTER);
 			} else {
 				$data_tbl->set_header_col($col++, '',ALIGN_CENTER);
 			}
 		}
-		$data_tbl->set_header_col($col++,'<A HREF="./fin_payrule_edit.php?new" title="Přidat platby">+</A>',ALIGN_CENTER);
+		$data_tbl->set_header_col($col++,'<A HREF="./fin_payrule_edit.php?new" title="Přidat platby" style="color:inherit;">+</A>',ALIGN_CENTER);
 
 		echo $data_tbl->get_css()."\n";
 		echo $data_tbl->get_header()."\n";
