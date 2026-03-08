@@ -147,7 +147,7 @@ while ($zaznam=mysqli_fetch_assoc($vysledek_prihlaseni))
 	if ($enable_fin_types)
 		$row[] = ($zaznam['nazev'] != null)? $zaznam['nazev'] : '-';
 
-	$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['u_id'].'\',\'\')">Platby</A>';
+	$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['u_id'].'&race_id='.$race_id.'\',\'\')">Platby</A>';
 	$row_text .= '<input type="hidden" id="userid'.$i.'" name="userid'.$i.'" value="'.$zaznam["u_id"].'"/><input type="hidden" id="paymentid'.$i.'" name="paymentid'.$i.'" value="'.$zaznam["id"].'"/>'; 
 	$row[] = $row_text;
 	if ($g_enable_race_transport)
@@ -195,7 +195,7 @@ while ($zaznam=mysqli_fetch_assoc($vysledek_platici))
 	if ($enable_fin_types)
 		$row[] = ($zaznam['nazev'] != null)? $zaznam['nazev'] : '-';
 	
-	$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['u_id'].'\',\'\')">Platby</A>';
+	$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['u_id'].'&race_id='.$race_id.'\',\'\')">Platby</A>';
 	$row_text .= '<input type="hidden" id="userid'.$i.'" name="userid'.$i.'" value="'.$zaznam["u_id"].'"/><input type="hidden" id="paymentid'.$i.'" name="paymentid'.$i.'" value="'.$zaznam["id"].'"/>';
 	$row[] = $row_text;
 	$row[] = '';
@@ -253,7 +253,7 @@ while ($zaznam=mysqli_fetch_assoc($vysledek_neprihlaseni))
 	if ($enable_fin_types)
 		$row[] = ($zaznam['nazev'] != null)? $zaznam['nazev'] : '-';
 	
-	$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['u_id'].'\',\'\')">Platby</A>';
+	$row_text = '<A HREF="javascript:open_win(\'./user_finance_view.php?user_id='.$zaznam['u_id'].'&race_id='.$race_id.'\',\'\')">Platby</A>';
 	$row_text .= '<input type="hidden" id="userid'.$i.'" name="userid'.$i.'" value="'.$zaznam["u_id"].'"/><input type="hidden" id="paymentid'.$i.'" name="paymentid'.$i.'" value="'.$zaznam["id"].'"/>';
 	$row[] = $row_text;
 
