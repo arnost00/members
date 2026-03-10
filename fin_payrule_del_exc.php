@@ -12,7 +12,7 @@ if (IsLoggedFinance())
 		$query = 'DELETE FROM '.TBL_PAYRULES.' WHERE `id`=\''.$id.'\'';
 		query_db($query);
 	}
-	header("location: ".$g_baseadr.'index.php?id='._FINANCE_GROUP_ID_.'&subid=4');
+	header("location: ".$g_baseadr.'index.php?id='._FINANCE_GROUP_ID_.'&subid=5');
 	exit;
 }
 else

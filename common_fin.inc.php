@@ -157,7 +157,7 @@ class CheckboxRow {
                 continue;
             }
 
-            $html .= '<input type="checkbox" data-role="one" data-key="' . htmlspecialchars($this->key) . '" value="' . $entry['id'] . '"';
+            $html .= '<input style="margin-left: 1em;" type="checkbox" data-role="one" data-key="' . htmlspecialchars($this->key) . '" value="' . $entry['id'] . '"';
 			if ( isset ($this->namePrefix) ) {
 				if ( !$this->disabled ) $html .= ' name="' . htmlspecialchars($this->namePrefix) . '[]"'; // name on active only
 				$html .= ' id="' . htmlspecialchars($this->namePrefix) . '_' . $id++ . '"';

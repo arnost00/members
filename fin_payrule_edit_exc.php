@@ -79,10 +79,8 @@ function find_existing_ids(array $keys, int $uctovano): array
 
 	$has_entry = false;
 
-	echo '<br> uctovano'; var_dump ( $uctovano );
     if ($res && count($res) > 0) {
         foreach ($res as $row) {
-			echo '<br> row'; var_dump ( $row );
 			$mask = -1; // delete record
 			if ( !$has_entry ) {
 				// there is no record yet
@@ -99,7 +97,6 @@ function find_existing_ids(array $keys, int $uctovano): array
             		$mask = ((int)$row['uctovano']) & (~(int)$uctovano);
 				}
 			}
-			echo 'Mask ' . $mask . ' ' . $has_entry;
             $result[$row['id']] = $mask;
         }
     }
@@ -131,29 +128,24 @@ foreach ($local_payrule_keys as [$key, $label, $type]) {
 	$combinations = $newCombinations;
 }
 
-var_dump ( $combinations );
 // --- Determine existing / new record ---
 $uctovano = isset($_POST['uctovano']) ? array_sum($_POST['uctovano']) : 0;
 
 // --- For each combination: update or insert ---
 foreach ($combinations as $combo) {
 
-	echo '<br>Combo '; var_dump ( $combo );
 	$existing_ids = find_existing_ids($combo, $uctovano);
-	echo '<br>existing_ids '; var_dump ($existing_ids);
 
 	$has_entry = false;
 
 	foreach ($existing_ids as $existing_id => $existing_uctovano) {
 		
-		echo '<br> existing'; var_dump ($existing_id); var_dump($existing_uctovano);
 		// manage existing
 		if ($existing_id) {
 			if ( $existing_uctovano == -1 ) {
 				// delete record
 				$sql = "DELETE FROM " . TBL_PAYRULES . " WHERE id = ?";
 				$stmt = db_prepare($sql);
-				echo '<br>' . $sql . ' id=' . $existing_id;
 				$result = db_exec($stmt, 's', [$existing_id]);
 			} elseif ( ((int)$existing_uctovano & ~(int)$uctovano ) != 0 ) {
 				// restrict existing $uctovano list
@@ -161,7 +153,6 @@ foreach ($combinations as $combo) {
 						SET uctovano = ? 
 						WHERE id = ?";
 				$stmt = db_prepare($sql);
-				echo '<br>' . $sql . ' id=' . $existing_id . ' ' . $existing_uctovano;
 				$result = db_exec($stmt, 'si', [$existing_uctovano, $existing_id]);
 			} else {
 				// --- Update existing ---
@@ -171,7 +162,6 @@ foreach ($combinations as $combo) {
 						WHERE id = ?";
 				$stmt = db_prepare($sql);
 
-				echo '<br>' . $sql . ' id=' . $existing_id . ' ' . $payment_type . ' ' . $amount . ' ' . $existing_uctovano;
 				$result = db_exec($stmt, 'siii', [$payment_type, $amount, $existing_uctovano, $existing_id]);
 			}
 
@@ -212,16 +202,13 @@ foreach ($combinations as $combo) {
 
 		$stmt = db_prepare($sql);
 
-		echo '<br>' . $sql . ' ' .$types. ' '; var_dump ( $values );
 		$result = db_exec($stmt, $types, $values);
-
-		var_dump($result);
 
 		if ($result == FALSE)
 			die("Nepodařilo se vytvořit záznam o definici platby.");
 	}
 }
 
-//header('location: '.$g_baseadr.'index.php?id='._FINANCE_GROUP_ID_.'&subid=4');
+header('location: '.$g_baseadr.'index.php?id='._FINANCE_GROUP_ID_.'&subid=5');
 exit;
 ?>
