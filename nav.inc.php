@@ -133,6 +133,7 @@ function DrawMenuGroupHeader($name)
 		DrawMenuItem('Přehled závodů',_FINANCE_GROUP_ID_,2);
 		if ($g_enable_finances_claim) DrawMenuItem('Přehled reklamací',_FINANCE_GROUP_ID_,3);
 		DrawMenuItem('Typy příspěvků',_FINANCE_GROUP_ID_,4);
+		DrawMenuItem('Pravidla plateb',_FINANCE_GROUP_ID_,5);
 	}
 	if(IsLoggedAdmin())
 	{

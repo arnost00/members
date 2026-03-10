@@ -101,6 +101,11 @@ $g_finance_payement_IBAN = '';
 // Prefix VS pro clenske platby
 $g_finance_payement_VS = '';
 
+// Dodatečná informace k platbě příspěvků. Zobrazena na stránce uživatelových financí.
+// Text {reg} bude nahrazen registračním číslem užívatele.
+// např.: 'Číslo oddílového účtu: 4067843369/5500 VS: {reg}'
+$g_finance_payement_info = '';
+
 
 // doprava & ubytovani 
 $g_enable_race_transport = true;
@@ -115,6 +120,11 @@ $g_external_is_connector = 'OrisCZConnector';
 $g_external_is_club_id = '';
 
 $g_oris_club_key = 'orisClubKey';
+
+// Identifikator C oblasti v informacnim systemu e.g. JM
+$g_external_is_region_C = '';
+// Identifikator B oblasti v informacnim systemu e.g. Č M
+$g_external_is_region_B = '';
 
 $g_custom_entry_list_text = '';
 

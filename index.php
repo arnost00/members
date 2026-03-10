@@ -15,6 +15,10 @@ require_once ("./sess.inc.php");
 require_once ("./common.inc.php");
 require_once ("./ctable.inc.php");
 define('IS_INDEX',true);
+if (!isset($head_addons)) $head_addons = ''; 
+if ( $id ==	_FINANCE_GROUP_ID_ && $subid == 5  ) {
+	$head_addons .="\t".'<script src="finance.js" type="text/javascript"></script>'."\n";
+}
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 require_once ("./version.inc.php");
 db_Connect();
@@ -285,6 +289,9 @@ if($g_is_system_running || IsLoggedAdmin())
 						break;
 					case 4:
 						require_once "fin_types.inc.php";
+						break;
+					case 5:
+						require_once "fin_payrule.inc.php";
 						break;
 					default:
 						require_once "./news.inc.php";

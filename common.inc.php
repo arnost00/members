@@ -150,7 +150,7 @@ function SQLDate2StringReg($date)
 }
 
 //-----------------------------------------------------------
-// Race function
+// RaceInfo function
 //-----------------------------------------------------------
 
 function _todays($value)

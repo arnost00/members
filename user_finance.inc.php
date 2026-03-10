@@ -17,6 +17,13 @@ if ($zaznam_user_name['ft_nazev'] != null)
 	DrawPageSubTitle('Typ oddílového příspěvku člena: '.$zaznam_user_name['ft_nazev']);
 }
 
+if (!empty($g_finance_payement_info)) {
+    $msg = strtr($g_finance_payement_info, [
+        '{reg}' => $zaznam_user_name['reg']
+    ]);
+    echo '<div style="text-align: left;">' . htmlspecialchars($msg) . '</div>';
+}
+
 require_once ("./common_race.inc.php");
 require_once ('./url.inc.php');
 

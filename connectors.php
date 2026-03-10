@@ -5,12 +5,13 @@ if (!isset($g_external_is_connector))
 	require_once('./cfg/_cfg.php');
 }
 // Define a class to represent the race data
-class Race {
+class RaceInfo {
 	public $ext_id;
 	public $datum;
 	public $datum2;
 	public $nazev;
 	public $misto;
+	public $oblasti;
 	public $typ;
 	public $zebricek2;
 	public $ranking;
@@ -21,12 +22,15 @@ class Race {
 	public $prihlasky3;
 	public $prihlasky4;
 	public $prihlasky5;
+	public $koeficient1;
+	public $koeficient2;
 	public $etap;
 	public $poznamka;
 	public $vicedenni;
 	public $oddil;
 	public $modify_flag;
 	public $kategorie;
+	public $startovne;
 
 	// Constructor to initialize the object with key-value pairs
 	public function __construct($data) {
@@ -35,6 +39,7 @@ class Race {
 		$this->datum2 = $data['datum2'] ?? null;
 		$this->nazev = $data['nazev'] ?? null;
 		$this->misto = $data['misto'] ?? null;
+		$this->oblasti = $data['oblasti'] ?? null;
 		$this->typ = $data['typ'] ?? null;
 		$this->zebricek2 = $data['zebricek2'] ?? null;
 		$this->ranking = $data['ranking'] ?? null;
@@ -45,19 +50,98 @@ class Race {
 		$this->prihlasky3 = $data['prihlasky3'] ?? null;
 		$this->prihlasky4 = $data['prihlasky4'] ?? null;
 		$this->prihlasky5 = $data['prihlasky5'] ?? null;
+		$this->koeficient1 = $data['koeficient1'] ?? null;
+		$this->koeficient2 = $data['koeficient2'] ?? null;
 		$this->etap = $data['etap'] ?? null;
 		$this->poznamka = $data['poznamka'] ?? null;
 		$this->vicedenni = $data['vicedenni'] ?? null;
 		$this->oddil = $data['oddil'] ?? null;
 		$this->modify_flag = $data['modify_flag'] ?? null;
 		$this->kategorie = $data['kategorie'] ?? null;
+		$this->startovne = $data['startovne'] ?? null;
 	}
+}
+
+class RacePayement {
+    public int $raceId;
+    public RaceOverview $overview;
+    /** @var array<int, RaceParticipant> RegNo => User */
+    public array $participants = [];
+
+    public function __construct(int $raceId) {
+        $this->raceId = $raceId;
+        $this->overview = new RaceOverview();
+    }
+
+    public function addPatricipant(RaceParticipant $user): void {
+        $this->participants[$user->regNo] = $user;
+    }
+
+	public function addCategory(string $name, int $feeTier, int $fee ): void {
+		$this->overview->addCategory($name,$feeTier,$fee);
+	}
+
+	public function addService(string $name, int $fee, int $count ): void {
+		$this->overview->addService( $name, $fee, $count );
+	}
+}
+
+class RaceOverview {
+    /** @var array<string, array<int, float>> Category => [EntryStop => Fee] */
+    public array $categories = [];
+
+    /** @var array<string, array<float,int>> ServiceName => [ Fee => Count ]  */
+    public array $services = [];
+
+    /** @var array<int, bool> feeTier => exist */
+    public array $feeTiers = [];
+
+    public function addCategory(string $name, int $feeTier, int $fee ): void {
+
+		if (!isset($this->categories[$name])) {
+			$this->categories[$name] = [];
+		}
+		$this->categories[$name][$feeTier] = $fee;
+
+		// Store only unique sorted feeTier values
+    	$this->feeTiers[$feeTier] = true;
+    }
+
+    public function addService(string $name, int $fee, int $count ): void {
+		if ( isset ( $this->services[$name][$fee] ) ) {
+        	$this->services[$name][$fee] += $count;
+		} else {
+        	$this->services[$name][$fee] = $count;
+		}
+    }
+}
+
+class RaceParticipant {
+    public string $regNo;
+    public string $classDesc;
+    public string $name;
+    public bool $rentSI;
+    public string $licence;
+	public $fee;
+	public int $feeTier;
+
+    public function __construct(string $regNo, string $classDesc, string $name, bool $rentSI, string|null $licence, int $fee, int $feeTier) {
+        $this->regNo = $regNo;
+        $this->classDesc = $classDesc;
+        $this->name = $name;
+        $this->rentSI = $rentSI;
+        $this->licence = $licence ?? '';
+		$this->fee = $fee;
+		$this->feeTier = $feeTier;
+    }
 }
 
 interface ConnectorInterface {
 	public function getSystemName(): string;
 	public function getRaceURL(string $id): string;
-	public function getRaceInfo(string $id);
+	public function getRaceInfo(string $id) : ?RaceInfo;
+	public function getRacesList($fromDate, $toDate);
+	public function getRacePayement(string $id) : ?RacePayement;
 }
 
 class OrisCZConnector implements ConnectorInterface {
@@ -68,13 +152,12 @@ class OrisCZConnector implements ConnectorInterface {
 		$this->apiUrl = $this->sourceUrl . 'API/';
 	}
 
-
 	// Method to get the system name
 	public function getSystemName(): string {
 		return "Oris";
 	}
 
-	// Race URL
+	// RaceInfo URL
 	public function getRaceURL($raceId) : string {
 		return $this->sourceUrl . 'Zavod?id=' . $raceId;
 	}
@@ -115,23 +198,24 @@ class OrisCZConnector implements ConnectorInterface {
 		return implode('+', $oddily);
 	}
 
-	// Method to get race date based on race ID
-	public function getRaceDate($raceId) {
-		$url = $this->apiUrl . '?format=json&method=getEvent&id=' . $raceId;
-		$response = $this->makeRequest($url);
-
-		if ($response && $response['Status'] == "OK") {
-			$raceData = $response['Data'];
-
-			return String2DateDMY(formatDate($raceData['Date']));
-		} else {
-			return ''; // Return empty string if race not found or error
+	// Method to get race date based on race ID or provided response
+	public function getRaceDate($raceId, $response = null) {
+		// If no response provided, fetch it from API
+		if ($response === null) {
+			$url = $this->apiUrl . '?format=json&method=getEvent&id=' . $raceId;
+			$response = $this->makeRequest($url);
 		}
 
+		if ($response && isset($response['Status']) && $response['Status'] === "OK") {
+			$raceData = $response['Data'];
+			return String2DateDMY(formatDate($raceData['Date']));
+		}
+
+		return ''; // Return empty string if race not found or error
 	}
 
 	// Method to get detailed race information based on race ID
-	public function getRaceInfo($raceId) {
+	public function getRaceInfo($raceId) : RaceInfo {
 		$url = $this->apiUrl . '?format=json&method=getEvent&id=' . $raceId;
 
 		$response = $this->makeRequest($url);
@@ -139,23 +223,31 @@ class OrisCZConnector implements ConnectorInterface {
 		if ($response && $response['Status'] == "OK") {
 			$raceData = $response['Data'];
 			
-			$classNames = [];
+			$classFees = [];
 			if (isset($raceData['Classes'])) {
 				foreach ($raceData['Classes'] as $class) {
 					if (isset($class['Name'])) {
-						$classNames[] = $class['Name'];
+						$name = $class['Name'];
+						$fee  = $class['Fee'] ?? null; // default to null if missing
+						$classFees[$name] = $fee;
 					}
 				}
 			}
-			
-			sort($classNames);
+
+			ksort ( $classFees );
 
 			$oddily = $this->getClubs($raceData);
+			$oblasti = [];
+			if (isset($raceData['Regions'])) {
+				foreach ($raceData['Regions'] as $tag => $region) {
+					$oblasti[] = $region['ID'];
+				}
+			}
 			
 			// Get last Stage date if multistage event
-			$date2 = ($raceData['Stages'] > 1) ? $this->getRaceDate($raceData['Stage'.$raceData['Stages']]) : 0;
+			$date2 = ($raceData['Stages'] > 1) ? $this->getRaceDate($raceData['Stage'.$raceData['Stages']], $response) : 0;
 			// Use associative array to pass data to constructor
-			return new Race([
+			return new RaceInfo([
 				'ext_id' => $raceData['ID'],
 				'datum' => String2DateDMY(formatDate($raceData['Date'])),
 				'datum2' => $date2,
@@ -163,6 +255,7 @@ class OrisCZConnector implements ConnectorInterface {
 				'misto' => $raceData['Place'],
 //				  'category' => $raceData['Category'],
 				 //typ0 => Typ akce
+				'oblasti' => $oblasti,
 				'typ0' => 'Z',
 				'typ' => $this->mapSport($raceData['Sport']['ID']), 
 				'zebricek2' => $this->mapLevelToZebricek2($raceData['Level']['ID']),
@@ -174,12 +267,15 @@ class OrisCZConnector implements ConnectorInterface {
 //				'prihlasky3' => '',
 //				'prihlasky4' => '',
 //				'prihlasky5' => '',
+				'koeficient1' => $raceData['EntryKoef2'],
+				'koeficient2' => $raceData['EntryKoef3'],
 				'etap' => $raceData['Stages'],
 //				'poznamka' => $poznamka,
 				'vicedenni' => ($raceData['Stages']>1?1:0),
 				'oddil' => $oddily,
 				'modify_flag' => 0,
-				'kategorie' => implode(';', $classNames )
+				'kategorie' => implode(';', array_keys ( $classFees ) ),
+				'startovne' => $classFees
 				]);
 		} else {
 			return null; // Return null if race not found or error
@@ -235,6 +331,57 @@ class OrisCZConnector implements ConnectorInterface {
 		} else {
 			return null; // Return null if race not found or error
 		}
+	}
+
+	// Method to get detailed race information based on race ID
+	public function getRacePayement($raceId) : ?RacePayement {
+
+		global $g_external_is_club_id;
+
+		if ( !IsSet ($g_external_is_club_id) || $g_external_is_club_id === '' ) return null;
+		
+		$url = $this->apiUrl . '?format=json&method=getEventEntries&clubid=' . $g_external_is_club_id . '&eventid=' . $raceId;
+
+		$response = $this->makeRequest($url);
+		$racePayement = null;
+
+		if ($response && $response['Status'] == "OK") {
+			$racePayement = new RacePayement($raceId);
+
+			foreach ($response['Data'] as $entry) {
+				if (isset($entry['Fee'])) {
+					if (isset($entry['RegNo']) ) {
+						$racePayement->addPatricipant(
+							new RaceParticipant($entry['RegNo'], $entry['ClassDesc'], $entry['Name'],
+							 $entry['RentSI'], $entry['Licence'], (int)$entry['Fee'], $entry['EntryStop']));
+					}
+					if (isset($entry['ClassDesc'])&&isset($entry['ClassDesc'])) {
+						$racePayement->addCategory($entry['ClassDesc'], $entry['EntryStop'], (int)$entry['Fee']);
+					}
+				}
+			}
+		}
+
+		$url = $this->apiUrl . '?format=json&method=getEventServiceEntries&clubid=' . $g_external_is_club_id . '&eventid=' . $raceId;
+
+		$response = $this->makeRequest($url);
+
+		if ($response && $response['Status'] == "OK") {
+			if ( $racePayement ===  null ) $racePayement = new RacePayement($raceId);
+			foreach ($response['Data'] as $entry) {
+				if ( isset ( $entry['Service'] ) ) {
+					$racePayement->addService($entry['Service']['NameCZ'] ?? 'Name?', $entry['Service']['UnitPrice'] , $entry['Quantity'] );
+				} else {
+					if ( isset ( $entry['Quantity'] ) && isset ( $entry['TotalFee'] ) ) {
+						$racePayement->addService('Name?', $entry['TotalFee'] / $entry['Quantity'], $entry['Quantity'] );
+					}
+				}
+			}
+		}
+
+		//print_r ($racePayement);
+
+		return $racePayement;
 	}
 }
 
