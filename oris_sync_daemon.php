@@ -29,6 +29,7 @@ $query = "
     FROM `" . TBL_ZAVXUS . "` zx
     LEFT JOIN `" . TBL_RACE . "` r ON zx.id_zavod = r.id
     WHERE zx.sync_status IN ('PENDING_CREATE', 'PENDING_UPDATE', 'PENDING_DELETE', 'FAILED_RETRY')
+      AND (r.datum >= DATE_SUB(CURDATE(), INTERVAL 1 DAY) OR r.datum IS NULL)
     ORDER BY ISNULL(r.oris_entry_start), r.oris_entry_start ASC
 ";
 $res = query_db($query);
@@ -79,7 +80,7 @@ function logMessage($msg) {
     // Output to console when run via CLI
     echo $line;
     // Log to file in the same directory
-    file_put_contents(__DIR__ . '/oris_sync.log', $line, FILE_APPEND);
+    file_put_contents(__DIR__ . '/logs/oris_sync.log', $line, FILE_APPEND);
 }
 
 function processEntry($row, $action, $service) {
