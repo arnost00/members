@@ -81,13 +81,21 @@ if($termin != 0)
 		if ($kateg == '')
 		{	// del
 //			echo "DEL";
-			$result=query_db("DELETE FROM ".TBL_ZAVXUS." WHERE id_zavod = '$id' AND id_user = '$user_id'")
-				or die("Chyba při provádění dotazu do databáze.");
+			$has_ext_id = !empty($zaznam_z['ext_id']);
+			$is_pending_create = ($zaznam['sync_status'] === 'PENDING_CREATE');
+			
+			if ($has_ext_id && !$is_pending_create) {
+				$result=query_db("UPDATE ".TBL_ZAVXUS." SET sync_status='PENDING_DELETE' WHERE id_zavod = '$id' AND id_user = '$user_id'")
+					or die("Chyba při provádění dotazu do databáze.");
+			} else {
+				$result=query_db("DELETE FROM ".TBL_ZAVXUS." WHERE id_zavod = '$id' AND id_user = '$user_id'")
+					or die("Chyba při provádění dotazu do databáze.");
+				if ($result !== false && mysqli_affected_rows($db_conn) > 0) {
+					query_db("UPDATE ".TBL_RACE." SET prihlasenych = GREATEST(0, prihlasenych - 1) WHERE id = '$id'");
+				}
+			}
 			if ($result == FALSE)
 				die ("Nepodařilo se změnit přihlášku člena.");
-			if ($result !== false && mysqli_affected_rows($db_conn) > 0) {
-				query_db("UPDATE ".TBL_RACE." SET prihlasenych = GREATEST(0, prihlasenych - 1) WHERE id = '$id'");
-			}
 		}
 		else
 		{	// update
@@ -97,7 +105,12 @@ if($termin != 0)
 			$pozn2=correct_sql_string($pozn2);
 			$termin=correct_sql_string($termin);
 			
-			$result=query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kateg', pozn='$pozn', pozn_in='$pozn2', termin='$termin', transport = '$transport', sedadel = ".$sedadel.", ubytovani = '$ubytovani' WHERE id_zavod = '$id' AND id_user = '$user_id'")
+			$sync_status_update = "";
+			if (!empty($zaznam_z['ext_id']) && $zaznam['sync_status'] !== 'PENDING_CREATE') {
+				$sync_status_update = ", sync_status='PENDING_UPDATE'";
+			}
+			
+			$result=query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kateg', pozn='$pozn', pozn_in='$pozn2', termin='$termin', transport = '$transport', sedadel = ".$sedadel.", ubytovani = '$ubytovani'".$sync_status_update." WHERE id_zavod = '$id' AND id_user = '$user_id'")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se změnit přihlášku člena.");
@@ -112,8 +125,10 @@ if($termin != 0)
 			$pozn=correct_sql_string($pozn);
 			$pozn2=correct_sql_string($pozn2);
 			$termin=correct_sql_string($termin);
+			
+			$sync_status = !empty($zaznam_z['ext_id']) ? 'PENDING_CREATE' : 'LOCAL_ONLY';
 
-			$result=query_db("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in,termin,transport,sedadel,ubytovani) VALUES ('$user_id','$id','$kateg', '$pozn', '$pozn2','$termin','$transport',".$sedadel.",'$ubytovani')")
+			$result=query_db("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in,termin,transport,sedadel,ubytovani,sync_status) VALUES ('$user_id','$id','$kateg', '$pozn', '$pozn2','$termin','$transport',".$sedadel.",'$ubytovani','$sync_status')")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se změnit přihlášku člena.");

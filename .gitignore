@@ -4,5 +4,5 @@ _tables.php
 _globals.php
 _cfg.php
 /logs
-.agents/*
+.agents
 skills-lock.json
