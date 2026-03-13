@@ -19,7 +19,7 @@ if (!isset($GLOBALS['db_conn']) || !$GLOBALS['db_conn']) {
 global $g_oris_club_key;
 
 if (empty($g_oris_club_key)) {
-    die("Error: ORIS club key is not configured.");
+    die("Error: ORIS club key neni nastaven.");
 }
 
 $service = new OrisIntegrationService($g_oris_club_key);
@@ -41,11 +41,11 @@ while ($row = mysqli_fetch_assoc($res)) {
         if ($entryStartTime > $now) {
             $diff = $entryStartTime - $now;
             if ($diff <= 65) { // 65 seconds buffer for cron running every minute
-                logMessage("Race opening in $diff seconds (at $entryStartStr). Sleeping before processing...");
+                logMessage("Prihlasky se oteviraji za $diff seconds (at $entryStartStr). Jdu sapt pred pokracovanim...");
                 sleep($diff);
             } else {
                 // Race is not open yet and more than a minute away, skip for now
-                logMessage("Skipping entry ID {$row['id']} - Race opens at $entryStartStr (in $diff seconds).");
+                logMessage("Preskakuju prihlasku ID {$row['id']} - Zavod otevira prihlasky v $entryStartStr (za $diff s).");
                 continue;
             }
         }
