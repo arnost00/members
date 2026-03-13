@@ -62,12 +62,16 @@ interface ConnectorInterface {
 	public function getRaceInfo(string $id);
 }
 
+require_once __DIR__ . '/lib/OrisIntegrationService.php';
+
 class OrisCZConnector implements ConnectorInterface {
-	private $sourceUrl = 'https://oris.orientacnisporty.cz/';
+	private $sourceUrl = 'https://oris.ceskyorientak.cz/';
 	private $apiUrl;
+	private $service;
 
 	public function __construct() {
 		$this->apiUrl = $this->sourceUrl . 'API/';
+		$this->service = new OrisIntegrationService(null);
 	}
 
 
@@ -119,10 +123,9 @@ class OrisCZConnector implements ConnectorInterface {
 
 	// Method to get race date based on race ID
 	public function getRaceDate($raceId) {
-		$url = $this->apiUrl . '?format=json&method=getEvent&id=' . $raceId;
-		$response = $this->makeRequest($url);
+		$response = $this->service->getEvent($raceId);
 
-		if ($response && $response['Status'] == "OK") {
+		if ($response && isset($response['Status']) && $response['Status'] == "OK") {
 			$raceData = $response['Data'];
 
 			return String2DateDMY(formatDate($raceData['Date']));
@@ -134,11 +137,9 @@ class OrisCZConnector implements ConnectorInterface {
 
 	// Method to get detailed race information based on race ID
 	public function getRaceInfo($raceId) {
-		$url = $this->apiUrl . '?format=json&method=getEvent&id=' . $raceId;
+		$response = $this->service->getEvent($raceId);
 
-		$response = $this->makeRequest($url);
-
-		if ($response && $response['Status'] == "OK") {
+		if ($response && isset($response['Status']) && $response['Status'] == "OK") {
 			$raceData = $response['Data'];
 			
 			$classNames = [];
@@ -217,11 +218,9 @@ class OrisCZConnector implements ConnectorInterface {
 	}
 
 	function getRacesList($fromDate, $toDate) {
-		$url = $this->apiUrl.'?format=json&method=getEventList&all=1&datefrom='.$fromDate.'&dateto='.$toDate;
-//		echo($url.'<BR/>');
-		$response = $this->makeRequest($url);
+		$response = $this->service->getEventList($fromDate, $toDate, 1);
 
-		if ($response && $response['Status'] == "OK") {
+		if ($response && isset($response['Status']) && $response['Status'] == "OK") {
 			$racesData = $response['Data'];
 			$rows = array();
 			foreach($racesData as $oneRace) {
