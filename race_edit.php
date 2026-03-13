@@ -372,6 +372,11 @@ if ($g_enable_race_capacity)
 	<TD colspan="3"></TD>
 </TR>
 </TABLE>
+<?
+if ($raceInfo->oris_entry_start !== null) {
+	echo '<input type="hidden" name="oris_entry_start" value="'.htmlspecialchars($raceInfo->oris_entry_start).'">';
+}
+?>
 </FORM>
 <?
 echo(insertDocuOnLoad());
