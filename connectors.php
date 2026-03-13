@@ -4,6 +4,9 @@ if (!isset($g_external_is_connector))
 {
 	require_once('./cfg/_cfg.php');
 }
+
+require_once __DIR__ . '/lib/OrisIntegrationService.php';
+
 // Define a class to represent the race data
 class RaceInfo {
 	public $ext_id;
@@ -149,11 +152,13 @@ interface ConnectorInterface {
 }
 
 class OrisCZConnector implements ConnectorInterface {
-	private $sourceUrl = 'https://oris.orientacnisporty.cz/';
+	private $sourceUrl = 'https://oris.ceskyorientak.cz/';
 	private $apiUrl;
+	private $service;
 
 	public function __construct() {
 		$this->apiUrl = $this->sourceUrl . 'API/';
+		$this->service = new OrisIntegrationService(null);
 	}
 
 	// Method to get the system name
@@ -165,7 +170,7 @@ class OrisCZConnector implements ConnectorInterface {
 	public function getRaceURL($raceId) : string {
 		return $this->sourceUrl . 'Zavod?id=' . $raceId;
 	}
-	
+
 	private function mapLevelToZebricek2($levelId) {
 		$map = [
 			1  => 17, // MCR
@@ -202,15 +207,11 @@ class OrisCZConnector implements ConnectorInterface {
 		return implode('+', $oddily);
 	}
 
-	// Method to get race date based on race ID or provided response
-	public function getRaceDate($raceId, $response = null) {
-		// If no response provided, fetch it from API
-		if ($response === null) {
-			$url = $this->apiUrl . '?format=json&method=getEvent&id=' . $raceId;
-			$response = $this->makeRequest($url);
-		}
+	// Method to get race date based on race ID
+	public function getRaceDate($raceId) {
+		$response = $this->service->getEvent($raceId);
 
-		if ($response && isset($response['Status']) && $response['Status'] === "OK") {
+		if ($response && isset($response['Status']) && $response['Status'] == "OK") {
 			$raceData = $response['Data'];
 			return String2DateDMY(formatDate($raceData['Date']));
 		}
@@ -219,14 +220,12 @@ class OrisCZConnector implements ConnectorInterface {
 	}
 
 	// Method to get detailed race information based on race ID
-	public function getRaceInfo($raceId) : RaceInfo {
-		$url = $this->apiUrl . '?format=json&method=getEvent&id=' . $raceId;
+	public function getRaceInfo($raceId) : ?RaceInfo {
+		$response = $this->service->getEvent($raceId);
 
-		$response = $this->makeRequest($url);
-
-		if ($response && $response['Status'] == "OK") {
+		if ($response && isset($response['Status']) && $response['Status'] == "OK") {
 			$raceData = $response['Data'];
-			
+
 			$classFees = [];
 			if (isset($raceData['Classes'])) {
 				foreach ($raceData['Classes'] as $class) {
@@ -247,9 +246,9 @@ class OrisCZConnector implements ConnectorInterface {
 					$oblasti[] = $region['ID'];
 				}
 			}
-			
+
 			// Get last Stage date if multistage event
-			$date2 = ($raceData['Stages'] > 1) ? $this->getRaceDate($raceData['Stage'.$raceData['Stages']], $response) : 0;
+			$date2 = ($raceData['Stages'] > 1) ? $this->getRaceDate($raceData['Stage'.$raceData['Stages']]) : 0;
 			// Use associative array to pass data to constructor
 			return new RaceInfo([
 				'ext_id' => $raceData['ID'],
@@ -261,7 +260,7 @@ class OrisCZConnector implements ConnectorInterface {
 				 //typ0 => Typ akce
 				'oblasti' => $oblasti,
 				'typ0' => 'Z',
-				'typ' => $this->mapSport($raceData['Sport']['ID']), 
+				'typ' => $this->mapSport($raceData['Sport']['ID']),
 				'zebricek2' => $this->mapLevelToZebricek2($raceData['Level']['ID']),
 				'ranking' => $raceData['Ranking'],
 				'odkaz' => $this->getRaceURL($raceData['ID']),
@@ -288,44 +287,23 @@ class OrisCZConnector implements ConnectorInterface {
 		}
 	}
 
-	// Helper method to make HTTP requests
+	// Helper method to make HTTP requests (used by getRacePayement)
 	private function makeRequest($url) {
 		$response = file_get_contents($url);
-		
-		// Decode JSON response
-		return json_decode($response, true);
-	}
-	
-	private function makeRequestCurl($url) {
-		$ch = curl_init($url);
-
-		// Set curl options
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		$response = curl_exec($ch);
-
-		// Check for errors
-		if (curl_errno($ch)) {
-			echo 'Curl error: ' . curl_error($ch);
-			return null;
-		}
-
-		curl_close($ch);
 
 		// Decode JSON response
 		return json_decode($response, true);
 	}
 
 	function getRacesList($fromDate, $toDate) {
-		$url = $this->apiUrl.'?format=json&method=getEventList&all=1&datefrom='.$fromDate.'&dateto='.$toDate;
-//		echo($url.'<BR/>');
-		$response = $this->makeRequest($url);
+		$response = $this->service->getEventList($fromDate, $toDate, 1);
 
-		if ($response && $response['Status'] == "OK") {
+		if ($response && isset($response['Status']) && $response['Status'] == "OK") {
 			$racesData = $response['Data'];
 			$rows = array();
 			foreach($racesData as $oneRace) {
 				$oddily = $this->getClubs($oneRace);
-			
+
 				$row = array();
 				$row[] = $oneRace['ID'];
 				$row[] = $oneRace['Date'];
@@ -339,13 +317,13 @@ class OrisCZConnector implements ConnectorInterface {
 		}
 	}
 
-	// Method to get detailed race information based on race ID
+	// Method to get race payment details
 	public function getRacePayement($raceId) : ?RacePayement {
 
 		global $g_external_is_club_id;
 
 		if ( !IsSet ($g_external_is_club_id) || $g_external_is_club_id === '' ) return null;
-		
+
 		$url = $this->apiUrl . '?format=json&method=getEventEntries&clubid=' . $g_external_is_club_id . '&eventid=' . $raceId;
 
 		$response = $this->makeRequest($url);
@@ -384,8 +362,6 @@ class OrisCZConnector implements ConnectorInterface {
 				}
 			}
 		}
-
-		//print_r ($racePayement);
 
 		return $racePayement;
 	}

@@ -51,17 +51,18 @@ function startsWith( $haystack, $needle ) {
      return substr( $haystack, 0, $length ) === $needle;
 }
 
-$json = file_get_contents('https://oris.orientacnisporty.cz/API/?format=json&method=getRegistration&sport=1&year='.$ORIS_year);
-$obj = json_decode($json);
+require_once './lib/OrisIntegrationService.php';
+$service = new OrisIntegrationService(null);
+$obj = $service->getRegistration(1, $ORIS_year);
 
 $arr_oris = array();
 
-foreach ($obj->Data as $key=>$value)
+foreach ($obj['Data'] as $key=>$value)
 {
 	$user = new User();
-	$user->create($value->UserID, $value->FirstName, $value->LastName, $value->RegNo, $value->SI, $value->ClubID);
+	$user->create($value['UserID'], $value['FirstName'], $value['LastName'], $value['RegNo'], $value['SI'], $value['ClubID']);
 
-	$reg = $value->RegNo;
+	$reg = $value['RegNo'];
 	if (startsWith($reg, $g_shortcut))
 	{
 		$arr_oris["user"] [$reg]= $user;
