@@ -205,7 +205,7 @@
 <?
     require_once ('connect.inc.php');
     db_Connect();
-    $race_id = $_GET['race_id'];
+    $race_id = (IsSet($_GET['race_id']) && is_numeric($_GET['race_id'])) ? (int)$_GET['race_id'] : 0;
     $query = "select nazev from ".TBL_RACE." where id = $race_id";
     @$vysledek=$db_conn->query($query);
     $zaznam=mysqli_fetch_array($vysledek)

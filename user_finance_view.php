@@ -21,7 +21,12 @@ if (IsSet($payment) && IsLogged())
 {
 
  	$editor_id = $usr->user_id;
- 	
+	$trn_id = (IsSet($trn_id) && is_numeric($trn_id)) ? (int)$trn_id : 0;
+	$id_zavod = (IsSet($id_zavod) && is_numeric($id_zavod)) ? (int)$id_zavod : 0;
+	$amount = (IsSet($amount) && is_numeric($amount)) ? (int)$amount : 0;
+	$id_from = (IsSet($id_from) && is_numeric($id_from)) ? (int)$id_from : 0;
+	$id_to = (IsSet($id_to) && is_numeric($id_to)) ? (int)$id_to : 0;
+
  	if ($payment == "both" && $id_to != -1)
  	{
 	

@@ -1,6 +1,7 @@
 <?php /* finance -  show exact user finance */ ?>
 
 <?
+$user_id = (IsSet($user_id) && is_numeric($user_id)) ? (int)$user_id : 0;
 @$vysledek_historie=query_db("select fin.id fin_id, fin.id_users_editor id_editor, rc.nazev zavod_nazev, rc.cancelled zavod_cancelled, from_unixtime(rc.datum,'%Y-%c-%e') zavod_datum, fin.amount amount, fin.note note, us.sort_name name, fin.date `date` from ".TBL_FINANCE." fin 
 		left join ".TBL_USER." us on fin.id_users_editor = us.id
 		left join ".TBL_RACE." rc on fin.id_zavod = rc.id

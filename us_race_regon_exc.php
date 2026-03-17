@@ -14,6 +14,7 @@ if (!IsLogged())
 }
 $id_zav = (IsSet($id_zav) && is_numeric($id_zav)) ? (int)$id_zav: 0;
 $id_us = (IsSet($id_us) && is_numeric($id_us)) ? (int)$id_us: 0;
+$id_z = (IsSet($id_z) && is_numeric($id_z)) ? (int)$id_z: 0;
 $kat = (IsSet($kat)) ? $kat : '';
 
 if ($kat != '')

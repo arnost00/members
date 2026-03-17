@@ -30,7 +30,7 @@ require_once ('url.inc.php');
 
 require_once ('functions.php');
 
-$race_id = $_GET['id_race'];
+$race_id = (IsSet($_GET['id_race']) && is_numeric($_GET['id_race'])) ? (int)$_GET['id_race'] : 0;
 
 $data = array(); //variable for return in json
 
@@ -38,7 +38,7 @@ $userSelected = (isset($_GET['id_user']));
 
 if ($userSelected) {
 	// user selected
-	$id_user = $_GET['id_user'];
+	$id_user = (IsSet($_GET['id_user']) && is_numeric($_GET['id_user'])) ? (int)$_GET['id_user'] : 0;
 	// now select what to do with user
 	$action = (isset($_GET['action'])) ? $_GET['action'] : 'detail';
 	switch ($action) {
@@ -61,7 +61,7 @@ if ($userSelected) {
 				}
 
 			} else {
-				$kat = isset($_GET['kat']) ? $_GET['kat'] : '';
+				$kat = isset($_GET['kat']) ? correct_sql_string($_GET['kat']) : '';
 				$pozn = '';
 				$pozn2 = 'vlozeno financnikem na miste';
 				$termin = 0;

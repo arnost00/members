@@ -65,8 +65,9 @@ foreach($list as $one) {
 	$ext_id_info = '';
 
 	// check if ID is is not yet used as ext_id
+	$ext_id_val = (int)$one[0];
 	$query_ext = 'SELECT id, datum, nazev, ext_id'.
-	' FROM '.TBL_RACE.' WHERE ext_id = '.$one[0].
+	' FROM '.TBL_RACE.' WHERE ext_id = '.$ext_id_val.
 	' ORDER BY datum, datum2, id';
 	$vysledek_ext=query_db($query_ext);
 

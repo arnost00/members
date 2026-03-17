@@ -2,6 +2,7 @@
 <?
 function CheckIfLoginIsValid($new_login,$curr_id)
 {
+	$new_login = correct_sql_string($new_login);
 	@$vysl=query_db("SELECT id,login FROM ".TBL_ACCOUNT." WHERE login = '$new_login' LIMIT 1");
 	if (mysqli_num_rows ($vysl) == 0)
 	{
