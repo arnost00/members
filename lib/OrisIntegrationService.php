@@ -1,33 +1,44 @@
 <?php
 /**
  * OrisIntegrationService
- * Handles the automated background forwarding of entries to ORIS API.
+ * Unified service layer for interacting with the ORIS API.
  */
+
+require_once __DIR__ . '/OrisExceptions.php';
+require_once __DIR__ . '/OrisDTOs.php';
+
 class OrisIntegrationService {
     
     private $apiUrl = 'https://oris.ceskyorientak.cz/API/';
     private $clubKey;
     
-    public function __construct($clubKey) {
+    public function __construct($clubKey = null) {
         $this->clubKey = $clubKey;
     }
     
     /**
-     * Executes the HTTP POST request to ORIS API
+     * Internal generic HTTP request method.
      */
-    private function executeRequest($method, $params) {
+    private function makeRequest($method, $params = [], $isPost = false) {
         $params['method'] = $method;
         $params['format'] = 'json';
-        $params['clubkey'] = $this->clubKey;
-        
-        $postData = http_build_query($params);
-        
+        if ($this->clubKey) {
+            $params['clubkey'] = $this->clubKey;
+        }
+
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->apiUrl);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+        
+        if ($isPost) {
+            $postData = http_build_query($params);
+            curl_setopt($ch, CURLOPT_URL, $this->apiUrl);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+        } else {
+            $url = $this->apiUrl . '?' . http_build_query($params);
+            curl_setopt($ch, CURLOPT_URL, $url);
+        }
+        
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        // Ensure SSL verification
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         
@@ -36,7 +47,7 @@ class OrisIntegrationService {
         if(curl_errno($ch)){
             $error = curl_error($ch);
             curl_close($ch);
-            return ['status' => 'error', 'message' => 'cURL Error: ' . $error, 'request' => $postData];
+            throw new OrisNetworkException('cURL Error: ' . $error);
         }
         
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -45,192 +56,62 @@ class OrisIntegrationService {
         $decoded = json_decode($response, true);
         
         if ($httpCode >= 200 && $httpCode < 300 && isset($decoded['Status']) && $decoded['Status'] === 'OK') {
-            return ['status' => 'success', 'data' => $decoded['Data'] ?? $decoded, 'request' => $postData];
+            return $decoded['Data'] ?? $decoded;
         } else {
-            $apiErrorMsg = '';
-            if (is_array($decoded) && isset($decoded['Status'])) {
-                $apiErrorMsg = " ORIS Status: " . $decoded['Status'];
-                // Some endpoints might return error details in Data or a specific Error field
-                if (isset($decoded['Data']) && is_string($decoded['Data'])) {
-                    $apiErrorMsg .= " - " . $decoded['Data'];
-                }
+            $apiStatus = $decoded['Status'] ?? 'Unknown';
+            $apiData = $decoded['Data'] ?? null;
+            $msg = "API Error or HTTP {$httpCode}. Status: {$apiStatus}";
+            if (is_string($apiData)) {
+                $msg .= " - " . $apiData;
             }
-            return [
-                'status' => 'error', 
-                'message' => 'API Error or HTTP ' . $httpCode . $apiErrorMsg,
-                'payload' => $response,
-                'request' => $postData
-            ];
+            throw new OrisApiException($msg, $apiStatus, $apiData);
         }
     }
 
-    public function createEntry($clubuser, $classId, $si, $rentSi, $note = '') {
-        $params = [
-            'clubuser' => $clubuser,
-            'class' => $classId
-        ];
-        
-        if ($si) {
-            $params['si'] = $si;
-        }
-        if ($rentSi) {
-            $params['rent_si'] = 1;
-        }
-        if ($note) {
-            $params['note'] = $note;
-        }
+    // --- Write/Mutating Operations (Phase C) ---
 
-        return $this->executeRequest('createEntry', $params);
+    public function createEntry(OrisEntryRequestDTO $dto) {
+        return $this->makeRequest('createEntry', $dto->toArray(), true);
     }
     
-    public function updateEntry($entryId, $clubuser, $classId, $si, $rentSi, $note = '') {
-        $params = [
-            'entryid' => $entryId,
-            'clubuser' => $clubuser,
-            'class' => $classId
-        ];
-        
-        if ($si) {
-            $params['si'] = $si;
-        }
-        if ($rentSi) {
-            $params['rent_si'] = 1;
-        }
-        if ($note) {
-            $params['note'] = $note;
-        }
-
-        return $this->executeRequest('updateEntry', $params);
+    public function updateEntry(OrisEntryRequestDTO $dto) {
+        return $this->makeRequest('updateEntry', $dto->toArray(), true);
     }
     
     public function deleteEntry($entryId) {
-        $params = [
-            'entryid' => $entryId
-        ];
-        return $this->executeRequest('deleteEntry', $params);
+        return $this->makeRequest('deleteEntry', ['entryid' => $entryId], true);
     }
 
+    // --- Read-Only and Protected Read Endpoints (Phase A & B) ---
+
     public function getUser($rgnum) {
-        $params = [
-            'method' => 'getUser',
-            'format' => 'json',
-            'rgnum' => $rgnum
-        ];
-        
-        $ch = curl_init();
-        $url = $this->apiUrl . '?' . http_build_query($params);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        
-        $response = curl_exec($ch);
-        curl_close($ch);
-        
-        return json_decode($response, true);
+        return $this->makeRequest('getUser', ['rgnum' => $rgnum]);
     }
 
     public function getClubUsers($userId) {
-        $params = [
-            'method' => 'getClubUsers',
-            'format' => 'json',
-            'user' => $userId
-        ];
-        
-        $ch = curl_init();
-        $url = $this->apiUrl . '?' . http_build_query($params);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        
-        $response = curl_exec($ch);
-        curl_close($ch);
-        
-        return json_decode($response, true);
+        return $this->makeRequest('getClubUsers', ['user' => $userId]);
     }
 
     public function getEventEntries($eventId) {
-        $params = [
-            'method' => 'getEventEntries',
-            'format' => 'json',
-            'eventid' => $eventId
-        ];
-        
-        $ch = curl_init();
-        $url = $this->apiUrl . '?' . http_build_query($params);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        
-        $response = curl_exec($ch);
-        curl_close($ch);
-        
-        return json_decode($response, true);
+        return $this->makeRequest('getEventEntries', ['eventid' => $eventId]);
     }
 
     public function getEvent($eventId) {
-        $params = [
-            'method' => 'getEvent',
-            'format' => 'json',
-            'id' => $eventId
-        ];
-        
-        $ch = curl_init();
-        $url = $this->apiUrl . '?' . http_build_query($params);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        
-        $response = curl_exec($ch);
-        curl_close($ch);
-        
-        return json_decode($response, true);
+        return $this->makeRequest('getEvent', ['id' => $eventId]);
     }
 
     public function getEventList($fromDate, $toDate, $all = 1) {
-        $params = [
-            'method' => 'getEventList',
-            'format' => 'json',
+        return $this->makeRequest('getEventList', [
             'all' => $all,
             'datefrom' => $fromDate,
             'dateto' => $toDate
-        ];
-
-        $ch = curl_init();
-        $url = $this->apiUrl . '?' . http_build_query($params);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        return json_decode($response, true);
+        ]);
     }
 
     public function getRegistration($sport, $year) {
-        $params = [
-            'method' => 'getRegistration',
-            'format' => 'json',
+        return $this->makeRequest('getRegistration', [
             'sport' => $sport,
             'year' => $year
-        ];
-
-        $ch = curl_init();
-        $url = $this->apiUrl . '?' . http_build_query($params);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        return json_decode($response, true);
+        ]);
     }
 }
-?>
