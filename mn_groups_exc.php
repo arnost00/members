@@ -1,7 +1,5 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
-@extract($_REQUEST);
-
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
 
@@ -12,8 +10,8 @@ if (!IsLoggedManager())
 }
 db_Connect();
 
-$id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
-$type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
+$id = (IsSet($_REQUEST['id']) && is_numeric($_REQUEST['id'])) ? (int)$_REQUEST['id'] : 0;
+$type = (IsSet($_REQUEST['type']) && is_numeric($_REQUEST['type'])) ? (int)$_REQUEST['type'] : 0;
 
 switch ($type)
 {

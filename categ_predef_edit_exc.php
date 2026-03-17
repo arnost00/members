@@ -1,7 +1,5 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?php /* finance - editace (pridavani) typu prispevku */
-@extract($_REQUEST);
-
 require_once ('connect.inc.php');
 require_once ('sess.inc.php');
 require_once ('common.inc.php');
@@ -11,6 +9,9 @@ if (IsLoggedRegistrator())
 {
 	db_Connect();
 
+	$name = isset($_REQUEST['name']) ? $_REQUEST['name'] : '';
+	$cat_list = isset($_REQUEST['cat_list']) ? $_REQUEST['cat_list'] : '';
+	
 	if ($name == '')
 	{
 		header('location: '.$g_baseadr.'error.php?code=72');
@@ -24,9 +25,9 @@ if (IsLoggedRegistrator())
 		$name=correct_sql_string($name);
 		$cat_list=correct_sql_string($cat_list);
 		
-		if (IsSet($update))
+		if (IsSet($_REQUEST['update']))
 		{
-			$update = (isset($update) && is_numeric($update)) ? (int)$update : 0;
+			$update = (isset($_REQUEST['update']) && is_numeric($_REQUEST['update'])) ? (int)$_REQUEST['update'] : 0;
 			
 			$query = "UPDATE ".TBL_CATEGORIES_PREDEF." SET name='$name', cat_list='$cat_list' WHERE id='$update'";
 			$result=query_db($query)
