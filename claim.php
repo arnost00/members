@@ -3,6 +3,8 @@ define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
 @extract($_REQUEST);
 
+$payment_id = (IsSet($payment_id) && is_numeric($payment_id)) ? (int)$payment_id : 0;
+
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
 require_once ("./common.inc.php");

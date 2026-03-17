@@ -75,6 +75,8 @@ else
 	$oddil=correct_sql_string($oddil);
 	$modify_flag=correct_sql_string($modify_flag);
 	$kategorie=correct_sql_string($kategorie);
+	$poznamka=correct_sql_string($poznamka);
+	$vicedenni=correct_sql_string($vicedenni);
 	
 	if (!isset($transport))
 		$transport=0;

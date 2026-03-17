@@ -61,7 +61,6 @@ else
 
 $zebricek2 = CreateZebricekNumber($zebricek);
 
-$ext_id=correct_sql_string($ext_id);
 $prihlasky1 = String2DateDMY($prihlasky1);
 $prihlasky2 = String2DateDMY($prihlasky2);
 $prihlasky3 = String2DateDMY($prihlasky3);
@@ -114,6 +113,8 @@ else
 	$prihlasky5=correct_sql_string($prihlasky5);
 	$etap=correct_sql_string($etap);
 	$oddil=correct_sql_string($oddil);
+	$poznamka=correct_sql_string($poznamka);
+	$odkaz=correct_sql_string($odkaz);
 
 	if (!isset($transport))
 		$transport=0;

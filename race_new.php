@@ -28,6 +28,7 @@ require_once ("./common_race_ed.inc.php");
 $raceInfo = null;
 $ext_id_info = '';
 $connector = null;
+$ext_id = (IsSet($ext_id) && is_numeric($ext_id)) ? (int)$ext_id : 0;
 
 if (!empty($ext_id)) { 
 	$connector = ConnectorFactory::create();

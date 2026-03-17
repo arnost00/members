@@ -48,7 +48,7 @@ $sc->add_column('reg','');
 $sc->set_url('index.php?id='._FINANCE_GROUP_ID_.'&subid=1',true);
 $sub_query = $sc->get_sql_string();
 
-$finance_dateTo_condition = isset($_GET["dateTo"])?' and date <= "'.$_GET["dateTo"].'"':"";
+$finance_dateTo_condition = isset($_GET["dateTo"]) ? ' and date <= "'.correct_sql_string($_GET["dateTo"]).'"' : "";
 
 $query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,entry_locked, ifnull(f.sum_amount,0) sum_amount, (n.amount+f.sum_amount) total_amount, u.chief_pay, ft.nazev, ft.popis, u.bank_account FROM '.TBL_USER.' u 
 		left join (select sum(fin.amount) sum_amount, id_users_user from '.TBL_FINANCE.' fin where (fin.storno is null '.$finance_dateTo_condition.') group by fin.id_users_user) f on u.id=f.id_users_user 
