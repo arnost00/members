@@ -121,6 +121,9 @@ else
 	if (!isset($accommodation))
 		$accommodation=0;
 
+	$transport=(int)$transport;
+	$accommodation=(int)$accommodation;
+
 	$kapacitaSql = (!isset($kapacita) || $kapacita === '')
 		? 'NULL'
 		: (int)$kapacita;

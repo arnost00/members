@@ -76,12 +76,17 @@ else
 	$modify_flag=correct_sql_string($modify_flag);
 	$kategorie=correct_sql_string($kategorie);
 	$poznamka=correct_sql_string($poznamka);
+	$odkaz=correct_sql_string($odkaz);
 	$vicedenni=correct_sql_string($vicedenni);
 	
 	if (!isset($transport))
 		$transport=0;
 	if (!isset($accommodation))
 		$accommodation=0;
+
+	$transport=(int)$transport;
+	$accommodation=(int)$accommodation;
+
 	$kapacita= (IsSet($kapacita) && is_numeric($kapacita)) ? (int)$kapacita: 0;
 
 	
