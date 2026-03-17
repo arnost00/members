@@ -613,7 +613,7 @@ function countRaceStats(array $zaznamy, bool $is_sdil_dopr_on): array
             $stats['ubyt']++;
         }
 
-        if ($is_sdil_dopr_on) {
+        if ($is_sdil_dopr_on && !empty($zaznam['transport'])) {
             // fix when changing transport from Common to Shared
             $stats['sedadel'] +=
                 ($zaznam['sedadel'] === null) ? -1 : (int)$zaznam['sedadel'];

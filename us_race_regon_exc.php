@@ -42,7 +42,7 @@ if ($kat != '')
 		{
 			if ( $zaznam_z["transport"] == 3 ) {
 				// shared transport
-				if ( !isset($sedadel) || $sedadel=='' ) {
+				if ( !isset($sedadel) || $sedadel=='' || $sedadel=='null') {
 					// no seats no trasport
 					$sedadel = 'null';
 					$transport = 0;

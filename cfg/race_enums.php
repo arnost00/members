@@ -40,7 +40,7 @@ $g_racetype0_cnt = count($g_racetype0_idx);
 
 // Volby pro sdilenou dopravu
 $g_sedadel_cnt = [
-	null => "nejedu",
+	'null' => "nejedu",
 	-1 => "potřebuji místo",
 	4 => "vezmu 4 osoby",
 	3 => "vezmu 3 osoby",
