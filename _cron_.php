@@ -27,6 +27,14 @@ header("Pragma: no-cache");
 
 require_once (dirname(__FILE__) .'/cfg/_globals.php');
 require_once (dirname(__FILE__) .'/connect.inc.php');
+
+if (php_sapi_name() !== 'cli') {
+    if (!isset($_GET['secret']) || $_GET['secret'] !== $g_cron_secret) {
+        http_response_code(403);
+        exit('Forbidden');
+    }
+}
+
 require_once (dirname(__FILE__) .'/common.inc.php');
 require_once (dirname(__FILE__) .'/common_race.inc.php');
 require_once (dirname(__FILE__) .'/common_fin.inc.php');

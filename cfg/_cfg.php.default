@@ -34,6 +34,10 @@ $g_enable_notify = true;
 // head -c 64 /dev/urandom | base64
 $g_jwt_secret_key = "DEVELOPMENT+ONLY+++GENERATE+A+SECURE+64+BYTE+KEY+IN+PRODUCTION++/uV4zp8UPeLiSXUL62Ae/w==";
 
+// secret token to protect cron/admin-only scripts from public HTTP access
+// generate with: openssl rand -hex 32
+$g_cron_secret = 'CHANGE_ME_TO_A_RANDOM_STRING';
+
 //==================================================================
 // http server
 //==================================================================
