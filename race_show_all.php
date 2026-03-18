@@ -1,6 +1,6 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
-@extract($_REQUEST);
+@extract($_REQUEST, EXTR_SKIP);
 
 require_once ("./timestamp.inc.php");
 _set_global_RT_Start();

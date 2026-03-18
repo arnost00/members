@@ -1,5 +1,5 @@
 <?
-@extract($_REQUEST);
+@extract($_REQUEST, EXTR_SKIP);
 
 $zmeny_list = array();
 function AddZmenyFile($version)

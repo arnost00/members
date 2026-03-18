@@ -61,7 +61,7 @@ if ($userSelected) {
 				}
 
 			} else {
-				$kat = isset($_GET['kat']) ? mysqli_real_escape_string($db_conn, $_GET['kat']) : '';
+				$kat = isset($_GET['kat']) ? correct_sql_string($_GET['kat']) : '';
 				$pozn = '';
 				$pozn2 = 'vlozeno financnikem na miste';
 				$termin = 0;

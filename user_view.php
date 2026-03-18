@@ -1,7 +1,7 @@
 <?php /* adminova stranka - editace clena */
 define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
-@extract($_REQUEST);
+@extract($_REQUEST, EXTR_SKIP);
 
 require_once("./cfg/_colors.php");
 require_once("./cfg/_globals.php");
