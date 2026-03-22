@@ -52,16 +52,18 @@ $obj = $service->getRegistration(1, $ORIS_year);
 
 $arr_oris = array();
 
-foreach ($obj['Data'] as $key=>$value)
-{
-	$user = new User();
-	$user->create($value['UserID'], $value['FirstName'], $value['LastName'], $value['RegNo'], $value['SI'], $value['ClubID']);
-
-	$reg = $value['RegNo'];
-	if (startsWith($reg, $g_shortcut))
+if (is_array($obj) || is_object($obj)) {
+	foreach ($obj as $key=>$value)
 	{
-		$arr_oris["user"] [$reg]= $user;
-		$arr_oris["members"][$reg] = 0;
+		$user = new User();
+		$user->create($value['UserID'], $value['FirstName'], $value['LastName'], $value['RegNo'], $value['SI'], $value['ClubID']);
+
+		$reg = $value['RegNo'];
+		if (startsWith($reg, $g_shortcut))
+		{
+			$arr_oris["user"] [$reg]= $user;
+			$arr_oris["members"][$reg] = 0;
+		}
 	}
 }
 //konec nahrani dat z orisu

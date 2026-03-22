@@ -29,7 +29,6 @@ if ($oris_id > 0 && $user_id > 0)
             'format' => 'json',
             'method' => 'editPerson',
             'userid' => $oris_id,
-            'si' => $zaznam['si_chip'],
             'clubkey' => $g_oris_club_key,
             'firstname' => $zaznam['jmeno'],
             'lastname' => $zaznam['prijmeni'],
@@ -39,6 +38,9 @@ if ($oris_id > 0 && $user_id > 0)
             'zip' => $zaznam['psc'],
             'country' => (!empty($zaznam['narodnost']) ? $zaznam['narodnost'] : 'CZ')
         );
+        if (!empty($zaznam['si_chip']) && $zaznam['si_chip'] != 0 && $zaznam['si_chip'] !== '0') {
+            $params['si'] = $zaznam['si_chip'];
+        }
         
         $url = "https://oris.ceskyorientak.cz/API/?" . http_build_query($params);
         

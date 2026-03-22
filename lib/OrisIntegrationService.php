@@ -61,6 +61,9 @@ class OrisIntegrationService {
             $apiStatus = $decoded['Status'] ?? 'Unknown';
             $apiData = $decoded['Data'] ?? null;
             $msg = "API Error or HTTP {$httpCode}. Status: {$apiStatus}";
+            if ($isPost) {
+                $msg .= "\nPOST Data sent: " . print_r($params, true);
+            }
             if (is_string($apiData)) {
                 $msg .= " - " . $apiData;
             }
