@@ -101,6 +101,7 @@ function DrawMenuGroupHeader($name)
 		DrawMenuItem('Přihlášky na závody',_REGISTRATOR_GROUP_ID_,1);
 		DrawMenuItem('Editace závodů',_REGISTRATOR_GROUP_ID_,4);
 		DrawMenuItemStatic('Synchronizuj přihlášky s ORISem', 'adm_oris_sync.php');
+		DrawMenuItemStatic('ORIS Sync Log', 'rg_oris_sync_log.php');
 	}
 	if(IsLoggedManager())
 	{

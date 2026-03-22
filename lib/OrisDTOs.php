@@ -90,8 +90,10 @@ class OrisEntryRequestDTO {
         $data = [];
         if ($this->clubuser !== null) $data['clubuser'] = $this->clubuser;
         if ($this->classId !== null) $data['class'] = $this->classId;
-        if ($this->si !== null && $this->si !== '') $data['si'] = $this->si;
-        if ($this->rentSi) $data['rent_si'] = 1;
+        if ($this->si !== null && $this->si !== '' && $this->si !== '0' && $this->si !== 0) {
+            $data['si'] = $this->si;
+        }
+        $data['rent_si'] = $this->rentSi ? 1 : 0;
         if ($this->note !== null && $this->note !== '') $data['note'] = $this->note;
         if ($this->entryId !== null) $data['entryid'] = $this->entryId;
         return $data;

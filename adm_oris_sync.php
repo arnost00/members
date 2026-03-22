@@ -26,6 +26,7 @@ if (!IsLoggedAdmin() && !IsLoggedRegistrator()) {
 <?php
 // Capture output
 ob_start();
+define('ORIS_MANUAL_SYNC', true);
 try {
     require_once("oris_sync_daemon.php");
 } catch (Exception $e) {
