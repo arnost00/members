@@ -1,12 +1,12 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?php
-@extract($_REQUEST);
+@extract($_REQUEST, EXTR_SKIP);
 
 require_once('./cfg/_colors.php');
 require_once ('./connect.inc.php');
 require_once ('./sess.inc.php');
 
-$id_zav = (IsSet($id_zav) && is_numeric($id_zav)) ? $id_zav : 0;
+$id_zav = (IsSet($id_zav) && is_numeric($id_zav)) ? (int)$id_zav : 0;
 
 if($id_zav == 0)
 {

@@ -1,6 +1,6 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?php /* adminova stranka - provedeni smazani clena */
-@extract($_REQUEST);
+@extract($_REQUEST, EXTR_SKIP);
 
 require_once ('./connect.inc.php');
 require_once ('./common.inc.php');

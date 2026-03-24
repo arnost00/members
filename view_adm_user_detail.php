@@ -1,7 +1,7 @@
 <? /* adminova stranka - detail clena */
 define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
-@extract($_REQUEST);
+@extract($_REQUEST, EXTR_SKIP);
 
 require_once("./cfg/_colors.php");
 require_once ("./connect.inc.php");
@@ -21,6 +21,9 @@ db_Connect();
 
 if (IsSet($edit) && $edit=true)
 {
+    $hidden = (IsSet($hidden) && is_numeric($hidden)) ? (int)$hidden : 0;
+    $entry_locked = (IsSet($entry_locked) && is_numeric($entry_locked)) ? (int)$entry_locked : 0;
+    $locked = (IsSet($locked) && is_numeric($locked)) ? (int)$locked : 0;
     $updateUser = "update ".TBL_USER." set hidden='".$hidden."', entry_locked='".$entry_locked."' where id=".$id;
     $updateAccount = "update ".TBL_ACCOUNT." set locked='".$locked."' where id_users=".$id;
     query_db($updateUser);

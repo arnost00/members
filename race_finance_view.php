@@ -1,7 +1,7 @@
 <?php /* maly trener - zobrazeni detailu financi pro clena */
 define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
-@extract($_REQUEST);
+@extract($_REQUEST, EXTR_SKIP);
 
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
@@ -74,9 +74,9 @@ if (IsSet($payment))
 	$_SESSION['flash_message'] = ob_get_clean();  // stops buffering and stores content
 	$_SESSION['flash_message_type'] = 'success';
 
-    //Redirect to the same page (GET) → clears POST data
-    header("Location: ?race_id=" . $race_id . "&status=ok");
-    exit;
+	//Redirect to the same page (GET) → clears POST data
+	header("Location: ?race_id=" . $race_id . "&status=ok");
+	exit;
 }
 
 ob_end_flush(); // at the very start
@@ -95,8 +95,8 @@ if ( isset($msg) ) {
 
 
 if (!empty($_SESSION['flash_message'])) {
-    echo $_SESSION['flash_message'];  // display buffered output
-    unset($_SESSION['flash_message']);
+	echo $_SESSION['flash_message'];  // display buffered output
+	unset($_SESSION['flash_message']);
 }
 ?>
 <CENTER>

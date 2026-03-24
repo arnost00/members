@@ -284,11 +284,13 @@ class html_table_mc extends html_table_base
 		$row_add_class = '';
 		$row_add_attrs = '';
 
-		foreach ($row_attrs as $key => $value) {
-			if ( $key === 'class')
-			  $row_add_class = ' ' . $value;
-			else 
-			  $row_add_attrs .= ' ' . htmlspecialchars($key) . '="' . htmlspecialchars($value) . '"';
+		if (is_array($row_attrs)) {
+			foreach ($row_attrs as $key => $value) {
+				if ( $key === 'class')
+				  $row_add_class = ' ' . $value;
+				else 
+				  $row_add_attrs .= ' ' . htmlspecialchars($key) . '="' . htmlspecialchars($value) . '"';
+			}
 		}
 
 		$cols = count ($row_arr);

@@ -1,6 +1,6 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?php
-@extract($_REQUEST);
+@extract($_REQUEST, EXTR_SKIP);
 
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
@@ -14,6 +14,7 @@ if (!IsLogged())
 }
 $id_zav = (IsSet($id_zav) && is_numeric($id_zav)) ? (int)$id_zav: 0;
 $id_us = (IsSet($id_us) && is_numeric($id_us)) ? (int)$id_us: 0;
+$id_z = (IsSet($id_z) && is_numeric($id_z)) ? (int)$id_z: 0;
 $kat = (IsSet($kat)) ? $kat : '';
 
 if ($kat != '')
@@ -42,7 +43,7 @@ if ($kat != '')
 		{
 			if ( $zaznam_z["transport"] == 3 ) {
 				// shared transport
-				if ( !isset($sedadel) || $sedadel=='' ) {
+				if ( !isset($sedadel) || $sedadel=='' || $sedadel=='null') {
 					// no seats no trasport
 					$sedadel = 'null';
 					$transport = 0;

@@ -1,6 +1,6 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?php
-@extract($_REQUEST);
+@extract($_REQUEST, EXTR_SKIP);
 
 require_once("./cfg/_colors.php");
 require_once ("./connect.inc.php");
@@ -67,7 +67,7 @@ if (IsLogged())
 
 if ($g_enable_race_capacity && isSet ($zaznam_z['kapacita']) ) {
 	$tbl_renderer->addBreak(new LimitBreakDetector($zaznam_z['kapacita']));
-	$tbl_renderer->setRowTextPainter ( new GreyLastNPainter($zaznam_z['kapacita']) );	
+	$tbl_renderer->setRowTextPainter ( new GreyLastNPainter($zaznam_z['kapacita']) );
 }
 
 $tbl_renderer->setRowFilter ( function ( RowData $row ) use ( $select, $usr ) : bool  {

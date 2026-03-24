@@ -1,6 +1,6 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
-@extract($_REQUEST);
+@extract($_REQUEST, EXTR_SKIP);
 
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
@@ -28,6 +28,7 @@ require_once ("./common_race_ed.inc.php");
 $raceInfo = null;
 $ext_id_info = '';
 $connector = null;
+$ext_id = (IsSet($ext_id) && is_numeric($ext_id)) ? (int)$ext_id : 0;
 
 if (!empty($ext_id)) { 
 	$connector = ConnectorFactory::create();

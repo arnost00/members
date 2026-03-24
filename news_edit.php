@@ -1,8 +1,6 @@
 <?php /* adminova stranka - editace clena */
 define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
-@extract($_REQUEST);
-
 require_once ("connect.inc.php");
 require_once ("sess.inc.php");
 require_once ("ctable.inc.php");
@@ -14,7 +12,7 @@ if (!IsLoggedEditor())
 require_once("cfg/_globals.php");
 
 db_Connect();
-$id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
+$id = (isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) ? (int)$_REQUEST['id'] : 0;
 
 // id je z tabulky "news"
 $sql_query = 'SELECT * FROM '.TBL_NEWS." WHERE id = '$id' LIMIT 1";

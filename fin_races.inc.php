@@ -22,7 +22,11 @@ $query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prih
 
 $query = "select id_zavod, sum(amount) amount from ".TBL_FINANCE." where storno is null group by id_zavod;";
 @$result_amount=query_db($query);
-while ($rec=mysqli_fetch_array($result_amount)) $race_amount[$rec["id_zavod"]]=$rec["amount"];
+while ($rec=mysqli_fetch_array($result_amount))
+{
+	if ($rec["id_zavod"] != null)	// add only payment with race
+		$race_amount[$rec["id_zavod"]]=$rec["amount"];
+}
 // print_r($race_amount);
 ?>
 

@@ -1,6 +1,6 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
-@extract($_REQUEST);
+@extract($_REQUEST, EXTR_SKIP);
 
 //TBD: podpora entry_locked
 
@@ -57,7 +57,7 @@ if ( $is_spol_dopr_on) {
 	$sedadel = 'null';
 } else if ( $is_sdil_dopr_on) {
 	// shared transport
-	if ( !isset($sedadel) || $sedadel=='' ) {
+	if ( !isset($sedadel) || $sedadel=='' || $sedadel=='null') {
 		// no seats no trasport
 		$sedadel = 'null';
 		$transport = 0;
@@ -69,7 +69,7 @@ if ( $is_spol_dopr_on) {
 } else {
 	// no transport
 	$transport = 0;
-	$sedadel = 'null';	
+	$sedadel = 'null';
 }
 
 $ubytovani = ($is_spol_ubyt_on) ? $ubytovani : 0;

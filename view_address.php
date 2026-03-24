@@ -1,7 +1,7 @@
 <?php /* adminova stranka - editace clena */
 define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
-@extract($_REQUEST);
+@extract($_REQUEST, EXTR_SKIP);
 
 require_once("./cfg/_colors.php");
 require_once ("./connect.inc.php");
@@ -21,6 +21,11 @@ db_Connect();
 // id je z tabulky "users"
 @$vysledek=query_db("SELECT * FROM ".TBL_USER." WHERE id = '$id' LIMIT 1");
 @$zaznam=mysqli_fetch_array($vysledek);
+if (!$zaznam || $zaznam['hidden'] != 0)
+{
+	header("location: ".$g_baseadr."error.php?code=201");
+	exit;
+}
 $update=$id;
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 require_once ("./common.inc.php");

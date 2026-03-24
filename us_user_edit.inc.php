@@ -9,7 +9,12 @@ DrawPageTitle('Členská základna - Editace uživatele');
 
 if (IsSet($chiefPayFor))
 {
-	if (empty($chief_pay)) $chief_pay = "null";
+	$chiefPayFor = is_numeric($chiefPayFor) ? (int)$chiefPayFor : 0;
+	if (empty($chief_pay)) {
+		$chief_pay = "null";
+	} else {
+		$chief_pay = (IsSet($chief_pay) && is_numeric($chief_pay)) ? (int)$chief_pay : 0;
+	}
 	$chief_pay_query = "update `".TBL_USER."` set chief_pay = $chief_pay where id = $chiefPayFor";
 	$chief_pay_result = query_db($chief_pay_query);
 // 	echo $chief_pay_query;

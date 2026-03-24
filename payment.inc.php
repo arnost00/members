@@ -11,7 +11,9 @@ require_once './modify_log.inc.php';
  */
 function createClaim($user_id, $payment_id, $claim_text)
 {
-	
+	$user_id = (IsSet($user_id) && is_numeric($user_id)) ? (int)$user_id : 0;
+	$payment_id = (IsSet($payment_id) && is_numeric($payment_id)) ? (int)$payment_id : 0;
+	$claim_text = correct_sql_string($claim_text);
 	$query = "insert into ".TBL_CLAIM." (user_id, payment_id, text) 
 		values (".$user_id.", ".$payment_id.", '".$claim_text."')";
 	query_db($query);
@@ -24,6 +26,8 @@ function createClaim($user_id, $payment_id, $claim_text)
  */
 function updateClaim($claim_id, $claim_text)
 {
+	$claim_id = (IsSet($claim_id) && is_numeric($claim_id)) ? (int)$claim_id : 0;
+	$claim_text = correct_sql_string($claim_text);
 	$query = "update ".TBL_CLAIM." set text='".$claim_text."' where id = $claim_id";
 	query_db($query);
 }
@@ -33,6 +37,8 @@ function updateClaim($claim_id, $claim_text)
  */
 function closeClaim($claim_id, $payment_id)
 {
+	$claim_id = (IsSet($claim_id) && is_numeric($claim_id)) ? (int)$claim_id : 0;
+	$payment_id = (IsSet($payment_id) && is_numeric($payment_id)) ? (int)$payment_id : 0;
 	$query = "update ".TBL_FINANCE." set claim = 0 where id = $payment_id";
 	query_db($query);
 }
@@ -46,6 +52,9 @@ function createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod)
 {
 	global $db_conn;
 
+	$editor_id = (IsSet($editor_id) && is_numeric($editor_id)) ? (int)$editor_id : 0;
+	$user_id = (IsSet($user_id) && is_numeric($user_id)) ? (int)$user_id : 0;
+	$amount = (IsSet($amount) && is_numeric($amount)) ? (int)$amount : 0;
 	if ($datum==null)
 		$datum=date("Y-m-d");
 	else
@@ -67,6 +76,8 @@ function stornoPayment($editor_id, $trn_id, $storno_note)
 {
 	global $db_conn;
 
+	$editor_id = (IsSet($editor_id) && is_numeric($editor_id)) ? (int)$editor_id : 0;
+	$trn_id = (IsSet($trn_id) && is_numeric($trn_id)) ? (int)$trn_id : 0;
 	$datum=date("Y-m-d");
 	$storno_note = correct_sql_string($storno_note);
 	$query = "update ".TBL_FINANCE." set storno='1', storno_by=".$editor_id.", storno_note='".$storno_note."', storno_date = '".$datum."' where id = $trn_id";
@@ -78,6 +89,10 @@ function updatePayment($editor_id, $trn_id, $id_zavod, $amount, $note)
 {
 	global $db_conn;
 
+	$editor_id = (IsSet($editor_id) && is_numeric($editor_id)) ? (int)$editor_id : 0;
+	$trn_id = (IsSet($trn_id) && is_numeric($trn_id)) ? (int)$trn_id : 0;
+	$id_zavod = (IsSet($id_zavod) && is_numeric($id_zavod)) ? (int)$id_zavod : 'NULL';
+	$amount = (IsSet($amount) && is_numeric($amount)) ? (int)$amount : 0;
 	$note = correct_sql_string($note);
 	$query = "update ".TBL_FINANCE." set id_zavod=".$id_zavod.", amount=".$amount.", note='".$note."' where id = $trn_id";
 	query_db($query);
@@ -202,6 +217,9 @@ function getAllUsersCurrentBalance()
 function createFinanceNoteFromTo($lid_from, $lid_to)
 {
 	global $db_conn;
+
+	$lid_from = (IsSet($lid_from) && is_numeric($lid_from)) ? (int)$lid_from : 0;
+	$lid_to = (IsSet($lid_to) && is_numeric($lid_to)) ? (int)$lid_to : 0;
 
 	//TODO popremyslet, zda nerozdelit do 2 selectu, takhle je to zbytecne necitelne
 

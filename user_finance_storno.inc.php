@@ -1,6 +1,8 @@
 <?php /* finance -  show form for storno payment*/ 
 if (!defined("__HIDE_TEST__")) exit;
 
+$trn_id = (IsSet($trn_id) && is_numeric($trn_id)) ? (int)$trn_id : 0;
+
 $sql_query = "select fin.id, fin.id_users_user, fin.id_users_editor, fin.amount, fin.note, fin.date, rc.nazev zavod_nazev, from_unixtime(rc.datum,'%Y-%c-%e') zavod_datum from ".TBL_FINANCE." fin 
 	left join ".TBL_RACE." rc on fin.id_zavod = rc.id
 	where fin.id = ".$trn_id;
