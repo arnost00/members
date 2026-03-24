@@ -76,7 +76,7 @@ function isValidDate(subject)
 	// Idea for new code taken from :
 	// Original JavaScript code by Chirp Internet: www.chirp.com.au
 	// Please acknowledge use of this code by including this header.
- 
+
 	var minYear = 1902;
 
 	// regular expression to match required date format
@@ -92,20 +92,20 @@ function isValidDate(subject)
 			return false;
 		else
 			return true;
-	} 
+	}
 	return false;
 }
 
 function isValidLogin(subject)
 {
-  if (subject.match(/^[[a-zA-Z/._-][a-zA-Z0-9/._-]*$/)) // prvni znak neni cislo
-  { 
-    return true;
-  }
+	if (subject.match(/^[[a-zA-Z/._-][a-zA-Z0-9/._-]*$/)) // prvni znak neni cislo
+	{
+		return true;
+	}
   else
   {
-    return false;
-  }
+		return false;
+	}
 }
 
 function isPositiveNumber(subject)
@@ -150,9 +150,18 @@ function toggle_expand_by_group(group,el) {
     }
 }
 
-function toggleDisplayByToggleClass(cls) {
-	let elems = document.getElementsByClassName(cls)
-	Array.prototype.forEach.call(elems, function(el) {
-		$( el ).toggleClass("hidden");
-	});
+// function toggleDisplayByToggleClass(cls) {
+// 	let elems = document.getElementsByClassName(cls)
+// 	Array.prototype.forEach.call(elems, function(el) {
+// 		$( el ).toggleClass("hidden");
+// 	});
+// }
+
+function toggleDisplayByData(key,value) {
+
+	var lst = document.querySelectorAll('[' + key + '="' + value + '"]');
+
+	for(var i = 0; i < lst.length; ++i) {
+        (lst[i].style.display == '')?(lst[i].style.display='none'):(lst[i].style.display='');
+	}
 }

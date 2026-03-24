@@ -16,6 +16,43 @@ div.link-top {
 	text-align: right;
 }
 
-div.update-categories > div#ckbx-cat{
+div.update-categories > div.checkbox-row{
 	padding: 2px 2px 2px 2px;
+}
+
+div.form-row {
+  display: flex;
+  gap: 1em; /* spacing between fields */
+}
+
+div.form-field {
+  display: flex;
+  flex-direction: column; /* label above input */
+}
+
+/* row with checkboxes for filter */
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5em; /* spacing between items */
+}
+
+
+/* row selector */
+.state {
+	cursor: pointer;
+	user-select: none;
+	vertical-align: middle;
+}
+.unpinned {
+	font-size: 0.9rem;
+	opacity: 0.3;   /* faded */
+}
+.pinned {
+	font-size: 0.9rem;
+	opacity: 1;
+}
+.selected {
+	font-size: 1.2em;
+	color: green;
 }

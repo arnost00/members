@@ -38,6 +38,24 @@ $g_racetype0 = [
 $g_racetype0_idx = array_keys($g_racetype0);
 $g_racetype0_cnt = count($g_racetype0_idx);
 
+// Typy plateb
+$g_payement_type = [
+	'C' => 'celá',
+	'P' => 'pevná',
+	'R' => 'rozdíl',
+];
+
+// Uctovani plateb
+$g_uctovano = [
+	[ "id" => 1, "nm" => 'Startovné', "char" => '🏁' ],
+	[ "id" => 2, "nm" => 'Doprava', "char" => '🚌' ],
+	[ "id" => 4, "nm" => 'Ubytování', "char" => '🛏️' ]
+];
+
+// Volby pro externi systemy
+// Identifikator A oblasti v informacnim systemu
+$g_external_is_region_A = 'ČR';
+
 // Volby pro sdilenou dopravu
 $g_sedadel_cnt = [
 	'null' => "nejedu",
