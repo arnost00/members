@@ -19,6 +19,14 @@ require_once ('timestamp.inc.php');
 _set_global_RT_Start();
 require_once('cfg/_globals.php');
 require_once ('connect.inc.php');
+
+if (php_sapi_name() !== 'cli') {
+    if (!isset($_GET['secret']) || $_GET['secret'] !== $g_cron_secret) {
+        http_response_code(403);
+        exit('Forbidden');
+    }
+}
+
 require_once ('./version.inc.php');
 require_once ('common.inc.php');
 
