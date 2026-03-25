@@ -10,8 +10,9 @@ Source code is avaible at https://github.com/arnost00/members.
 - ©️ Copyright 2014-2015 LuF
 - ©️ Copyright 2023-2025 Jurakin
 - ©️ Copyright 2024-2026 Svatoš Coufal
-- ©️ Copyright 2025 Jenda Zháňal
-
+- ©️ Copyright 2025-2026 Jenda Zháňal
+- ©️ Copyright 2026 Ondřej Nový
+- ©️ Copyright 2026 Josef Kolář
 
 ## License
 Distributed under the `Boost Software License`, Version 1.0.
