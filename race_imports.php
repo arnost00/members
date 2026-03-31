@@ -27,7 +27,7 @@ db_Connect();
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 require_once ("./common.inc.php");
 
-DrawPageTitle('Import závodu ze systému Oris');
+DrawPageTitle('Import závodu ze systému '.$connector->getSystemName());
 
 DrawPageSubTitle('V rozmezí od '.$from.' do '.$to);
 ?>
