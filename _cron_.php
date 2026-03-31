@@ -520,6 +520,9 @@ if (!defined('_CRON_DEBUG_SEND_'))
 	ClearAllModifyFlags();
 }
 
+// Spusteni synchronizace s Raiffeisenbank
+require_once(dirname(__FILE__) . '/cron_rb_sync.php');
+
 _set_global_RT_End();
 $logme->writeline('Processed requests: '.$cnt_tested.'. Emails send: '.$cnt_send);
 $logme->writeline('Generation time = '._get_global_RT_difference_TS().' sec');

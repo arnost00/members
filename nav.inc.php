@@ -134,6 +134,7 @@ function DrawMenuGroupHeader($name)
 		if ($g_enable_finances_claim) DrawMenuItem('Přehled reklamací',_FINANCE_GROUP_ID_,3);
 		DrawMenuItem('Typy příspěvků',_FINANCE_GROUP_ID_,4);
 		DrawMenuItem('Pravidla plateb',_FINANCE_GROUP_ID_,5);
+		DrawMenuItem('Nespárované platby',_FINANCE_GROUP_ID_,6);
 	}
 	if(IsLoggedAdmin())
 	{

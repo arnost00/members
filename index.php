@@ -293,6 +293,9 @@ if($g_is_system_running || IsLoggedAdmin())
 					case 5:
 						require_once "fin_payrule.inc.php";
 						break;
+					case 6:
+						require_once "fin_bank_orphans.inc.php";
+						break;
 					default:
 						require_once "./news.inc.php";
 				}

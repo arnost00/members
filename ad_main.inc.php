@@ -9,6 +9,7 @@ DrawPageTitle('Administrace stránek oddílu');
 
 <A HREF="srv_repair_regs_db.php" class="NaviColSm">Oprava tabulky registrací na závody.</A><BR>
 <A HREF="_SQL/zmeny.sql.php" class="NaviColSm" target="_blank">Úpravy databáze (patche,updaty)</A><BR>
+<A HREF="admin_run_rb_sync.php" class="NaviColSm">Ruční synchronizace z RB API (Raiffeisenbank)</A><BR>
 
 <BR><hr>
 
