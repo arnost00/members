@@ -95,9 +95,6 @@ function createRaceUpdateMap(RaceInfo $raceInfo, array $raceRow, array $raceType
 function getChangedUpdates(array $raceRow, array $update): array
 {
 
-echo 'raceRow:'; var_dump ( $raceRow ); echo '<BR>';
-echo 'update:'; var_dump ( $update ); echo '<BR>';
-
 	$changed = [];
 
 	foreach ($update as $column => $value) {
@@ -153,7 +150,6 @@ function fetchRaceRow(int $raceId)
 		return false;
 
 	$rows = db_select($stmt, 'i', [$raceId]);
-var_dump ($rows); echo '<BR>';
 	return !empty($rows) ? $rows[0] : false;
 }
 
@@ -179,10 +175,6 @@ function executeRaceUpdate(int $raceId, array $changedUpdates): bool
 	$stmt = db_prepare($sql);
 	if ($stmt === false)
 		return false;
-
-var_dump ($sql); echo '<BR>';
-var_dump ($types); echo '<BR>';
-var_dump ($params); echo '<BR>';
 
 	$result = db_exec($stmt, $types, $params);
 	return ($result !== false);
@@ -267,8 +259,6 @@ else {
 
 		$update = createRaceUpdateMap($raceInfo, $raceRow, $g_racetype);
 		$changedUpdates = getChangedUpdates($raceRow, $update);
-
-var_dump ( $changedUpdates ); echo '<br>';
 
 		if (empty($changedUpdates)) {
 			$unchanged_count++;
