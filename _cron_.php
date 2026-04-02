@@ -520,8 +520,8 @@ if (!defined('_CRON_DEBUG_SEND_'))
 	ClearAllModifyFlags();
 }
 
-// Spusteni synchronizace s Raiffeisenbank
-require_once(dirname(__FILE__) . '/cron_rb_sync.php');
+// Spusteni synchronizace s bankou (API)
+// require_once(dirname(__FILE__) . '/cron_bank_sync.php'); // Disabled automated bank sync
 
 _set_global_RT_End();
 $logme->writeline('Processed requests: '.$cnt_tested.'. Emails send: '.$cnt_send);

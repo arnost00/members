@@ -135,11 +135,9 @@ $g_custom_entry_list_text = '';
 //==================================================================
 // bank API
 //==================================================================
-$g_bank_connector = ''; // Pro pripadne dalsi implementace (napr. 'RaiffeisenbankConnector')
+$g_bank_connector = ''; // BankConnector třída, např. 'RaiffeisenbankConnector' pro připojení banky
 
-
-
-// RB API
+// Nastavení bankovního API
 $g_bank_cert_path = '/path/to/cert.p12';
 $g_bank_cert_pass = 'cert_password';
 $g_bank_client_id = 'raiffeisen_client_id';

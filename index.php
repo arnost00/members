@@ -296,6 +296,9 @@ if($g_is_system_running || IsLoggedAdmin())
 					case 6:
 						require_once "fin_bank_orphans.inc.php";
 						break;
+					case 7:
+						require_once "fin_history.inc.php";
+						break;
 					default:
 						require_once "./news.inc.php";
 				}
