@@ -19,9 +19,10 @@ $total = $row_count['cnt'];
 $pages = ceil($total / $limit);
 if ($pages == 0) $pages = 1;
 
-$query = "SELECT f.date, concat('".$g_shortcut."',u.reg) as reg, u.sort_name as name, f.id_users_editor, f.amount, f.note, rc.nazev zavod_nazev, "
+$query = "SELECT f.date, concat('".$g_shortcut."',u.reg) as reg, u.sort_name as name, f.id_users_editor, e.sort_name as editor_name, f.amount, f.note, rc.nazev zavod_nazev, "
 		." from_unixtime(rc.datum,'%Y-%m-%d') zavod_datum FROM `".TBL_FINANCE."` f "
 		." left join `".TBL_USER."` u on u.id = f.id_users_user "
+		." left join `".TBL_USER."` e on e.id = f.id_users_editor "
 		." left join `".TBL_RACE."` rc on f.id_zavod = rc.id where f.storno is null ORDER BY f.date desc, f.id desc LIMIT $limit OFFSET $offset";
 @$vysl=query_db($query)
 	or die("Chyba při provádění dotazu do databáze.");
@@ -63,8 +64,9 @@ while ($zaznam=mysqli_fetch_array($vysl))
 	$row[] = $zaznam['reg'];
 	$row[] = $zaznam['name'];
 	
-	$c = $zaznam['id_users_editor'] == 0 ? 'red': '';
-	$row[] = "<span class='amount$c'>".$zaznam['id_users_editor']."</span>";
+	$c = ($zaznam['id_users_editor'] == 0 || $zaznam['id_users_editor'] == null) ? 'red': '';
+	$editor_name = ($zaznam['id_users_editor'] == 0 || $zaznam['id_users_editor'] == null) ? 'Systém' : $zaznam['editor_name'];
+	$row[] = "<span class='amount$c'>".$editor_name."</span>";
 	$row[] = $zaznam['amount'];
 	$row[] = $zaznam['zavod_datum'];
 	$row[] = $zaznam['zavod_nazev'];

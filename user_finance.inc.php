@@ -57,7 +57,7 @@ while ($zaznam=mysqli_fetch_array($vysledek_historie))
 	$row[] = ($zaznam['zavod_nazev'] == null) ? '-':formatDate($zaznam['zavod_datum']);
 	$row[] = $zaznam['amount'];
 	$row[] = $zaznam['note'];
-	$row[] = ($zaznam['name'] == null) ? "<<<".$zaznam['id_editor'].">>>":$zaznam['name'];
+	$row[] = ($zaznam['id_editor'] == 0 || $zaznam['id_editor'] == null) ? 'Systém' : (($zaznam['name'] == null) ? "<<<".$zaznam['id_editor'].">>>" : $zaznam['name']);
 	if ($g_enable_finances_claim)
 		$row[] = '<A HREF="javascript:open_win(\'./claim.php?payment_id='.$zaznam['fin_id'].'\',\'\')">Problém?</A>';
 	if (!isset($finance_readonly) && IsLoggedFinance())
