@@ -2,16 +2,16 @@
 <?
 
 define('SYSTEM_NAME','members');
-define('SYSTEM_AUTORS','Arnošt, Kenia, LuF, Jurakin a Svatoš');
+define('SYSTEM_AUTORS','Arnošt, Kenia a kolektiv autorů');
 
 function GetCodeVersion()
 {
-	return "v3.4.9.658";
+	return "v3.4.10.660";
 }
 
 function GetCopyright()
 {
-	return 'Copyright © 2002-2026 Arnošt, Kenia; 2014-2015 LuF; 2023-2025 Jurakin; 2024-2026 Svatoš, 2025 Jenda';
+	return 'Copyright © 2002-2026 '.SYSTEM_AUTORS;
 }
 
 ?>

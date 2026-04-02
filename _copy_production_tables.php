@@ -6,6 +6,13 @@
 
 require ('./cfg/_cfg.php');
 
+if (php_sapi_name() !== 'cli') {
+    if (!isset($_GET['secret']) || $_GET['secret'] !== $g_cron_secret) {
+        http_response_code(403);
+        exit('Forbidden');
+    }
+}
+
 //nastavit vsem heslo na '12345' - 1 = True, 0 = False
 $set_default_password=1;
 $default_password=password_hash(md5('12345'), PASSWORD_DEFAULT);
