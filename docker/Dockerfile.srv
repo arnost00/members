@@ -1,0 +1,42 @@
+FROM php:8.2-apache as base
+
+# Install mysqli and clean up
+RUN docker-php-ext-install mysqli
+
+# Create log directory
+RUN mkdir -p /var/www/html/members/logs && chown -R www-data:www-data /var/www/html/members/logs
+
+# Add Apache alias for /members
+RUN echo '\
+Alias /members /var/www/html/members\n\
+<Directory /var/www/html/members>\n\
+    Options Indexes FollowSymLinks\n\
+    Require all granted\n\
+</Directory>' \
+    > /etc/apache2/conf-available/members.conf \
+    && a2enconf members
+
+FROM base as autotest
+
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+
+# Install Playwright CLI and Chromium for browser-based tests.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends nodejs npm ca-certificates \
+    && npm install -g playwright \
+    && playwright install --with-deps chromium \
+    && rm -rf /var/lib/apt/lists/*
+
+FROM autotest as dev
+
+# Install common VS Code Container Tools dependencies.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        curl \
+        git \
+        iproute2 \
+        less \
+        procps \
+        unzip \
+        wget \
+    && rm -rf /var/lib/apt/lists/*

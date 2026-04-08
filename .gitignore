@@ -1,8 +1,9 @@
 *.bak
 *~
-_tables.php
-_globals.php
-_cfg.php
+cfg/_tables.php
+cfg/_globals.php
+cfg/_cfg.php
+db_data/
 /logs
 .agents/*
 skills-lock.json

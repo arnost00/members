@@ -1,0 +1,34 @@
+services:
+  web:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile.srv
+      target: autotest
+    ports:
+      - "10090:80"    #this line maps your pc port to the container port
+    depends_on:
+      - db    #this line links this container to the db container
+    volumes:
+      - ./:/var/www/html/members    #this line maps the content of ./html in your pc to the /var/www/html of the container
+      # override configuration
+      - ./docker/config/test/_cfg.php:/var/www/html/members/cfg/_cfg.php
+      - ./docker/config/test/_globals.php:/var/www/html/members/cfg/_globals.php
+      - ./docker/config/test/_tables.php:/var/www/html/members/cfg/_tables.php
+  db:
+    image: mariadb:10.11
+    environment:
+      MARIADB_ROOT_PASSWORD: lkj234@sf!--+KLM
+      MARIADB_DATABASE: members_test
+      MARIADB_USER: appuser
+      MARIADB_PASSWORD: apppass
+    volumes:
+      # initial database content
+      - ./docker/db_init/d235220_members_populated.sql:/docker-entrypoint-initdb.d/d235220_members.sql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "10091:80"    #this line maps your pc port to the container port
+    depends_on:
+      - db   #this line links this container to the db container
+    environment:
+      PMA_HOST: db

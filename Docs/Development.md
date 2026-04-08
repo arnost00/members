@@ -2,9 +2,22 @@
 
 * naklonuj [repo](https://github.com/arnost00/members) do pracovního adresáře ( můžeš potřebovat [git windows klient](https://git-scm.com/downloads/win) )
 * nainstaluj docker composer - např. [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-* do pracovního adresáře rozpakuj soubory pro docker [members_development_files.zip](Docs/members_development_files.zip)
 
-* konfigurace
+* Velké vývojové prostředí
+  * v pracovním adresáři spusť ```docker compose -p members-dev -f docker-compose.dev.yml up```
+  * do visual studio code přidej Remote explorer extension
+  * připoj visual studio code k containeru members-dev-web-1
+  * otevři adresář /var/www/html/members
+
+  Prostředí obsahuje git, playwright a další nástroje. Konfigurační soubory jsou v docker/config/dev !sdílené!
+  Přístup z host serveru [members](http://127.0.0.1:10100/members) a [phpadmin](http://127.0.0.1:10101)
+
+* Automatické testy
+  * v pracovním adresáři spusť ```docker compose -p members-autotest -f docker-compose.autotest.yml up```
+
+
+* Minimální konfigurace
+
   * zkopíruj soubor members/cfg/_cfg.php.default do members/cfg/_cfg.php a uprav nebo použij připravený [_cfg.php](Docs/X_cfg.php)
 
   * zkopíruj soubor members/cfg/_globals.php.default do members/cfg/_globals.php a uprav nebo použij připravený [_globals.php]hDocs/X_globals.php)
@@ -13,18 +26,16 @@
 
   Výsledek:
   ```
-  ── docker-compose.yml
-    ├── db_init
-    │   └── d235220_members.sql
-    ├── members
+  ── members
     │   ...
-    │   ├── cfg
-    │       ...
-    │       ├── _cfg.php
-    │       ... 
+    ├── cfg
+    │   ...
+    │   ├── _cfg.php
+    │   ... 
+    ├─── docker
+    │    └── db_init
     │   ...
-    └── web
-         └── DockerFile
+
   ```
 * spusť docker compose - z VS Code, docker desktopu, příkazové řádky, …
 
