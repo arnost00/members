@@ -1,6 +1,5 @@
 const { expect } = require('@playwright/test');
-
-const DEFAULT_PASSWORD = '54321';
+const { DEFAULT_PASSWORD } = require('../constants/auth');
 
 async function login(page, user, password = DEFAULT_PASSWORD) {
   await page.goto('./');
