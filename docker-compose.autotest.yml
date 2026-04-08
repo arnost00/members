@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile.srv
       target: autotest
     ports:
-      - "10090:80"    #this line maps your pc port to the container port
+      - "10090:10100"    #this line maps your pc port to the container port
     depends_on:
       - db    #this line links this container to the db container
     volumes:

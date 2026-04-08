@@ -3,6 +3,10 @@ FROM php:8.2-apache as base
 # Install mysqli and clean up
 RUN docker-php-ext-install mysqli
 
+# Let Apache listen on port 10100 inside the container.
+RUN sed -ri 's/^Listen 80$/Listen 10100/' /etc/apache2/ports.conf \
+    && sed -ri 's#<VirtualHost \\*:80>#<VirtualHost *:10100>#' /etc/apache2/sites-available/000-default.conf
+
 # Create log directory
 RUN mkdir -p /var/www/html/members/logs && chown -R www-data:www-data /var/www/html/members/logs
 
@@ -15,6 +19,8 @@ Alias /members /var/www/html/members\n\
 </Directory>' \
     > /etc/apache2/conf-available/members.conf \
     && a2enconf members
+
+EXPOSE 10100
 
 FROM base as autotest
 

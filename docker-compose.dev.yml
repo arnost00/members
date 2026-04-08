@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile.srv
       target: dev
     ports:
-      - "10100:80"    #this line maps your pc port to the container port
+      - "10100:10100"    #this line maps your pc port to the container port
     depends_on:
       - db    #this line links this container to the db container
     volumes:
