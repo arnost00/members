@@ -142,4 +142,5 @@ $g_bank_cert_path = '/path/to/cert.p12';
 $g_bank_cert_pass = 'cert_password';
 $g_bank_client_id = 'raiffeisen_client_id';
 $g_bank_account_number = '4067843369';
+$g_bank_sync_start_date = '2026-04-09'; // Datum (YYYY-MM-DD), od kterého se stahují transakce (nastavte podle potřeby)
 ?>

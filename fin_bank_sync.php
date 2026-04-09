@@ -75,7 +75,18 @@ if (isset($_POST['action']) && $_POST['action'] === 'import_confirmed') {
 }
 
 // Načtení dat z API (vlozi nove transakce do DB)
-$days_back = isset($_GET['days_back']) ? (int)$_GET['days_back'] : 7;
+$days_back = 7;
+global $g_bank_sync_start_date;
+if (!empty($g_bank_sync_start_date)) {
+    try {
+        $start_date = new DateTime($g_bank_sync_start_date);
+        $now = new DateTime();
+        $diff = $now->diff($start_date);
+        $days_back = $diff->days;
+    } catch (Exception $e) {
+        $days_back = 7;
+    }
+}
 if ($days_back < 1) $days_back = 1;
 if ($days_back > 88) $days_back = 88;
 
@@ -151,13 +162,6 @@ require_once('./header.inc.php');
 <TD width="90%" ALIGN="left" valign="top">
 
     <h2>Import plateb z banky (API)</h2>
-    
-    <form method="GET" action="fin_bank_sync.php" style="margin-bottom: 20px;">
-        <label for="days_back">Počet dní pro načtení historie (max 88):</label>
-        <input type="number" id="days_back" name="days_back" value="<?php echo htmlspecialchars($days_back); ?>" min="1" max="88" required>
-        
-        <button type="submit" class="btn" style="margin-left: 15px;">Načíst transakce</button>
-    </form>
 
     <?php if ($message): ?>
         <div class="msg"><?php echo htmlspecialchars($message); ?></div>

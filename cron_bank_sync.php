@@ -72,6 +72,15 @@ function run_bank_sync($days_back = 30) {
         $msg = $tx['msg'];
         $created_at = $tx['created_at'];
         
+        // Filter by start date if configured
+        global $g_bank_sync_start_date;
+        if (!empty($g_bank_sync_start_date)) {
+            $tx_date = date('Y-m-d', strtotime($created_at));
+            if ($tx_date < $g_bank_sync_start_date) {
+                continue;
+            }
+        }
+        
         // Check if transaction exists
         $check_res = query_db("SELECT id FROM " . TBL_BANK_TRANSACTIONS . " WHERE transaction_id = '$tx_id'");
         if ($check_res && mysqli_num_rows($check_res) > 0) {
