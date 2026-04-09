@@ -18,6 +18,7 @@ async function expectForbiddenRoute(page, route) {
   await expect(page).toHaveURL(new RegExp(`${escapeRegExp(route.path)}$`));
   await expect(page.locator('body')).toContainText('Přihlášen');
   await expect(page.locator('input[name^="mbr_l_"]')).toHaveCount(0);
+  await expect(page.locator('h2')).toHaveText('Novinky');
   await expect(page.locator('span.NaviColSmSel')).toHaveCount(0);
   await expect(page.locator(`a.NaviColSm[href="${route.path}"]`)).toHaveCount(0);
 }
