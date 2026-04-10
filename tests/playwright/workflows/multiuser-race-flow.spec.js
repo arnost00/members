@@ -15,6 +15,7 @@ const {
   createPaymentRule,
   createRace,
   findRaceUserIdByReg,
+  getFinanceDirectoryEntryByReg,
   setMemberFinanceType,
   submitManagedRaceRegistration,
   submitMemberRaceRegistration,
@@ -49,6 +50,22 @@ async function expectFinanceRowValues(finance, expected) {
   await expect(finance.entryFee).toContainText(expected.entryFee);
   await expect(finance.transport).toHaveText(expected.transport);
   await expect(finance.accommodation).toHaveText(expected.accommodation);
+}
+
+async function getAccountantBalances(page, regs, path = './index.php?id=800&subid=1') {
+  const balances = {};
+
+  for (const [index, reg] of regs.entries()) {
+    const entry = await getFinanceDirectoryEntryByReg(page, reg, index === 0 ? { path } : {});
+
+    if (!entry) {
+      throw new Error(`Could not find accountant balance for reg ${reg}`);
+    }
+
+    balances[reg] = entry;
+  }
+
+  return balances;
 }
 
 test.describe('Multi-User Race Workflow', () => {
@@ -296,22 +313,28 @@ test.describe('Multi-User Race Workflow', () => {
     expect(detail.name).toBe(state.labels.raceNameUpdated);
   });
 
-  test('accountant can apply payrule wizard on race finance view', async ({ page }) => {
-    await loginAs(page, 'accountant');
-    await page.goto(`./race_finance_view.php?race_id=${state.race.id}`);
+  async function fillAndCheckFieldsWithWizard( page ) {
+    const popupPromise = page.waitForEvent('popup');
 
-    await page.locator('button[title="Vyplň platby podle pravidel"]').click();
+    await page.evaluate((raceId) => {
+      window.open(`./race_finance_view.php?race_id=${raceId}`, '', 'width=800,height=800');
+    }, state.race.id);
 
-    await expectFinanceRowValues(financeRow(page, 'Coufalová Martina'), {
+    const financePopup = await popupPromise;
+    await financePopup.waitForLoadState('domcontentloaded');
+
+    await financePopup.locator('button[title="Vyplň platby podle pravidel"]').click();
+
+    await expectFinanceRowValues(financeRow(financePopup, 'Coufalová Martina'), {
       state: '🪄',
       amount: '145',
       note: '+45 startovné+100 doprava',
       entryFee: '45',
       transport: '✔+100',
       accommodation: '',
-    });    
+    });
 
-    await expectFinanceRowValues(financeRow(page, 'Drábek Jan'), {
+    await expectFinanceRowValues(financeRow(financePopup, 'Drábek Jan'), {
       state: '🪄',
       amount: '45',
       note: '+45 startovné',
@@ -320,7 +343,7 @@ test.describe('Multi-User Race Workflow', () => {
       accommodation: '',
     });
 
-    await expectFinanceRowValues(financeRow(page, 'Koča Jaroslav'), {
+    await expectFinanceRowValues(financeRow(financePopup, 'Koča Jaroslav'), {
       state: '📌',
       amount: '',
       note: '',
@@ -328,6 +351,39 @@ test.describe('Multi-User Race Workflow', () => {
       transport: '',
       accommodation: '',
     });
+    return financePopup;
+  }
+
+  test('accountant can apply payrule wizard on race finance view', async ({ page }) => {
+    await loginAs(page, 'accountant');
+    await fillAndCheckFieldsWithWizard(page);
+  });
+
+  test('accountant can book the wizard suggestions', async ({ page }) => {
+    await loginAs(page, 'accountant');
+
+    const beforeBalances = await getAccountantBalances(page, ['7755', '8511']);
+    const financePopup = await fillAndCheckFieldsWithWizard(page);
+
+    await Promise.all([
+      financePopup.waitForURL(new RegExp(`race_finance_view\\.php\\?race_id=${state.race.id}.*status=ok`)),
+      financePopup.locator('input[type="submit"][value="Změnit platby"]').click(),
+    ]);
+
+    await expect(financeRow(financePopup, 'Coufalová Martina').amount).toHaveValue('145');
+    await expect(financeRow(financePopup, 'Coufalová Martina').note).toHaveValue('+45 startovné+100 doprava');
+    await expect(financeRow(financePopup, 'Drábek Jan').amount).toHaveValue('45');
+    await expect(financeRow(financePopup, 'Drábek Jan').note).toHaveValue('+45 startovné');
+
+    await Promise.all([
+      financePopup.waitForEvent('close'),
+      financePopup.locator('button[onclick="javascript:close_popup();"]').click(),
+    ]);
+
+    const afterBalances = await getAccountantBalances(page, ['7755', '8511']);
+
+    expect(afterBalances['7755'].amount).toBe(beforeBalances['7755'].amount + 145);
+    expect(afterBalances['8511'].amount).toBe(beforeBalances['8511'].amount + 45);
 
   });
 });
