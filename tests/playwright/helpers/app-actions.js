@@ -62,6 +62,15 @@ function getUserIdFromEditPath(editPath) {
   return match ? match[1] : null;
 }
 
+function getUserIdFromFinancePath(path) {
+  if (!path) {
+    return null;
+  }
+
+  const match = path.match(/[?&]user_id=(\d+)/);
+  return match ? match[1] : null;
+}
+
 function getMemberDirectoryPath(role = 'clubAdmin') {
   switch (role) {
     case 'manager':
@@ -99,6 +108,86 @@ async function findClubMemberByReg(page, reg, role) {
 
     return null;
   }, formatClubReg(reg));
+}
+
+async function getFinanceDirectoryEntryByReg(page, reg, options = {}) {
+  if (options.path) {
+    await page.goto(options.path);
+  }
+
+  const entry = await page.evaluate((formattedReg) => {
+    const rows = Array.from(document.querySelectorAll('table.ctmc tr'));
+
+    function extractOverviewPath(href) {
+      if (!href) {
+        return null;
+      }
+
+      const popupMatch = href.match(/open_win(?:_ex)?\('([^']+)'/);
+      if (popupMatch) {
+        return popupMatch[1];
+      }
+
+      return href.startsWith('javascript:') ? null : href;
+    }
+
+    function parseAmountValue(text) {
+      const normalized = String(text || '').replace(/\s+/g, '');
+      const match = normalized.match(/-?\d+/);
+
+      return {
+        text: normalized,
+        value: match ? Number(match[0]) : null,
+      };
+    }
+
+    for (const row of rows) {
+      const cells = Array.from(row.querySelectorAll('td'));
+      if (cells.length < 5) {
+        continue;
+      }
+
+      if (cells[3].textContent.trim() !== formattedReg) {
+        continue;
+      }
+
+      const amountSpan = row.querySelector('span.amount, span.amountred, span.amountgreen');
+      const overviewLink = Array.from(row.querySelectorAll('a')).find((link) => (
+        link.textContent.includes('Přehled')
+      ));
+      const overviewPath = extractOverviewPath(overviewLink ? overviewLink.getAttribute('href') : null);
+      const parsedAmount = parseAmountValue(amountSpan ? amountSpan.textContent : '');
+
+      let userId = null;
+      if (overviewPath) {
+        try {
+          const url = new URL(overviewPath, window.location.href);
+          userId = url.searchParams.get('user_id');
+        } catch (error) {
+          userId = null;
+        }
+      }
+
+      return {
+        reg: formattedReg,
+        amount: parsedAmount.value,
+        amountText: parsedAmount.text,
+        overviewPath,
+        userId,
+      };
+    }
+
+    return null;
+  }, formatClubReg(reg));
+
+  if (!entry) {
+    return null;
+  }
+
+  return {
+    ...entry,
+    userId: entry.userId || getUserIdFromFinancePath(entry.overviewPath),
+  };
 }
 
 async function ensureClubMember(page, overrides = {}) {
@@ -189,6 +278,127 @@ async function setMemberFinanceType(page, userId, financeType) {
   });
 
   return ensureHtmlSubmission(result, `Set finance type for user ${userId}`);
+}
+
+async function submitMemberFinanceEntry(page, userId, type, overrides = {}) {
+  if (!userId) {
+    throw new Error('Cannot submit member finance entry without a user id');
+  }
+
+  if (!['in', 'out'].includes(type)) {
+    throw new Error(`Unsupported finance entry type: ${type}`);
+  }
+
+  await page.goto(`./user_finance_view.php?user_id=${userId}`);
+
+  const form = await readFormState(page, `form.form[action^="?payment=${type}&user_id="]`);
+  const result = await postFormInSession(page, form.action, {
+    ...form.fields,
+    amount: String(overrides.amount ?? ''),
+    note: overrides.note ?? form.fields.note ?? '',
+    datum: overrides.date ?? form.fields.datum,
+    id_zavod: overrides.raceId ?? form.fields.id_zavod,
+    ...overrides.fields,
+  });
+
+  const label = type === 'out' ? 'Submit member payment' : 'Submit member deposit';
+  return ensureHtmlSubmission(result, `${label} for user ${userId}`);
+}
+
+async function submitFinanceTransferByReg(page, targetReg, overrides = {}) {
+  const sourcePath = overrides.path || './index.php?id=200&subid=10';
+  await page.goto(sourcePath);
+
+  const targetUserId = await page.evaluate((formattedReg) => {
+    const select = document.querySelector('form.form[action*="payment=both"] select[name="id_to"]');
+    if (!select) {
+      return null;
+    }
+
+    for (const option of Array.from(select.options)) {
+      if (option.textContent.includes(formattedReg)) {
+        return option.value;
+      }
+    }
+
+    return null;
+  }, formatClubReg(targetReg));
+
+  if (!targetUserId || targetUserId === '-1') {
+    throw new Error(`Could not find member transfer recipient with reg ${formatClubReg(targetReg)}`);
+  }
+
+  const form = await readFormState(page, 'form.form[action*="payment=both"]');
+  const result = await postFormInSession(page, form.action, {
+    ...form.fields,
+    id_to: String(targetUserId),
+    amount: String(overrides.amount ?? ''),
+    note: overrides.note ?? form.fields.note ?? '',
+    ...overrides.fields,
+  });
+
+  return ensureHtmlSubmission(result, `Submit member transfer to reg ${formatClubReg(targetReg)}`);
+}
+
+async function submitMemberTransferByReg(page, targetReg, overrides = {}) {
+  return submitFinanceTransferByReg(page, targetReg, {
+    path: './index.php?id=200&subid=10',
+    ...overrides,
+  });
+}
+
+async function stornoFirstMemberFinanceEntry(page, userId, overrides = {}) {
+  if (!userId) {
+    throw new Error('Cannot storno member finance entry without a user id');
+  }
+
+  await page.goto(`./user_finance_view.php?user_id=${userId}`);
+
+  const stornoPath = await page.locator('a', { hasText: 'Storno' }).first().getAttribute('href');
+
+  if (!stornoPath) {
+    throw new Error(`No storno link was found for user ${userId}`);
+  }
+
+  const match = stornoPath.match(/[?&]trn_id=(\d+)/);
+  if (!match) {
+    throw new Error(`No transaction id was found in storno link for user ${userId}`);
+  }
+
+  const result = await postFormInSession(page, `./user_finance_view.php?payment=storno&trn_id=${match[1]}&user_id=${userId}`, {
+    storno_note: overrides.note ?? '',
+    ...overrides.fields,
+  });
+
+  return ensureHtmlSubmission(result, `Storno first member finance entry for user ${userId}`);
+}
+
+async function updateFirstMemberFinanceEntry(page, userId, overrides = {}) {
+  if (!userId) {
+    throw new Error('Cannot update member finance entry without a user id');
+  }
+
+  await page.goto(`./user_finance_view.php?user_id=${userId}`);
+
+  const updatePath = await page.locator('a', { hasText: 'Změnit' }).first().getAttribute('href');
+
+  if (!updatePath) {
+    throw new Error(`No update link was found for user ${userId}`);
+  }
+
+  const match = updatePath.match(/[?&]trn_id=(\d+)/);
+  if (!match) {
+    throw new Error(`No transaction id was found in update link for user ${userId}`);
+  }
+
+  const result = await postFormInSession(page, `./user_finance_view.php?payment=update&user_id=${userId}&trn_id=${match[1]}`, {
+    amount: String(overrides.amount ?? ''),
+    note: overrides.note ?? '',
+    id_zavod: overrides.raceId ?? 'null',
+    ...overrides.fields,
+  });
+
+  return ensureHtmlSubmission(result, `Update first member finance entry for user ${userId}`);
 }
 
 async function findRaceUserIdByReg(page, raceId, options = {}) {
@@ -289,7 +499,13 @@ module.exports = {
   findRaceUserIdByReg,
   createPaymentRule,
   createRace,
+  getFinanceDirectoryEntryByReg,
   setMemberFinanceType,
+  stornoFirstMemberFinanceEntry,
+  updateFirstMemberFinanceEntry,
+  submitFinanceTransferByReg,
+  submitMemberFinanceEntry,
+  submitMemberTransferByReg,
   submitManagedRaceRegistration,
   submitMemberRaceRegistration,
   updateRace,
