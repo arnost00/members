@@ -10,24 +10,38 @@ async function createPaymentRule(page, overrides = {}) {
   await page.goto('./fin_payrule_edit.php');
 
   const financeTypeInputs = page.locator('input[name="finance_type[]"][data-role="one"]');
-  const financeType = overrides.financeType || (
-    await financeTypeInputs.count()
-      ? await financeTypeInputs.first().getAttribute('value')
-      : null
+  const defaultFinanceType = await financeTypeInputs.count()
+    ? await financeTypeInputs.first().getAttribute('value')
+    : null;
+
+  const normalizeValues = (value, fallback = []) => {
+    const resolved = value === undefined ? fallback : value;
+    if (resolved === null) {
+      return [];
+    }
+
+    return Array.isArray(resolved)
+      ? resolved.map((item) => String(item))
+      : [String(resolved)];
+  };
+
+  const financeTypes = normalizeValues(
+    overrides.financeTypes ?? overrides.financeType ?? defaultFinanceType,
+    []
   );
 
-  const financeFields = financeType
-    ? { 'finance_type[]': [financeType] }
+  const financeFields = financeTypes.length
+    ? { 'finance_type[]': financeTypes }
     : { finance_type_all: '1' };
 
   const result = await postFormInSession(page, './fin_payrule_edit_exc.php', {
-    'typ[]': [],
-    'typ0[]': ['T'],
-    'termin[]': [],
-    zebricek_all: '1',
-    payment_type: 'P',
-    amount: '45',
-    'uctovano[]': ['1'],
+    'typ[]': normalizeValues(overrides.sports ?? overrides.sport, []),
+    'typ0[]': normalizeValues(overrides.eventTypes ?? overrides.eventType, []),
+    'termin[]': normalizeValues(overrides.terms ?? overrides.term, []),
+    'zebricek[]': normalizeValues(overrides.rankings ?? overrides.ranking, []),
+    payment_type: String(overrides.paymentType ?? 'P'),
+    amount: String(overrides.amount ?? '1'),
+    'uctovano[]': normalizeValues(overrides.chargedItems ?? overrides.chargedItem, ['1']),
     ...financeFields,
     ...overrides.fields,
   });
@@ -37,6 +51,15 @@ async function createPaymentRule(page, overrides = {}) {
 
 function formatClubReg(reg) {
   return String(reg || 0).padStart(4, '0');
+}
+
+function getUserIdFromEditPath(editPath) {
+  if (!editPath) {
+    return null;
+  }
+
+  const match = editPath.match(/[?&]id=(\d+)/);
+  return match ? match[1] : null;
 }
 
 function getMemberDirectoryPath(role = 'clubAdmin') {
@@ -67,7 +90,7 @@ async function findClubMemberByReg(page, reg, role) {
         continue;
       }
 
-      const editLink = cells[4].querySelector('a[href*="./user_edit.php"], a[href*="user_edit.php"]');
+      const editLink = row.querySelector('a[href*="./user_edit.php"], a[href*="user_edit.php"]');
       return {
         reg: regText,
         editPath: editLink ? editLink.getAttribute('href') : null,
@@ -86,6 +109,7 @@ async function ensureClubMember(page, overrides = {}) {
     return {
       created: false,
       reg: existingMember.reg,
+      userId: getUserIdFromEditPath(existingMember.editPath),
       editPath: existingMember.editPath,
     };
   }
@@ -125,6 +149,7 @@ async function ensureClubMember(page, overrides = {}) {
   return {
     created: true,
     reg: createdMember.reg,
+    userId: getUserIdFromEditPath(createdMember.editPath),
     editPath: createdMember.editPath,
   };
 }
@@ -152,6 +177,18 @@ async function ensureClubMembers(page, registrationIds, options = {}) {
   }
 
   return ensuredMembers;
+}
+
+async function setMemberFinanceType(page, userId, financeType) {
+  if (!userId) {
+    throw new Error('Cannot set member finance type without a user id');
+  }
+
+  const result = await postFormInSession(page, `./user_finance_type_exc.php?user_id=${userId}`, {
+    type: String(financeType ?? 0),
+  });
+
+  return ensureHtmlSubmission(result, `Set finance type for user ${userId}`);
 }
 
 async function findRaceUserIdByReg(page, raceId, options = {}) {
@@ -252,6 +289,7 @@ module.exports = {
   findRaceUserIdByReg,
   createPaymentRule,
   createRace,
+  setMemberFinanceType,
   submitManagedRaceRegistration,
   submitMemberRaceRegistration,
   updateRace,

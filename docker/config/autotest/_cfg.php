@@ -50,10 +50,10 @@ $g_www_meta_description = "Stránky oddílu orientačního běhu ".$g_fullname;
 $g_www_meta_keyword = $g_shortcut.", Žabovřesky, Zabovresky";
 
 // zakladni URL adresa WWW serveru (ukoncen "/" !!)
-$g_baseadr='http://127.0.0.1:10090/members/';
+$g_baseadr='http://web:10100/members/';
 
 // adresa hlavnich stranek oddilu
-$g_mainwww='http://127.0.0.1:10090/';
+$g_mainwww='http://web:10100/';
 
 // e-mailove adresy
 $g_emailadr='email@eob.cz';

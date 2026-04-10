@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.2
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Sep 23, 2025 at 07:59 AM
--- Server version: 8.1.0
--- PHP Version: 8.2.27
+-- Generation Time: Apr 09, 2026 at 08:23 PM
+-- Server version: 10.11.16-MariaDB-ubu2204
+-- PHP Version: 8.3.26
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -21,8 +21,22 @@ SET time_zone = "+00:00";
 -- Database: `d235220_members`
 --
 
-CREATE DATABASE IF NOT EXISTS `d235220_members` DEFAULT CHARACTER SET utf8 COLLATE utf8_czech_ci;
-USE `d235220_members`;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tokens`
+--
+
+CREATE TABLE `tokens` (
+  `device` varchar(36) NOT NULL COMMENT 'https://capacitorjs.com/docs/apis/device#deviceid',
+  `device_name` varchar(32) NOT NULL,
+  `user_id` smallint(5) NOT NULL,
+  `fcm_token` varchar(4096) NOT NULL,
+  `fcm_token_timestamp` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'update on token update',
+  `app_version` varchar(16) NOT NULL,
+  `app_last_opened` timestamp NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci;
+
 -- --------------------------------------------------------
 
 --
@@ -30,18 +44,18 @@ USE `d235220_members`;
 --
 
 CREATE TABLE `tst_accounts` (
-  `id` smallint UNSIGNED NOT NULL,
-  `id_users` smallint DEFAULT NULL,
-  `login` varchar(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT '',
-  `heslo` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT '',
-  `policy_news` tinyint UNSIGNED NOT NULL DEFAULT '0',
-  `policy_regs` tinyint UNSIGNED NOT NULL DEFAULT '0',
-  `policy_mng` tinyint UNSIGNED NOT NULL DEFAULT '0',
-  `policy_adm` tinyint UNSIGNED NOT NULL DEFAULT '0',
-  `podpis` varchar(15) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT '',
-  `locked` tinyint UNSIGNED NOT NULL DEFAULT '0',
-  `last_visit` int NOT NULL DEFAULT '0',
-  `policy_fin` tinyint UNSIGNED NOT NULL DEFAULT '0'
+  `id` smallint(5) UNSIGNED NOT NULL,
+  `id_users` smallint(5) DEFAULT NULL,
+  `login` varchar(25) NOT NULL DEFAULT '',
+  `heslo` varchar(255) NOT NULL DEFAULT '',
+  `policy_news` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `policy_regs` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `policy_mng` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `policy_adm` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `podpis` varchar(15) NOT NULL DEFAULT '',
+  `locked` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `last_visit` int(11) NOT NULL DEFAULT 0,
+  `policy_fin` tinyint(1) UNSIGNED NOT NULL DEFAULT 0
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci COMMENT='loginy a hesla uzivatelu';
 
 --
@@ -49,15 +63,15 @@ CREATE TABLE `tst_accounts` (
 --
 
 INSERT INTO `tst_accounts` (`id`, `id_users`, `login`, `heslo`, `policy_news`, `policy_regs`, `policy_mng`, `policy_adm`, `podpis`, `locked`, `last_visit`, `policy_fin`) VALUES
-(1, 0, 'admin', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 1, 0, 0, 0, '', 0, 1758499200, 0),
+(1, 0, 'admin', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 1, 0, 0, 0, '', 0, 1710802800, 0),
 (10, 2, 'test_k', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 1, 1, 0, 1, 'Kenia', 0, 1578524400, 1),
 (11, 1, 'test_a', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 1, 1, 4, 1, 'arnost', 0, 1578438000, 1),
 (12, 3, 'test_v', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 1, 1, 4, 1, 'Veseláček', 0, 1359586800, 1),
-(13, 4, 'tnov_1', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 1, 1, 0, 0, 'tnov_1', 0, 1758240000, 0),
-(14, 5, 'tnov_2', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 1, 0, 4, 0, 'tnov_2', 0, 1758499200, 0),
-(15, 6, 'tnov_3', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 1, 1, 4, 1, 'tnov_3', 0, 1758240000, 1),
-(16, 7, 'tnov_4', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 0, 0, 2, 0, 'tnov_4', 0, 1758240000, 0),
-(17, 8, 'tnov_5', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 0, 0, 0, 0, 'tnov_5', 0, 1758240000, 0),
+(13, 4, 'tnov_1', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 1, 1, 0, 0, 'tnov_1', 0, 1700262000, 0),
+(14, 5, 'tnov_2', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 1, 0, 4, 0, 'tnov_2', 0, 1708988400, 0),
+(15, 6, 'tnov_3', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 1, 1, 4, 1, 'tnov_3', 0, 1708988400, 1),
+(16, 7, 'tnov_4', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 0, 0, 2, 0, 'tnov_4', 0, 1708988400, 0),
+(17, 8, 'tnov_5', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 0, 0, 0, 0, 'tnov_5', 0, 1701903600, 0),
 (18, 11, 'test_d1', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 1, 0, 2, 0, 'Drbča', 0, 1393455600, 0),
 (19, 14, 'hanah', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 1, 0, 2, 0, 'Hanka', 0, 1420758000, 0),
 (20, 13, 'test_k1', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 1, 0, 2, 0, 'Verča', 0, 1342648800, 0),
@@ -68,7 +82,7 @@ INSERT INTO `tst_accounts` (`id`, `id_users`, `login`, `heslo`, `policy_news`, `
 (25, 23, 'MB7605', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 0, 0, 0, 0, 'Maroš', 0, 0, 0),
 (26, 21, 'PB8101', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 0, 0, 0, 0, 'Palo', 0, 0, 0),
 (27, 33, 'VM8951', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 1, 0, 0, 0, 'Věra', 0, 1421622000, 1),
-(28, 9, 'tnov_6', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 0, 0, 0, 0, 'tnov_6', 0, 1758326400, 1),
+(28, 9, 'tnov_6', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 0, 0, 0, 0, 'tnov_6', 0, 1700262000, 1),
 (29, 34, 'majkl', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 0, 1, 2, 0, 'majkl', 0, 1393714800, 1),
 (30, 36, 'RS8006', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 0, 0, 0, 0, 'Řehoř', 0, 0, 0);
 
@@ -79,9 +93,9 @@ INSERT INTO `tst_accounts` (`id`, `id_users`, `login`, `heslo`, `policy_news`, `
 --
 
 CREATE TABLE `tst_categories_predef` (
-  `id` int UNSIGNED NOT NULL,
-  `name` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
-  `cat_list` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL
+  `id` int(10) UNSIGNED NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `cat_list` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci;
 
 --
@@ -103,11 +117,11 @@ INSERT INTO `tst_categories_predef` (`id`, `name`, `cat_list`) VALUES
 --
 
 CREATE TABLE `tst_claim` (
-  `id` int UNSIGNED NOT NULL,
-  `user_id` int UNSIGNED NOT NULL,
-  `payment_id` int UNSIGNED NOT NULL,
-  `text` mediumtext CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `payment_id` int(10) UNSIGNED NOT NULL,
+  `text` mediumtext NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci;
 
 --
@@ -127,17 +141,17 @@ INSERT INTO `tst_claim` (`id`, `user_id`, `payment_id`, `text`, `date`) VALUES
 --
 
 CREATE TABLE `tst_finance` (
-  `id` int UNSIGNED NOT NULL,
-  `id_users_editor` smallint UNSIGNED NOT NULL,
-  `id_users_user` smallint UNSIGNED NOT NULL,
-  `id_zavod` int UNSIGNED DEFAULT NULL,
-  `amount` int NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
+  `id_users_editor` smallint(5) UNSIGNED NOT NULL,
+  `id_users_user` smallint(5) UNSIGNED NOT NULL,
+  `id_zavod` int(10) UNSIGNED DEFAULT NULL,
+  `amount` int(11) NOT NULL,
   `date` date NOT NULL,
-  `note` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
+  `note` varchar(255) DEFAULT NULL,
   `storno` tinyint(1) DEFAULT NULL,
-  `storno_by` int UNSIGNED DEFAULT NULL,
+  `storno_by` int(10) UNSIGNED DEFAULT NULL,
   `storno_date` date DEFAULT NULL,
-  `storno_note` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
+  `storno_note` varchar(255) DEFAULT NULL,
   `claim` tinyint(1) DEFAULT NULL COMMENT 'null = bez reklamace, 1 = aktivni reklamace, 0 = uzavrena reklamace'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci;
 
@@ -322,15 +336,7 @@ INSERT INTO `tst_finance` (`id`, `id_users_editor`, `id_users_user`, `id_zavod`,
 (174, 6, 4, 47, 44, '2020-10-20', '', NULL, NULL, NULL, NULL, NULL),
 (175, 6, 5, 47, 55, '2020-10-20', '', NULL, NULL, NULL, NULL, NULL),
 (176, 9, 21, 44, 100, '2023-11-18', 'Startovne', NULL, NULL, NULL, NULL, NULL),
-(177, 6, 22, 41, 100, '2023-11-18', 'Cesta', NULL, NULL, NULL, NULL, NULL),
-(178, 0, 11, 51, 150, '2025-09-19', '', NULL, NULL, NULL, NULL, NULL),
-(179, 0, 13, 51, 225, '2025-09-19', '', NULL, NULL, NULL, NULL, NULL),
-(180, 0, 36, 51, 150, '2025-09-19', '', NULL, NULL, NULL, NULL, NULL),
-(181, 0, 10, 51, 150, '2025-09-19', '', NULL, NULL, NULL, NULL, NULL),
-(182, 0, 2, 51, 150, '2025-09-19', '', NULL, NULL, NULL, NULL, NULL),
-(183, 0, 13, 44, 150, '2025-09-19', '', NULL, NULL, NULL, NULL, NULL),
-(184, 9, 22, 26, 150, '2025-09-19', '', NULL, NULL, NULL, NULL, NULL),
-(185, 0, 39, 52, 900, '2025-09-22', '', NULL, NULL, NULL, NULL, NULL);
+(177, 6, 22, 41, 100, '2023-11-18', 'Cesta', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -339,9 +345,9 @@ INSERT INTO `tst_finance` (`id`, `id_users_editor`, `id_users_user`, `id_zavod`,
 --
 
 CREATE TABLE `tst_finance_types` (
-  `id` int UNSIGNED NOT NULL,
-  `nazev` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
-  `popis` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL
+  `id` int(10) UNSIGNED NOT NULL,
+  `nazev` varchar(50) NOT NULL,
+  `popis` varchar(255) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci;
 
 --
@@ -366,12 +372,12 @@ INSERT INTO `tst_finance_types` (`id`, `nazev`, `popis`) VALUES
 --
 
 CREATE TABLE `tst_modify_log` (
-  `id` int UNSIGNED NOT NULL,
-  `timestamp` int UNSIGNED NOT NULL DEFAULT '0',
-  `action` enum('unknown','add','edit','delete') CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT 'unknown',
-  `table` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT '',
-  `description` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT '',
-  `author` int UNSIGNED NOT NULL DEFAULT '0'
+  `id` int(10) UNSIGNED NOT NULL,
+  `timestamp` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `action` enum('unknown','add','edit','delete') NOT NULL DEFAULT 'unknown',
+  `table` varchar(20) NOT NULL DEFAULT '',
+  `description` varchar(255) NOT NULL DEFAULT '',
+  `author` int(10) UNSIGNED NOT NULL DEFAULT 0
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci;
 
 --
@@ -841,347 +847,7 @@ INSERT INTO `tst_modify_log` (`id`, `timestamp`, `action`, `table`, `description
 (460, 1700315793, 'edit', 'tst_finance', 'id=39|user_id=9|amount=150|note=Startovne', 28),
 (461, 1700315793, 'edit', 'tst_finance', 'id=40|user_id=9|amount=80|note=', 28),
 (462, 1700315793, 'edit', 'tst_finance', 'id=41|user_id=9|amount=80|note=', 28),
-(463, 1700317985, 'add', 'tst_finance', 'id=177|user_id=22|amount=100', 15),
-(464, 1758306089, 'add', 'tst_finance', 'id=178|user_id=11|amount=150', 1),
-(465, 1758306225, 'add', 'tst_finance', 'id=179|user_id=13|amount=225', 1),
-(466, 1758306617, 'add', 'tst_finance', 'id=180|user_id=36|amount=150', 1),
-(467, 1758306667, 'add', 'tst_finance', 'id=181|user_id=10|amount=150', 1),
-(468, 1758307571, 'add', 'tst_finance', 'id=182|user_id=2|amount=150', 1),
-(469, 1758308134, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(470, 1758308134, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(471, 1758308134, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(472, 1758308134, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(473, 1758308170, 'edit', 'tst_finance', 'id=176|user_id=0|amount=100|note=Startovne', 1),
-(474, 1758308183, 'edit', 'tst_finance', 'id=176|user_id=0|amount=100|note=Startovne', 1),
-(475, 1758308207, 'add', 'tst_finance', 'id=183|user_id=13|amount=150', 1),
-(476, 1758312634, 'edit', 'tst_finance', 'id=182|user_id=9|amount=150|note=', 28),
-(477, 1758312634, 'edit', 'tst_finance', 'id=179|user_id=9|amount=225|note=', 28),
-(478, 1758312634, 'edit', 'tst_finance', 'id=181|user_id=9|amount=150|note=', 28),
-(479, 1758312634, 'edit', 'tst_finance', 'id=180|user_id=9|amount=150|note=', 28),
-(480, 1758312646, 'edit', 'tst_finance', 'id=182|user_id=9|amount=150|note=', 28),
-(481, 1758312646, 'edit', 'tst_finance', 'id=179|user_id=9|amount=225|note=', 28),
-(482, 1758312646, 'edit', 'tst_finance', 'id=181|user_id=9|amount=150|note=', 28),
-(483, 1758312646, 'edit', 'tst_finance', 'id=180|user_id=9|amount=150|note=', 28),
-(484, 1758313674, 'edit', 'tst_finance', 'id=182|user_id=9|amount=150|note=', 28),
-(485, 1758313674, 'edit', 'tst_finance', 'id=179|user_id=9|amount=225|note=', 28),
-(486, 1758313674, 'edit', 'tst_finance', 'id=181|user_id=9|amount=150|note=', 28),
-(487, 1758313674, 'edit', 'tst_finance', 'id=180|user_id=9|amount=150|note=', 28),
-(488, 1758313758, 'edit', 'tst_finance', 'id=182|user_id=9|amount=150|note=', 28),
-(489, 1758313758, 'edit', 'tst_finance', 'id=179|user_id=9|amount=225|note=', 28),
-(490, 1758313758, 'edit', 'tst_finance', 'id=181|user_id=9|amount=150|note=', 28),
-(491, 1758313758, 'edit', 'tst_finance', 'id=180|user_id=9|amount=150|note=', 28),
-(492, 1758313786, 'edit', 'tst_finance', 'id=178|user_id=9|amount=150|note=', 28),
-(493, 1758313786, 'edit', 'tst_finance', 'id=182|user_id=9|amount=150|note=', 28),
-(494, 1758313786, 'edit', 'tst_finance', 'id=179|user_id=9|amount=225|note=', 28),
-(495, 1758313786, 'edit', 'tst_finance', 'id=181|user_id=9|amount=150|note=', 28),
-(496, 1758313786, 'edit', 'tst_finance', 'id=180|user_id=9|amount=150|note=', 28),
-(497, 1758313840, 'edit', 'tst_finance', 'id=178|user_id=9|amount=150|note=', 28),
-(498, 1758313840, 'edit', 'tst_finance', 'id=182|user_id=9|amount=150|note=', 28),
-(499, 1758313840, 'edit', 'tst_finance', 'id=179|user_id=9|amount=225|note=', 28),
-(500, 1758313840, 'edit', 'tst_finance', 'id=181|user_id=9|amount=150|note=', 28),
-(501, 1758313840, 'edit', 'tst_finance', 'id=180|user_id=9|amount=150|note=', 28),
-(502, 1758313999, 'add', 'tst_finance', 'id=184|user_id=22|amount=150', 28),
-(503, 1758314007, 'edit', 'tst_finance', 'id=27|user_id=9|amount=100|note=sto podruhe', 28),
-(504, 1758314007, 'edit', 'tst_finance', 'id=184|user_id=9|amount=150|note=', 28),
-(505, 1758466886, 'edit', 'tst_finance', 'id=178|user_id=9|amount=0|note=', 28),
-(506, 1758466886, 'edit', 'tst_finance', 'id=182|user_id=9|amount=150|note=', 28),
-(507, 1758466886, 'edit', 'tst_finance', 'id=179|user_id=9|amount=225|note=', 28),
-(508, 1758466886, 'edit', 'tst_finance', 'id=181|user_id=9|amount=150|note=', 28),
-(509, 1758466886, 'edit', 'tst_finance', 'id=180|user_id=9|amount=150|note=', 28),
-(510, 1758531635, 'edit', 'tst_finance', 'id=178|user_id=0|amount=0|note=', 1),
-(511, 1758531635, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(512, 1758531635, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(513, 1758531635, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(514, 1758531635, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(515, 1758531660, 'edit', 'tst_finance', 'id=178|user_id=0|amount=0|note=', 1),
-(516, 1758531660, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(517, 1758531660, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(518, 1758531660, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(519, 1758531660, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(520, 1758536178, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(521, 1758536178, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(522, 1758536178, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(523, 1758536178, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(524, 1758536178, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(525, 1758536194, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(526, 1758536194, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(527, 1758536194, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(528, 1758536194, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(529, 1758536194, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(530, 1758540023, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(531, 1758540023, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(532, 1758540023, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(533, 1758540023, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(534, 1758540023, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(535, 1758540067, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(536, 1758540067, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(537, 1758540067, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(538, 1758540067, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(539, 1758540067, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(540, 1758540320, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(541, 1758540320, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(542, 1758540320, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(543, 1758540320, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(544, 1758540320, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(545, 1758540336, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(546, 1758540336, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(547, 1758540336, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(548, 1758540336, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(549, 1758540336, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(550, 1758540385, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(551, 1758540385, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(552, 1758540385, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(553, 1758540385, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(554, 1758540385, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(555, 1758540490, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(556, 1758540490, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(557, 1758540490, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(558, 1758540490, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(559, 1758540490, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(560, 1758540508, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(561, 1758540508, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(562, 1758540508, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(563, 1758540508, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(564, 1758540508, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(565, 1758541953, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(566, 1758541953, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(567, 1758541953, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(568, 1758541953, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(569, 1758541953, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(570, 1758541973, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(571, 1758541973, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(572, 1758541973, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(573, 1758541973, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(574, 1758541973, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(575, 1758541997, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(576, 1758541997, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(577, 1758541997, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(578, 1758541997, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(579, 1758541997, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(580, 1758542117, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(581, 1758542117, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(582, 1758542117, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(583, 1758542117, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(584, 1758542117, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(585, 1758542137, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(586, 1758542137, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(587, 1758542137, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(588, 1758542137, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(589, 1758542137, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(590, 1758542190, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(591, 1758542190, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(592, 1758542190, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(593, 1758542190, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(594, 1758542190, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(595, 1758542396, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(596, 1758542396, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(597, 1758542396, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(598, 1758542396, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(599, 1758542396, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(600, 1758542590, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(601, 1758542590, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(602, 1758542590, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(603, 1758542590, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(604, 1758542590, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(605, 1758542634, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(606, 1758542634, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(607, 1758542634, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(608, 1758542634, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(609, 1758542634, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(610, 1758542655, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(611, 1758542655, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(612, 1758542655, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(613, 1758542655, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(614, 1758542655, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(615, 1758567803, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(616, 1758567803, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(617, 1758567803, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(618, 1758567803, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(619, 1758567803, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(620, 1758567816, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(621, 1758567816, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(622, 1758567816, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(623, 1758567816, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(624, 1758567816, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(625, 1758570169, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(626, 1758570169, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(627, 1758570169, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(628, 1758570169, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(629, 1758570169, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(630, 1758570282, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(631, 1758570282, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(632, 1758570282, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(633, 1758570282, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(634, 1758570282, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(635, 1758571734, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(636, 1758571734, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(637, 1758571734, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(638, 1758571734, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(639, 1758571734, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(640, 1758572039, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(641, 1758572039, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(642, 1758572039, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(643, 1758572039, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(644, 1758572039, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(645, 1758572185, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(646, 1758572185, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(647, 1758572185, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(648, 1758572185, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(649, 1758572185, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(650, 1758572618, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(651, 1758572618, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(652, 1758572618, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1);
-INSERT INTO `tst_modify_log` (`id`, `timestamp`, `action`, `table`, `description`, `author`) VALUES
-(653, 1758572618, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(654, 1758572618, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(655, 1758572630, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(656, 1758572630, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(657, 1758572630, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(658, 1758572630, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(659, 1758572630, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(660, 1758572731, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(661, 1758572731, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(662, 1758572731, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(663, 1758572731, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(664, 1758572731, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(665, 1758573050, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(666, 1758573050, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(667, 1758573050, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(668, 1758573050, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(669, 1758573050, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(670, 1758573572, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(671, 1758573572, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(672, 1758573572, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(673, 1758573572, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(674, 1758573572, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(675, 1758573592, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(676, 1758573592, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(677, 1758573592, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(678, 1758573592, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(679, 1758573592, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(680, 1758573634, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(681, 1758573634, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(682, 1758573634, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(683, 1758573634, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(684, 1758573634, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(685, 1758573650, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(686, 1758573650, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(687, 1758573650, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(688, 1758573650, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(689, 1758573650, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(690, 1758573681, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(691, 1758573681, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(692, 1758573681, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(693, 1758573681, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(694, 1758573681, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(695, 1758573760, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(696, 1758573760, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(697, 1758573760, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(698, 1758573760, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(699, 1758573760, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(700, 1758573931, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(701, 1758573931, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(702, 1758573931, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(703, 1758573931, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(704, 1758573931, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(705, 1758574467, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(706, 1758574467, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(707, 1758574467, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(708, 1758574467, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(709, 1758574467, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(710, 1758574490, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(711, 1758574490, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(712, 1758574490, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(713, 1758574490, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(714, 1758574490, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(715, 1758574574, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(716, 1758574574, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(717, 1758574574, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(718, 1758574574, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(719, 1758574574, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(720, 1758574635, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(721, 1758574635, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(722, 1758574635, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(723, 1758574635, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(724, 1758574635, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(725, 1758575282, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(726, 1758575282, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(727, 1758575282, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(728, 1758575282, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(729, 1758575282, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(730, 1758575383, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(731, 1758575383, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(732, 1758575383, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(733, 1758575383, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(734, 1758575383, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(735, 1758576254, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(736, 1758576254, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(737, 1758576254, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(738, 1758576254, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(739, 1758576254, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(740, 1758576282, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(741, 1758576282, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(742, 1758576282, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(743, 1758576282, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(744, 1758576282, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(745, 1758576300, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(746, 1758576300, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(747, 1758576300, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(748, 1758576300, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(749, 1758576300, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(750, 1758576352, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(751, 1758576352, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(752, 1758576352, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(753, 1758576352, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(754, 1758576352, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(755, 1758576381, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(756, 1758576381, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(757, 1758576381, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(758, 1758576381, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(759, 1758576381, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(760, 1758576452, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(761, 1758576452, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(762, 1758576452, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(763, 1758576452, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(764, 1758576452, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(765, 1758576626, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(766, 1758576626, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(767, 1758576626, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(768, 1758576626, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(769, 1758576626, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(770, 1758576651, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(771, 1758576651, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(772, 1758576651, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(773, 1758576651, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(774, 1758576651, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(775, 1758576687, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(776, 1758576687, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(777, 1758576687, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(778, 1758576687, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(779, 1758576687, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(780, 1758576737, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(781, 1758576737, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(782, 1758576737, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(783, 1758576737, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(784, 1758576737, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(785, 1758576751, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(786, 1758576751, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(787, 1758576751, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(788, 1758576751, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(789, 1758576751, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(790, 1758576860, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(791, 1758576860, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(792, 1758576860, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(793, 1758576860, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(794, 1758576860, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(795, 1758576878, 'edit', 'tst_finance', 'id=178|user_id=0|amount=150|note=', 1),
-(796, 1758576878, 'edit', 'tst_finance', 'id=182|user_id=0|amount=150|note=', 1),
-(797, 1758576878, 'edit', 'tst_finance', 'id=179|user_id=0|amount=225|note=', 1),
-(798, 1758576878, 'edit', 'tst_finance', 'id=181|user_id=0|amount=150|note=', 1),
-(799, 1758576878, 'edit', 'tst_finance', 'id=180|user_id=0|amount=150|note=', 1),
-(800, 1758578774, 'add', 'tst_users', 'Svatoš Coufal [6700]', 1),
-(801, 1758578875, 'add', 'tst_finance', 'id=185|user_id=39|amount=900', 1),
-(802, 1758602944, 'add', 'tst_users', 'Rea Coufalová [0953]', 1);
+(463, 1700317985, 'add', 'tst_finance', 'id=177|user_id=22|amount=100', 15);
 
 -- --------------------------------------------------------
 
@@ -1190,13 +856,13 @@ INSERT INTO `tst_modify_log` (`id`, `timestamp`, `action`, `table`, `description
 --
 
 CREATE TABLE `tst_news` (
-  `id` int UNSIGNED NOT NULL,
-  `id_user` smallint UNSIGNED DEFAULT NULL,
-  `datum` int NOT NULL DEFAULT '0',
-  `nadpis` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT '',
-  `text` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
-  `internal` tinyint(1) NOT NULL DEFAULT '0',
-  `modify_flag` tinyint(1) NOT NULL DEFAULT '0'
+  `id` int(10) UNSIGNED NOT NULL,
+  `id_user` smallint(5) UNSIGNED DEFAULT NULL,
+  `datum` int(11) NOT NULL DEFAULT 0,
+  `nadpis` varchar(50) NOT NULL DEFAULT '',
+  `text` longtext NOT NULL,
+  `internal` tinyint(1) NOT NULL DEFAULT 0,
+  `modify_flag` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci COMMENT='novinky';
 
 --
@@ -1316,32 +982,16 @@ INSERT INTO `tst_news` (`id`, `id_user`, `datum`, `nadpis`, `text`, `internal`, 
 --
 
 CREATE TABLE `tst_payment_rules` (
-  `typ` enum('ob','mtbo','lob','jine','trail') CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
-  `typ0` enum('Z','T','S','V','N','J') CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
-  `druh_platby` enum('N','P','R') CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
-  `termin` tinyint UNSIGNED DEFAULT NULL,
-  `vicedenni` tinyint UNSIGNED DEFAULT NULL,
-  `zebricek` int UNSIGNED DEFAULT NULL,
-  `finance_type` int UNSIGNED DEFAULT NULL,
-  `pomer_platby` decimal(3,2) DEFAULT NULL,
-  `platba` int DEFAULT NULL
+  `id` int(10) UNSIGNED NOT NULL,
+  `typ` enum('ob','mtbo','lob','jine','trail') DEFAULT NULL,
+  `typ0` enum('Z','T','S','V','N','J') DEFAULT NULL,
+  `finance_type` int(10) UNSIGNED DEFAULT NULL,
+  `termin` tinyint(1) DEFAULT NULL COMMENT 'Platný termín pro pozitivní hodnoutu, první platný pro negativní',
+  `zebricek` int(10) UNSIGNED DEFAULT NULL,
+  `druh_platby` enum('C','P','R') DEFAULT NULL,
+  `platba` int(10) DEFAULT NULL,
+  `uctovano` tinyint(1) UNSIGNED DEFAULT NULL COMMENT '1 startovné, 2 doprava, 4 ubytování'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci COMMENT='podminene predpisy plateb uzivate';
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tst_tokens`
---
-
-CREATE TABLE `tst_tokens` (
-  `device` varchar(36) COLLATE utf8mb3_czech_ci NOT NULL COMMENT 'https://capacitorjs.com/docs/apis/device#deviceid',
-  `device_name` varchar(32) COLLATE utf8mb3_czech_ci NOT NULL,
-  `user_id` smallint NOT NULL,
-  `fcm_token` varchar(4096) COLLATE utf8mb3_czech_ci NOT NULL,
-  `fcm_token_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'update on token update',
-  `app_version` varchar(16) COLLATE utf8mb3_czech_ci NOT NULL,
-  `app_last_opened` timestamp NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci;
 
 -- --------------------------------------------------------
 
@@ -1350,75 +1000,74 @@ CREATE TABLE `tst_tokens` (
 --
 
 CREATE TABLE `tst_users` (
-  `id` smallint UNSIGNED NOT NULL,
-  `prijmeni` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT '',
-  `jmeno` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT '',
+  `id` smallint(5) UNSIGNED NOT NULL,
+  `prijmeni` varchar(30) NOT NULL DEFAULT '',
+  `jmeno` varchar(20) NOT NULL DEFAULT '',
   `datum` date DEFAULT NULL,
-  `adresa` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
-  `mesto` varchar(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
-  `psc` varchar(6) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
-  `tel_domu` varchar(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
-  `tel_zam` varchar(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
-  `tel_mobil` varchar(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
-  `email` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
-  `reg` int(4) UNSIGNED ZEROFILL NOT NULL DEFAULT '0000',
-  `si_chip` int UNSIGNED NOT NULL DEFAULT '0',
-  `hidden` tinyint UNSIGNED NOT NULL DEFAULT '0',
-  `sort_name` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT '',
-  `poh` enum('H','D') CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT 'H',
-  `lic` enum('E','A','B','C','D','R','-') CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT '-',
-  `lic_mtbo` enum('E','A','B','C','D','R','-') CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT '-',
-  `lic_lob` enum('E','A','B','C','D','R','-') CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT '-',
-  `fin` int NOT NULL DEFAULT '0',
-  `chief_id` smallint UNSIGNED NOT NULL DEFAULT '0',
-  `rc` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
-  `narodnost` varchar(2) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT 'CZ',
-  `entry_locked` tinyint UNSIGNED NOT NULL DEFAULT '0',
-  `chief_pay` smallint UNSIGNED DEFAULT NULL,
-  `finance_type` int UNSIGNED NOT NULL DEFAULT '0'
+  `adresa` varchar(50) DEFAULT NULL,
+  `mesto` varchar(25) NOT NULL,
+  `psc` varchar(6) NOT NULL,
+  `tel_domu` varchar(25) DEFAULT NULL,
+  `tel_zam` varchar(25) DEFAULT NULL,
+  `tel_mobil` varchar(25) DEFAULT NULL,
+  `email` varchar(50) DEFAULT NULL,
+  `reg` int(4) UNSIGNED ZEROFILL NOT NULL DEFAULT 0000,
+  `si_chip` int(9) UNSIGNED NOT NULL DEFAULT 0,
+  `hidden` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `sort_name` varchar(50) NOT NULL DEFAULT '',
+  `poh` enum('H','D') NOT NULL DEFAULT 'H',
+  `lic` enum('E','A','B','C','D','R','-') DEFAULT '-',
+  `lic_mtbo` enum('E','A','B','C','D','R','-') DEFAULT '-',
+  `lic_lob` enum('E','A','B','C','D','R','-') DEFAULT '-',
+  `fin` int(11) NOT NULL DEFAULT 0,
+  `bank_account` varchar(255) DEFAULT NULL,
+  `chief_id` smallint(5) UNSIGNED NOT NULL DEFAULT 0,
+  `rc` varchar(10) NOT NULL,
+  `narodnost` varchar(2) NOT NULL DEFAULT 'CZ',
+  `entry_locked` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `chief_pay` smallint(5) UNSIGNED DEFAULT NULL,
+  `finance_type` int(10) UNSIGNED NOT NULL DEFAULT 0
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci COMMENT='vsechny informace o uzivatelich';
 
 --
 -- Dumping data for table `tst_users`
 --
 
-INSERT INTO `tst_users` (`id`, `prijmeni`, `jmeno`, `datum`, `adresa`, `mesto`, `psc`, `tel_domu`, `tel_zam`, `tel_mobil`, `email`, `reg`, `si_chip`, `hidden`, `sort_name`, `poh`, `lic`, `lic_mtbo`, `lic_lob`, `fin`, `chief_id`, `rc`, `narodnost`, `entry_locked`, `chief_pay`, `finance_type`) VALUES
-(1, 'Pátek', 'Richard', '0000-00-00', '', '', '', '', '', '', 'arnost.p@centrum.cz', 7609, 130, 0, 'Pátek Richard', 'H', 'C', '-', '-', 0, 0, '', 'CZ', 0, NULL, 2),
-(2, 'König', 'Lukáš', '1980-06-17', '', '', '', '', '', '', 'kenia@seznam.cz', 8001, 121, 0, 'König Lukáš', 'H', 'C', '-', '-', 0, 0, '', 'CZ', 0, NULL, 0),
-(3, 'Veselý', 'Martin', '0000-00-00', '<a href =\\\"zhusta.sky.cz\\\">Předklášteří </a>', '', '', '', '', '', '', 7502, 53201, 0, 'Veselý Martin', 'H', 'C', '-', '-', 0, 12, '', 'CZ', 0, NULL, 0),
-(4, 'Novák', 'Jan', '1991-01-01', '', '', '', '', '', '', '', 9111, 0, 0, 'Novák Jan', 'H', 'C', '-', '-', 0, 7, '', 'CZ', 0, 7, 3),
-(5, 'Novák', 'Karel', '1993-01-01', '', '', '', '', '', '', '', 9312, 0, 0, 'Novák Karel', 'H', 'A', '-', '-', 0, 7, '', 'CZ', 0, 7, 0),
-(6, 'Novák', 'Martin', '1995-01-01', '', '', '', '', '', '', '', 9513, 1341, 0, 'Novák Martin', 'H', 'E', '-', '-', 0, 0, '', 'CZ', 0, NULL, 0),
-(7, 'Nováková', 'Eva', '1997-01-01', '', '', '', '', '', '', '', 9751, 55555, 0, 'Nováková Eva', 'D', 'E', 'E', '-', 0, 0, '', 'CZ', 0, NULL, 0),
-(8, 'Nováková', 'Zuzana', '1999-01-01', '', '', '', '', '', '', '', 9952, 1341431, 0, 'Nováková Zuzana', 'D', 'R', '-', '-', 0, 7, '', 'CZ', 0, 7, 0),
-(9, 'Nováková', 'Jitka', '1983-01-01', '', '', '', '', '', '', '', 8357, 49494, 0, 'Nováková Jitka', 'D', 'C', '-', '-', 0, 7, '', 'CZ', 0, 7, 0),
-(10, 'Mazaný', 'Filil', '1988-05-01', '', '', '', '', '', '', '', 8801, 1486785, 0, 'Mazaný Filil', 'H', 'E', '-', 'A', 0, 0, '', 'CZ', 0, NULL, 2),
-(11, 'Drábek', 'Jan', '1985-11-04', 'Škroupova 10', 'Brno - Židenice', '636 00', '', '', '608477026', 'jan_drabek@volny.cz', 8511, 49690, 0, 'Drábek Jan', 'H', 'C', '-', '-', 0, 13, '', 'CZ', 0, 13, 1),
-(12, 'Zřídkaveselý', 'Libor', '1972-07-03', 'Skorkovského 153', 'Brno', '636 00', '549246395', '545321282', '604776993', 'zr@jaroska.cz', 7207, 101, 0, 'Zřídkaveselý Libor', 'H', 'C', '-', '-', 0, 0, '', 'CZ', 0, NULL, 0),
-(13, 'Křístková', 'Veronika', '1983-01-28', 'Za kovárnou 405', 'Smržice', '79817', '', '', '736120094', 'fricco@seznam.cz', 8379, 52865, 0, 'Křístková Veronika', 'D', 'C', '-', '-', 0, 0, '', 'CZ', 0, NULL, 0),
-(14, 'Hlavová', 'Hana', '1988-05-12', 'Tyršova 397', 'Konice', '798 52', '608131017', '', '608131017', 'hanah.kon@centrum.cz', 8888, 515450, 0, 'Hlavová Hana', 'D', 'E', '-', '-', 0, 0, '', 'CZ', 1, NULL, 3),
-(15, 'Zvarik', 'Tomáš', '1977-01-29', '', '', '000 00', '', '', '', 'ciselko@gmail.com, icq 220735915', 7702, 0, 0, 'Zvarik Tomáš', 'H', 'C', '-', '-', 0, 0, '', 'CZ', 0, NULL, 0),
-(16, 'Zřídkaveselý', 'Adam', '2005-11-11', 'Skorkovského 153', 'Brno', '636 00', '', '', '', '', 0505, 0, 0, 'Zřídkaveselý Adam', 'H', 'C', '-', '-', 0, 12, '', 'CZ', 0, NULL, 0),
-(17, 'Zřídkaveselý', 'Martin', '2008-09-01', 'Skorkovského 153', 'Brno', '636 00', '', '', '', '', 0808, 0, 0, 'Zřídkaveselý Martin', 'H', 'C', '-', '-', 0, 12, '', 'CZ', 0, NULL, 0),
-(18, 'Stehlík', 'Martin', '1985-06-25', 'Tichého 7', 'Brno', '616 00', '543240819', '', '608438928', 'stehlik.m@atlas.cz', 8503, 1985625, 0, 'Stehlík Martin', 'H', 'C', '-', '-', 0, 0, '', 'CZ', 0, NULL, 3),
-(32, 'Urválek', 'Jiří', '0000-00-00', '', '', '', '', '', '', '', 6107, 0, 0, 'Urválek Jiří', 'H', 'C', '-', '-', 0, 0, '', 'CZ', 0, NULL, 0),
-(21, 'Bukovac', 'Palo', '1981-09-27', 'Nezvalova 27', 'Bratislava, Slovensko', '821 06', '00421245525925', '', '00421905570266', 'bukki.pallo@zoznam.sk', 8101, 515478, 0, 'Bukovac Palo', 'H', 'E', '-', '-', 0, 14, '', 'CZ', 1, NULL, 0),
-(22, 'Bukovac', 'Dušan', '1975-03-07', 'Nezvalova 27', 'Bratislava, Slovensko', '821 06', '00421245525925', '', '00421905296601', 'dusan.bukovac@vertical.sk ', 7503, 232004, 0, 'Bukovac Dušan', 'H', 'C', '-', '-', 0, 11, '', 'CZ', 1, NULL, 3),
-(23, 'Bukovac', 'Maroš', '1976-05-25', 'Nezvalova 27', 'Bratislava,  Slovensko', '821 06', '00421245525925', '00421268206015', '00421905974050', 'bukovaci@centrum.sk maros.bukovac@vertical.sk', 7605, 232006, 0, 'Bukovac Maroš', 'H', 'C', '-', '-', 0, 11, '', 'CZ', 1, NULL, 0),
-(25, 'Bukovacová', 'Alena', '1974-04-22', 'Nezvalova 27', 'Bratislava, Slovensko', '821 06', '00421245525925', '', '00421905194946', 'alena.bukovacova@gmail.com', 7454, 232008, 0, 'Bukovacová Alena', 'D', 'C', '-', '-', 0, 14, '', 'CZ', 1, NULL, 0),
-(26, 'Jevsejenko', 'Alexandr', '1981-01-23', 'Orlí 9', 'Brno', '602 00', '542213452', '', '605534547', 'jevsejenko@gmail.com', 8110, 52073, 0, 'Jevsejenko Alexandr', 'D', 'C', '-', '-', 0, 13, '', 'CZ', 0, NULL, 5),
-(27, 'Koča', 'Jaroslav', '1982-06-15', 'Dusíkova 29', 'Brno', '638 00', '', '', '777269786', 'jerry.koca@email.cz', 8200, 301217, 0, 'Koča Jaroslav', 'H', 'C', '-', '-', 0, 13, '', 'CZ', 0, NULL, 4),
-(28, 'Kočová', 'Hana', '1986-02-27', 'Vranov 260', 'Vranov', '664 32', '', '', '602 344 660', 'hankoc@seznam.cz', 8676, 52165, 0, 'Kočová Hana', 'D', 'A', '-', '-', 0, 18, '', 'CZ', 0, NULL, 1),
-(29, 'Kolbaba', 'Tomáš', '1982-02-21', '', '', '', '', '', '724243655', 'kolbic@seznam.cz', 8243, 52022, 0, 'Kolbaba Tomáš', 'H', 'C', '-', '-', 0, 18, '', 'CZ', 0, NULL, 0),
-(30, 'Zimmermann', 'Jakub', '1989-01-11', 'Blatnická 12', 'Brno', '628 00', '', '', '723 967 341', 'jarazim@seznam.cz ,skype:jara.zimmermann', 8928, 995810, 0, 'Zimmermann Jakub', 'H', 'C', '-', '-', 0, 15, '', 'CZ', 0, NULL, 0),
-(31, 'Zimmermann', 'Štěpán', '1991-12-20', 'Blatnická 12', 'Brno', '628 00', '', '', '721062310', 'stepazdepa@seznam.cz, xzimmermanns@gmail.com', 9101, 911220, 0, 'Zimmermann Štěpán', 'H', 'R', '-', '-', 0, 15, '', 'CZ', 0, NULL, 0),
-(33, 'Mádlová', 'Věra', '0000-00-00', '', '', '', '', '', '', '', 8951, 0, 0, 'Mádlová Věra', 'D', 'C', '-', '-', 0, 0, '', 'CZ', 0, NULL, 6),
-(34, 'Gross', 'Michal', '0000-00-00', '', '', '', '', '', '', '', 6946, 0, 0, 'Gross Michal', 'H', 'C', '-', '-', 0, 0, '', 'CZ', 0, NULL, 0),
-(36, 'Štěrbák', 'Řehoř', '0000-00-00', '', '', '', '', '', '', 'arnost@eob.cz', 8006, 0, 0, 'Štěrbák Řehoř', 'H', 'C', '-', '-', 0, 0, '', 'CZ', 0, NULL, 0),
-(37, 'Mocvesely', 'Osvald', '1944-01-01', '', '', '', '', '', '', '', 4400, 0, 0, 'Mocvesely Osvald', 'H', 'C', '-', '-', 0, 0, '', 'BW', 1, NULL, 8),
-(38, 'Matula', 'Petr', '1982-05-17', '', '', '', '', '', '', '', 8202, 2042531, 0, 'Matula Petr', 'H', 'C', '-', '-', 0, 0, '', 'CZ', 0, NULL, 5),
-(39, 'Coufal', 'Svatoš', '1967-03-28', '', '', '', '', '', '', '', 6700, 1387775, 0, 'Coufal Svatoš', 'H', 'C', '-', '-', 0, 0, '6703281794', 'CZ', 0, NULL, 9),
-(40, 'Coufalová', 'Rea', '2010-03-06', '', '', '', '', '', '', '', 0953, 123, 0, 'Coufalová Rea', 'D', 'A', '-', '-', 0, 0, '0953068089', 'CZ', 0, NULL, 0);
+INSERT INTO `tst_users` (`id`, `prijmeni`, `jmeno`, `datum`, `adresa`, `mesto`, `psc`, `tel_domu`, `tel_zam`, `tel_mobil`, `email`, `reg`, `si_chip`, `hidden`, `sort_name`, `poh`, `lic`, `lic_mtbo`, `lic_lob`, `fin`, `bank_account`, `chief_id`, `rc`, `narodnost`, `entry_locked`, `chief_pay`, `finance_type`) VALUES
+(1, 'Pátek', 'Richard', '0000-00-00', '', '', '', '', '', '', 'arnost.p@centrum.cz', 7609, 130, 0, 'Pátek Richard', 'H', 'C', '-', '-', 0, NULL, 0, '', 'CZ', 0, NULL, 2),
+(2, 'König', 'Lukáš', '1980-06-17', '', '', '', '', '', '', 'kenia@seznam.cz', 8001, 121, 0, 'König Lukáš', 'H', 'C', '-', '-', 0, NULL, 0, '', 'CZ', 0, NULL, 0),
+(3, 'Veselý', 'Martin', '0000-00-00', '<a href =\\\"zhusta.sky.cz\\\">Předklášteří </a>', '', '', '', '', '', '', 7502, 53201, 0, 'Veselý Martin', 'H', 'C', '-', '-', 0, NULL, 12, '', 'CZ', 0, NULL, 0),
+(4, 'Novák', 'Jan', '1991-01-01', '', '', '', '', '', '', '', 9111, 0, 0, 'Novák Jan', 'H', 'C', '-', '-', 0, NULL, 7, '', 'CZ', 0, 7, 3),
+(5, 'Novák', 'Karel', '1993-01-01', '', '', '', '', '', '', '', 9312, 0, 0, 'Novák Karel', 'H', 'A', '-', '-', 0, NULL, 7, '', 'CZ', 0, 7, 0),
+(6, 'Novák', 'Martin', '1995-01-01', '', '', '', '', '', '', '', 9513, 1341, 0, 'Novák Martin', 'H', 'E', '-', '-', 0, NULL, 0, '', 'CZ', 0, NULL, 0),
+(7, 'Nováková', 'Eva', '1997-01-01', '', '', '', '', '', '', '', 9751, 55555, 0, 'Nováková Eva', 'D', 'E', 'E', '-', 0, NULL, 0, '', 'CZ', 0, NULL, 0),
+(8, 'Nováková', 'Zuzana', '1999-01-01', '', '', '', '', '', '', '', 9952, 1341431, 0, 'Nováková Zuzana', 'D', 'R', '-', '-', 0, NULL, 7, '', 'CZ', 0, 7, 0),
+(9, 'Nováková', 'Jitka', '1983-01-01', '', '', '', '', '', '', '', 8357, 49494, 0, 'Nováková Jitka', 'D', 'C', '-', '-', 0, NULL, 7, '', 'CZ', 0, 7, 0),
+(10, 'Mazaný', 'Filil', '1988-05-01', '', '', '', '', '', '', '', 8801, 1486785, 0, 'Mazaný Filil', 'H', 'E', '-', 'A', 0, NULL, 0, '', 'CZ', 0, NULL, 2),
+(11, 'Drábek', 'Jan', '1985-11-04', 'Škroupova 10', 'Brno - Židenice', '636 00', '', '', '608477026', 'jan_drabek@volny.cz', 8511, 49690, 0, 'Drábek Jan', 'H', 'C', '-', '-', 0, NULL, 13, '', 'CZ', 0, 13, 1),
+(12, 'Zřídkaveselý', 'Libor', '1972-07-03', 'Skorkovského 153', 'Brno', '636 00', '549246395', '545321282', '604776993', 'zr@jaroska.cz', 7207, 101, 0, 'Zřídkaveselý Libor', 'H', 'C', '-', '-', 0, NULL, 0, '', 'CZ', 0, NULL, 0),
+(13, 'Křístková', 'Veronika', '1983-01-28', 'Za kovárnou 405', 'Smržice', '79817', '', '', '736120094', 'fricco@seznam.cz', 8379, 52865, 0, 'Křístková Veronika', 'D', 'C', '-', '-', 0, NULL, 0, '', 'CZ', 0, NULL, 0),
+(14, 'Hlavová', 'Hana', '1988-05-12', 'Tyršova 397', 'Konice', '798 52', '608131017', '', '608131017', 'hanah.kon@centrum.cz', 8888, 515450, 0, 'Hlavová Hana', 'D', 'E', '-', '-', 0, NULL, 0, '', 'CZ', 1, NULL, 3),
+(15, 'Zvarik', 'Tomáš', '1977-01-29', '', '', '000 00', '', '', '', 'ciselko@gmail.com, icq 220735915', 7702, 0, 0, 'Zvarik Tomáš', 'H', 'C', '-', '-', 0, NULL, 0, '', 'CZ', 0, NULL, 0),
+(16, 'Zřídkaveselý', 'Adam', '2005-11-11', 'Skorkovského 153', 'Brno', '636 00', '', '', '', '', 0505, 0, 0, 'Zřídkaveselý Adam', 'H', 'C', '-', '-', 0, NULL, 12, '', 'CZ', 0, NULL, 0),
+(17, 'Zřídkaveselý', 'Martin', '2008-09-01', 'Skorkovského 153', 'Brno', '636 00', '', '', '', '', 0808, 0, 0, 'Zřídkaveselý Martin', 'H', 'C', '-', '-', 0, NULL, 12, '', 'CZ', 0, NULL, 0),
+(18, 'Stehlík', 'Martin', '1985-06-25', 'Tichého 7', 'Brno', '616 00', '543240819', '', '608438928', 'stehlik.m@atlas.cz', 8503, 1985625, 0, 'Stehlík Martin', 'H', 'C', '-', '-', 0, NULL, 0, '', 'CZ', 0, NULL, 3),
+(32, 'Urválek', 'Jiří', '0000-00-00', '', '', '', '', '', '', '', 6107, 0, 0, 'Urválek Jiří', 'H', 'C', '-', '-', 0, NULL, 0, '', 'CZ', 0, NULL, 0),
+(21, 'Bukovac', 'Palo', '1981-09-27', 'Nezvalova 27', 'Bratislava, Slovensko', '821 06', '00421245525925', '', '00421905570266', 'bukki.pallo@zoznam.sk', 8101, 515478, 0, 'Bukovac Palo', 'H', 'E', '-', '-', 0, NULL, 14, '', 'CZ', 1, NULL, 0),
+(22, 'Bukovac', 'Dušan', '1975-03-07', 'Nezvalova 27', 'Bratislava, Slovensko', '821 06', '00421245525925', '', '00421905296601', 'dusan.bukovac@vertical.sk ', 7503, 232004, 0, 'Bukovac Dušan', 'H', 'C', '-', '-', 0, NULL, 11, '', 'CZ', 1, NULL, 3),
+(23, 'Bukovac', 'Maroš', '1976-05-25', 'Nezvalova 27', 'Bratislava,  Slovensko', '821 06', '00421245525925', '00421268206015', '00421905974050', 'bukovaci@centrum.sk maros.bukovac@vertical.sk', 7605, 232006, 0, 'Bukovac Maroš', 'H', 'C', '-', '-', 0, NULL, 11, '', 'CZ', 1, NULL, 0),
+(25, 'Bukovacová', 'Alena', '1974-04-22', 'Nezvalova 27', 'Bratislava, Slovensko', '821 06', '00421245525925', '', '00421905194946', 'alena.bukovacova@gmail.com', 7454, 232008, 0, 'Bukovacová Alena', 'D', 'C', '-', '-', 0, NULL, 14, '', 'CZ', 1, NULL, 0),
+(26, 'Jevsejenko', 'Alexandr', '1981-01-23', 'Orlí 9', 'Brno', '602 00', '542213452', '', '605534547', 'jevsejenko@gmail.com', 8110, 52073, 0, 'Jevsejenko Alexandr', 'D', 'C', '-', '-', 0, NULL, 13, '', 'CZ', 0, NULL, 5),
+(27, 'Koča', 'Jaroslav', '1982-06-15', 'Dusíkova 29', 'Brno', '638 00', '', '', '777269786', 'jerry.koca@email.cz', 8200, 301217, 0, 'Koča Jaroslav', 'H', 'C', '-', '-', 0, NULL, 13, '', 'CZ', 0, NULL, 4),
+(28, 'Kočová', 'Hana', '1986-02-27', 'Vranov 260', 'Vranov', '664 32', '', '', '602 344 660', 'hankoc@seznam.cz', 8676, 52165, 0, 'Kočová Hana', 'D', 'A', '-', '-', 0, NULL, 18, '', 'CZ', 0, NULL, 1),
+(29, 'Kolbaba', 'Tomáš', '1982-02-21', '', '', '', '', '', '724243655', 'kolbic@seznam.cz', 8243, 52022, 0, 'Kolbaba Tomáš', 'H', 'C', '-', '-', 0, NULL, 18, '', 'CZ', 0, NULL, 0),
+(30, 'Zimmermann', 'Jakub', '1989-01-11', 'Blatnická 12', 'Brno', '628 00', '', '', '723 967 341', 'jarazim@seznam.cz ,skype:jara.zimmermann', 8928, 995810, 0, 'Zimmermann Jakub', 'H', 'C', '-', '-', 0, NULL, 15, '', 'CZ', 0, NULL, 0),
+(31, 'Zimmermann', 'Štěpán', '1991-12-20', 'Blatnická 12', 'Brno', '628 00', '', '', '721062310', 'stepazdepa@seznam.cz, xzimmermanns@gmail.com', 9101, 911220, 0, 'Zimmermann Štěpán', 'H', 'R', '-', '-', 0, NULL, 15, '', 'CZ', 0, NULL, 0),
+(33, 'Mádlová', 'Věra', '0000-00-00', '', '', '', '', '', '', '', 8951, 0, 0, 'Mádlová Věra', 'D', 'C', '-', '-', 0, NULL, 0, '', 'CZ', 0, NULL, 6),
+(34, 'Gross', 'Michal', '0000-00-00', '', '', '', '', '', '', '', 6946, 0, 0, 'Gross Michal', 'H', 'C', '-', '-', 0, NULL, 0, '', 'CZ', 0, NULL, 0),
+(36, 'Štěrbák', 'Řehoř', '0000-00-00', '', '', '', '', '', '', 'arnost@eob.cz', 8006, 0, 0, 'Štěrbák Řehoř', 'H', 'C', '-', '-', 0, NULL, 0, '', 'CZ', 0, NULL, 0),
+(37, 'Mocvesely', 'Osvald', '1944-01-01', '', '', '', '', '', '', '', 4400, 0, 0, 'Mocvesely Osvald', 'H', 'C', '-', '-', 0, NULL, 0, '', 'BW', 1, NULL, 8),
+(38, 'Matula', 'Petr', '1982-05-17', '', '', '', '', '', '', '', 8202, 2042531, 0, 'Matula Petr', 'H', 'C', '-', '-', 0, NULL, 0, '', 'CZ', 0, NULL, 5);
 
 -- --------------------------------------------------------
 
@@ -1427,21 +1076,21 @@ INSERT INTO `tst_users` (`id`, `prijmeni`, `jmeno`, `datum`, `adresa`, `mesto`, 
 --
 
 CREATE TABLE `tst_xmailinfo` (
-  `id` int UNSIGNED NOT NULL,
-  `id_user` int UNSIGNED NOT NULL,
-  `email` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
-  `active_tf` tinyint UNSIGNED NOT NULL,
-  `active_ch` tinyint UNSIGNED NOT NULL,
-  `active_rg` tinyint UNSIGNED NOT NULL,
-  `daysbefore` int NOT NULL,
-  `type` int NOT NULL,
-  `sub_type` int UNSIGNED NOT NULL,
-  `ch_data` int UNSIGNED NOT NULL,
-  `active_fin` tinyint UNSIGNED NOT NULL,
-  `active_finf` tinyint UNSIGNED NOT NULL,
-  `fin_type` int UNSIGNED NOT NULL,
-  `fin_limit` smallint NOT NULL,
-  `active_news` tinyint UNSIGNED NOT NULL DEFAULT '0'
+  `id` int(11) UNSIGNED NOT NULL,
+  `id_user` int(11) UNSIGNED NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `active_tf` tinyint(1) UNSIGNED NOT NULL,
+  `active_ch` tinyint(1) UNSIGNED NOT NULL,
+  `active_rg` tinyint(1) UNSIGNED NOT NULL,
+  `daysbefore` int(2) NOT NULL,
+  `type` int(11) NOT NULL,
+  `sub_type` int(11) UNSIGNED NOT NULL,
+  `ch_data` int(11) UNSIGNED NOT NULL,
+  `active_fin` tinyint(1) UNSIGNED NOT NULL,
+  `active_finf` tinyint(1) UNSIGNED NOT NULL,
+  `fin_type` int(11) UNSIGNED NOT NULL,
+  `fin_limit` smallint(5) NOT NULL,
+  `active_news` tinyint(1) UNSIGNED NOT NULL DEFAULT 0
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci;
 
 --
@@ -1463,91 +1112,91 @@ INSERT INTO `tst_xmailinfo` (`id`, `id_user`, `email`, `active_tf`, `active_ch`,
 --
 
 CREATE TABLE `tst_zavod` (
-  `id` smallint UNSIGNED NOT NULL,
-  `ext_id` varchar(8) COLLATE utf8mb3_czech_ci DEFAULT NULL,
-  `datum` int NOT NULL DEFAULT '0',
-  `datum2` int NOT NULL DEFAULT '0',
-  `nazev` varchar(70) COLLATE utf8mb3_czech_ci DEFAULT NULL,
-  `misto` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
-  `typ` enum('ob','mtbo','lob','jine','trail') CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
-  `typ0` enum('Z','T','S','V','N','J') CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT 'Z',
-  `vicedenni` tinyint UNSIGNED NOT NULL DEFAULT '0',
-  `zebricek` int UNSIGNED NOT NULL DEFAULT '0',
-  `ranking` enum('0','1') CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT '0',
-  `odkaz` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
-  `prihlasky` tinyint UNSIGNED NOT NULL DEFAULT '0',
-  `prihlasky1` int DEFAULT '0',
-  `prihlasky2` int NOT NULL DEFAULT '0',
-  `prihlasky3` int NOT NULL DEFAULT '0',
-  `prihlasky4` int NOT NULL DEFAULT '0',
-  `prihlasky5` int NOT NULL DEFAULT '0',
-  `etap` tinyint UNSIGNED NOT NULL DEFAULT '0',
-  `kategorie` mediumtext CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
-  `poznamka` mediumtext CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
-  `vedouci` int UNSIGNED NOT NULL,
-  `poslano` tinyint UNSIGNED NOT NULL,
-  `oddil` varchar(8) COLLATE utf8mb3_czech_ci DEFAULT NULL,
-  `send` tinyint UNSIGNED NOT NULL DEFAULT '0',
-  `modify_flag` int UNSIGNED NOT NULL,
+  `id` smallint(5) UNSIGNED NOT NULL,
+  `ext_id` varchar(8) DEFAULT NULL,
+  `datum` int(11) NOT NULL DEFAULT 0,
+  `datum2` int(11) NOT NULL DEFAULT 0,
+  `nazev` varchar(70) DEFAULT NULL,
+  `misto` varchar(50) DEFAULT NULL,
+  `typ` enum('ob','mtbo','lob','jine','trail') NOT NULL,
+  `typ0` enum('Z','T','S','V','N','J') NOT NULL DEFAULT 'Z',
+  `vicedenni` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `zebricek` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `ranking` enum('0','1') NOT NULL DEFAULT '0',
+  `odkaz` varchar(100) DEFAULT NULL,
+  `prihlasky` tinyint(4) UNSIGNED NOT NULL DEFAULT 0,
+  `prihlasky1` int(11) DEFAULT 0,
+  `prihlasky2` int(11) NOT NULL DEFAULT 0,
+  `prihlasky3` int(11) NOT NULL DEFAULT 0,
+  `prihlasky4` int(11) NOT NULL DEFAULT 0,
+  `prihlasky5` int(11) NOT NULL DEFAULT 0,
+  `etap` tinyint(4) UNSIGNED NOT NULL DEFAULT 0,
+  `kategorie` mediumtext NOT NULL,
+  `poznamka` mediumtext NOT NULL,
+  `vedouci` int(10) UNSIGNED NOT NULL,
+  `poslano` tinyint(3) UNSIGNED NOT NULL,
+  `oddil` varchar(8) DEFAULT NULL,
+  `send` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `modify_flag` int(10) UNSIGNED NOT NULL,
   `transport` tinyint(1) DEFAULT NULL,
   `ubytovani` tinyint(1) DEFAULT NULL,
-  `cancelled` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci COMMENT='tabulka popisu zavodu';
+  `kapacita` smallint(6) DEFAULT NULL,
+  `prihlasenych` smallint(6) NOT NULL DEFAULT 0,
+  `cancelled` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci COMMENT='tabulka popisu zavodu';
 
 --
 -- Dumping data for table `tst_zavod`
 --
 
-INSERT INTO `tst_zavod` (`id`, `ext_id`, `datum`, `datum2`, `nazev`, `misto`, `typ`, `typ0`, `vicedenni`, `zebricek`, `ranking`, `odkaz`, `prihlasky`, `prihlasky1`, `prihlasky2`, `prihlasky3`, `prihlasky4`, `prihlasky5`, `etap`, `kategorie`, `poznamka`, `vedouci`, `poslano`, `oddil`, `send`, `modify_flag`, `transport`, `ubytovani`, `cancelled`) VALUES
-(1, NULL, 1545433200, 0, 'Vánoční běh Brnem', 'Brno', 'ob', 'V', 0, 0, '1', '', 1, 1543618800, 0, 0, 0, 0, 1, '', '', 0, 0, 'ABC', 0, 0, 0, 0, 1),
-(2, NULL, 1545778800, 0, 'Štěpánský běh', 'Radostice2', 'jine', 'T', 0, 0, '1', '', 1, 1545174000, 0, 0, 0, 0, 1, '', '', 0, 0, 'BBM', 0, 0, 0, 0, 1),
-(3, NULL, 1671750000, 1672009200, 'Svátky ', 'Doma u krbu', 'lob', 'T', 1, 2, '1', '', 4, 1670626800, 1670886000, 1671231600, 1671577200, 0, 0, '', '', 0, 0, 'XMA', 0, 5, 0, 0, 1),
-(4, NULL, 1546210800, 0, 'Silvestrovské poježdění', 'Velodrom', 'mtbo', 'V', 0, 8, '1', '', 1, 1545865200, 0, 0, 0, 0, 1, '', '', 0, 0, 'ACH', 0, 0, 0, 0, 0),
-(5, NULL, 1546124400, 0, 'Hromniční trápení', 'Blansko', 'ob', 'Z', 0, 0, '0', '', 1, 1545692400, 0, 0, 0, 0, 1, '', '', 0, 0, 'RBK', 0, 0, 0, 0, 0),
-(6, NULL, 1675378800, 1675724400, 'Další pracovní týden', 'Brno', 'jine', 'T', 1, 0, '0', '', 5, 1672873200, 1672959600, 1673046000, 1674774000, 1675033200, 5, '', '', 0, 0, 'WRK', 0, 5, 0, 0, 0),
-(7, NULL, 1675378800, 0, 'testovaci nejakej', 'misto', 'ob', 'J', 0, 191, '1', 'www.asdad.sd', 1, 1672873200, 0, 0, 0, 0, 1, '', '', 0, 0, 'asdf', 0, 5, 0, 0, 0),
-(8, NULL, 1673737200, 0, 'MČR klasická trať, 1.ČP', 'Strážné ', 'lob', 'Z', 0, 17, '0', 'www.ob.spartak-vrchlabi.cz/zavody2011/lob/', 1, 1672786800, 0, 0, 0, 0, 1, '', '', 0, 0, 'VRL', 0, 5, 0, 0, 0),
-(9, NULL, 1674946800, 0, '3.ČP na krátké trati', 'Zinnwald, DE', 'lob', 'Z', 0, 1, '0', '', 1, 1672786800, 0, 0, 0, 0, 1, '', '', 0, 0, 'LIV', 0, 5, 1, 0, 0),
-(10, NULL, 1676761200, 0, 'MČR dvoučlenných družstev', 'Tři Studně', 'lob', 'T', 0, 48, '0', 'www.ski-adventure.cz/2011/rozpis-lob/', 1, 1675897200, 0, 0, 0, 0, 1, '', '', 28, 0, 'OSN+TBM', 0, 5, 0, 0, 0),
-(11, NULL, 1708902000, 0, 'MČR ve sprintu, 6.ČP', 'Nová Ves u Rýmařova', 'lob', 'Z', 0, 16, '0', '', 0, 0, 0, 0, 0, 0, 1, '', '', 0, 0, 'VRB', 0, 4, 0, 0, 0),
-(36, NULL, 1675292400, 0, 'Hromniční trápení', 'Blansko', 'ob', 'Z', 0, 7, '1', 'hromnicni.wz.cz/', 2, 1674860400, 1675033200, 0, 0, 0, 1, '', 'Testovací závod', 0, 0, 'RBK', 0, 5, 2, 0, 0),
-(13, NULL, 1710802800, 1710889200, 'Brutus Extreme Orienteering', '', 'jine', 'Z', 1, 0, '0', '', 3, 1705964400, 1707260400, 1709334000, 0, 0, 2, 'D10N;D12C;D14C;D16C;D18C;D21C;D21D;D35C;D45C;D55C;H10N;H12C;H14C;H16C;H18C;H21C;H21D;H35C;H45C;H55C;HDR', '', 0, 0, 'GEMMA', 0, 5, 0, 0, 0),
-(14, NULL, 1675465200, 0, 'Hromniční trápení II', 'Blansko', 'ob', 'Z', 0, 8, '0', 'www.hromnicni.wz.cz/', 1, 1675033200, 0, 0, 0, 0, 1, 'H14;D14;H19;D19;H35;D35;P;HDR', '', 0, 0, 'RBK', 0, 5, 0, 0, 0),
-(15, NULL, 1680213600, 1680300000, 'CESOM 2015', 'Borský Mikuláš', 'ob', 'Z', 1, 0, '1', '', 2, 1677193200, 1678834800, 0, 0, 0, 3, 'H10N;D10N;H12C;D12C;H14C;D14C;H16C;D16C;H18C;D18C;H21C;D21C;H21D;D21D;H35C;D35C;H45C;D45C;H55C;D55C;HDR;D12B;D14B;D16B;D18B;D20B;D21B;D35B;D40B;D45B;D50B;D55B;D60B;D65B;H12B;H14B;H16B;H18B;H20B;H21B;H35B;H40B;H45B;H50B;H55B;H60B;H65B;H70B;H75B', '', 0, 0, 'BBA', 0, 5, 0, 0, 0),
-(16, NULL, 1687989600, 1688162400, 'Cena střední Moravy', 'Okrouhlá – Melkov', 'mtbo', 'Z', 1, 0, '1', 'csm12.kobkon.cz/', 1, 1686693600, 0, 0, 0, 0, 3, 'H10N;D10N;H12C;D12C;D12;H14C;D14C;D14;H16C;D16C;D16;H18C;D18C;D18;H21C;D21C;H21D;D21D;H35C;D35C;D35;H45C;D45C;D45;H55C;D55C;D55;D10N;D12C;D14C;D16C;D18C;D21C;D21D;D35C;D45C;D55C;HDR;D10N;D12C;D14C;D16C;D18C;D21C;D21D;D35C;D45C;D55C;H10N;H12C;H14C;H16C;H18C;H21C;H21D;H35C;H45C;H55C;HDR;', '', 0, 0, 'KON+ZBM', 0, 5, 1, 0, 0),
-(18, NULL, 1689199200, 1689372000, 'H.S.H. Vysočina cup', 'Leština u Skály', 'ob', 'Z', 1, 128, '1', 'www.obchrast.com/', 2, 1686866400, 1688508000, 0, 0, 0, 3, '', '', 0, 0, 'CHT', 0, 5, 1, 1, 0),
-(19, NULL, 1689112800, 0, 'H.S.H. Vysočina cup - noční ', 'Leština u Skály', 'ob', 'Z', 0, 128, '1', 'obchrast.com/nz.php?nzid=891', 1, 1683842400, 0, 0, 0, 0, 1, '', '2154365ěřčěšžžřážíáýöïÿ¨tëw¨s¨ds¨d¨x¨vdgf¨ds¨sä', 23, 0, 'CHT', 0, 5, 1, 0, 0),
-(20, NULL, 1721426400, 1721599200, 'Veteran cup', 'Obec Záměl', 'ob', 'Z', 1, 0, '1', 'obvamberk.aspone.cz/VETERAN_CUP_2012_podrobny_rozpis.pdf', 3, 1715551200, 1719525600, 1720735200, 0, 0, 3, '', '', 0, 0, 'VAM', 0, 5, 0, 0, 0),
-(21, NULL, 1721944800, 1722204000, 'Grand Prix Silesia 20XX', 'Vidnava', 'ob', 'Z', 1, 128, '1', 'silesia.obopava.cz/silesia_2012/', 3, 1709074800, 1719525600, 1720821600, 0, 0, 5, 'D10N;D12;D14;D16;D18;D21C;D21D;D35;D45;D55;H10N;H12;H14;H16;H18;H21C;H21D;H35;H45;H55;HDR', '', 0, 0, 'AOP', 1, 5, 1, 1, 0),
-(22, NULL, 1724536800, 1724623200, 'Pěkné prázdniny', 'Malá Skála, Český ráj', 'ob', 'Z', 1, 0, '1', 'www.tur.cz/pekneprazdniny/', 2, 1722031200, 1723327200, 0, 0, 0, 3, '', '', 0, 0, 'TUR', 0, 5, 2, 0, 0),
-(23, NULL, 1535061600, 0, 'Pěkné prázdniny - sprint  ', 'Turnov', 'ob', 'Z', 0, 0, '1', 'tur.cz/pekneprazdniny/', 2, 1532642400, 1532728800, 0, 0, 0, 1, '', 'Prihlasuje se spolu prihlaskou na PPcka', 0, 0, 'TUR', 1, 0, 0, 0, 0),
-(24, NULL, 1723932000, 1724018400, '3 etapový OB Jičín ', 'Sportcentrum Brada', 'ob', 'Z', 1, 0, '1', 'objicin.tpc.cz/jicin/main.php?&zavody=40&menu=100&jazyk=0', 1, 1720821600, 0, 0, 0, 0, 3, '', 'E1 a E2 bez rankingu', 0, 0, 'SJC', 0, 5, 1, 0, 0),
-(25, NULL, 1725055200, 1725228000, 'Cena východních Čech', 'Seč', 'ob', 'Z', 1, 0, '1', 'lpu.cz/cvc15', 2, 1719957600, 1720821600, 0, 0, 0, 3, '', '', 0, 0, 'LPU', 0, 5, 0, 0, 0),
-(26, NULL, 1727474400, 1727560800, 'MČR na klasice', 'Skokovy', 'ob', 'Z', 1, 17, '1', 'www.ok99.cz/mct2012', 1, 1725746400, 0, 0, 0, 0, 0, '', '', 0, 0, 'PHK+TUV', 0, 5, 0, 0, 0),
-(27, NULL, 1538776800, 0, 'MČR štafet', 'Březina', 'ob', 'Z', 0, 48, '1', 'mcrdruzstva.eob.cz', 1, 1537567200, 0, 0, 0, 0, 1, 'a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d', '', 0, 0, 'ZBM', 0, 0, 1, 0, 0),
-(28, NULL, 1728252000, 0, 'MČR klubů a oblastních výběrů žactva', 'Březina', 'ob', 'Z', 0, 0, '1', 'mcrdruzstva.eob.cz', 1, 1726956000, 0, 0, 0, 0, 1, 'H65D;', '', 0, 0, 'ZBM', 0, 5, 0, 0, 0),
-(29, NULL, 1536357600, 0, 'ČP, ŽA , ŽB - klasika', 'Nová Ves, lyžařský stadion', 'ob', 'Z', 0, 131, '1', 'cp12.aljosa.org', 1, 1534975200, 0, 0, 0, 0, 1, '', '', 0, 0, 'ASU', 0, 0, 0, 0, 0),
-(30, NULL, 1536444000, 0, 'ČP, ŽA , ŽB - krátká trať', 'Nová Ves, lyžařský stadion', 'ob', 'Z', 0, 131, '1', 'cp12.aljosa.org', 1, 1534975200, 0, 0, 0, 0, 1, '', '', 0, 0, 'ASU', 0, 0, 0, 0, 0),
-(31, NULL, 1726351200, 0, '9. JmL - klasika', 'Předklášteří', 'ob', 'Z', 0, 136, '1', 'www.tbm.cz/zavody/', 0, 0, 0, 0, 0, 0, 1, '', '', 0, 0, 'TBM', 0, 4, 1, 0, 0),
-(32, NULL, 1726956000, 0, '10. JmL - klasika', 'Nová Dědina', 'ob', 'Z', 0, 136, '1', 'www.smerkromeriz.cz/poradame/', 5, 1715292000, 1718056800, 1720735200, 1723500000, 1726264800, 1, '', '', 0, 0, 'SKM', 0, 5, 2, 0, 0),
-(33, NULL, 1539381600, 0, '11. JmL - klasika', 'Dambořice', 'ob', 'Z', 0, 136, '1', 'abm.eob.cz/', 1, 1538863200, 0, 0, 0, 0, 1, 'H10N;D10N;H10;D10;H12;D12;H14;D14;H16;D16;H18;D18;H21C;D21C;H21D;D21D;H35;D35;H45;D45;H55;D55;H65;HDR;P;pořadatel;', '', 0, 0, 'ABM', 0, 0, 0, 0, 0),
-(34, NULL, 1539986400, 0, '12. JmL - klasika2', 'Bílý potok', 'ob', 'Z', 0, 136, '1', 'vsk-mendelu.cz/', 0, 0, 0, 0, 0, 0, 1, '', 'Test', 0, 0, 'VBM', 0, 0, 0, 0, 0),
-(35, NULL, 1540591200, 0, '13. JmL - klasika', 'Senetářov', 'ob', 'Z', 0, 136, '1', 'radioklub.blansko.net/', 1, 1536098400, 0, 0, 0, 0, 1, 'D12E;', '', 0, 0, 'RBK', 0, 0, 0, 0, 0),
-(37, NULL, 1551999600, 0, 'Kvetinovy zavod bez dopravy', 'Brno', 'ob', 'Z', 0, 24, '0', '', 2, 1549234800, 1549407600, 0, 0, 0, 1, '', '', 0, 0, 'PBM', 0, 0, 0, 0, 0),
-(38, NULL, 1678402800, 1678575600, 'Perina kup', 'Podoli', 'ob', 'S', 1, 132, '1', '', 3, 1675292400, 1676588400, 1677625200, 0, 0, 4, 'D10N;D12;D14;D16;D18;D21C;D21D;D35;D45;D55;H10N;H12;H14;H16;H18;H21C;H21D;H35;H45;H55;HDR;', '', 0, 0, 'PGP', 0, 5, 0, 0, 0),
-(40, NULL, 1710198000, 0, 'bjlsdjvn', 'Brno', 'ob', 'Z', 0, 128, '1', 'o-mikron.czechian.net/', 2, 1710025200, 1710111600, 0, 0, 0, 1, 'H35A;D35A;H35D;D35D;', 'fsdgdgh', 0, 0, 'MBM', 0, 5, 0, 0, 1),
-(41, NULL, 1707433200, 0, 'POKUS ABM', 'Žabiny', 'ob', 'Z', 0, 0, '1', '', 3, 1694124000, 1699657200, 1703977200, 0, 0, 1, 'D10N;D12;D14;D16;D18;D21C;D21D;D35;D45;D55;H10N;H12;H14;H16;H18;H21C;H21D;H35;H45;H55;HDR;', '', 0, 0, 'ZBM', 0, 5, 0, 0, 0),
-(42, NULL, 1708815600, 0, 'pokus ABM 2', 'Brno', 'ob', 'Z', 0, 1, '1', '', 1, 1708729200, 0, 0, 0, 0, 1, 'D10N;D12;D14;D16;D18;D21C;D21D;D35;D45;D55;H10N;H12;H14;H16;H18;H21C;H21D;H35;H45;H55;HDR;', '', 0, 0, 'ABM', 0, 5, 1, 0, 0),
-(43, NULL, 1678402800, 0, 'ABM 3', '', 'ob', 'J', 0, 0, '1', '', 1, 1678402800, 0, 0, 0, 0, 1, 'D10N;D12;D14;D16;D18;D21C;D21D;D35;D45;D55;H10N;H12;H14;H16;H18;H21C;H21D;H35;H45;H55;HDR;', '', 0, 0, 'ABM', 0, 5, 0, 0, 0),
-(44, NULL, 1738364400, 0, 'Testovaci zavod pro dopravu', 'Misto', 'ob', 'Z', 0, 52, '1', '', 0, 0, 0, 0, 0, 0, 1, '', '', 0, 0, 'XYZ', 0, 4, 1, 0, 0),
-(45, NULL, 1720994400, 0, 'ěščřžýáíé', 'BřBr = ěščřžýáíé', 'ob', 'J', 0, 0, '1', '', 0, 0, 0, 0, 0, 0, 1, '', '', 0, 0, 'AZT', 0, 4, 1, 0, 0),
-(46, NULL, 1602712800, 0, 'Test', 'Brno', 'ob', 'Z', 0, 1, '1', '', 1, 1603058400, 0, 0, 0, 0, 1, '', '', 38, 0, 'YBV', 0, 2, 2, 1, 0),
-(47, NULL, 1615590000, 0, 'Pokus', 'XXX', 'ob', 'Z', 0, 1, '1', '', 2, 1607727600, 1610406000, 0, 0, 0, 1, 'D10N;D12C;D14C;D16C;D18C;D21C;D21D;D35C;D45C;D55C;H10N;H12C;H14C;H16C;H18C;H21C;H21D;H35C;H45C;H55C;HDR', '', 0, 0, 'kkk', 1, 2, 0, 0, 0),
-(48, NULL, 1658354400, 0, 'Letni test', 'Brno - Salingrad', 'jine', 'Z', 0, 17, '0', '', 2, 1658095200, 1658268000, 0, 0, 0, 1, 'D16A;D18A;D20A;D21A;D21E;H16A;H18A;H20A;H21A;H21E', '', 0, 0, 'FAK', 0, 2, 2, 2, 0),
-(49, NULL, 1675378800, 0, 'MČR Klasika', 'Dolní Lhota', 'ob', 'Z', 0, 1, '1', '', 2, 1674169200, 1674255600, 0, 0, 0, 1, 'H18D;H18N;H20B;H20C;H21E;H21A;D10N;D12;D14;D16;D18;D21C;D21D;D35;D45;D55;H10N;H12;H14;H16;H18;H21C;H21D;H35;H45;H55;HDR;D16A;D18A;D20A;D21A;D21E;H16A;H18A;H20A', '', 0, 0, 'GBM', 0, 2, 1, 2, 0),
-(50, NULL, 1699311600, 0, 'Kamenec pod Vtáčnikom Middle sobota', 'Kamenec pod Vtáčnikom', 'ob', 'Z', 0, 1, '1', 'is.orienteering.sk/competitions/1759', 3, 1696111200, 1696370400, 1698793200, 0, 0, 1, 'D10N;D12;D14;D16;D18;D21C;D21D;D35;D45;D55;H10N;H12;H14;H16;H18;H21C;H21D;H35;H45;H55;HDR', 'Slovenský rebríček jednotlivcov - E1	07.10.2023	Stredná trať	205\r\nSlovenský rebríček jednotlivcov - E2	08.10.2023	Stredná trať	212', 0, 0, 'SKS', 0, 2, 0, 0, 0),
-(51, '8971', 1749254400, 0, 'Mistrovství oblasti na klasické trati', 'Bunkr - bývalý vojenský areál, Mokrá - Horákov', 'ob', 'Z', 0, 24, '1', 'oris.orientacnisporty.cz/Zavod?id=8971', 2, 1748736000, 1748908800, 0, 0, 0, 1, 'D10;D10N;D12;D14;D16;D18;D21C;D21D;D35;D45;D55;D65;D70;H10;H10N;H12;H14;H16;H18;H21C;H21D;H35;H45;H55;H65;H70;HDR;P', '', 0, 0, 'PBM', 0, 2, 1, 1, 0),
-(52, '9026', 1755820800, 1755993600, 'Pěkné prázdniny s orientačním během v Českém ráji', 'Na Prašivci, Hrubá Skála', 'ob', 'Z', 1, 128, '0', 'oris.orientacnisporty.cz/Zavod?id=9026', 1, 1755043200, 0, 0, 0, 0, 3, 'D10;D10F;D12;D14A;D16;D18;D20;D21A;D21B;D21C;D21E;D35;D40;D45;D50;D55;D60;D65;D70;D75;H10;H10F;H12;H14A;H16;H18;H20;H21A;H21B;H21C;H21E;H35;H40;H45;H50;H55;H60;H65;H70;H75;H80;HDR', '', 0, 0, 'TUR', 0, 2, 0, 0, 0);
+INSERT INTO `tst_zavod` (`id`, `ext_id`, `datum`, `datum2`, `nazev`, `misto`, `typ`, `typ0`, `vicedenni`, `zebricek`, `ranking`, `odkaz`, `prihlasky`, `prihlasky1`, `prihlasky2`, `prihlasky3`, `prihlasky4`, `prihlasky5`, `etap`, `kategorie`, `poznamka`, `vedouci`, `poslano`, `oddil`, `send`, `modify_flag`, `transport`, `ubytovani`, `kapacita`, `prihlasenych`, `cancelled`) VALUES
+(1, NULL, 1545433200, 0, 'Vánoční běh Brnem', 'Brno', 'ob', 'V', 0, 0, '1', '', 1, 1543618800, 0, 0, 0, 0, 1, '', '', 0, 0, 'ABC', 0, 0, 0, 0, NULL, 0, 1),
+(2, NULL, 1545778800, 0, 'Štěpánský běh', 'Radostice2', 'jine', 'T', 0, 0, '1', '', 1, 1545174000, 0, 0, 0, 0, 1, '', '', 0, 0, 'BBM', 0, 0, 0, 0, NULL, 0, 1),
+(3, NULL, 1671750000, 1672009200, 'Svátky ', 'Doma u krbu', 'lob', 'T', 1, 2, '1', '', 4, 1670626800, 1670886000, 1671231600, 1671577200, 0, 0, '', '', 0, 0, 'XMA', 0, 5, 0, 0, NULL, 0, 1),
+(4, NULL, 1546210800, 0, 'Silvestrovské poježdění', 'Velodrom', 'mtbo', 'V', 0, 8, '1', '', 1, 1545865200, 0, 0, 0, 0, 1, '', '', 0, 0, 'ACH', 0, 0, 0, 0, NULL, 4, 0),
+(5, NULL, 1546124400, 0, 'Hromniční trápení', 'Blansko', 'ob', 'Z', 0, 0, '0', '', 1, 1545692400, 0, 0, 0, 0, 1, '', '', 0, 0, 'RBK', 0, 0, 0, 0, NULL, 0, 0),
+(6, NULL, 1675378800, 1675724400, 'Další pracovní týden', 'Brno', 'jine', 'T', 1, 0, '0', '', 5, 1672873200, 1672959600, 1673046000, 1674774000, 1675033200, 5, '', '', 0, 0, 'WRK', 0, 5, 0, 0, NULL, 1, 0),
+(7, NULL, 1675378800, 0, 'testovaci nejakej', 'misto', 'ob', 'J', 0, 191, '1', 'www.asdad.sd', 1, 1672873200, 0, 0, 0, 0, 1, '', '', 0, 0, 'asdf', 0, 5, 0, 0, NULL, 1, 0),
+(8, NULL, 1673737200, 0, 'MČR klasická trať, 1.ČP', 'Strážné ', 'lob', 'Z', 0, 17, '0', 'www.ob.spartak-vrchlabi.cz/zavody2011/lob/', 1, 1672786800, 0, 0, 0, 0, 1, '', '', 0, 0, 'VRL', 0, 5, 0, 0, NULL, 0, 0),
+(9, NULL, 1674946800, 0, '3.ČP na krátké trati', 'Zinnwald, DE', 'lob', 'Z', 0, 1, '0', '', 1, 1672786800, 0, 0, 0, 0, 1, '', '', 0, 0, 'LIV', 0, 5, 1, 0, NULL, 0, 0),
+(10, NULL, 1676761200, 0, 'MČR dvoučlenných družstev', 'Tři Studně', 'lob', 'T', 0, 48, '0', 'www.ski-adventure.cz/2011/rozpis-lob/', 1, 1675897200, 0, 0, 0, 0, 1, '', '', 28, 0, 'OSN+TBM', 0, 5, 0, 0, NULL, 1, 0),
+(11, NULL, 1708902000, 0, 'MČR ve sprintu, 6.ČP', 'Nová Ves u Rýmařova', 'lob', 'Z', 0, 16, '0', '', 0, 0, 0, 0, 0, 0, 1, '', '', 0, 0, 'VRB', 0, 4, 0, 0, NULL, 1, 0),
+(13, NULL, 1710802800, 1710889200, 'Brutus Extreme Orienteering', '', 'jine', 'Z', 1, 0, '0', '', 3, 1705964400, 1707260400, 1709334000, 0, 0, 2, 'D10N;D12C;D14C;D16C;D18C;D21C;D21D;D35C;D45C;D55C;H10N;H12C;H14C;H16C;H18C;H21C;H21D;H35C;H45C;H55C;HDR', '', 0, 0, 'GEMMA', 0, 5, 0, 0, NULL, 2, 0),
+(14, NULL, 1675465200, 0, 'Hromniční trápení II', 'Blansko', 'ob', 'Z', 0, 8, '0', 'www.hromnicni.wz.cz/', 1, 1675033200, 0, 0, 0, 0, 1, 'H14;D14;H19;D19;H35;D35;P;HDR', '', 0, 0, 'RBK', 0, 5, 0, 0, NULL, 1, 0),
+(15, NULL, 1680213600, 1680300000, 'CESOM 2015', 'Borský Mikuláš', 'ob', 'Z', 1, 0, '1', '', 2, 1677193200, 1678834800, 0, 0, 0, 3, 'H10N;D10N;H12C;D12C;H14C;D14C;H16C;D16C;H18C;D18C;H21C;D21C;H21D;D21D;H35C;D35C;H45C;D45C;H55C;D55C;HDR;D12B;D14B;D16B;D18B;D20B;D21B;D35B;D40B;D45B;D50B;D55B;D60B;D65B;H12B;H14B;H16B;H18B;H20B;H21B;H35B;H40B;H45B;H50B;H55B;H60B;H65B;H70B;H75B', '', 0, 0, 'BBA', 0, 5, 0, 0, NULL, 9, 0),
+(16, NULL, 1687989600, 1688162400, 'Cena střední Moravy', 'Okrouhlá – Melkov', 'mtbo', 'Z', 1, 0, '1', 'csm12.kobkon.cz/', 1, 1686693600, 0, 0, 0, 0, 3, 'H10N;D10N;H12C;D12C;D12;H14C;D14C;D14;H16C;D16C;D16;H18C;D18C;D18;H21C;D21C;H21D;D21D;H35C;D35C;D35;H45C;D45C;D45;H55C;D55C;D55;D10N;D12C;D14C;D16C;D18C;D21C;D21D;D35C;D45C;D55C;HDR;D10N;D12C;D14C;D16C;D18C;D21C;D21D;D35C;D45C;D55C;H10N;H12C;H14C;H16C;H18C;H21C;H21D;H35C;H45C;H55C;HDR;', '', 0, 0, 'KON+ZBM', 0, 5, 1, 0, NULL, 5, 0),
+(18, NULL, 1689199200, 1689372000, 'H.S.H. Vysočina cup', 'Leština u Skály', 'ob', 'Z', 1, 128, '1', 'www.obchrast.com/', 2, 1686866400, 1688508000, 0, 0, 0, 3, '', '', 0, 0, 'CHT', 0, 5, 1, 1, NULL, 2, 0),
+(19, NULL, 1689112800, 0, 'H.S.H. Vysočina cup - noční ', 'Leština u Skály', 'ob', 'Z', 0, 128, '1', 'obchrast.com/nz.php?nzid=891', 1, 1683842400, 0, 0, 0, 0, 1, '', '2154365ěřčěšžžřážíáýöïÿ¨tëw¨s¨ds¨d¨x¨vdgf¨ds¨sä', 23, 0, 'CHT', 0, 5, 1, 0, NULL, 4, 0),
+(20, NULL, 1721426400, 1721599200, 'Veteran cup', 'Obec Záměl', 'ob', 'Z', 1, 0, '1', 'obvamberk.aspone.cz/VETERAN_CUP_2012_podrobny_rozpis.pdf', 3, 1715551200, 1719525600, 1720735200, 0, 0, 3, '', '', 0, 0, 'VAM', 0, 5, 0, 0, NULL, 1, 0),
+(21, NULL, 1721944800, 1722204000, 'Grand Prix Silesia 20XX', 'Vidnava', 'ob', 'Z', 1, 128, '1', 'silesia.obopava.cz/silesia_2012/', 3, 1709074800, 1719525600, 1720821600, 0, 0, 5, 'D10N;D12;D14;D16;D18;D21C;D21D;D35;D45;D55;H10N;H12;H14;H16;H18;H21C;H21D;H35;H45;H55;HDR', '', 0, 0, 'AOP', 1, 5, 1, 1, NULL, 1, 0),
+(22, NULL, 1724536800, 1724623200, 'Pěkné prázdniny', 'Malá Skála, Český ráj', 'ob', 'Z', 1, 0, '1', 'www.tur.cz/pekneprazdniny/', 2, 1722031200, 1723327200, 0, 0, 0, 3, '', '', 0, 0, 'TUR', 0, 5, 2, 0, NULL, 2, 0),
+(23, NULL, 1535061600, 0, 'Pěkné prázdniny - sprint  ', 'Turnov', 'ob', 'Z', 0, 0, '1', 'tur.cz/pekneprazdniny/', 2, 1532642400, 1532728800, 0, 0, 0, 1, '', 'Prihlasuje se spolu prihlaskou na PPcka', 0, 0, 'TUR', 1, 0, 0, 0, NULL, 2, 0),
+(24, NULL, 1723932000, 1724018400, '3 etapový OB Jičín ', 'Sportcentrum Brada', 'ob', 'Z', 1, 0, '1', 'objicin.tpc.cz/jicin/main.php?&zavody=40&menu=100&jazyk=0', 1, 1720821600, 0, 0, 0, 0, 3, '', 'E1 a E2 bez rankingu', 0, 0, 'SJC', 0, 5, 1, 0, NULL, 0, 0),
+(25, NULL, 1725055200, 1725228000, 'Cena východních Čech', 'Seč', 'ob', 'Z', 1, 0, '1', 'lpu.cz/cvc15', 2, 1719957600, 1720821600, 0, 0, 0, 3, '', '', 0, 0, 'LPU', 0, 5, 0, 0, NULL, 2, 0),
+(26, NULL, 1727474400, 1727560800, 'MČR na klasice', 'Skokovy', 'ob', 'Z', 1, 17, '1', 'www.ok99.cz/mct2012', 1, 1725746400, 0, 0, 0, 0, 0, '', '', 0, 0, 'PHK+TUV', 0, 5, 0, 0, NULL, 3, 0),
+(27, NULL, 1538776800, 0, 'MČR štafet', 'Březina', 'ob', 'Z', 0, 48, '1', 'mcrdruzstva.eob.cz', 1, 1537567200, 0, 0, 0, 0, 1, 'a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d', '', 0, 0, 'ZBM', 0, 0, 1, 0, NULL, 1, 0),
+(28, NULL, 1728252000, 0, 'MČR klubů a oblastních výběrů žactva', 'Březina', 'ob', 'Z', 0, 0, '1', 'mcrdruzstva.eob.cz', 1, 1726956000, 0, 0, 0, 0, 1, 'H65D;', '', 0, 0, 'ZBM', 0, 5, 0, 0, NULL, 0, 0),
+(29, NULL, 1536357600, 0, 'ČP, ŽA , ŽB - klasika', 'Nová Ves, lyžařský stadion', 'ob', 'Z', 0, 131, '1', 'cp12.aljosa.org', 1, 1534975200, 0, 0, 0, 0, 1, '', '', 0, 0, 'ASU', 0, 0, 0, 0, NULL, 3, 0),
+(30, NULL, 1536444000, 0, 'ČP, ŽA , ŽB - krátká trať', 'Nová Ves, lyžařský stadion', 'ob', 'Z', 0, 131, '1', 'cp12.aljosa.org', 1, 1534975200, 0, 0, 0, 0, 1, '', '', 0, 0, 'ASU', 0, 0, 0, 0, NULL, 0, 0),
+(31, NULL, 1726351200, 0, '9. JmL - klasika', 'Předklášteří', 'ob', 'Z', 0, 136, '1', 'www.tbm.cz/zavody/', 0, 0, 0, 0, 0, 0, 1, '', '', 0, 0, 'TBM', 0, 4, 1, 0, NULL, 0, 0),
+(32, NULL, 1726956000, 0, '10. JmL - klasika', 'Nová Dědina', 'ob', 'Z', 0, 136, '1', 'www.smerkromeriz.cz/poradame/', 5, 1715292000, 1718056800, 1720735200, 1723500000, 1726264800, 1, '', '', 0, 0, 'SKM', 0, 5, 2, 0, NULL, 1, 0),
+(33, NULL, 1539381600, 0, '11. JmL - klasika', 'Dambořice', 'ob', 'Z', 0, 136, '1', 'abm.eob.cz/', 1, 1538863200, 0, 0, 0, 0, 1, 'H10N;D10N;H10;D10;H12;D12;H14;D14;H16;D16;H18;D18;H21C;D21C;H21D;D21D;H35;D35;H45;D45;H55;D55;H65;HDR;P;pořadatel;', '', 0, 0, 'ABM', 0, 0, 0, 0, NULL, 0, 0),
+(34, NULL, 1539986400, 0, '12. JmL - klasika2', 'Bílý potok', 'ob', 'Z', 0, 136, '1', 'vsk-mendelu.cz/', 0, 0, 0, 0, 0, 0, 1, '', 'Test', 0, 0, 'VBM', 0, 0, 0, 0, NULL, 0, 0),
+(35, NULL, 1540591200, 0, '13. JmL - klasika', 'Senetářov', 'ob', 'Z', 0, 136, '1', 'radioklub.blansko.net/', 1, 1536098400, 0, 0, 0, 0, 1, 'D12E;', '', 0, 0, 'RBK', 0, 0, 0, 0, NULL, 1, 0),
+(36, NULL, 1675292400, 0, 'Hromniční trápení', 'Blansko', 'ob', 'Z', 0, 7, '1', 'hromnicni.wz.cz/', 2, 1674860400, 1675033200, 0, 0, 0, 1, '', 'Testovací závod', 0, 0, 'RBK', 0, 5, 2, 0, NULL, 2, 0),
+(37, NULL, 1551999600, 0, 'Kvetinovy zavod bez dopravy', 'Brno', 'ob', 'Z', 0, 24, '0', '', 2, 1549234800, 1549407600, 0, 0, 0, 1, '', '', 0, 0, 'PBM', 0, 0, 0, 0, NULL, 4, 0),
+(38, NULL, 1678402800, 1678575600, 'Perina kup', 'Podoli', 'ob', 'S', 1, 132, '1', '', 3, 1675292400, 1676588400, 1677625200, 0, 0, 4, 'D10N;D12;D14;D16;D18;D21C;D21D;D35;D45;D55;H10N;H12;H14;H16;H18;H21C;H21D;H35;H45;H55;HDR;', '', 0, 0, 'PGP', 0, 5, 0, 0, NULL, 7, 0),
+(40, NULL, 1710198000, 0, 'bjlsdjvn', 'Brno', 'ob', 'Z', 0, 128, '1', 'o-mikron.czechian.net/', 2, 1710025200, 1710111600, 0, 0, 0, 1, 'H35A;D35A;H35D;D35D;', 'fsdgdgh', 0, 0, 'MBM', 0, 5, 0, 0, NULL, 1, 1),
+(41, NULL, 1707433200, 0, 'POKUS ABM', 'Žabiny', 'ob', 'Z', 0, 0, '1', '', 3, 1694124000, 1699657200, 1703977200, 0, 0, 1, 'D10N;D12;D14;D16;D18;D21C;D21D;D35;D45;D55;H10N;H12;H14;H16;H18;H21C;H21D;H35;H45;H55;HDR;', '', 0, 0, 'ZBM', 0, 5, 0, 0, NULL, 5, 0),
+(42, NULL, 1708815600, 0, 'pokus ABM 2', 'Brno', 'ob', 'Z', 0, 1, '1', '', 1, 1708729200, 0, 0, 0, 0, 1, 'D10N;D12;D14;D16;D18;D21C;D21D;D35;D45;D55;H10N;H12;H14;H16;H18;H21C;H21D;H35;H45;H55;HDR;', '', 0, 0, 'ABM', 0, 5, 1, 0, NULL, 5, 0),
+(43, NULL, 1678402800, 0, 'ABM 3', '', 'ob', 'J', 0, 0, '1', '', 1, 1678402800, 0, 0, 0, 0, 1, 'D10N;D12;D14;D16;D18;D21C;D21D;D35;D45;D55;H10N;H12;H14;H16;H18;H21C;H21D;H35;H45;H55;HDR;', '', 0, 0, 'ABM', 0, 5, 0, 0, NULL, 4, 0),
+(44, NULL, 1738364400, 0, 'Testovaci zavod pro dopravu', 'Misto', 'ob', 'Z', 0, 52, '1', '', 0, 0, 0, 0, 0, 0, 1, '', '', 0, 0, 'XYZ', 0, 4, 1, 0, NULL, 8, 0),
+(45, NULL, 1720994400, 0, 'ěščřžýáíé', 'BřBr = ěščřžýáíé', 'ob', 'J', 0, 0, '1', '', 0, 0, 0, 0, 0, 0, 1, '', '', 0, 0, 'AZT', 0, 4, 1, 0, NULL, 1, 0),
+(46, NULL, 1602712800, 0, 'Test', 'Brno', 'ob', 'Z', 0, 1, '1', '', 1, 1603058400, 0, 0, 0, 0, 1, '', '', 38, 0, 'YBV', 0, 2, 2, 1, NULL, 0, 0),
+(47, NULL, 1615590000, 0, 'Pokus', 'XXX', 'ob', 'Z', 0, 1, '1', '', 2, 1607727600, 1610406000, 0, 0, 0, 1, 'D10N;D12C;D14C;D16C;D18C;D21C;D21D;D35C;D45C;D55C;H10N;H12C;H14C;H16C;H18C;H21C;H21D;H35C;H45C;H55C;HDR', '', 0, 0, 'kkk', 1, 2, 0, 0, NULL, 5, 0),
+(48, NULL, 1658354400, 0, 'Letni test', 'Brno - Salingrad', 'jine', 'Z', 0, 17, '0', '', 2, 1658095200, 1658268000, 0, 0, 0, 1, 'D16A;D18A;D20A;D21A;D21E;H16A;H18A;H20A;H21A;H21E', '', 0, 0, 'FAK', 0, 2, 2, 2, NULL, 9, 0),
+(49, NULL, 1675378800, 0, 'MČR Klasika', 'Dolní Lhota', 'ob', 'Z', 0, 1, '1', '', 2, 1674169200, 1674255600, 0, 0, 0, 1, 'H18D;H18N;H20B;H20C;H21E;H21A;D10N;D12;D14;D16;D18;D21C;D21D;D35;D45;D55;H10N;H12;H14;H16;H18;H21C;H21D;H35;H45;H55;HDR;D16A;D18A;D20A;D21A;D21E;H16A;H18A;H20A', '', 0, 0, 'GBM', 0, 2, 1, 2, NULL, 1, 0),
+(50, NULL, 1699311600, 0, 'Kamenec pod Vtáčnikom Middle sobota', 'Kamenec pod Vtáčnikom', 'ob', 'Z', 0, 1, '1', 'is.orienteering.sk/competitions/1759', 3, 1696111200, 1696370400, 1698793200, 0, 0, 1, 'D10N;D12;D14;D16;D18;D21C;D21D;D35;D45;D55;H10N;H12;H14;H16;H18;H21C;H21D;H35;H45;H55;HDR', 'Slovenský rebríček jednotlivcov - E1	07.10.2023	Stredná trať	205\r\nSlovenský rebríček jednotlivcov - E2	08.10.2023	Stredná trať	212', 0, 0, 'SKS', 0, 2, 0, 0, NULL, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -1556,14 +1205,14 @@ INSERT INTO `tst_zavod` (`id`, `ext_id`, `datum`, `datum2`, `nazev`, `misto`, `t
 --
 
 CREATE TABLE `tst_zavxus` (
-  `id` int UNSIGNED NOT NULL,
-  `id_user` smallint UNSIGNED NOT NULL DEFAULT '0',
-  `id_zavod` smallint UNSIGNED NOT NULL DEFAULT '0',
-  `kat` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT '',
-  `pozn` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
-  `pozn_in` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
-  `termin` tinyint UNSIGNED NOT NULL DEFAULT '1',
-  `si_chip` int UNSIGNED NOT NULL DEFAULT '0',
+  `id` int(10) UNSIGNED NOT NULL,
+  `id_user` smallint(5) UNSIGNED NOT NULL DEFAULT 0,
+  `id_zavod` smallint(5) UNSIGNED NOT NULL DEFAULT 0,
+  `kat` varchar(10) NOT NULL DEFAULT '',
+  `pozn` varchar(255) DEFAULT NULL,
+  `pozn_in` varchar(255) DEFAULT NULL,
+  `termin` tinyint(4) UNSIGNED NOT NULL DEFAULT 1,
+  `si_chip` int(9) UNSIGNED NOT NULL DEFAULT 0,
   `transport` tinyint(1) DEFAULT NULL,
   `sedadel` tinyint(1) DEFAULT NULL,
   `ubytovani` tinyint(1) DEFAULT NULL,
@@ -1677,13 +1326,17 @@ INSERT INTO `tst_zavxus` (`id`, `id_user`, `id_zavod`, `kat`, `pozn`, `pozn_in`,
 (130, 4, 50, 'H45', '', '', 3, 0, 0, NULL, 0, NULL, NULL),
 (131, 6, 13, 'D21C', '', '', 1, 0, 0, NULL, 0, NULL, NULL),
 (132, 4, 11, 'H', '', '', 1, 0, 0, NULL, 0, NULL, NULL),
-(133, 4, 13, 'H', '', '', 1, 0, 0, NULL, 0, NULL, NULL),
-(135, 11, 51, 'H21C', '', '', 1, 0, 1, NULL, 1, NULL, NULL),
-(136, 40, 52, 'D16', '', '', 1, 0, NULL, NULL, NULL, NULL, NULL);
+(133, 4, 13, 'H', '', '', 1, 0, 0, NULL, 0, NULL, NULL);
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `tokens`
+--
+ALTER TABLE `tokens`
+  ADD PRIMARY KEY (`device`);
 
 --
 -- Indexes for table `tst_accounts`
@@ -1732,10 +1385,10 @@ ALTER TABLE `tst_news`
   ADD KEY `sort_datum` (`datum`,`id`);
 
 --
--- Indexes for table `tst_tokens`
+-- Indexes for table `tst_payment_rules`
 --
-ALTER TABLE `tst_tokens`
-  ADD PRIMARY KEY (`device`);
+ALTER TABLE `tst_payment_rules`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tst_users`
@@ -1774,67 +1427,73 @@ ALTER TABLE `tst_zavxus`
 -- AUTO_INCREMENT for table `tst_accounts`
 --
 ALTER TABLE `tst_accounts`
-  MODIFY `id` smallint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `tst_categories_predef`
 --
 ALTER TABLE `tst_categories_predef`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tst_claim`
 --
 ALTER TABLE `tst_claim`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tst_finance`
 --
 ALTER TABLE `tst_finance`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=186;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=178;
 
 --
 -- AUTO_INCREMENT for table `tst_finance_types`
 --
 ALTER TABLE `tst_finance_types`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `tst_modify_log`
 --
 ALTER TABLE `tst_modify_log`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=803;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=464;
 
 --
 -- AUTO_INCREMENT for table `tst_news`
 --
 ALTER TABLE `tst_news`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
+
+--
+-- AUTO_INCREMENT for table `tst_payment_rules`
+--
+ALTER TABLE `tst_payment_rules`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tst_users`
 --
 ALTER TABLE `tst_users`
-  MODIFY `id` smallint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `tst_xmailinfo`
 --
 ALTER TABLE `tst_xmailinfo`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tst_zavod`
 --
 ALTER TABLE `tst_zavod`
-  MODIFY `id` smallint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `tst_zavxus`
 --
 ALTER TABLE `tst_zavxus`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=135;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

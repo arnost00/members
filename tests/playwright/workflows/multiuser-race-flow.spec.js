@@ -15,6 +15,7 @@ const {
   createPaymentRule,
   createRace,
   findRaceUserIdByReg,
+  setMemberFinanceType,
   submitManagedRaceRegistration,
   submitMemberRaceRegistration,
   updateRace,
@@ -100,16 +101,35 @@ test.describe('Multi-User Race Workflow', () => {
       throw new Error('The seeded smallManager user has no managed child for workflow coverage');
     }
 
+    const paymentRules = [
+      {
+        eventType: 'T',
+        paymentType: 'P',
+        amount: '45',
+        chargedItems: '1',
+      },
+      {
+        eventType: 'T',
+        paymentType: 'P',
+        amount: '100',
+        chargedItems: '2',
+      },
+    ];
+
     const accountantContext = await browser.newContext();
     const accountantPage = await accountantContext.newPage();
     await loginAs(accountantPage, 'accountant');
-    await createPaymentRule(accountantPage);
+
+    for (const paymentRule of paymentRules) {
+      await createPaymentRule(accountantPage, paymentRule);
+    }
+
     await accountantContext.close();
 
     const managerContext = await browser.newContext();
     const managerPage = await managerContext.newPage();
     await loginAs(managerPage, 'manager');
-    await ensureClubMembers(managerPage, [state.managerRaceUser.reg,state.managerRaceUser2.reg,state.registrarRaceUser.reg], {
+    const ensuredMembers = await ensureClubMembers(managerPage, [state.managerRaceUser.reg,state.managerRaceUser2.reg,state.registrarRaceUser.reg], {
       role: 'manager',
     });
 
@@ -181,6 +201,16 @@ test.describe('Multi-User Race Workflow', () => {
     });
 
     await managerContext.close();
+
+    const financeContext = await browser.newContext();
+    const financePage = await financeContext.newPage();
+    await loginAs(financePage, 'accountant');
+
+    for (const member of ensuredMembers) {
+      await setMemberFinanceType(financePage, member.userId, member.fixture.financeType);
+    }
+
+    await financeContext.close();
   });
 
   test('member can register using the created race id', async ({ page, request }) => {

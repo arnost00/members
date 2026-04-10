@@ -23,7 +23,7 @@ define ('TBL_FINANCE','tst_finance');
 define ('TBL_CLAIM','tst_claim');
 define ('TBL_TOKENS','tokens');
 define ('TBL_FINANCE_TYPES','tst_finance_types');
-define ('TBL_PAYRULES','payment_rules');
+define ('TBL_PAYRULES','tst_payment_rules');
 define ('TBL_CATEGORIES_PREDEF','tst_categories_predef');
 
 ?>
