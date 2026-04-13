@@ -277,6 +277,7 @@ if($type == 1)
 </TR>
 </TABLE>
 <input type="hidden" id="kategorie" name="kategorie" value="<? echo ($raceInfo->kategorie); ?>">
+<input type="hidden" id="oris_entry_start" name="oris_entry_start" value="<? echo ($raceInfo->oris_entry_start); ?>">
 </FORM>
 
 <?
