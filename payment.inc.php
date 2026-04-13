@@ -67,6 +67,7 @@ function createPayment($editor_id, $user_id, $amount, $note, $datum, $id_zavod)
 	query_db($query);
 	$lastId = mysqli_insert_id($db_conn);
 	SaveItemToModifyLog_Add(TBL_FINANCE, "id=$lastId|user_id=$user_id|amount=$amount");
+	return $lastId;
 }
 
 /*
