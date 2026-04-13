@@ -147,7 +147,7 @@ if (is_array($transactions)) {
     }
 }
 
-$g_page_title = 'Import z banky (API)';
+$g_page_title = 'Import z banky';
 require_once('./header.inc.php');
 ?>
 
@@ -161,7 +161,7 @@ require_once('./header.inc.php');
 <TD rowspan=2 width="2%"></TD>
 <TD width="90%" ALIGN="left" valign="top">
 
-    <h2>Import plateb z banky (API)</h2>
+    <h2>Import plateb z banky</h2>
 
     <?php if ($message): ?>
         <div class="msg"><?php echo htmlspecialchars($message); ?></div>

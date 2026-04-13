@@ -56,6 +56,8 @@ class RaiffeisenbankConnector implements BankConnectorInterface {
             curl_setopt($ch, CURLOPT_SSLCERT, $cert_path);
             curl_setopt($ch, CURLOPT_SSLCERTPASSWD, $g_bank_cert_pass);
             curl_setopt($ch, CURLOPT_SSLCERTTYPE, "P12");
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
             $request_id = $this->generate_uuid_v4();
 
@@ -69,10 +71,15 @@ class RaiffeisenbankConnector implements BankConnectorInterface {
             $response = curl_exec($ch);
             $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             $curl_error = curl_error($ch);
+            $curl_errno = curl_errno($ch);
             curl_close($ch);
 
             if ($response === false || $http_code !== 200) {
-                $this->log("Error fetching API. HTTP Code: $http_code. cURL Error: $curl_error. Response: " . (is_string($response) ? $response : ''));
+                if ($curl_errno === CURLE_OPERATION_TIMEDOUT || $curl_errno === CURLE_COULDNT_CONNECT || $http_code >= 500) {
+                    $this->log("Error: Bank API is currently unavailable (Timeout or 5xx error). HTTP Code: $http_code. cURL Error: $curl_error.");
+                } else {
+                    $this->log("Error fetching API. HTTP Code: $http_code. cURL Error: $curl_error. Response: " . (is_string($response) ? $response : ''));
+                }
                 break;
             }
 

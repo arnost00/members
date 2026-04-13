@@ -137,7 +137,7 @@ function DrawMenuGroupHeader($name)
 		DrawMenuItem('Pravidla plateb',_FINANCE_GROUP_ID_,5);
 		DrawMenuItem('Nespárované platby',_FINANCE_GROUP_ID_,6);
     DrawMenuItem('Historie transakcí',_FINANCE_GROUP_ID_,7);
-		DrawMenuItemStatic('Import z banky (API)', 'fin_bank_sync.php', '_blank');
+		DrawMenuItemStatic('Import z banky', 'fin_bank_sync.php', '_blank');
 	}
 	if(IsLoggedAdmin())
 	{
