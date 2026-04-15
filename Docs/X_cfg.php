@@ -98,6 +98,10 @@ $g_external_is_connector = 'OrisCZConnector';
 // Identifikator oddilu v informacnim systemu
 $g_external_is_club_id = '205';
 
+// doprava & ubytovani pro vytvareni z informacniho systemu (oris)
+$g_external_race_transport_default = 0;
+$g_external_race_accommodation_default = 0;
+
 $g_custom_entry_list_text = '';
 
 ?>

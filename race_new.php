@@ -29,8 +29,15 @@ $raceInfo = null;
 $ext_id_info = '';
 $connector = null;
 $ext_id = (IsSet($ext_id) && is_numeric($ext_id)) ? (int)$ext_id : 0;
+$race_transport_default = $g_race_transport_default;
+$race_accommodation_default = $g_race_accommodation_default;
 
 if (!empty($ext_id)) { 
+	if (isset($g_external_race_transport_default))
+		$race_transport_default = $g_external_race_transport_default;
+	if (isset($g_external_race_accommodation_default))
+		$race_accommodation_default = $g_external_race_accommodation_default;
+
 	$connector = ConnectorFactory::create();
 
 	// Get race info by race ID
@@ -176,10 +183,10 @@ if ($g_enable_race_transport)
 	<TD width="130" align="right" valign="top">Společná doprava</TD>
 	<TD width="5"></TD>
 	<TD>
-		<input type="radio" name="transport" value="0" id="radio_ff0" <?if ($g_race_transport_default==0) echo "checked=\"checked\"";?>><label for="radio_ff0">Bez společné dopravy</label><br>
-		<input type="radio" name="transport" value="1" id="radio_ff1" <?if ($g_race_transport_default==1) echo "checked=\"checked\"";?>><label for="radio_ff1">Společná doprava s výběrem účasti</label><br>
-		<input type="radio" name="transport" value="2" id="radio_ff2" <?if ($g_race_transport_default==2) echo "checked=\"checked\"";?>><label for="radio_ff2">Automatická společná doprava</label><br>
-		<input type="radio" name="transport" value="3" id="radio_ff3" <?if ($g_race_transport_default==3) echo "checked=\"checked\"";?>><label for="radio_ff3">Sdílená doprava</label>
+		<input type="radio" name="transport" value="0" id="radio_ff0" <?if ($race_transport_default==0) echo "checked=\"checked\"";?>><label for="radio_ff0">Bez společné dopravy</label><br>
+		<input type="radio" name="transport" value="1" id="radio_ff1" <?if ($race_transport_default==1) echo "checked=\"checked\"";?>><label for="radio_ff1">Společná doprava s výběrem účasti</label><br>
+		<input type="radio" name="transport" value="2" id="radio_ff2" <?if ($race_transport_default==2) echo "checked=\"checked\"";?>><label for="radio_ff2">Automatická společná doprava</label><br>
+		<input type="radio" name="transport" value="3" id="radio_ff3" <?if ($race_transport_default==3) echo "checked=\"checked\"";?>><label for="radio_ff3">Sdílená doprava</label>
 	</TD>
 </TR>
 <?
@@ -191,9 +198,9 @@ if ($g_enable_race_accommodation)
 	<TD width="130" align="right" valign="top">Společné ubytování</TD>
 	<TD width="5"></TD>
 	<TD>
-		<input type="radio" name="accommodation" value="0" id="radio_acc0" <?if ($g_race_accommodation_default==0) echo "checked=\"checked\"";?>><label for="radio_acc0">Bez společného ubytování</label><br>
-		<input type="radio" name="accommodation" value="1" id="radio_acc1" <?if ($g_race_accommodation_default==1) echo "checked=\"checked\"";?>><label for="radio_acc1">Společné ubytování s výběrem účasti</label><br>
-		<input type="radio" name="accommodation" value="2" id="radio_acc2" <?if ($g_race_accommodation_default==2) echo "checked=\"checked\"";?>><label for="radio_acc2">Automatické společné ubytování</label>
+		<input type="radio" name="accommodation" value="0" id="radio_acc0" <?if ($race_accommodation_default==0) echo "checked=\"checked\"";?>><label for="radio_acc0">Bez společného ubytování</label><br>
+		<input type="radio" name="accommodation" value="1" id="radio_acc1" <?if ($race_accommodation_default==1) echo "checked=\"checked\"";?>><label for="radio_acc1">Společné ubytování s výběrem účasti</label><br>
+		<input type="radio" name="accommodation" value="2" id="radio_acc2" <?if ($race_accommodation_default==2) echo "checked=\"checked\"";?>><label for="radio_acc2">Automatické společné ubytování</label>
 	</TD>
 </TR>
 <?
