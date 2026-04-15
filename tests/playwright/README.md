@@ -18,7 +18,15 @@ These files are not part of the PHP runtime and must not be deployed to the prod
    ```bash
    npm run test:e2e -- tests/playwright/workflows/multiuser-race-flow.spec.js
    ```
-5. Write new specs using shared constants instead of hardcoded usernames:
+5. Run the ORIS local race workflow:
+   ```bash
+   npm run test:e2e -- tests/playwright/workflows/oris-local-race-flow.spec.js
+   ```
+6. Run the ORIS public multistage race workflow:
+   ```bash
+   npm run test:e2e -- tests/playwright/workflows/oris-public-multistage-race-flow.spec.js
+   ```
+7. Write new specs using shared constants instead of hardcoded usernames:
    ```js
    const { TEST_USERS } = require('./constants/users');
    const user = TEST_USERS.member;

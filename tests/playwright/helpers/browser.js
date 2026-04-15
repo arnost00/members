@@ -104,6 +104,14 @@ async function firstCheckedValue(page, selector) {
   return page.locator(selector).first().getAttribute('value');
 }
 
+async function openPopup(page, action) {
+  const popupPromise = page.waitForEvent('popup');
+  await action();
+  const popup = await popupPromise;
+  await popup.waitForLoadState('domcontentloaded');
+  return popup;
+}
+
 function ensureHtmlSubmission(result, label) {
   if (!result.ok) {
     throw new Error(`${label} failed with HTTP ${result.status}`);
@@ -120,6 +128,7 @@ module.exports = {
   ensureHtmlSubmission,
   firstCheckedValue,
   loginAs,
+  openPopup,
   postFormInSession,
   readFormState,
 };

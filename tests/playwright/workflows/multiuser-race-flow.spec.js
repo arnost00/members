@@ -1,5 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { getTestMemberFixture } = require('../constants/members');
+const { POPULATED_PAYMENT_RULES } = require('../constants/payment-rules');
 const { TEST_USERS } = require('../constants/users');
 const {
   getCurrentUser,
@@ -12,45 +13,25 @@ const {
 } = require('../helpers/browser');
 const {
   ensureClubMembers,
-  createPaymentRule,
   createRace,
+  ensurePaymentRules,
   findRaceUserIdByReg,
   getFinanceDirectoryEntryByReg,
-  setMemberFinanceType,
   submitManagedRaceRegistration,
   submitMemberRaceRegistration,
   updateRace,
 } = require('../helpers/app-actions');
 const {
+  expectFinanceRowValues,
+  financeRow,
+  openRaceFinancePopup,
+  runRaceFinanceWizard,
+} = require('../helpers/race-finance');
+const {
   addUtcDays,
   createWorkflowRun,
   formatCzDate,
 } = require('../helpers/workflow-runtime');
-
-function financeRow(page, memberName) {
-  const row = page.locator('tr', {
-    has: page.locator('a.adr_name', { hasText: memberName }),
-  }).first();
-
-  return {
-    row,
-    state: row.locator('.state'),
-    amount: row.locator('input[data-col="amount"]'),
-    note: row.locator('input[data-col="note"]'),
-    entryFee: row.locator('[data-col="entryFee"]'),
-    transport: row.locator('[data-col="transport"]'),
-    accommodation: row.locator('[data-col="accommodation"]'),
-  };
-}
-
-async function expectFinanceRowValues(finance, expected) {
-  await expect(finance.state).toHaveText(expected.state);
-  await expect(finance.amount).toHaveValue(expected.amount);
-  await expect(finance.note).toHaveValue(expected.note);
-  await expect(finance.entryFee).toContainText(expected.entryFee);
-  await expect(finance.transport).toHaveText(expected.transport);
-  await expect(finance.accommodation).toHaveText(expected.accommodation);
-}
 
 async function getAccountantBalances(page, regs, path = './index.php?id=800&subid=1') {
   const balances = {};
@@ -98,10 +79,10 @@ test.describe('Multi-User Race Workflow', () => {
       managerRaceUserNote: `manager-user-note-${state.run.runId}`,
       registrarRaceUserNote: `registrar-user-note-${state.run.runId}`,
       managerNote: `manager-note-${state.run.runId}`,
-      raceName: `PW Race ${state.run.runId}`,
+      raceName: `PW Training ${state.run.runId}`,
       raceNoteInitial: `Initial workflow note ${state.run.runId}`,
       raceNoteUpdated: `Updated workflow note ${state.run.runId}`,
-      raceNameUpdated: `PW Race ${state.run.runId} v2`,
+      raceNameUpdated: `PW Training ${state.run.runId} v2`,
     };
 
     state.memberToken = await loginViaApi(request, TEST_USERS.member);
@@ -118,36 +99,17 @@ test.describe('Multi-User Race Workflow', () => {
       throw new Error('The seeded smallManager user has no managed child for workflow coverage');
     }
 
-    const paymentRules = [
-      {
-        eventType: 'T',
-        paymentType: 'P',
-        amount: '45',
-        chargedItems: '1',
-      },
-      {
-        eventType: 'T',
-        paymentType: 'P',
-        amount: '100',
-        chargedItems: '2',
-      },
-    ];
-
     const accountantContext = await browser.newContext();
     const accountantPage = await accountantContext.newPage();
     await loginAs(accountantPage, 'accountant');
-
-    for (const paymentRule of paymentRules) {
-      await createPaymentRule(accountantPage, paymentRule);
-    }
-
-    await accountantContext.close();
+    await ensurePaymentRules(accountantPage, POPULATED_PAYMENT_RULES);
 
     const managerContext = await browser.newContext();
     const managerPage = await managerContext.newPage();
     await loginAs(managerPage, 'manager');
     const ensuredMembers = await ensureClubMembers(managerPage, [state.managerRaceUser.reg,state.managerRaceUser2.reg,state.registrarRaceUser.reg], {
       role: 'manager',
+      financePage: accountantPage,
     });
 
     const registrarContext = await browser.newContext();
@@ -218,16 +180,7 @@ test.describe('Multi-User Race Workflow', () => {
     });
 
     await managerContext.close();
-
-    const financeContext = await browser.newContext();
-    const financePage = await financeContext.newPage();
-    await loginAs(financePage, 'accountant');
-
-    for (const member of ensuredMembers) {
-      await setMemberFinanceType(financePage, member.userId, member.fixture.financeType);
-    }
-
-    await financeContext.close();
+    await accountantContext.close();
   });
 
   test('member can register using the created race id', async ({ page, request }) => {
@@ -314,16 +267,8 @@ test.describe('Multi-User Race Workflow', () => {
   });
 
   async function fillAndCheckFieldsWithWizard( page ) {
-    const popupPromise = page.waitForEvent('popup');
-
-    await page.evaluate((raceId) => {
-      window.open(`./race_finance_view.php?race_id=${raceId}`, '', 'width=800,height=800');
-    }, state.race.id);
-
-    const financePopup = await popupPromise;
-    await financePopup.waitForLoadState('domcontentloaded');
-
-    await financePopup.locator('button[title="Vyplň platby podle pravidel"]').click();
+    const financePopup = await openRaceFinancePopup(page, state.race.id);
+    await runRaceFinanceWizard(financePopup);
 
     await expectFinanceRowValues(financeRow(financePopup, 'Coufalová Martina'), {
       state: '🪄',

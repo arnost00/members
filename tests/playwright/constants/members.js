@@ -136,7 +136,31 @@ const TEST_MEMBER_FIXTURES = {
     chiefId: '0',
     chiefPay: '',
     financeType: '1',
-  },};
+  },
+  '9711': {
+    reg: '9711',
+    surname: 'Kelbl',
+    name: 'Vladimír',
+    birthDate: '14.4.1997',
+    address: '',
+    city: 'Brno',
+    postalCode: '612 00',
+    phoneHome: '',
+    phoneWork: '',
+    phoneMobile: '',
+    email: 'vladimir.kelbl.9711@example.test',
+    chip: '8660427',
+    gender: 'H',
+    licenceOb: 'A',
+    licenceMtbo: '-',
+    licenceLob: '-',
+    birthNumber: '',
+    nationality: 'CZ',
+    chiefId: '13',
+    chiefPay: '',
+    financeType: '1',
+  },
+};
 
 function getTestMemberFixture(registrationId) {
   return TEST_MEMBER_FIXTURES[String(registrationId)] || null;

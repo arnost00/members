@@ -32,8 +32,28 @@ function createWorkflowRun(name) {
   };
 }
 
+async function expandYear(page, year) {
+  const normalizedYear = String(year);
+  const expander = page.locator(
+    `span.year-expander[onclick="toggle_expand_by_group('${normalizedYear}', this)"]`
+  ).first();
+
+  if (await expander.count() === 0) {
+    return false;
+  }
+
+  const label = String(await expander.textContent() || '').replace(/\s+/g, ' ').trim();
+  if (label === `▼ ${normalizedYear}`) {
+    await expander.click();
+    return true;
+  }
+
+  return false;
+}
+
 module.exports = {
   addUtcDays,
   createWorkflowRun,
+  expandYear,
   formatCzDate,
 };

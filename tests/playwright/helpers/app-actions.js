@@ -9,11 +9,6 @@ const {
 async function createPaymentRule(page, overrides = {}) {
   await page.goto('./fin_payrule_edit.php');
 
-  const financeTypeInputs = page.locator('input[name="finance_type[]"][data-role="one"]');
-  const defaultFinanceType = await financeTypeInputs.count()
-    ? await financeTypeInputs.first().getAttribute('value')
-    : null;
-
   const normalizeValues = (value, fallback = []) => {
     const resolved = value === undefined ? fallback : value;
     if (resolved === null) {
@@ -25,28 +20,66 @@ async function createPaymentRule(page, overrides = {}) {
       : [String(resolved)];
   };
 
-  const financeTypes = normalizeValues(
-    overrides.financeTypes ?? overrides.financeType ?? defaultFinanceType,
-    []
-  );
+  async function setCheckboxGroup(name, values) {
+    await page.locator(`input[name="${name}_all"]`).evaluateAll((elements) => {
+      elements.forEach((element) => {
+        element.checked = false;
+      });
+    });
 
-  const financeFields = financeTypes.length
-    ? { 'finance_type[]': financeTypes }
-    : { finance_type_all: '1' };
+    await page.locator(`input[name="${name}[]"]`).evaluateAll((elements, selectedValues) => {
+      const selected = new Set(selectedValues);
+      elements.forEach((element) => {
+        element.checked = selected.has(String(element.value));
+      });
+    }, values);
+  }
 
-  const result = await postFormInSession(page, './fin_payrule_edit_exc.php', {
-    'typ[]': normalizeValues(overrides.sports ?? overrides.sport, []),
-    'typ0[]': normalizeValues(overrides.eventTypes ?? overrides.eventType, []),
-    'termin[]': normalizeValues(overrides.terms ?? overrides.term, []),
-    'zebricek[]': normalizeValues(overrides.rankings ?? overrides.ranking, []),
-    payment_type: String(overrides.paymentType ?? 'P'),
-    amount: String(overrides.amount ?? '1'),
-    'uctovano[]': normalizeValues(overrides.chargedItems ?? overrides.chargedItem, ['1']),
-    ...financeFields,
-    ...overrides.fields,
-  });
+  const sports = normalizeValues(overrides.sports ?? overrides.sport, []);
+  const eventTypes = normalizeValues(overrides.eventTypes ?? overrides.eventType, []);
+  const terms = normalizeValues(overrides.terms ?? overrides.term, []);
+  const rankings = normalizeValues(overrides.rankings ?? overrides.ranking, []);
+  const financeTypes = normalizeValues(overrides.financeTypes ?? overrides.financeType, []);
+  const chargedItems = normalizeValues(overrides.chargedItems ?? overrides.chargedItem, ['1']);
 
-  return ensureHtmlSubmission(result, 'Create payment rule');
+  await setCheckboxGroup('typ', sports);
+  await setCheckboxGroup('typ0', eventTypes);
+  await setCheckboxGroup('termin', terms);
+  await setCheckboxGroup('zebricek', rankings);
+  await setCheckboxGroup('finance_type', financeTypes);
+  await setCheckboxGroup('uctovano', chargedItems);
+
+  await page.locator(`input[name="payment_type"][value="${String(overrides.paymentType ?? 'P')}"]`).check();
+  await page.locator('input[name="amount"]').fill(String(overrides.amount ?? '1'));
+
+  if (overrides.fields) {
+    await page.evaluate((fields) => {
+      for (const [name, value] of Object.entries(fields)) {
+        const field = document.querySelector(`[name="${CSS.escape(name)}"]`);
+        if (field) {
+          field.value = String(value);
+        }
+      }
+    }, overrides.fields);
+  }
+
+  await Promise.all([
+    page.waitForURL(/index\.php\?id=800&subid=5/),
+    page.locator('input[type="submit"][value="Uložit"]').click(),
+  ]);
+
+  return ensureHtmlSubmission({
+    ok: true,
+    status: 200,
+    url: page.url(),
+    text: await page.content(),
+  }, 'Create payment rule');
+}
+
+async function ensurePaymentRules(page, paymentRules = []) {
+  for (const paymentRule of paymentRules) {
+    await createPaymentRule(page, paymentRule);
+  }
 }
 
 function formatClubReg(reg) {
@@ -192,13 +225,20 @@ async function getFinanceDirectoryEntryByReg(page, reg, options = {}) {
 
 async function ensureClubMember(page, overrides = {}) {
   const role = overrides.role || 'clubAdmin';
+  const financePage = overrides.financePage;
   const existingMember = await findClubMemberByReg(page, overrides.reg, role);
 
   if (existingMember) {
+    const existingUserId = getUserIdFromEditPath(existingMember.editPath);
+
+    if (financePage && overrides.financeType !== undefined) {
+      await setMemberFinanceType(financePage, existingUserId, overrides.financeType);
+    }
+
     return {
       created: false,
       reg: existingMember.reg,
-      userId: getUserIdFromEditPath(existingMember.editPath),
+      userId: existingUserId,
       editPath: existingMember.editPath,
     };
   }
@@ -235,16 +275,23 @@ async function ensureClubMember(page, overrides = {}) {
     throw new Error(`Club member with reg ${formatClubReg(overrides.reg)} was not found after ensure`);
   }
 
+  const createdUserId = getUserIdFromEditPath(createdMember.editPath);
+
+  if (financePage && overrides.financeType !== undefined) {
+    await setMemberFinanceType(financePage, createdUserId, overrides.financeType);
+  }
+
   return {
     created: true,
     reg: createdMember.reg,
-    userId: getUserIdFromEditPath(createdMember.editPath),
+    userId: createdUserId,
     editPath: createdMember.editPath,
   };
 }
 
 async function ensureClubMembers(page, registrationIds, options = {}) {
   const role = options.role || 'clubAdmin';
+  const financePage = options.financePage;
   const ensuredMembers = [];
 
   for (const registrationId of registrationIds) {
@@ -256,6 +303,7 @@ async function ensureClubMembers(page, registrationIds, options = {}) {
 
     const member = await ensureClubMember(page, {
       role,
+      financePage,
       ...fixture,
     });
 
@@ -498,7 +546,9 @@ module.exports = {
   ensureClubMembers,
   findRaceUserIdByReg,
   createPaymentRule,
+  ensurePaymentRules,
   createRace,
+  formatClubReg,
   getFinanceDirectoryEntryByReg,
   setMemberFinanceType,
   stornoFirstMemberFinanceEntry,
