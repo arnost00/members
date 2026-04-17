@@ -1,7 +1,7 @@
 <?php
 define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
-@extract($_REQUEST, EXTR_SKIP);
+$user_id = $_REQUEST['user_id'] ?? null;
 
 require_once ("connect.inc.php");
 require_once ("sess.inc.php");

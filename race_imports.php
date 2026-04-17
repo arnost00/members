@@ -1,7 +1,8 @@
 <?php
 define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
-@extract($_REQUEST, EXTR_SKIP);
+$from = $_REQUEST['from'] ?? null;
+$to = $_REQUEST['to'] ?? null;
 
 require_once ("connect.inc.php");
 require_once ("sess.inc.php");

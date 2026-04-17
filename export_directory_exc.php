@@ -1,6 +1,9 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
-@extract($_REQUEST, EXTR_SKIP);
+$par1 = $_REQUEST['par1'] ?? null;
+$par2 = $_REQUEST['par2'] ?? null;
+$par3 = $_REQUEST['par3'] ?? null;
+$oris = $_REQUEST['oris'] ?? null;
 
 require_once ('./connect.inc.php');
 require_once ('./sess.inc.php');

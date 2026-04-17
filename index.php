@@ -1,6 +1,6 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
-@extract($_REQUEST, EXTR_SKIP);
+
 
 $id = (IsSet($_GET['id']) && is_numeric($_GET['id'])) ? (int)$_GET['id'] : 0;
 $subid = (IsSet($_GET['subid']) && is_numeric($_GET['subid'])) ? (int)$_GET['subid'] : 0;

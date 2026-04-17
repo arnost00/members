@@ -1,7 +1,18 @@
 <?php /* maly trener - zobrazeni detailu financi pro clena */
 define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
-@extract($_REQUEST, EXTR_SKIP);
+$payment = $_REQUEST['payment'] ?? null;
+$trn_id = $_REQUEST['trn_id'] ?? null;
+$id_zavod = $_REQUEST['id_zavod'] ?? null;
+$amount = $_REQUEST['amount'] ?? null;
+$id_from = $_REQUEST['id_from'] ?? null;
+$id_to = $_REQUEST['id_to'] ?? null;
+$note = $_REQUEST['note'] ?? null;
+$user_id = $_REQUEST['user_id'] ?? null;
+$datum = $_REQUEST['datum'] ?? null;
+$storno_note = $_REQUEST['storno_note'] ?? null;
+$change = $_REQUEST['change'] ?? null;
+$storno = $_REQUEST['storno'] ?? null;
 
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");

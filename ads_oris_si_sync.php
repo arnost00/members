@@ -1,7 +1,8 @@
 <?php
 define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
-@extract($_REQUEST, EXTR_SKIP);
+$oris_id = $_REQUEST['oris_id'] ?? null;
+$id = $_REQUEST['id'] ?? null;
 
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");

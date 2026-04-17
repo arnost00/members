@@ -1,5 +1,5 @@
 <?php /* definice plateb - mazani */
-@extract($_REQUEST);
+$id = $_REQUEST['id'] ?? null;
 
 require_once ("connect.inc.php");
 require_once ("sess.inc.php");

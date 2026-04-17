@@ -1,6 +1,8 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?php /* finance - editace (pridavani) typu prispevku */
-@extract($_REQUEST, EXTR_SKIP);
+$nazev = $_REQUEST['nazev'] ?? null;
+$popis = $_REQUEST['popis'] ?? null;
+$update = $_REQUEST['update'] ?? null;
 
 require_once ('connect.inc.php');
 require_once ('sess.inc.php');

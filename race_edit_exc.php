@@ -1,6 +1,29 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
-@extract($_REQUEST, EXTR_SKIP);
+$id = $_REQUEST['id'] ?? null;
+$rtype = $_REQUEST['rtype'] ?? null;
+$datum = $_REQUEST['datum'] ?? null;
+$datum2 = $_REQUEST['datum2'] ?? null;
+$etap = $_REQUEST['etap'] ?? null;
+$zebricek = $_REQUEST['zebricek'] ?? null;
+$prihlasky1 = $_REQUEST['prihlasky1'] ?? null;
+$prihlasky2 = $_REQUEST['prihlasky2'] ?? null;
+$prihlasky3 = $_REQUEST['prihlasky3'] ?? null;
+$prihlasky4 = $_REQUEST['prihlasky4'] ?? null;
+$prihlasky5 = $_REQUEST['prihlasky5'] ?? null;
+$odkaz = $_REQUEST['odkaz'] ?? null;
+$nazev = $_REQUEST['nazev'] ?? null;
+$ext_id = $_REQUEST['ext_id'] ?? null;
+$misto = $_REQUEST['misto'] ?? null;
+$typ0 = $_REQUEST['typ0'] ?? null;
+$typ = $_REQUEST['typ'] ?? null;
+$ranking = $_REQUEST['ranking'] ?? null;
+$oddil = $_REQUEST['oddil'] ?? null;
+$poznamka = $_REQUEST['poznamka'] ?? null;
+$transport = $_REQUEST['transport'] ?? null;
+$accommodation = $_REQUEST['accommodation'] ?? null;
+$kapacita = $_REQUEST['kapacita'] ?? null;
+$cancelled = $_REQUEST['cancelled'] ?? null;
 
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");

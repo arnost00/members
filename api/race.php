@@ -128,7 +128,12 @@ switch ($action) {
                 raise_and_die("$key is not set");
             }
         }
-        extract($required_data);
+        $category = $required_data['category'];
+        $note = $required_data['note'];
+        $note_internal = $required_data['note_internal'];
+        $transport = $required_data['transport'];
+        $sedadlel = $required_data['sedadlel'];
+        $accommodation = $required_data['accommodation'];
 
         $transport = $transport ? 1 : 0;
         $accommodation = $accommodation ? 1 : 0;
