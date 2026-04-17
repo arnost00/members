@@ -623,6 +623,33 @@ function countRaceStats(array $zaznamy, bool $is_sdil_dopr_on): array
     return $stats;
 }
 
+function gen_modify_flag_v2b($val_last,$val_new)
+{	// varianta s ignorovanim zmeny terminu a zmeny v zavode pokud je zaroven vytvoren zavod
+	// povolene vysledne hodnoty 0,1,2,4,5
+	//
+	//              puvodni
+	//         0   1   2   4   5
+	// n   0 | 0 | 1 | 2 | 4 | 5 
+	// o   1 | 1 | 1 | 2 | 5 | 5 
+	// v   4 | 4 | 5 | 2 | 4 | 5 
+	// e   5 | 5 | 5 | 2 | 5 | 5 
+	
+	global $g_modify_flag;
+	
+	if ($val_last == $val_new || $val_new == 0)	// beze zmeny, nebo stejna zmena
+		$v1 = $val_last;
+	else if (($val_last & $g_modify_flag [1]['id'] ) != 0) // byl vytvoren (top level flag)
+		$v1 = $g_modify_flag [1]['id'] ;
+	else
+	{
+		if (($val_last & $g_modify_flag [0]['id'] ) != 0 || ($val_last & $g_modify_flag [2]['id'] ) != 0)
+			$v1 = $g_modify_flag [0]['id'] + $g_modify_flag [2]['id'];
+		else
+			$v1 = $val_new;
+	}
+	return $v1;
+}
+
 function RenderRaceStats(
     array $stats,
     bool $is_spol_dopr_on,
