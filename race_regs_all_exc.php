@@ -1,6 +1,14 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
-@extract($_REQUEST, EXTR_SKIP);
+$gr_id = $_REQUEST['gr_id'] ?? null;
+$id = $_REQUEST['id'] ?? null;
+$kateg = $_REQUEST['kateg'] ?? null;
+$pozn = $_REQUEST['pozn'] ?? null;
+$pozn2 = $_REQUEST['pozn2'] ?? null;
+$transport = $_REQUEST['transport'] ?? null;
+$sedadel = $_REQUEST['sedadel'] ?? null;
+$ubytovani = $_REQUEST['ubytovani'] ?? null;
+$term = $_REQUEST['term'] ?? null;
 
 //TBD: podpora entry_locked
 

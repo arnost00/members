@@ -1,6 +1,15 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?php
-@extract($_REQUEST, EXTR_SKIP);
+$id_zav = $_REQUEST['id_zav'] ?? null;
+$id_us = $_REQUEST['id_us'] ?? null;
+$id_z = $_REQUEST['id_z'] ?? null;
+$kat = $_REQUEST['kat'] ?? null;
+$pozn = $_REQUEST['pozn'] ?? null;
+$pozn2 = $_REQUEST['pozn2'] ?? null;
+$sedadel = $_REQUEST['sedadel'] ?? null;
+$transport = $_REQUEST['transport'] ?? null;
+$ubytovani = $_REQUEST['ubytovani'] ?? null;
+$novy = $_REQUEST['novy'] ?? null;
 
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");

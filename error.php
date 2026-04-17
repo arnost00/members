@@ -1,6 +1,6 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
-@extract($_REQUEST, EXTR_SKIP);
+$code = $_REQUEST['code'] ?? null;
 
 require_once("./cfg/_cfg.php");
 require_once ("./sess.inc.php");

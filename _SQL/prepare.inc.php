@@ -1,5 +1,6 @@
 <?
-@extract($_REQUEST, EXTR_SKIP);
+$version_upd = $_REQUEST['version_upd'] ?? null;
+$sql = $_REQUEST['sql'] ?? null;
 $this_file_name = 'zmeny_'.$version_upd.'.sql.php';
 
 require_once ('connect.inc.php');

@@ -1,6 +1,20 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
-@extract($_REQUEST, EXTR_SKIP);
+$id = $_REQUEST['id'] ?? null;
+$notify_type = $_REQUEST['notify_type'] ?? null;
+$racetype = $_REQUEST['racetype'] ?? null;
+$zebricek = $_REQUEST['zebricek'] ?? null;
+$daysbefore = $_REQUEST['daysbefore'] ?? null;
+$ch_data = $_REQUEST['ch_data'] ?? null;
+$active_tf = $_REQUEST['active_tf'] ?? null;
+$active_ch = $_REQUEST['active_ch'] ?? null;
+$active_rg = $_REQUEST['active_rg'] ?? null;
+$active_fin = $_REQUEST['active_fin'] ?? null;
+$active_finf = $_REQUEST['active_finf'] ?? null;
+$active_news = $_REQUEST['active_news'] ?? null;
+$fin_limit = $_REQUEST['fin_limit'] ?? null;
+$fin_type = $_REQUEST['fin_type'] ?? null;
+$email = $_REQUEST['email'] ?? null;
 
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");

@@ -1,7 +1,11 @@
 <? /* adminova stranka - detail clena */
 define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
-@extract($_REQUEST, EXTR_SKIP);
+$id = $_REQUEST['id'] ?? null;
+$edit = $_REQUEST['edit'] ?? null;
+$hidden = $_REQUEST['hidden'] ?? null;
+$entry_locked = $_REQUEST['entry_locked'] ?? null;
+$locked = $_REQUEST['locked'] ?? null;
 
 require_once("./cfg/_colors.php");
 require_once ("./connect.inc.php");

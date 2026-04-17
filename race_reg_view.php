@@ -1,6 +1,9 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?php
-@extract($_REQUEST, EXTR_SKIP);
+$id = $_REQUEST['id'] ?? null;
+$us = $_REQUEST['us'] ?? null;
+$gr_id = $_REQUEST['gr_id'] ?? null;
+$select = $_REQUEST['select'] ?? null;
 
 require_once("./cfg/_colors.php");
 require_once ("./connect.inc.php");

@@ -1,6 +1,9 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
-@extract($_REQUEST, EXTR_SKIP);
+$id_zav = $_REQUEST['id_zav'] ?? null;
+$termin = $_REQUEST['termin'] ?? null;
+$ff = $_REQUEST['ff'] ?? null;
+$creg = $_REQUEST['creg'] ?? null;
 
 require_once ('./connect.inc.php');
 require_once ('./sess.inc.php');
