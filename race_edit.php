@@ -1,6 +1,7 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
-@extract($_REQUEST, EXTR_SKIP);
+$id = $_REQUEST['id'] ?? null;
+$ext_id = $_REQUEST['ext_id'] ?? null;
 
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");

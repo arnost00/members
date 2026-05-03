@@ -1,6 +1,21 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?
-@extract($_REQUEST, EXTR_SKIP);
+$id = $_REQUEST['id'] ?? null;
+$type = $_REQUEST['type'] ?? null;
+$action_type = $_REQUEST['action_type'] ?? null;
+$news = $_REQUEST['news'] ?? null;
+$regs = $_REQUEST['regs'] ?? null;
+$mng = $_REQUEST['mng'] ?? null;
+$mng2 = $_REQUEST['mng2'] ?? null;
+$adm = $_REQUEST['adm'] ?? null;
+$fin = $_REQUEST['fin'] ?? null;
+$login = $_REQUEST['login'] ?? null;
+$podpis = $_REQUEST['podpis'] ?? null;
+$login_g = $_REQUEST['login_g'] ?? null;
+$podpis_g = $_REQUEST['podpis_g'] ?? null;
+$nheslo = $_REQUEST['nheslo'] ?? null;
+$nheslo2 = $_REQUEST['nheslo2'] ?? null;
+$email = $_REQUEST['email'] ?? null;
 
 require_once('./connect.inc.php');
 require_once('./sess.inc.php');

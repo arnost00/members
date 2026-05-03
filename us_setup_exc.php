@@ -1,6 +1,13 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?php /* clenova stranka - provedeni zmeny informaci a nastaveni */
-@extract($_REQUEST, EXTR_SKIP);
+$id = $_REQUEST['id'] ?? null;
+$type = $_REQUEST['type'] ?? null;
+$login = $_REQUEST['login'] ?? null;
+$podpis = $_REQUEST['podpis'] ?? null;
+$hesloo = $_REQUEST['hesloo'] ?? null;
+$oldheslo = $_REQUEST['oldheslo'] ?? null;
+$heslo = $_REQUEST['heslo'] ?? null;
+$heslo2 = $_REQUEST['heslo2'] ?? null;
 
 require_once('./connect.inc.php');
 require_once('./sess.inc.php');

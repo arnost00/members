@@ -1,6 +1,27 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?php /* adminova stranka - provedeni vlozeni clena */
-@extract($_REQUEST, EXTR_SKIP);
+$fin = $_REQUEST['fin'] ?? null;
+$rc = $_REQUEST['rc'] ?? null;
+$hidden = $_REQUEST['hidden'] ?? null;
+$bank_account = $_REQUEST['bank_account'] ?? null;
+$datum = $_REQUEST['datum'] ?? null;
+$prijmeni = $_REQUEST['prijmeni'] ?? null;
+$jmeno = $_REQUEST['jmeno'] ?? null;
+$update = $_REQUEST['update'] ?? null;
+$adresa = $_REQUEST['adresa'] ?? null;
+$mesto = $_REQUEST['mesto'] ?? null;
+$psc = $_REQUEST['psc'] ?? null;
+$domu = $_REQUEST['domu'] ?? null;
+$zam = $_REQUEST['zam'] ?? null;
+$mobil = $_REQUEST['mobil'] ?? null;
+$email = $_REQUEST['email'] ?? null;
+$reg = $_REQUEST['reg'] ?? null;
+$si = $_REQUEST['si'] ?? null;
+$poh = $_REQUEST['poh'] ?? null;
+$lic = $_REQUEST['lic'] ?? null;
+$lic_mtbo = $_REQUEST['lic_mtbo'] ?? null;
+$lic_lob = $_REQUEST['lic_lob'] ?? null;
+$narodnost = $_REQUEST['narodnost'] ?? null;
 
 require_once ('./connect.inc.php');
 require_once ('./sess.inc.php');

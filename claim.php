@@ -1,7 +1,10 @@
 <?php /* zobrazeni reklamace pro platbu */
 define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
-@extract($_REQUEST, EXTR_SKIP);
+$payment_id = $_REQUEST['payment_id'] ?? null;
+$submit = $_REQUEST['submit'] ?? null;
+$close = $_REQUEST['close'] ?? null;
+$claim_text = $_REQUEST['claim_text'] ?? null;
 
 $payment_id = (IsSet($payment_id) && is_numeric($payment_id)) ? (int)$payment_id : 0;
 

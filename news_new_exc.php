@@ -1,6 +1,10 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?php /* novinky - editace (pridavani) novinek */
-@extract($_REQUEST, EXTR_SKIP);
+$datum = $_REQUEST['datum'] ?? null;
+$text = $_REQUEST['text'] ?? null;
+$nadpis = $_REQUEST['nadpis'] ?? null;
+$internal = $_REQUEST['internal'] ?? null;
+$update = $_REQUEST['update'] ?? null;
 
 require_once ('connect.inc.php');
 require_once ('sess.inc.php');

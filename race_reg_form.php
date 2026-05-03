@@ -1,6 +1,8 @@
 <? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
 <?php
-@extract($_REQUEST, EXTR_SKIP);
+$id_zav = $_REQUEST['id_zav'] ?? null;
+$regsend = $_REQUEST['regsend'] ?? null;
+$regsendnow = $_REQUEST['regsendnow'] ?? null;
 
 require_once("./cfg/_colors.php");
 require_once ("./connect.inc.php");
