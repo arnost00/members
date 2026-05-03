@@ -12,9 +12,14 @@ if ($g_external_is_connector !== 'OrisCZConnector')
 </ul>
 <CENTER>
 <?
-$ORIS_year = (isset($ORIS_year) && is_numeric($ORIS_year)) ? $ORIS_year : date("Y");
 require_once "./common_user.inc.php";
 require_once('./csort.inc.php');
+
+$csd = $_REQUEST['csd'] ?? null;
+$ORIS_year = $_REQUEST['ORIS_year'] ?? null;
+$result = $_REQUEST['result'] ?? null;
+
+$ORIS_year = (isset($ORIS_year) && is_numeric($ORIS_year)) ? $ORIS_year : date("Y");
 
 require_once('./oris_user.class.php');
 

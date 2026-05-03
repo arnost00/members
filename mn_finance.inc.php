@@ -13,6 +13,8 @@ DrawPageTitle('Finance členů');
 require_once "./common_user.inc.php";
 require_once('./csort.inc.php');
 
+$csd = $_REQUEST['csd'] ?? null;
+
 $sc = new column_sort_db();
 $sc->add_column('sort_name','');
 $sc->add_column('reg','');

@@ -20,6 +20,7 @@ function confirm_delete(date) {
 <?
 }
 // news_sh
+$news = $_REQUEST['news'] ?? null;
 $news = (IsSet($news) && is_numeric($news) && $news > 0) ? 1 : 0;
 
 $sql_query = 'SELECT '.TBL_NEWS.'.*, '.TBL_ACCOUNT.'.podpis FROM '.TBL_NEWS.' LEFT JOIN '.TBL_ACCOUNT.' ON '.TBL_NEWS.'.id_user = '.TBL_ACCOUNT.'.id ORDER BY datum DESC,id DESC';

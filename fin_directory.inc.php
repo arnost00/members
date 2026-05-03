@@ -27,7 +27,10 @@ function confirm_entry_unlock(name) {
 </script>
 
 <?
-	if (!isset($_GET["dateTo"]))
+$csd = $_REQUEST['csd'] ?? null;
+$dateTo = $_REQUEST['dateTo'] ?? null;
+
+	if (!isset($dateTo))
 		$dateTo = '';
 ?>
 

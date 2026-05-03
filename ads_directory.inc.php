@@ -58,7 +58,11 @@ function toggleShowHidden(element) {
 require_once "./common_user.inc.php";
 require_once('./csort.inc.php');
 
-if (!isset($_GET['showHidden'])) $showHidden = 0;
+$csd = $_REQUEST['csd'] ?? null;
+$result = $_REQUEST['result'] ?? null;
+$showHidden = $_REQUEST['showHidden'] ?? 0;
+
+if (!isset($showHidden)) $showHidden = 0;
 
 $sc = new column_sort_db();
 $sc->add_column('sort_name','');

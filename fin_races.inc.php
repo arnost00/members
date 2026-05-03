@@ -9,6 +9,11 @@ require_once ("./common_race.inc.php");
 require_once ('./url.inc.php');
 require_once ('./ct_renderer_races.inc.php');
 
+$fA = $_REQUEST['fA'] ?? null;
+$fB = $_REQUEST['fB'] ?? null;
+$fC = $_REQUEST['fC'] ?? null;
+$fD = $_REQUEST['fD'] ?? null;
+
 $fA = (IsSet($fA) && is_numeric($fA)) ? (int)$fA : 0;
 $fB = (IsSet($fB) && is_numeric($fB)) ? (int)$fB : 0;
 $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 1;  // old races

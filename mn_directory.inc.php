@@ -18,6 +18,9 @@ function confirm_delete(name) {
 require_once "./common_user.inc.php";
 require_once('./csort.inc.php');
 
+$csd = $_REQUEST['csd'] ?? null;
+$result = $_REQUEST['result'] ?? null;
+
 $sc = new column_sort_db();
 $sc->add_column('sort_name','');
 $sc->add_column('reg','');
