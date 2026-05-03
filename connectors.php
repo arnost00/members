@@ -31,6 +31,7 @@ class RaceInfo {
 	public $modify_flag;
 	public $kategorie;
 	public $startovne;
+	public $cancelled;
 
 	// Constructor to initialize the object with key-value pairs
 	public function __construct($data) {
@@ -59,6 +60,7 @@ class RaceInfo {
 		$this->modify_flag = $data['modify_flag'] ?? null;
 		$this->kategorie = $data['kategorie'] ?? null;
 		$this->startovne = $data['startovne'] ?? null;
+		$this->cancelled = $data['cancelled'] ?? null;
 	}
 }
 
@@ -275,7 +277,8 @@ class OrisCZConnector implements ConnectorInterface {
 				'oddil' => $oddily,
 				'modify_flag' => 0,
 				'kategorie' => implode(';', array_keys ( $classFees ) ),
-				'startovne' => $classFees
+				'startovne' => $classFees,
+				'cancelled' => (!empty($raceData['Cancelled']) || !empty($raceData['Canceled']) || !empty($raceData['cancelled']) || !empty($raceData['canceled'])) ? 1 : 0
 				]);
 		} else {
 			return null; // Return null if race not found or error

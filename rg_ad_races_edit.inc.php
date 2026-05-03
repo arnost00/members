@@ -68,7 +68,7 @@ $tbl_renderer->addColumns('typ0','typ','odkaz', ['kategorie', new FormatFieldRen
 if ($g_enable_race_capacity)
  	$tbl_renderer->addColumns('ucast');
 $tbl_renderer->addColumns(['moznosti', new FormatFieldRenderer ( 'id', function ( $id ) : string {
-	return "<A HREF=\"javascript:open_win('./race_edit.php?id=".$id."','')\">Edit</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_kat.php?id=".$id."','')\">Kategorie</A>&nbsp;/&nbsp;<A HREF=\"./race_del_exc.php?id=".$id."\" onclick=\"return confirm_delete();\" class=\"Erase\">Smazat</A>";
+	return "<A HREF=\"javascript:open_win('./race_edit.php?id=".$id."&refresh_parent=1','')\">Edit</A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_kat.php?id=".$id."','')\">Kategorie</A>&nbsp;/&nbsp;<A HREF=\"./race_del_exc.php?id=".$id."\" onclick=\"return confirm_delete();\" class=\"Erase\">Smazat</A>";
 	})]);
 if (!$g_is_release)
 {	// pri debug zobrazit
@@ -112,6 +112,9 @@ if ( $connector !== null ) {
 	echo('Rychlé načtení závodu ze zdroje ' .  $connector->getSystemName() . ' ');
 	echo("<input type='text' id='extID' onKeyup='toggleButtonState()' placeholder='ID závodu'>");
 	echo(' <button id="loadRaceByIdButton" disabled onclick="javascript:open_win(\'./race_new.php?ext_id=\'+extID.value, \'\')">Načíst</button>');
+	echo('<BR /><BR />');
+	echo('Aktualizace závodů ze systému ' .  $connector->getSystemName() . ' ');
+	echo('<button type="button" onclick="javascript:open_url(\'./race_imports_update.php\')">Aktualizovat</button>');
 	echo("<BR /><BR />\n");
 }
 

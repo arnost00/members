@@ -103,6 +103,7 @@ function checkDates()
 DrawPageTitle('Editace parametrů závodu');
 
 $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
+$refresh_parent = (IsSet($refresh_parent) && (int)$refresh_parent == 0) ? 0 : 1;
 $ext_id = (IsSet($ext_id)) ? $ext_id : '';
 $ext_id_info = '';
 
@@ -137,7 +138,7 @@ if($zaznam['vicedenni'])
 {	// vicedenni
 ?>
 
-<FORM METHOD=POST onsubmit="return checkDates();" ACTION="./race_edit_exc.php?rtype=1&id=<?echo $id?>" name="form2">
+<FORM METHOD=POST onsubmit="return checkDates();" ACTION="./race_edit_exc.php?rtype=1&id=<?echo $id?>&refresh_parent=<?echo $refresh_parent?>" name="form2">
 
 <TABLE width="90%">
 <TR>
@@ -155,7 +156,7 @@ if($zaznam['vicedenni'])
 else
 {	// jednodenni
 ?>
-<FORM METHOD=POST onsubmit="return checkDates();" ACTION="./race_edit_exc.php?rtype=0&id=<?echo $id?>" name="form2">
+<FORM METHOD=POST onsubmit="return checkDates();" ACTION="./race_edit_exc.php?rtype=0&id=<?echo $id?>&refresh_parent=<?echo $refresh_parent?>" name="form2">
 
 <TABLE width="90%">
 <TR>
@@ -185,7 +186,7 @@ if ( $connector !== null ) {
 </script>
 <?
 		echo('<TD class="DataError"><INPUT TYPE="text" NAME="ext_id" id="ext_id" SIZE=8 value="'.$ext_id.'" onKeyup=\'toggleButtonState()\' placeholder=\'ID závodu\'>');
-		echo(' <button type="button" id="loadRaceByIdButton" disabled onclick="javascript:open_url(\'./race_edit.php?id='.$id.'&ext_id=\'+ext_id.value, \'\')">Náhrat informace</button><br>');
+		echo(' <button type="button" id="loadRaceByIdButton" disabled onclick="javascript:open_url(\'./race_edit.php?id='.$id.'&refresh_parent='.$refresh_parent.'&ext_id=\'+ext_id.value, \'\')">Náhrat informace</button><br>');
 		echo('</TD>');
 	} else {
 		echo('<TD class="DataError"><INPUT TYPE="text" NAME="ext_id" SIZE=8 value="'.$ext_id.'">'.$ext_id_info.'</TD>');
