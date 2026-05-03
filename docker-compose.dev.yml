@@ -1,0 +1,36 @@
+services:
+  web:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile.srv
+      target: dev
+    ports:
+      - "10100:10100"    #this line maps your pc port to the container port
+    depends_on:
+      - db    #this line links this container to the db container
+    volumes:
+      - ./:/var/www/html/members    #this line maps the content of ./html in your pc to the /var/www/html of the container
+      # override configuration, modifiable in original place only
+      - ./docker/config/dev/_cfg.php:/var/www/html/members/cfg/_cfg.php:ro
+      - ./docker/config/dev/_globals.php:/var/www/html/members/cfg/_globals.php:ro
+      - ./docker/config/dev/_tables.php:/var/www/html/members/cfg/_tables.php:ro
+  db:
+    image: mariadb:10.11
+    environment:
+      MARIADB_ROOT_PASSWORD: dev4password
+      MARIADB_DATABASE: members_dev
+      MARIADB_USER: appuser
+      MARIADB_PASSWORD: apppass
+    volumes:
+      # persistent database storage
+      - ./db_data/dev:/var/lib/mysql    #this line maps the content of ./db_data/dev in your pc to the /var/lib/mysql of the container
+      # initial database content
+      - ./docker/db_init/d235220_members_latest.sql:/docker-entrypoint-initdb.d/d235220_members.sql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "10101:80"    #this line maps your pc port to the container port
+    depends_on:
+      - db    #this line links this container to the db container
+    environment:
+      PMA_HOST: db

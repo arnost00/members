@@ -1,0 +1,48 @@
+FROM php:8.2-apache as base
+
+# Install mysqli and clean up
+RUN docker-php-ext-install mysqli
+
+# Let Apache listen on port 10100 inside the container.
+RUN sed -ri 's/^Listen 80$/Listen 10100/' /etc/apache2/ports.conf \
+    && sed -ri 's#<VirtualHost \\*:80>#<VirtualHost *:10100>#' /etc/apache2/sites-available/000-default.conf
+
+# Create log directory
+RUN mkdir -p /var/www/html/members/logs && chown -R www-data:www-data /var/www/html/members/logs
+
+# Add Apache alias for /members
+RUN echo '\
+Alias /members /var/www/html/members\n\
+<Directory /var/www/html/members>\n\
+    Options Indexes FollowSymLinks\n\
+    Require all granted\n\
+</Directory>' \
+    > /etc/apache2/conf-available/members.conf \
+    && a2enconf members
+
+EXPOSE 10100
+
+FROM base as autotest
+
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+
+# Install Playwright CLI and Chromium for browser-based tests.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends nodejs npm ca-certificates \
+    && npm install -g playwright \
+    && playwright install --with-deps chromium \
+    && rm -rf /var/lib/apt/lists/*
+
+FROM autotest as dev
+
+# Install common VS Code Container Tools dependencies.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        curl \
+        git \
+        iproute2 \
+        less \
+        procps \
+        unzip \
+        wget \
+    && rm -rf /var/lib/apt/lists/*
