@@ -6,6 +6,29 @@ DrawPageTitle('Historie transakcí');
 ?>
 <CENTER>
 <?
+require_once('./ct_renderer_fin_history.inc.php');
+require_once('./ct_renderer_races.inc.php');
+
+if (!function_exists('render_fin_history_pagination')) {
+	function render_fin_history_pagination(int $page, int $pages, string $style = 'margin-bottom: 10px;'): void
+	{
+		echo "<div style='".$style."'>";
+		if ($page > 1) {
+			echo "<a href='index.php?id="._FINANCE_GROUP_ID_."&subid=7&list_page=".($page - 1)."'><< Novější</a> | ";
+		} else {
+			echo "<< Novější | ";
+		}
+
+		echo "Stránka $page z $pages";
+
+		if ($page < $pages) {
+			echo " | <a href='index.php?id="._FINANCE_GROUP_ID_."&subid=7&list_page=".($page + 1)."'>Starší >></a>";
+		} else {
+			echo " | Starší >>";
+		}
+		echo "</div>";
+	}
+}
 
 $limit = 50;
 $page = isset($_GET['list_page']) ? (int)$_GET['list_page'] : 1;
@@ -19,76 +42,26 @@ $total = $row_count['cnt'];
 $pages = ceil($total / $limit);
 if ($pages == 0) $pages = 1;
 
-$query = "SELECT f.date, concat('".$g_shortcut."',u.reg) as reg, u.sort_name as name, f.id_users_editor, e.sort_name as editor_name, f.amount, f.note, rc.nazev zavod_nazev, "
-		." from_unixtime(rc.datum,'%Y-%m-%d') zavod_datum FROM `".TBL_FINANCE."` f "
+$query = "SELECT unix_timestamp(f.date) datum, u.reg as reg, u.sort_name as name, f.id_users_editor, e.sort_name as editor_name, f.amount, f.note, rc.nazev zavod_nazev, "
+		." rc.datum zavod_datum FROM `".TBL_FINANCE."` f "
 		." left join `".TBL_USER."` u on u.id = f.id_users_user "
 		." left join `".TBL_USER."` e on e.id = f.id_users_editor "
 		." left join `".TBL_RACE."` rc on f.id_zavod = rc.id where f.storno is null ORDER BY f.date desc, f.id desc LIMIT $limit OFFSET $offset";
 @$vysl=query_db($query)
 	or die("Chyba při provádění dotazu do databáze.");
 
-echo "<div style='margin-bottom: 10px;'>";
-if ($page > 1) {
-    echo "<a href='index.php?id="._FINANCE_GROUP_ID_."&subid=7&list_page=".($page-1)."'><< Novější</a> | ";
-} else {
-	echo "<< Novější | ";
-}
-echo "Stránka $page z $pages";
-if ($page < $pages) {
-    echo " | <a href='index.php?id="._FINANCE_GROUP_ID_."&subid=7&list_page=".($page+1)."'>Starší >></a>";
-} else {
-	echo " | Starší >>";
-}
-echo "</div>";
+$zaznamy = $vysl ? mysqli_fetch_all($vysl, MYSQLI_ASSOC) : [];
 
-$data_tbl = new html_table_mc();
-$col = 0;
-$data_tbl->set_header_col($col++,'datum',ALIGN_CENTER,80);
-$data_tbl->set_header_col($col++,'reg',ALIGN_LEFT,80);
-$data_tbl->set_header_col($col++,'jméno',ALIGN_CENTER,160);
-$data_tbl->set_header_col($col++,'zapsal',ALIGN_CENTER,60);
-$data_tbl->set_header_col($col++,'částka',ALIGN_LEFT,100);
-$data_tbl->set_header_col($col++,'závod d.',ALIGN_CENTER,80);
-$data_tbl->set_header_col($col++,'závod n.',ALIGN_CENTER,160);
-$data_tbl->set_header_col($col++,'kometář',ALIGN_CENTER,160);
+render_fin_history_pagination($page, $pages);
 
-echo $data_tbl->get_css()."\n";
-echo $data_tbl->get_header()."\n";
-echo $data_tbl->get_header_row()."\n";
+$tbl_renderer = FinanceHistoryRendererFactory::createTable();
+$tbl_renderer->addColumns('datum', 'reg', 'name', 'editor_name', 'amount', 'zavod_datum', 'zavod_nazev', 'note');
+$tbl_renderer->addBreak(new YearExpanderDetector());
+$tbl_renderer->setRowAttrsExt(YearExpanderDetector::yearGroupRowAttrsExtender(...));
 
-while ($zaznam=mysqli_fetch_array($vysl))
-{
-	$row = array();
-	
-	$row[] = $zaznam['date'];
-	$row[] = $zaznam['reg'];
-	$row[] = $zaznam['name'];
-	
-	$c = ($zaznam['id_users_editor'] == 0 || $zaznam['id_users_editor'] == null) ? 'red': '';
-	$editor_name = ($zaznam['id_users_editor'] == 0 || $zaznam['id_users_editor'] == null) ? 'Systém' : $zaznam['editor_name'];
-	$row[] = "<span class='amount$c'>".$editor_name."</span>";
-	$row[] = $zaznam['amount'];
-	$row[] = $zaznam['zavod_datum'];
-	$row[] = $zaznam['zavod_nazev'];
-	$row[] = $zaznam['note'];
+echo $tbl_renderer->render(new html_table_mc(), $zaznamy);
 
-	echo $data_tbl->get_new_row_arr($row)."\n";
-}
-echo $data_tbl->get_footer()."\n";
-
-echo "<div style='margin-top: 10px;'>";
-if ($page > 1) {
-    echo "<a href='index.php?id="._FINANCE_GROUP_ID_."&subid=7&list_page=".($page-1)."'><< Novější</a> | ";
-} else {
-	echo "<< Novější | ";
-}
-echo "Stránka $page z $pages";
-if ($page < $pages) {
-    echo " | <a href='index.php?id="._FINANCE_GROUP_ID_."&subid=7&list_page=".($page+1)."'>Starší >></a>";
-} else {
-	echo " | Starší >>";
-}
-echo "</div>";
+render_fin_history_pagination($page, $pages, 'margin-top: 10px;');
 
 ?>
 <BR>
