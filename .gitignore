@@ -10,3 +10,4 @@ playwright-report/
 test-results/
 .agents/*
 skills-lock.json
+secure

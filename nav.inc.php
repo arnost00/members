@@ -129,11 +129,18 @@ function DrawMenuGroupHeader($name)
 	if(IsLoggedFinance() && $g_enable_finances)
 	{
 		DrawMenuGroupHeader('Menu&nbsp;finančníka');
+		
 		DrawMenuItem('Členská základna',_FINANCE_GROUP_ID_,1);
 		DrawMenuItem('Přehled závodů',_FINANCE_GROUP_ID_,2);
 		if ($g_enable_finances_claim) DrawMenuItem('Přehled reklamací',_FINANCE_GROUP_ID_,3);
 		DrawMenuItem('Typy příspěvků',_FINANCE_GROUP_ID_,4);
 		DrawMenuItem('Pravidla plateb',_FINANCE_GROUP_ID_,5);
+    DrawMenuItem('Historie transakcí',_FINANCE_GROUP_ID_,7);
+		if (!empty($g_bank_connector))
+		{
+			DrawMenuItemStatic('Import z banky', 'fin_bank_sync.php', '_blank');
+			DrawMenuItem('Nespárované bankovní platby',_FINANCE_GROUP_ID_,6);
+		}
 	}
 	if(IsLoggedAdmin())
 	{
