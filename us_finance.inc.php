@@ -12,6 +12,12 @@ $finance_readonly = "readonly";
 
 //---------- BLOK KODU PRO FINANCE ----------//
 require_once './payment.inc.php'; // pomocne funkce a javascript pro finance
+
+$payment = $_REQUEST['payment'] ?? null;
+$id_to = $_REQUEST['id_to'] ?? null;
+$amount = $_REQUEST['amount'] ?? null;
+$note = $_REQUEST['note'] ?? null;
+
 if (IsSet($payment) && IsSet($user_id) && IsSet($id_to) && IsSet($amount) && $id_to != -1)
 {
 	// set, clean & check values
