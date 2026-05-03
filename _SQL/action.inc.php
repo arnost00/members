@@ -1,4 +1,5 @@
 <?
+$action = $_REQUEST['action'] ?? null;
 if (!IsSet($action)) $action = 0;
 
 _print_upd_info();
