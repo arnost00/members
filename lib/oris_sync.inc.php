@@ -302,7 +302,7 @@ function processEntry($row, $action, $service) {
         // Action succeeded since no exception was thrown
         // 'create' usually returns ID in $response['ID']
         // 'update' might not return the ID, so we use the one we just found/used
-        $entryId = $response['ID'] ?? null;
+        $entryId = $response['Entry']['ID'] ?? $response['ID'] ?? null;
         if (empty($entryId)) {
             if ($action === 'update' && !empty($entryIdToUpdate)) {
                 $entryId = $entryIdToUpdate;
