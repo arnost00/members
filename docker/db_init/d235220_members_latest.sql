@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Apr 09, 2026 at 08:23 PM
+-- Generation Time: Apr 14, 2026 at 03:44 AM
 -- Server version: 10.11.16-MariaDB-ubu2204
 -- PHP Version: 8.3.26
 
@@ -85,6 +85,26 @@ INSERT INTO `tst_accounts` (`id`, `id_users`, `login`, `heslo`, `policy_news`, `
 (28, 9, 'tnov_6', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 0, 0, 0, 0, 'tnov_6', 0, 1700262000, 1),
 (29, 34, 'majkl', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 0, 1, 2, 0, 'majkl', 0, 1393714800, 1),
 (30, 36, 'RS8006', '$2y$10$R1tJ3QEZsG490bMvfao2jOKnhrJUOnHntqKQwgp14vbIN88BMRMje', 0, 0, 0, 0, 'Řehoř', 0, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tst_bank_transactions`
+--
+
+CREATE TABLE `tst_bank_transactions` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `transaction_id` varchar(64) NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `currency` varchar(3) NOT NULL,
+  `variable_symbol` varchar(20) DEFAULT NULL,
+  `constant_symbol` varchar(20) DEFAULT NULL,
+  `specific_symbol` varchar(20) DEFAULT NULL,
+  `originator_message` text DEFAULT NULL,
+  `status` enum('PROCESSED','ORPHAN','ERROR') NOT NULL DEFAULT 'ORPHAN',
+  `finance_id` int(10) UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci COMMENT='Bankovni transakce z API';
 
 -- --------------------------------------------------------
 
@@ -1348,6 +1368,13 @@ ALTER TABLE `tst_accounts`
   ADD KEY `id_users` (`id_users`);
 
 --
+-- Indexes for table `tst_bank_transactions`
+--
+ALTER TABLE `tst_bank_transactions`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `transaction_id` (`transaction_id`);
+
+--
 -- Indexes for table `tst_categories_predef`
 --
 ALTER TABLE `tst_categories_predef`
@@ -1428,6 +1455,12 @@ ALTER TABLE `tst_zavxus`
 --
 ALTER TABLE `tst_accounts`
   MODIFY `id` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+
+--
+-- AUTO_INCREMENT for table `tst_bank_transactions`
+--
+ALTER TABLE `tst_bank_transactions`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tst_categories_predef`

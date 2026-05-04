@@ -6,7 +6,9 @@ if (!defined('__HIDE_TEST__')) exit;
  */
 
 require_once dirname(__FILE__) . '/lib/BankConnectorInterface.php';
+require_once dirname(__FILE__) . '/lib/AbstractBankConnector.php';
 require_once dirname(__FILE__) . '/lib/RaiffeisenbankConnector.php';
+require_once dirname(__FILE__) . '/lib/RaiffeisenbankMockConnector.php';
 
 function cron_bank_sync_log($msg) {
     global $g_baseadr;

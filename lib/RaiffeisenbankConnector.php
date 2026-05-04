@@ -1,7 +1,11 @@
 <?php
-require_once dirname(__FILE__) . '/BankConnectorInterface.php';
+require_once dirname(__FILE__) . '/AbstractBankConnector.php';
 
-class RaiffeisenbankConnector implements BankConnectorInterface {
+class RaiffeisenbankConnector extends AbstractBankConnector {
+
+    protected function getBaseApiUrl() {
+        return 'https://api.rb.cz/rbcz/premium/api';
+    }
 
     private function log($msg) {
         $log_file = dirname(__FILE__) . '/../logs/bank_sync_log.txt';
@@ -18,13 +22,29 @@ class RaiffeisenbankConnector implements BankConnectorInterface {
     }
 
     public function getTransactions($days_back) {
-        global $g_bank_cert_path, $g_bank_cert_pass, $g_bank_client_id, $g_bank_account_number;
         global $db_conn;
 
         $this->log("Starting Bank sync run via RaiffeisenbankConnector.");
 
-        if (empty($g_bank_cert_path) || empty($g_bank_client_id) || empty($g_bank_account_number)) {
-            $this->log("Error: Bank configuration is missing (cert path, client ID, or account number).");
+        $mtls_enabled = $this->isMtlsEnabled();
+        $base_api_url = rtrim($this->getBaseApiUrl(), '/');
+        $g_bank_account_number = $this->getBankAccountNumber();
+        $g_bank_client_id = $this->getBankClientId();
+        $g_bank_cert_path = $this->getCertificatePath();
+        $g_bank_cert_pass = $this->getCertificatePassword();
+
+        if (empty($g_bank_account_number)) {
+            $this->log("Error: Bank configuration is missing account number.");
+            return [];
+        }
+
+        if (empty($g_bank_client_id)) {
+            $this->log("Error: Bank configuration is missing client ID.");
+            return [];
+        }
+
+        if ($mtls_enabled && empty($g_bank_cert_path)) {
+            $this->log("Error: Bank configuration is missing certificate path while mTLS is enabled.");
             return [];
         }
 
@@ -35,7 +55,7 @@ class RaiffeisenbankConnector implements BankConnectorInterface {
         $api_date_from = date('Y-m-d', strtotime("-{$days_back} day"));
         $api_date_to = date('Y-m-d');
 
-        $base_url = "https://api.rb.cz/rbcz/premium/api/accounts/{$g_bank_account_number}/CZK/transactions?from=" . urlencode($api_date_from) . "&to=" . urlencode($api_date_to);
+        $base_url = $base_api_url . "/accounts/{$g_bank_account_number}/CZK/transactions?from=" . urlencode($api_date_from) . "&to=" . urlencode($api_date_to);
 
         $cert_path = $g_bank_cert_path;
         if (!file_exists($cert_path) && file_exists(dirname(__FILE__) . '/../' . ltrim($cert_path, '/'))) {
@@ -53,9 +73,11 @@ class RaiffeisenbankConnector implements BankConnectorInterface {
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_SSLCERT, $cert_path);
-            curl_setopt($ch, CURLOPT_SSLCERTPASSWD, $g_bank_cert_pass);
-            curl_setopt($ch, CURLOPT_SSLCERTTYPE, "P12");
+            if ($mtls_enabled) {
+                curl_setopt($ch, CURLOPT_SSLCERT, $cert_path);
+                curl_setopt($ch, CURLOPT_SSLCERTPASSWD, $g_bank_cert_pass);
+                curl_setopt($ch, CURLOPT_SSLCERTTYPE, "P12");
+            }
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
             curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 

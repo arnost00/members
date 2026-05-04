@@ -1,0 +1,13 @@
+services:
+  web:
+    ports:
+      - "10090:10100"    # this line maps your pc port to the container port
+      - "10093:10300"    # this line maps your pc port to the container port
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "10091:80"    # this line maps your pc port to the container port
+    depends_on:
+      - db   # this line links this container to the db container
+    environment:
+      PMA_HOST: db

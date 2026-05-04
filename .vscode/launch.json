@@ -1,0 +1,74 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Listen for PHP Xdebug",
+      "type": "php",
+      "request": "launch",
+      "port": 9003,
+      "pathMappings": {
+        "/var/www/html/members": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "Debug Bank Mock Server",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "--import",
+        "tsx"
+      ],
+      "args": [
+        "mocks/bank/src/server.ts"
+      ],
+      "console": "integratedTerminal",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "env": {
+        "BANK_MOCK_HOST": "0.0.0.0",
+        "BANK_MOCK_PORT": "10300"
+      }
+    },
+    {
+      "name": "Debug Bank Mock Server (Watch)",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "--import",
+        "tsx",
+        "--watch"
+      ],
+      "args": [
+        "mocks/bank/src/server.ts"
+      ],
+      "console": "integratedTerminal",
+      "restart": true,
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "env": {
+        "BANK_MOCK_HOST": "0.0.0.0",
+        "BANK_MOCK_PORT": "10300"
+      }
+    },
+    {
+      "name": "Start Bank Mock Server",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run mock:bank",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Start Bank Mock Server (Watch)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run mock:bank:watch",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
