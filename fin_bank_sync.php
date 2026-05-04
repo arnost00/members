@@ -6,6 +6,7 @@ require_once('./connect.inc.php');
 require_once('./sess.inc.php');
 require_once('./common.inc.php');
 require_once('./common_fin.inc.php');
+require_once('./ct_renderer_bank_sync.inc.php');
 
 if (!IsLoggedFinance()) {
     header("Location: index.php");
@@ -170,67 +171,15 @@ require_once('./header.inc.php');
     <?php if (is_array($transactions) && count($transactions) > 0): ?>
         <form method="POST" action="fin_bank_sync.php">
             <input type="hidden" name="action" value="import_confirmed">
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>Import?</th>
-                        <th>Datum</th>
-                        <th>Částka</th>
-                        <th>Měna</th>
-                        <th>VS</th>
-                        <th>Zpráva</th>
-                        <th>Stav</th>
-                        <th>Reg. číslo (jméno)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php 
-                    $has_processed = false;
-                    foreach ($transactions as $tx): 
-                        // Only displaying PROCESSED matched ones, ORPHAN are not fetched from DB for this view
-                        $has_processed = true;
-                    ?>
-                        <tr>
-                            <td>
-                                <input type="checkbox" name="tx[<?php echo htmlspecialchars($tx['transaction_id']); ?>][import]" value="1" checked>
-                                <input type="hidden" name="tx[<?php echo htmlspecialchars($tx['transaction_id']); ?>][amount]" value="<?php echo htmlspecialchars($tx['amount']); ?>">
-                                <input type="hidden" name="tx[<?php echo htmlspecialchars($tx['transaction_id']); ?>][vs]" value="<?php echo htmlspecialchars($tx['vs']); ?>">
-                                <input type="hidden" name="tx[<?php echo htmlspecialchars($tx['transaction_id']); ?>][msg]" value="<?php echo htmlspecialchars($tx['msg']); ?>">
-                                <input type="hidden" name="tx[<?php echo htmlspecialchars($tx['transaction_id']); ?>][matched_user_id]" value="<?php echo htmlspecialchars($tx['matched_user_id'] ?? ''); ?>">
-                            </td>
-                            <td><?php echo htmlspecialchars(date('d.m.Y H:i', strtotime($tx['created_at'] ?? ''))); ?></td>
-                            <td><?php echo htmlspecialchars($tx['amount']); ?></td>
-                            <td><?php echo htmlspecialchars($tx['currency']); ?></td>
-                            <td><?php echo htmlspecialchars($tx['vs']); ?></td>
-                            <td><?php echo htmlspecialchars($tx['msg']); ?></td>
-                            <td>
-                                <?php if ($tx['status'] === 'PROCESSED'): ?>
-                                    <span class="status-processed">Přiřazeno</span>
-                                <?php else: ?>
-                                    <span class="status-orphan">Sirotek</span>
-                                <?php endif; ?>
-                            </td>
-                            <td><?php 
-                                $uid = $tx['matched_user_id'] ?? 0;
-                                if ($uid > 0 && isset($matched_users[$uid])) {
-                                    $u = $matched_users[$uid];
-                                    echo htmlspecialchars($u['reg'] . ' (' . $u['jmeno'] . ' ' . $u['prijmeni'] . ')');
-                                } else {
-                                    echo '-';
-                                }
-                            ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+
+            <?php
+            $tbl_renderer = BankSyncRendererFactory::createTable();
+            $tbl_renderer->addColumns('import', 'created_at', 'amount', 'currency', 'vs', 'msg', 'status', 'matched_user_reg', 'matched_user_name');
+            echo $tbl_renderer->render(new html_table_mc(), $transactions, ['matched_users' => $matched_users]);
+            ?>
             
             <br>
-            <?php if ($has_processed): ?>
-                <button type="submit" class="btn">Provést import vybraných</button>
-            <?php else: ?>
-                <p>Nebyly nalezeny žádné přiřazené transakce k importu.</p>
-            <?php endif; ?>
+            <button type="submit" class="btn">Provést import vybraných</button>
             <a href="index.php?id=800" class="btn" style="background-color: #f44336;">Zavřít</a>
         </form>
     <?php else: ?>

@@ -12,6 +12,7 @@ DrawPageTitle('Nespárované bankovní platby');
 <?php
 
 require_once "./common_user.inc.php";
+require_once "./ct_renderer_bank_orphans.inc.php";
 
 $date_from = isset($_POST['date_from']) ? $_POST['date_from'] : date('Y-m-d', strtotime('-30 day'));
 $date_to = isset($_POST['date_to']) ? $_POST['date_to'] : date('Y-m-d');
@@ -37,37 +38,14 @@ $query = "SELECT id, created_at, amount, currency, variable_symbol, constant_sym
 
 @$vysledek=query_db($query);
 
-$i=1;
 if ($vysledek != FALSE && mysqli_num_rows($vysledek) > 0)
 {
-	$data_tbl = new html_table_mc();
-	$col = 0;
-	$data_tbl->set_header_col($col++,'Poř.č.',ALIGN_CENTER);
-	$data_tbl->set_header_col($col++,'Datum',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Částka',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Měna',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'VS',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Zpráva',ALIGN_LEFT);
-	$data_tbl->set_header_col($col++,'Možnosti',ALIGN_CENTER);
+	$zaznamy = mysqli_fetch_all($vysledek, MYSQLI_ASSOC);
 
-	echo $data_tbl->get_css()."\n";
-	echo $data_tbl->get_header()."\n";
-	echo $data_tbl->get_header_row()."\n";
+	$tbl_renderer = BankOrphanRendererFactory::createTable();
+	$tbl_renderer->addColumns('poradi', 'created_at', 'amount', 'currency', 'variable_symbol', 'originator_message', 'moznosti');
 
-	while ($zaznam=mysqli_fetch_array($vysledek))
-	{
-		$row = array();
-		$row[] = $i++;
-		$row[] = date('d.m.Y H:i:s', strtotime($zaznam['created_at']));
-		$row[] = $zaznam['amount'];
-		$row[] = $zaznam['currency'];
-		$row[] = $zaznam['variable_symbol'];
-		$row[] = $zaznam['originator_message'];
-		$row[] = '<A HREF="javascript:open_win(\'./fin_bank_orphan_assign.php?tx_id='.$zaznam['id'].'\',\'\')">Přiřadit</A>';
-		
-		echo $data_tbl->get_new_row_arr($row)."\n";
-	}
-	echo $data_tbl->get_footer()."\n";
+	echo $tbl_renderer->render(new html_table_mc(), $zaznamy);
 } else {
 	echo "Nebyly nalezeny žádné nespárované platby v tomto období.";
 }

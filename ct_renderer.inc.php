@@ -54,10 +54,55 @@ class DefaultRenderer implements IColumnContentRenderer {
 
 // plain field renderer. Display direct value.
 class FieldRenderer implements IColumnContentRenderer {
-    public function __construct(private string $field) {}
+    public function __construct(protected string $field) {}
 
     public function render(RowData $row, array $options = []): string {
         return htmlspecialchars((string)($row->rec[$this->field] ?? ''));
+    }
+}
+
+class DateFieldRenderer extends FieldRenderer {
+    public function render(RowData $row, array $options = []): string {
+        $value = $row->rec[$this->field] ?? '';
+        if ($value === '' || $value === null || $value === 0 || $value === '0') {
+            return '';
+        }
+
+        if (is_numeric($value)) {
+            return Date2String((int)$value);
+        }
+
+        $value = (string)$value;
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $value) === 1) {
+            return SQLDate2String($value);
+        }
+
+        $timestamp = strtotime($value);
+        if ($timestamp === false) {
+            return htmlspecialchars($value);
+        }
+
+        return date('j.n.Y', $timestamp);
+    }
+}
+
+class DateTimeFieldRenderer extends FieldRenderer {
+    public function __construct(string $field, private string $format = 'd.m.Y H:i:s') {
+        parent::__construct($field);
+    }
+
+    public function render(RowData $row, array $options = []): string {
+        $value = (string)($row->rec[$this->field] ?? '');
+        if ($value === '') {
+            return '';
+        }
+
+        $timestamp = strtotime($value);
+        if ($timestamp === false) {
+            return htmlspecialchars($value);
+        }
+
+        return date($this->format, $timestamp);
     }
 }
 
