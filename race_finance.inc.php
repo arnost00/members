@@ -32,11 +32,11 @@ $zaznam_z = mysqli_fetch_array($vysledek_z);
 $zebricek = ( $zaznam_z['zebricek'] ?? 0 );
 
 //payement rules ordered for iteration default last, exact term first
-$pay = [];
+$pay = ['rule' => []];
 $sql = 'SELECT * FROM '.TBL_PAYRULES." WHERE (`typ`='" . $zaznam_z['typ'] .
  "' OR `typ` is null ) and ( `typ0`='" . $zaznam_z['typ0'] . "' or `typ0` is null)" .
 " ORDER BY finance_type DESC"; // nulls last
- @$vysledek_pay=query_db($sql);
+@$vysledek_pay=query_db($sql);
 
 if ($vysledek_pay && $vysledek_pay->num_rows > 0) {
     while ($row = $vysledek_pay->fetch_assoc()) {
