@@ -63,7 +63,7 @@ if (!empty($ext_id)) {
 
 if ($raceInfo === null) {
     // default
-    $raceInfo = new RaceInfo([]);
+    $raceInfo = new RaceDTO([]);
 }
 
 $type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
@@ -278,6 +278,7 @@ if($type == 1)
 </TR>
 </TABLE>
 <input type="hidden" id="kategorie" name="kategorie" value="<? echo ($raceInfo->kategorie); ?>">
+<input type="hidden" name="oris_entry_start" value="<?= htmlspecialchars($raceInfo->oris_entry_start ?? '') ?>">
 </FORM>
 
 <?
