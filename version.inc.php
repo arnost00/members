@@ -6,7 +6,7 @@ define('SYSTEM_AUTORS','Arnošt, Kenia a kolektiv autorů');
 
 function GetCodeVersion()
 {
-	return "v3.4.12.665";
+	return "v3.4.13.668";
 }
 
 function GetCopyright()
