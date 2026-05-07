@@ -58,6 +58,7 @@ if (mysqli_num_rows($vysledek) > 0)
 }
 
 $sync_errors = [];
+$sync_warns = [];
 if ($has_ext_id && count($sync_queue) > 0) {
 	global $g_oris_club_key;
 	if (!empty($g_oris_club_key)) {
@@ -66,7 +67,11 @@ if ($has_ext_id && count($sync_queue) > 0) {
 			$rowQuery = query_db("SELECT * FROM `" . TBL_ZAVXUS . "` WHERE `id` = " . (int)$sq['id']);
 			if ($rowQuery && $syncRow = mysqli_fetch_assoc($rowQuery)) {
 				$syncRes = processEntry($syncRow, $sq['action'], $service);
-				if ($syncRes !== true && $syncRes !== 'queued') {
+				if ($syncRes === 'not_open') {
+					$sync_warns[] = "Záznam " . $sq['id'] . ": Přihlašování na ORIS ještě nezačalo — čip bude odeslán, až se termín přihlášek otevře.";
+				} elseif ($syncRes === 'queued') {
+					$sync_warns[] = "Záznam " . $sq['id'] . ": Synchronizace s ORIS se nezdařila (síťová chyba) — zkuste to prosím znovu.";
+				} elseif ($syncRes !== true && $syncRes !== null) {
 					$sync_errors[] = "Záznam " . $sq['id'] . ": " . getOrisSyncError($sq['id']);
 				}
 			}
@@ -79,6 +84,9 @@ if ($has_ext_id && count($sync_queue) > 0) {
 <?php
 if (!empty($sync_errors)) {
 	echo "alert('Chyba při synchronizaci s ORIS:\\n" . addslashes(implode("\\n", $sync_errors)) . "');\n";
+}
+if (!empty($sync_warns)) {
+	echo "alert('Upozornění ze synchronizace s ORIS:\\n" . addslashes(implode("\\n", $sync_warns)) . "');\n";
 }
 ?>
 	window.opener.focus();

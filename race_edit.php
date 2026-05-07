@@ -127,11 +127,11 @@ if ( !empty ( $ext_id ) && $connector!== null ) {
     // Get race info by race ID
     $raceInfo = $connector->getRaceInfo($ext_id);
     if ( $raceInfo == null ) {
-		$raceInfo = new RaceInfo([]);
+		$raceInfo = new RaceDTO([]);
 		$ext_id_info = " \u{26A0} neplatné ID závodu";
 	}
 } else {
-	$raceInfo = new RaceInfo([]);
+	$raceInfo = new RaceDTO([]);
 }
 
 if($zaznam['vicedenni'])
@@ -374,11 +374,6 @@ if ($g_enable_race_capacity)
 	<TD colspan="3"></TD>
 </TR>
 </TABLE>
-<?
-if ($raceInfo->oris_entry_start !== null) {
-	echo '<input type="hidden" name="oris_entry_start" value="'.htmlspecialchars($raceInfo->oris_entry_start).'">';
-}
-?>
 </FORM>
 <?
 echo(insertDocuOnLoad());

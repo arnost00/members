@@ -10,6 +10,7 @@ require_once ("./common_race.inc.php");
 require_once ("./url.inc.php");
 require_once ("./ctable.inc.php");
 require_once ("./connectors.php");
+require_once ("./lib/oris_sync.inc.php");
 
 if (!IsLoggedRegistrator())
 {
@@ -28,7 +29,7 @@ function mapRaceTypeToDbEnum($typeValue, array $raceTypes): string
 	return (string)$typeValue;
 }
 
-function createRaceUpdateMap(RaceInfo $raceInfo, array $raceRow, array $raceTypes): array
+function createRaceUpdateMap(RaceDTO $raceInfo, array $raceRow, array $raceTypes): array
 {
 	$datum = (int)$raceInfo->datum;
 	$vicedenni = ($raceInfo->vicedenni == 1) ? 1 : 0;
@@ -87,6 +88,7 @@ function createRaceUpdateMap(RaceInfo $raceInfo, array $raceRow, array $raceType
 	$update['kategorie'] = (string)$raceInfo->kategorie;
 	$update['vicedenni'] = $vicedenni;
 	$update['cancelled'] = ($raceInfo->cancelled === null) ? (int)$raceRow['cancelled'] : (int)$raceInfo->cancelled;
+	$update['oris_entry_start'] = $raceInfo->oris_entry_start;
 	$update['modify_flag'] = $modify_flag;
 
 	return $update;
@@ -130,6 +132,7 @@ function getChangedLabels(array $changedUpdates): array
 		'kategorie' => 'kategorie',
 		'vicedenni' => 'vícedenní',
 		'cancelled' => 'zrušení',
+		'oris_entry_start' => 'zahájení přihlášek ORIS',
 		'modify_flag' => 'příznak změny'
 	];
 	$changedLabels = [];
@@ -143,7 +146,7 @@ function getChangedLabels(array $changedUpdates): array
 
 function fetchRaceRow(int $raceId)
 {
-	$sql = "SELECT id, ext_id, datum, datum2, nazev, misto, typ0, typ, zebricek, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, etap, oddil, kategorie, vicedenni, cancelled, modify_flag"
+	$sql = "SELECT id, ext_id, datum, datum2, nazev, misto, typ0, typ, zebricek, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, etap, oddil, kategorie, vicedenni, cancelled, oris_entry_start, modify_flag"
 		." FROM ".TBL_RACE." WHERE id=? LIMIT 1";
 	$stmt = db_prepare($sql);
 	if ($stmt === false)
@@ -275,8 +278,34 @@ else {
 			continue;
 		}
 
+		$syncNote = '';
+		if (array_key_exists('oris_entry_start', $changedUpdates)) {
+			$newEntryStart = $changedUpdates['oris_entry_start'];
+			$entryStartOpen = empty($newEntryStart) || strtotime($newEntryStart) <= time();
+			if ($entryStartOpen) {
+				global $g_oris_club_key;
+				if (!empty($g_oris_club_key)) {
+					$service = new OrisIntegrationService($g_oris_club_key);
+					$pendingQuery = query_db("SELECT * FROM `" . TBL_ZAVXUS . "` WHERE `id_zavod` = " . (int)$race_id . " AND `sync_status` = 'PENDING_CREATE'");
+					$syncedCount = 0;
+					$failedCount = 0;
+					while ($pendingRow = mysqli_fetch_assoc($pendingQuery)) {
+						$res = processEntry($pendingRow, 'create', $service);
+						if ($res === true) {
+							$syncedCount++;
+						} elseif ($res !== null) {
+							$failedCount++;
+						}
+					}
+					if ($syncedCount > 0 || $failedCount > 0) {
+						$syncNote = '; sync přihlášek: ' . $syncedCount . ' OK' . ($failedCount > 0 ? ', ' . $failedCount . ' chyb' : '');
+					}
+				}
+			}
+		}
+
 		$updated_count++;
-		echo $data_tbl->get_new_row_arr([ $raceRow['ext_id'], Date2String($raceRow['datum']), $raceRow['nazev'], $raceRow['oddil'], 'Aktualizováno', implode(', ', getChangedLabels($changedUpdates)),
+		echo $data_tbl->get_new_row_arr([ $raceRow['ext_id'], Date2String($raceRow['datum']), $raceRow['nazev'], $raceRow['oddil'], 'Aktualizováno', implode(', ', getChangedLabels($changedUpdates)) . $syncNote,
 			  '<A HREF="javascript:open_win(\'./race_edit.php?id='.$raceRow['id'].'&refresh_parent=0\',\'\')">Edit</A>'])."\n";
 	}
 }

@@ -35,6 +35,7 @@ if (!$entry_lock)
 	$zaznam_zx = mysqli_fetch_array($vysledek_zx);
 
 	$sync_error_msg = null;
+	$sync_warn_msg = null;
 	if ($zaznam_zx) {
 		$zx_id = $zaznam_zx['id'];
 		$sync_status = $zaznam_zx['sync_status'];
@@ -48,8 +49,13 @@ if (!$entry_lock)
 					$rowQuery = query_db("SELECT * FROM `" . TBL_ZAVXUS . "` WHERE `id` = '$zx_id'");
 					if ($rowQuery && $syncRow = mysqli_fetch_assoc($rowQuery)) {
 						$syncRes = processEntry($syncRow, 'delete', $service);
-						if ($syncRes === true || $syncRes === 'queued') {
+						if ($syncRes === true || $syncRes === 'queued' || $syncRes === 'not_open') {
 							query_db("UPDATE ".TBL_RACE." SET prihlasenych = GREATEST(0, prihlasenych - 1) WHERE id = '$id_zav'");
+							if ($syncRes === 'queued') {
+								$sync_warn_msg = 'Přihláška odstraněna. Zrušení v ORIS se nezdařilo (síťová chyba) — zkuste to prosím znovu.';
+							} elseif ($syncRes === 'not_open') {
+								$sync_warn_msg = 'Přihláška odstraněna. Zrušení v ORIS proběhne, až se otevře přihlašovací termín.';
+							}
 						} else {
 							$sync_error_msg = getOrisSyncError($zx_id);
 						}
@@ -70,6 +76,8 @@ if (!$entry_lock)
 <!--
 <?php if (!empty($sync_error_msg)) { ?>
 	alert("Chyba při synchronizaci s ORIS:\n<?php echo addslashes($sync_error_msg); ?>");
+<?php } elseif (!empty($sync_warn_msg)) { ?>
+	alert("<?php echo addslashes($sync_warn_msg); ?>");
 <?php } ?>
 	window.opener.location.reload();
 

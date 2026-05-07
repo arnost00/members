@@ -112,7 +112,6 @@ else
 	$kapacita= (IsSet($kapacita) && is_numeric($kapacita)) ? (int)$kapacita: 0;
 	$oris_entry_start_val = (!empty($oris_entry_start)) ? "'".correct_sql_string($oris_entry_start)."'" : "NULL";
 
-	
 	$result=query_db("INSERT INTO ".TBL_RACE." (ext_id, datum, datum2, nazev, misto, typ0, typ, zebricek, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, etap, poznamka, vicedenni, oddil, modify_flag, transport, ubytovani, kapacita, kategorie, oris_entry_start, vedouci, poslano) VALUES ( '$ext_id', '$datum', '$datum2', '$nazev', '$misto', '$typ0', '$typ', '$zebricek2', '$ranking', '$odkaz', '$prihlasky', '$prihlasky1', '$prihlasky2', '$prihlasky3', '$prihlasky4', '$prihlasky5', '$etap', '$poznamka', '$vicedenni', '$oddil', '$modify_flag', '$transport', '$accommodation', $kapacita,'$kategorie', $oris_entry_start_val, 0, 0)")
 		or die("Chyba při provádění dotazu do databáze.");
 	if ($result == FALSE)

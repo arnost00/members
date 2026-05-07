@@ -112,6 +112,7 @@ if ($kat != '')
 			}
 
 			$sync_error_msg = null;
+			$sync_warn_msg = null;
 			if ($has_ext_id && $inserted_or_updated_id > 0 && $sync_action !== '') {
 				global $g_oris_club_key;
 				if (!empty($g_oris_club_key)) {
@@ -119,7 +120,11 @@ if ($kat != '')
 					$rowQuery = query_db("SELECT * FROM `" . TBL_ZAVXUS . "` WHERE `id` = " . (int)$inserted_or_updated_id);
 					if ($rowQuery && $syncRow = mysqli_fetch_assoc($rowQuery)) {
 						$syncRes = processEntry($syncRow, $sync_action, $service);
-						if ($syncRes !== true && $syncRes !== 'queued') {
+						if ($syncRes === 'not_open') {
+							$sync_warn_msg = 'Přihláška uložena. Přihlašování na ORIS ještě nezačalo — odešlete ji znovu, až se termín přihlášek otevře.';
+						} elseif ($syncRes === 'queued') {
+							$sync_warn_msg = 'Přihláška uložena. Synchronizace s ORIS se nezdařila (síťová chyba) — zkuste to prosím znovu.';
+						} elseif ($syncRes !== true && $syncRes !== null) {
 							$sync_error_msg = getOrisSyncError($inserted_or_updated_id);
 							// Rollback changes
 							if ($is_new_insert) {
@@ -134,7 +139,7 @@ if ($kat != '')
 								$prev_sedadel = (!isset($previous_state['sedadel']) || $previous_state['sedadel'] === null) ? 'null' : (int)$previous_state['sedadel'];
 								$prev_ubytovani = (!isset($previous_state['ubytovani']) || $previous_state['ubytovani'] === null) ? 'null' : (int)$previous_state['ubytovani'];
 								$prev_sync_status = correct_sql_string($previous_state['sync_status']);
-								
+
 								query_db("UPDATE ".TBL_ZAVXUS." SET kat='$prev_kat', pozn='$prev_pozn', pozn_in='$prev_pozn_in', termin='$prev_termin', transport=$prev_transport, sedadel=$prev_sedadel, ubytovani=$prev_ubytovani, sync_status='$prev_sync_status' WHERE id='$inserted_or_updated_id'");
 							}
 						}
@@ -145,23 +150,24 @@ if ($kat != '')
 	}
 }
 ?>
-<?php if (!empty($sync_error_msg)) { 
-	$return_url = $g_baseadr.'us_race_regon.php?id_zav='.$id_zav.'&id_us='.$id_us;
-?>
+<?php
+$return_url = $g_baseadr.'us_race_regon.php?id_zav='.$id_zav.'&id_us='.$id_us;
+if (!empty($sync_error_msg)) { ?>
 	<div style="color: red; font-weight: bold; padding: 20px; border: 1px solid red; margin: 20px; font-family: sans-serif;">
 		Chyba při synchronizaci s ORIS:<br><br>
 		<?php echo htmlspecialchars($sync_error_msg); ?>
 		<br><br>
 		<a href="<?php echo htmlspecialchars($return_url); ?>">Zpět na přehled</a>
 	</div>
-	<SCRIPT LANGUAGE="JavaScript">
-		window.opener.location.reload();
-	</SCRIPT>
-<?php } else { 
-	$return_url = $g_baseadr.'us_race_regon.php?id_zav='.$id_zav.'&id_us='.$id_us;
+	<SCRIPT LANGUAGE="JavaScript">window.opener.location.reload();</SCRIPT>
+<?php } elseif (!empty($sync_warn_msg)) { ?>
+	<div style="color: #7a4f00; background: #fff3cd; padding: 20px; border: 1px solid #ffc107; margin: 20px; font-family: sans-serif;">
+		<?php echo htmlspecialchars($sync_warn_msg); ?>
+		<br><br>
+		<a href="<?php echo htmlspecialchars($return_url); ?>">Zpět na přehled</a>
+	</div>
+	<SCRIPT LANGUAGE="JavaScript">window.opener.location.reload();</SCRIPT>
+<?php } else {
 	header("Location: $return_url");
 	exit;
 } ?>
-<SCRIPT LANGUAGE="JavaScript">
-	window.opener.location.reload();
-</SCRIPT>

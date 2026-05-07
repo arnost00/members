@@ -159,6 +159,7 @@ while ($zaznamZ=mysqli_fetch_array($vysledek))
 }
 
 $sync_errors = [];
+$sync_warns = [];
 if ($has_ext_id && count($sync_queue) > 0) {
 	global $g_oris_club_key, $g_shortcut;
 	if (!empty($g_oris_club_key)) {
@@ -174,8 +175,13 @@ if ($has_ext_id && count($sync_queue) > 0) {
 
 				if ($sq['action'] === 'delete') {
 					$syncRes = processEntry($syncRow, 'delete', $service);
-					if ($syncRes === true || $syncRes === 'queued') {
+					if ($syncRes === true || $syncRes === 'queued' || $syncRes === 'not_open') {
 						query_db("UPDATE ".TBL_RACE." SET prihlasenych = GREATEST(0, prihlasenych - 1) WHERE id = '$id'");
+						if ($syncRes === 'queued') {
+							$sync_warns[] = $displayName . ": Zrušení v ORIS se nezdařilo (síťová chyba) — zkuste to prosím znovu.";
+						} elseif ($syncRes === 'not_open') {
+							$sync_warns[] = $displayName . ": Zrušení v ORIS proběhne, až se otevře přihlašovací termín.";
+						}
 					} else {
 						$sync_errors[] = $displayName . ": " . getOrisSyncError($sq['id']);
 						if (isset($sq['previous_state'])) {
@@ -185,7 +191,11 @@ if ($has_ext_id && count($sync_queue) > 0) {
 					}
 				} else {
 					$syncRes = processEntry($syncRow, $sq['action'], $service);
-					if ($syncRes !== true && $syncRes !== 'queued') {
+					if ($syncRes === 'not_open') {
+						$sync_warns[] = $displayName . ": Přihláška uložena. Přihlašování na ORIS ještě nezačalo — odešlete ji znovu, až se termín přihlášek otevře.";
+					} elseif ($syncRes === 'queued') {
+						$sync_warns[] = $displayName . ": Přihláška uložena. Synchronizace s ORIS se nezdařila (síťová chyba) — zkuste to prosím znovu.";
+					} elseif ($syncRes !== true && $syncRes !== null) {
 						$sync_errors[] = $displayName . ": " . getOrisSyncError($sq['id']);
 						if (!empty($sq['is_new_insert'])) {
 							query_db("DELETE FROM ".TBL_ZAVXUS." WHERE id = '{$sq['id']}'");
@@ -199,7 +209,7 @@ if ($has_ext_id && count($sync_queue) > 0) {
 							$prev_sedadel = (!isset($sq['previous_state']['sedadel']) || $sq['previous_state']['sedadel'] === null) ? 'null' : (int)$sq['previous_state']['sedadel'];
 							$prev_ubytovani = (!isset($sq['previous_state']['ubytovani']) || $sq['previous_state']['ubytovani'] === null) ? 'null' : (int)$sq['previous_state']['ubytovani'];
 							$prev_sync_status = correct_sql_string($sq['previous_state']['sync_status']);
-							
+
 							query_db("UPDATE ".TBL_ZAVXUS." SET kat='$prev_kat', pozn='$prev_pozn', pozn_in='$prev_pozn_in', termin='$prev_termin', transport=$prev_transport, sedadel=$prev_sedadel, ubytovani=$prev_ubytovani, sync_status='$prev_sync_status' WHERE id='{$sq['id']}'");
 						}
 					}
@@ -210,18 +220,25 @@ if ($has_ext_id && count($sync_queue) > 0) {
 }
 
 ?>
-<?php 
-if (!empty($sync_errors)) { 
-	$return_url = ($gr_id != 0) ? $g_baseadr.'race_regs_all.php?gr_id='.$gr_id.'&id='.$id : $g_baseadr.'race_regs_all.php?id='.$id;
-?>
+<?php
+$return_url = ($gr_id != 0) ? $g_baseadr.'race_regs_all.php?gr_id='.$gr_id.'&id='.$id : $g_baseadr.'race_regs_all.php?id='.$id;
+if (!empty($sync_errors)) { ?>
 	<div style="color: red; font-weight: bold; padding: 20px; border: 1px solid red; margin: 20px; font-family: sans-serif;">
 		Chyby při synchronizaci s ORIS:<br><br>
 		<?php echo implode('<br>', array_map('htmlspecialchars', $sync_errors)); ?>
 		<br><br>
 		<a href="<?php echo htmlspecialchars($return_url); ?>">Zpět na přehled</a>
 	</div>
-<?php } else { 
-	$return_url = ($gr_id != 0) ? $g_baseadr.'race_regs_all.php?gr_id='.$gr_id.'&id='.$id : $g_baseadr.'race_regs_all.php?id='.$id;
+<?php }
+if (!empty($sync_warns)) { ?>
+	<div style="color: #7a4f00; background: #fff3cd; padding: 20px; border: 1px solid #ffc107; margin: 20px; font-family: sans-serif;">
+		Upozornění ze synchronizace s ORIS:<br><br>
+		<?php echo implode('<br>', array_map('htmlspecialchars', $sync_warns)); ?>
+		<br><br>
+		<a href="<?php echo htmlspecialchars($return_url); ?>">Zpět na přehled</a>
+	</div>
+<?php }
+if (empty($sync_errors) && empty($sync_warns)) {
 	header("Location: $return_url");
 	exit;
 } ?>

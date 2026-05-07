@@ -204,7 +204,7 @@ class OrisCZConnector implements ConnectorInterface {
 				'kategorie' => implode(';', array_keys($classFees)),
 				'startovne' => $classFees,
 				'cancelled' => (!empty($raceData['Cancelled']) || !empty($raceData['Canceled']) || !empty($raceData['cancelled']) || !empty($raceData['canceled'])) ? 1 : 0,
-				'oris_entry_start' => !empty($raceData['EntryStart']) ? $raceData['EntryStart'] : null
+				'oris_entry_start' => !empty($raceData['EntryStart']) ? $raceData['EntryStart'] : null,
 			]);
 		} catch (OrisException $e) {
 			return null;

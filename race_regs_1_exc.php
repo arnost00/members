@@ -170,8 +170,13 @@ if($termin != 0)
 			if ($rowQuery && $syncRow = mysqli_fetch_assoc($rowQuery)) {
 				if ($sync_action === 'delete') {
 					$syncRes = processEntry($syncRow, 'delete', $service);
-					if ($syncRes === true || $syncRes === 'queued') {
+					if ($syncRes === true || $syncRes === 'queued' || $syncRes === 'not_open') {
 						query_db("UPDATE ".TBL_RACE." SET prihlasenych = GREATEST(0, prihlasenych - 1) WHERE id = '$id'");
+						if ($syncRes === 'queued') {
+							$sync_warn = 'Přihláška odstraněna. Zrušení v ORIS se nezdařilo (síťová chyba) — zkuste to prosím znovu.';
+						} elseif ($syncRes === 'not_open') {
+							$sync_warn = 'Přihláška odstraněna. Zrušení v ORIS proběhne, až se otevře přihlašovací termín.';
+						}
 					} else {
 						$sync_error = getOrisSyncError($inserted_or_updated_id);
 						// Rollback delete to original status if delete failed
@@ -182,7 +187,11 @@ if($termin != 0)
 					}
 				} else {
 					$syncRes = processEntry($syncRow, $sync_action, $service);
-					if ($syncRes !== true && $syncRes !== 'queued') {
+					if ($syncRes === 'not_open') {
+						$sync_warn = 'Přihláška uložena. Přihlašování na ORIS ještě nezačalo — odešlete ji znovu, až se termín přihlášek otevře.';
+					} elseif ($syncRes === 'queued') {
+						$sync_warn = 'Přihláška uložena. Synchronizace s ORIS se nezdařila (síťová chyba) — zkuste to prosím znovu.';
+					} elseif ($syncRes !== true && $syncRes !== null) {
 						$sync_error = getOrisSyncError($inserted_or_updated_id);
 						// Rollback changes
 						if ($is_new_insert) {
@@ -197,7 +206,7 @@ if($termin != 0)
 							$prev_sedadel = (!isset($previous_state['sedadel']) || $previous_state['sedadel'] === null) ? 'null' : (int)$previous_state['sedadel'];
 							$prev_ubytovani = (!isset($previous_state['ubytovani']) || $previous_state['ubytovani'] === null) ? 'null' : (int)$previous_state['ubytovani'];
 							$prev_sync_status = correct_sql_string($previous_state['sync_status']);
-							
+
 							query_db("UPDATE ".TBL_ZAVXUS." SET kat='$prev_kat', pozn='$prev_pozn', pozn_in='$prev_pozn_in', termin='$prev_termin', transport=$prev_transport, sedadel=$prev_sedadel, ubytovani=$prev_ubytovani, sync_status='$prev_sync_status' WHERE id='$inserted_or_updated_id'");
 						}
 					}
@@ -213,6 +222,18 @@ if (!empty($sync_error)) {
 	<div style="color: red; font-weight: bold; padding: 20px; border: 1px solid red; margin: 20px; font-family: sans-serif;">
 		Chyba při synchronizaci s ORIS:<br><br>
 		<?php echo htmlspecialchars($sync_error); ?>
+		<br><br>
+		<a href="<?php echo htmlspecialchars($return_url); ?>">Zpět na přehled</a>
+	</div>
+<?php
+	exit;
+}
+
+if (!empty($sync_warn)) {
+	$return_url = ($gr_id != 0) ? $g_baseadr.'race_regs_1.php?gr_id='.$gr_id.'&id='.$id.'&show_ed='.$show_ed : $g_baseadr.'race_regs_1.php?id='.$id.'&show_ed='.$show_ed;
+?>
+	<div style="color: #7a4f00; background: #fff3cd; padding: 20px; border: 1px solid #ffc107; margin: 20px; font-family: sans-serif;">
+		<?php echo htmlspecialchars($sync_warn); ?>
 		<br><br>
 		<a href="<?php echo htmlspecialchars($return_url); ?>">Zpět na přehled</a>
 	</div>
