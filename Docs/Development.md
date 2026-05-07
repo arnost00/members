@@ -20,6 +20,11 @@ docker compose -p members-dev -f docker-compose.dev.yml up --build
 
 Prostředí obsahuje Git, Playwright a další nástroje.
 
+PHP debug ve Visual Studio Code:
+
+* spusť konfiguraci `Listen for PHP Xdebug` z `.vscode/launch.json`
+* Xdebug v dev image poslouchá na portu `9003` a startuje se pro každý request
+
 Konfigurační soubory, které aplikace v kontejneru používá, jsou publikované v gitu a připojené z `docker/config/dev` do `cfg` jako read-only. Upravuj proto soubory v `docker/config/dev`, ne jejich cíle v `cfg`.
 
 Dostupné služby:
@@ -27,15 +32,40 @@ Dostupné služby:
 * [members](http://127.0.0.1:10100/members)
 * [phpMyAdmin](http://127.0.0.1:10101)
 
+Bank mock pro vývoj:
+
+```bash
+docker compose -p members-dev -f docker-compose.dev.yml exec web npm run mock:bank
+```
+
+* admin UI: [http://127.0.0.1:10300/__admin](http://127.0.0.1:10300/__admin)
+* API endpoint pro PHP konektor: `http://127.0.0.1:10300/rbcz/premium/api`
+* vývojová konfigurace v `docker/config/dev/_cfg.php` už používá `RaiffeisenbankMockConnector`
+
 ## Automatické testy
 
 V kořenovém adresáři `members` spusť:
 
 ```bash
-docker compose -p members-autotest -f docker-compose.autotest.yml up -d --build
+docker compose -p members-autotest -f docker-compose.autotest.yml up -d --build --wait
 docker compose -p members-autotest -f docker-compose.autotest.yml exec web npm run test:e2e
+docker compose -p members-autotest -f docker-compose.autotest.yml exec web npm run test:e2e:bank-errors
 docker compose -p members-autotest -f docker-compose.autotest.yml down
 ```
+
+Přepínač `--wait` počká, až budou kontejnery označené jako `healthy`. V autotest stacku to znamená, že je připravená databáze, běží web a bank mock odpovídá na health endpoint, takže testy můžeš spustit hned po startu bez ruční prodlevy.
+
+Pro ruční pozorování běžící aplikace a databáze přidej override soubor `docker-compose.autotest.observe.yml`:
+
+```bash
+docker compose -p members-autotest -f docker-compose.autotest.yml -f docker-compose.autotest.observe.yml up -d --build --wait
+```
+
+Dostupné služby:
+
+* [members](http://127.0.0.1:10090/members)
+* [phpMyAdmin](http://127.0.0.1:10091)
+* [bank](http://127.0.0.1:10093/_admin)
 
 ## Minimální konfigurace
 

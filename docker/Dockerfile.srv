@@ -33,6 +33,11 @@ RUN apt-get update \
     && playwright install --with-deps chromium \
     && rm -rf /var/lib/apt/lists/*
 
+COPY entrypoint.sh /usr/local/bin/members-entrypoint.sh
+RUN chmod +x /usr/local/bin/members-entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/members-entrypoint.sh"]
+
 FROM autotest as dev
 
 # Install common VS Code Container Tools dependencies.
@@ -45,4 +50,8 @@ RUN apt-get update \
         procps \
         unzip \
         wget \
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug \
     && rm -rf /var/lib/apt/lists/*
+
+COPY xdebug.ini /usr/local/etc/php/conf.d/zz-xdebug.ini

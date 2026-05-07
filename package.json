@@ -2,12 +2,24 @@
   "name": "members-playwright-tests",
   "private": true,
   "scripts": {
+    "mock:bank:init": "tsx mocks/bank/src/server.ts --init-only",
+    "mock:bank": "tsx mocks/bank/src/server.ts",
+    "mock:bank:watch": "tsx watch mocks/bank/src/server.ts",
     "test:e2e": "playwright test",
+    "test:e2e:bank-errors": "playwright test -c playwright.bank-errors.config.js",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:ui": "playwright test --ui",
     "playwright:install": "playwright install chromium"
   },
+  "dependencies": {
+    "express": "4.21.2",
+    "mysql2": "3.15.2"
+  },
   "devDependencies": {
-    "@playwright/test": "1.59.1"
+    "@playwright/test": "1.59.1",
+    "@types/express": "5.0.3",
+    "@types/node": "24.6.0",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3"
   }
 }
