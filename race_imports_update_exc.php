@@ -285,7 +285,7 @@ else {
 			if ($entryStartOpen) {
 				global $g_oris_club_key;
 				if (!empty($g_oris_club_key)) {
-					$service = new OrisIntegrationService($g_oris_club_key);
+					$service = OrisIntegrationService::create();
 					$pendingQuery = query_db("SELECT * FROM `" . TBL_ZAVXUS . "` WHERE `id_zavod` = " . (int)$race_id . " AND `sync_status` = 'PENDING_CREATE'");
 					$syncedCount = 0;
 					$failedCount = 0;

@@ -90,13 +90,15 @@ interface ConnectorInterface {
 }
 
 class OrisCZConnector implements ConnectorInterface {
-	private $sourceUrl = 'https://oris.ceskyorientak.cz/';
+	private $sourceUrl;
 	private $apiUrl;
 	private $service;
 
 	public function __construct() {
-		$this->apiUrl = $this->sourceUrl . 'API/';
-		$this->service = new OrisIntegrationService(null);
+		global $g_oris_base_url;
+		$this->sourceUrl = $g_oris_base_url ?? 'https://oris.ceskyorientak.cz/';
+		$this->apiUrl    = $this->sourceUrl . 'API/';
+		$this->service   = new OrisIntegrationService(null, $this->apiUrl);
 	}
 
 	public function getSystemName(): string {
@@ -231,58 +233,44 @@ class OrisCZConnector implements ConnectorInterface {
 		}
 	}
 
-	// Helper method to make HTTP requests (used by getRacePayement)
-	private function makeRequest($url) {
-		$response = file_get_contents($url);
-
-		// Decode JSON response
-		return json_decode($response, true);
-	}
-
 	public function getRacePayement($raceId) : ?RacePayement {
 
 		global $g_external_is_club_id;
 
 		if ( !IsSet ($g_external_is_club_id) || $g_external_is_club_id === '' ) return null;
 
-		$url = $this->apiUrl . '?format=json&method=getEventEntries&clubid=' . $g_external_is_club_id . '&eventid=' . $raceId;
-
-		$response = $this->makeRequest($url);
 		$racePayement = null;
 
-		if ($response && $response['Status'] == "OK") {
+		try {
+			$entries = $this->service->getEventEntries($raceId, $g_external_is_club_id);
 			$racePayement = new RacePayement($raceId);
-
-			foreach ($response['Data'] as $entry) {
+			foreach ($entries as $entry) {
 				if (isset($entry['Fee'])) {
-					if (isset($entry['RegNo']) ) {
+					if (isset($entry['RegNo'])) {
 						$racePayement->addPatricipant(
 							new RaceParticipant($entry['RegNo'], $entry['ClassDesc'], $entry['Name'],
 							 $entry['RentSI'], $entry['Licence'], (int)$entry['Fee'], $entry['EntryStop']));
 					}
-					if (isset($entry['ClassDesc'])&&isset($entry['ClassDesc'])) {
+					if (isset($entry['ClassDesc'])) {
 						$racePayement->addCategory($entry['ClassDesc'], $entry['EntryStop'], (int)$entry['Fee']);
 					}
 				}
 			}
-		}
+		} catch (OrisException $e) { }
 
-		$url = $this->apiUrl . '?format=json&method=getEventServiceEntries&clubid=' . $g_external_is_club_id . '&eventid=' . $raceId;
-
-		$response = $this->makeRequest($url);
-
-		if ($response && $response['Status'] == "OK") {
-			if ( $racePayement ===  null ) $racePayement = new RacePayement($raceId);
-			foreach ($response['Data'] as $entry) {
-				if ( isset ( $entry['Service'] ) ) {
-					$racePayement->addService($entry['Service']['NameCZ'] ?? 'Name?', $entry['Service']['UnitPrice'] , $entry['Quantity'] );
+		try {
+			$serviceEntries = $this->service->getEventServiceEntries($raceId, $g_external_is_club_id);
+			if ($racePayement === null) $racePayement = new RacePayement($raceId);
+			foreach ($serviceEntries as $entry) {
+				if (isset($entry['Service'])) {
+					$racePayement->addService($entry['Service']['NameCZ'] ?? 'Name?', $entry['Service']['UnitPrice'], $entry['Quantity']);
 				} else {
-					if ( isset ( $entry['Quantity'] ) && isset ( $entry['TotalFee'] ) ) {
-						$racePayement->addService('Name?', $entry['TotalFee'] / $entry['Quantity'], $entry['Quantity'] );
+					if (isset($entry['Quantity']) && isset($entry['TotalFee'])) {
+						$racePayement->addService('Name?', $entry['TotalFee'] / $entry['Quantity'], $entry['Quantity']);
 					}
 				}
 			}
-		}
+		} catch (OrisException $e) { }
 
 		return $racePayement;
 	}

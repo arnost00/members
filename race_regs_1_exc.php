@@ -165,7 +165,7 @@ if($termin != 0)
 	if ($has_ext_id && $inserted_or_updated_id > 0 && $sync_action !== '') {
 		global $g_oris_club_key;
 		if (!empty($g_oris_club_key)) {
-			$service = new OrisIntegrationService($g_oris_club_key);
+			$service = OrisIntegrationService::create();
 			$rowQuery = query_db("SELECT * FROM `" . TBL_ZAVXUS . "` WHERE `id` = " . (int)$inserted_or_updated_id);
 			if ($rowQuery && $syncRow = mysqli_fetch_assoc($rowQuery)) {
 				if ($sync_action === 'delete') {

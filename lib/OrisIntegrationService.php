@@ -8,12 +8,20 @@ require_once __DIR__ . '/OrisExceptions.php';
 require_once __DIR__ . '/OrisDTOs.php';
 
 class OrisIntegrationService {
-    
+
     private $apiUrl = 'https://oris.ceskyorientak.cz/API/';
     private $clubKey;
-    
-    public function __construct($clubKey = null) {
+
+    public function __construct($clubKey = null, $apiUrl = null) {
         $this->clubKey = $clubKey;
+        if ($apiUrl !== null) {
+            $this->apiUrl = $apiUrl;
+        }
+    }
+
+    public static function create($apiUrl = null): self {
+        global $g_oris_club_key;
+        return new self($g_oris_club_key ?? null, $apiUrl);
     }
     
     /**
@@ -95,8 +103,16 @@ class OrisIntegrationService {
         return $this->makeRequest('getClubUsers', ['user' => $userId]);
     }
 
-    public function getEventEntries($eventId) {
-        return $this->makeRequest('getEventEntries', ['eventid' => $eventId]);
+    public function getEventEntries($eventId, $clubId = null) {
+        $params = ['eventid' => $eventId];
+        if ($clubId !== null) { $params['clubid'] = $clubId; }
+        return $this->makeRequest('getEventEntries', $params);
+    }
+
+    public function getEventServiceEntries($eventId, $clubId = null) {
+        $params = ['eventid' => $eventId];
+        if ($clubId !== null) { $params['clubid'] = $clubId; }
+        return $this->makeRequest('getEventServiceEntries', $params);
     }
 
     public function getEvent($eventId) {

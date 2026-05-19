@@ -128,6 +128,7 @@ $g_external_race_transport_default = 0;
 $g_external_race_accommodation_default = 0;
 
 $g_oris_club_key = 'orisClubKey';
+$g_oris_base_url = 'https://oris.ceskyorientak.cz/';
 
 // Identifikator C oblasti v informacnim systemu e.g. JM
 $g_external_is_region_C = '';
