@@ -127,7 +127,11 @@ function processEntry($row, $action, $service) {
     if (empty($classId)) {
         $errorPayload = correct_sql_string(json_encode(['status' => 'error', 'message' => "Nelze spárovat kategorii '$katName' s ORISem."]));
         $failedStatus = 'FAILED_' . strtoupper($action);
-        query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_status` = '$failedStatus', `sync_error_payload` = '$errorPayload' WHERE `id` = " . (int)$id);
+        $res = query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_status` = '$failedStatus', `sync_error_payload` = '$errorPayload' WHERE `id` = " . (int)$id);
+        if (!$res) {
+            // FAILED_* not yet in ENUM (migration pending) — save at least the error payload
+            query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_error_payload` = '$errorPayload' WHERE `id` = " . (int)$id);
+        }
         return false;
     }
 
@@ -141,7 +145,10 @@ function processEntry($row, $action, $service) {
     if (empty($clubuser)) {
         $errorPayload = correct_sql_string(json_encode(['status' => 'error', 'message' => 'Chybí ORIS ID uživatele v klubu (clubuser).']));
         $failedStatus = 'FAILED_' . strtoupper($action);
-        query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_status` = '$failedStatus', `sync_error_payload` = '$errorPayload' WHERE `id` = " . (int)$id);
+        $res = query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_status` = '$failedStatus', `sync_error_payload` = '$errorPayload' WHERE `id` = " . (int)$id);
+        if (!$res) {
+            query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_error_payload` = '$errorPayload' WHERE `id` = " . (int)$id);
+        }
         return false;
     }
 
@@ -260,7 +267,10 @@ function processEntry($row, $action, $service) {
         ];
         $errorPayload = correct_sql_string(json_encode($errorData));
         $failedStatus = 'FAILED_' . strtoupper($action);
-        query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_status` = '$failedStatus', `sync_error_payload` = '$errorPayload' WHERE `id` = " . (int)$id);
+        $res = query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_status` = '$failedStatus', `sync_error_payload` = '$errorPayload' WHERE `id` = " . (int)$id);
+        if (!$res) {
+            query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_error_payload` = '$errorPayload' WHERE `id` = " . (int)$id);
+        }
         return false;
     }
 }
@@ -270,8 +280,14 @@ function getOrisSyncError($id) {
     if ($q && $r = mysqli_fetch_assoc($q)) {
         if (!empty($r['sync_error_payload'])) {
             $err = json_decode($r['sync_error_payload'], true);
+            // Prefer a human-readable ORIS API string (e.g. "Neplatná kategorie")
             if (!empty($err['api_data']) && is_string($err['api_data'])) {
                 return $err['api_data'];
+            }
+            // Fall back to the API status (also readable, e.g. "Neplatná kategorie")
+            if (!empty($err['api_status']) && is_string($err['api_status'])
+                && $err['api_status'] !== 'Exception') {
+                return $err['api_status'];
             }
             return $err['message'] ?? 'Neznámá chyba';
         }
