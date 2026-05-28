@@ -209,6 +209,9 @@ if($g_is_system_running || IsLoggedAdmin())
 					case 4:
 						require_once "./rg_ad_races_edit.inc.php";
 						break;
+					case 5:
+						require_once "./rg_oris_sync_log.inc.php";
+						break;
 					default:
 						require_once "./news.inc.php";
 				}

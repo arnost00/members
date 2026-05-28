@@ -118,15 +118,12 @@ else
 		$transport=0;
 	if (!isset($accommodation))
 		$accommodation=0;
+	if (isset($cancelled) && $cancelled=='on')
+		$cancelled=1;
+	else
+		$cancelled=0;
 
-	$transport=(int)$transport;
-	$accommodation=(int)$accommodation;
-
-	$kapacitaSql = (!isset($kapacita) || $kapacita === '')
-		? 'NULL'
-		: (int)$kapacita;
-	
-	$cancelled = !isset($cancelled)? 0: 1;
+	$kapacitaSql = isset($kapacita) && $kapacita !== '' && is_numeric($kapacita) ? (int)$kapacita : 'NULL';
 
 	$result=query_db("UPDATE ".TBL_RACE." SET ext_id='$ext_id', datum='$datum', datum2='$datum2', nazev='$nazev', misto='$misto', typ0='$typ0', typ='$typ', zebricek='$zebricek2', ranking='$ranking', prihlasky='$prihlasky', odkaz='$odkaz', prihlasky1='$prihlasky1', prihlasky2='$prihlasky2', prihlasky3='$prihlasky3', prihlasky4='$prihlasky4', prihlasky5='$prihlasky5', etap='$etap', poznamka='$poznamka', oddil='$oddil', modify_flag='$modify_flag', transport='$transport',  ubytovani='$accommodation', kapacita=$kapacitaSql, cancelled='$cancelled' WHERE id='$id'")
 		or die("Chyba při provádění dotazu do databáze.");
