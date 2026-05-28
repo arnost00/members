@@ -5,6 +5,7 @@ const baseURL = rawBaseURL.endsWith('/') ? rawBaseURL : `${rawBaseURL}/`;
 
 module.exports = defineConfig({
   testDir: './tests/playwright',
+  testIgnore: ['**/bank-connector-errors.spec.js'],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,

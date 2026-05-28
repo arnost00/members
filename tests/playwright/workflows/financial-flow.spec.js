@@ -8,43 +8,16 @@ const {
   updateFirstMemberFinanceEntry,
 } = require('../helpers/app-actions');
 const {
+  getFinalMemberBalance,
+  getFinanceBalancesByReg,
+  sumBalances,
+} = require('../helpers/finance');
+const {
   loginAs,
 } = require('../helpers/browser');
 const {
   createWorkflowRun,
 } = require('../helpers/workflow-runtime');
-
-async function getFinalMemberBalance(page, path) {
-  if (path) {
-    await page.goto(path);
-  }
-
-  const amountText = await page.locator('tr', {
-    has: page.locator('td', { hasText: 'Konečný zůstatek' }),
-  }).first().locator('span.amount, span.amountred, span.amountgreen').textContent();
-
-  const match = String(amountText || '').trim().match(/-?\d+/);
-  return match ? Number(match[0]) : null;
-}
-
-async function getAccountantBalances(page, regs, path = './index.php?id=800&subid=1') {
-  const balances = {};
-
-  for (const [index, reg] of regs.entries()) {
-    const entry = await getFinanceDirectoryEntryByReg(page, reg, index === 0 ? { path } : {});
-    if (!entry) {
-      throw new Error(`Could not find accountant balance for reg ${reg}`);
-    }
-
-    balances[reg] = entry;
-  }
-
-  return balances;
-}
-
-function sumBalances(balances) {
-  return Object.values(balances).reduce((sum, entry) => sum + entry.amount, 0);
-}
 
 test.describe('Balance Change Workflow', () => {
   test.describe.configure({ mode: 'serial' });
@@ -139,7 +112,7 @@ test.describe('Balance Change Workflow', () => {
       expect(afterUpdateEntry.amount).toBe(afterStornoEntry.amount - 100);
       expect(afterUpdateEntry.amount).toBe(initialAccountantEntry.amount - 350);
 
-      state.baselineBalances = await getAccountantBalances(accountantPage, ['9952', '8357', '9513']);
+      state.baselineBalances = await getFinanceBalancesByReg(accountantPage, ['9952', '8357', '9513']);
     } finally {
       await memberContext.close();
       await accountantContext.close();
@@ -193,7 +166,7 @@ test.describe('Balance Change Workflow', () => {
 
       await loginAs(accountantPage, 'accountant');
 
-      const beforeStornoBalances = await getAccountantBalances(accountantPage, ['9952', '8357', '9513']);
+      const beforeStornoBalances = await getFinanceBalancesByReg(accountantPage, ['9952', '8357', '9513']);
 
       expect(sumBalances(beforeStornoBalances)).toBe(sumBalances(state.baselineBalances));
       expect(beforeStornoBalances['9952'].amount).toBe(state.baselineBalances['9952'].amount - 200);
@@ -204,7 +177,7 @@ test.describe('Balance Change Workflow', () => {
         note: notes.storno,
       });
 
-      const afterStornoBalances = await getAccountantBalances(accountantPage, ['9952', '8357', '9513']);
+      const afterStornoBalances = await getFinanceBalancesByReg(accountantPage, ['9952', '8357', '9513']);
 
       expect(afterStornoBalances['9952'].amount).toBe(beforeStornoBalances['9952'].amount + 50);
       expect(afterStornoBalances['8357'].amount).toBe(beforeStornoBalances['8357'].amount);
@@ -227,7 +200,7 @@ test.describe('Balance Change Workflow', () => {
     try {
       await loginAs(smallManagerPage, 'smallManager');
 
-      const beforeBalances = await getAccountantBalances(smallManagerPage, ['8357', '9952'], './index.php?id=600&subid=10');
+      const beforeBalances = await getFinanceBalancesByReg(smallManagerPage, ['8357', '9952'], './index.php?id=600&subid=10');
 
       const sourceEntry = beforeBalances['8357'];
       const targetEntry = beforeBalances['9952'];
@@ -243,7 +216,7 @@ test.describe('Balance Change Workflow', () => {
       const sourceFinalBalance = await getFinalMemberBalance(smallManagerPage, sourceEntry.overviewPath);
       expect(sourceFinalBalance).toBe(sourceEntry.amount - 100);
 
-      const afterBalances = await getAccountantBalances(smallManagerPage, ['8357', '9952'], './index.php?id=600&subid=10');
+      const afterBalances = await getFinanceBalancesByReg(smallManagerPage, ['8357', '9952'], './index.php?id=600&subid=10');
 
       expect(afterBalances['8357'].amount).toBe(sourceEntry.amount - 100);
       expect(afterBalances['9952'].amount).toBe(targetEntry.amount + 100);

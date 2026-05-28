@@ -10,23 +10,16 @@ These files are not part of the PHP runtime and must not be deployed to the prod
    ```bash
    npm install
    ```
-3. Run the login smoke test:
+3. Run all regular tests:
    ```bash
-   npm run test:e2e -- tests/playwright/login.spec.js
+   npm run test:e2e
    ```
-4. Run the reusable multi-user workflow:
+4. Run the manual-only bank connector error suite:
    ```bash
-   npm run test:e2e -- tests/playwright/workflows/multiuser-race-flow.spec.js
+   npm run test:e2e:bank-errors
    ```
-5. Run the ORIS local race workflow:
-   ```bash
-   npm run test:e2e -- tests/playwright/workflows/oris-local-race-flow.spec.js
-   ```
-6. Run the ORIS public multistage race workflow:
-   ```bash
-   npm run test:e2e -- tests/playwright/workflows/oris-public-multistage-race-flow.spec.js
-   ```
-7. Write new specs using shared constants instead of hardcoded usernames:
+   This suite is intentionally excluded from the default `npm run test:e2e` run because it toggles global bank mock failure modes and can interfere with other finance workflows.
+5. Write new specs using shared constants instead of hardcoded usernames:
    ```js
    const { TEST_USERS } = require('./constants/users');
    const user = TEST_USERS.member;
@@ -51,3 +44,6 @@ These files are not part of the PHP runtime and must not be deployed to the prod
 - Prefer importing `TEST_USERS` in specs instead of hardcoding seeded usernames
 - Reusable workflow helpers live under `tests/playwright/helpers/`
 - Shared multi-step workflow specs can live under `tests/playwright/workflows/`
+- Manual-only suites can use a dedicated Playwright config when they must stay out of the default parallel run
+  - Bank connector error checks: `npm run test:e2e:bank-errors`
+  - Config: `playwright.bank-errors.config.js`

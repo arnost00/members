@@ -5,17 +5,34 @@ services:
       dockerfile: Dockerfile.srv
       target: autotest
     working_dir: /var/www/html/members
-    ports:
-      - "10090:10100"    #this line maps your pc port to the container port
     depends_on:
       db:
         condition: service_healthy    # wait until the autotest database import is complete
+    environment:
+      BANK_MOCK_DB_HOST: db
+      BANK_MOCK_DB_PORT: 3306
+      BANK_MOCK_DB_USER: root
+      BANK_MOCK_DB_PASSWORD: lkj234@sf!--+KLM
+      BANK_MOCK_DB_NAME: rb_mock
+      BANK_MOCK_PORT: 10300
+      BANK_MOCK_START: auto
     volumes:
       - ./:/var/www/html/members    #this line maps the content of ./html in your pc to the /var/www/html of the container
+      - ./logs/autotest/:/var/www/html/members/logs
       # override configuration, modifiable in original place only
       - ./docker/config/autotest/_cfg.php:/var/www/html/members/cfg/_cfg.php:ro
       - ./docker/config/autotest/_globals.php:/var/www/html/members/cfg/_globals.php:ro
       - ./docker/config/autotest/_tables.php:/var/www/html/members/cfg/_tables.php:ro
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "node -e \"const http=require('http');const urls=['http://127.0.0.1:10100/members/','http://127.0.0.1:10300/health'];let pending=urls.length;let done=false;const finish=(code)=>{if(!done){done=true;process.exit(code);}};const timer=setTimeout(()=>finish(1),3000);for(const url of urls){http.get(url,res=>{res.resume();if(res.statusCode>=200&&res.statusCode<500){if(--pending===0){clearTimeout(timer);finish(0);}}else{clearTimeout(timer);finish(1);}}).on('error',()=>{clearTimeout(timer);finish(1);});}\""
+        ]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
   db:
     image: mariadb:10.11
     environment:
@@ -32,13 +49,3 @@ services:
     volumes:
       # initial database content
       - ./docker/db_init/d235220_members_latest.sql:/docker-entrypoint-initdb.d/d235220_members.sql
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    profiles:
-      - tools
-    ports:
-      - "10091:80"    #this line maps your pc port to the container port
-    depends_on:
-      - db   #this line links this container to the db container
-    environment:
-      PMA_HOST: db
