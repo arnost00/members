@@ -46,6 +46,7 @@ ENTRYPOINT ["/usr/local/bin/members-entrypoint.sh"]
 FROM autotest as dev
 
 # Install common VS Code Container Tools dependencies.
+# bubblewrap is required for codex
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         curl \
@@ -55,6 +56,7 @@ RUN apt-get update \
         procps \
         unzip \
         wget \
+        bubblewrap \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \
     && rm -rf /var/lib/apt/lists/*

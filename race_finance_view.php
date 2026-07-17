@@ -33,17 +33,16 @@ if (IsSet($payment))
 		$datum = null;
 		if ($payment == "pay")
 		{
-			$i = 1;
-			$var = "userid".$i;
-			while (isset($$var))
+			foreach ($_REQUEST as $var => $user_id)
 			{
-				$user_id = $$var;
-				$var = "paymentid".$i;
-				$payment_id = $$var;
-				$var = "am".$i;
-				$amount = $$var;
-				$var = "nt".$i;
-				$note = $$var;
+				if (!preg_match('/^userid(.+)$/', $var, $matches)) {
+					continue;
+				}
+
+				$i = $matches[1];
+				$payment_id = $_REQUEST["paymentid".$i] ?? null;
+				$amount = $_REQUEST["am".$i] ?? '';
+				$note = $_REQUEST["nt".$i] ?? '';
 
 				if ($amount != "")
 				{
@@ -57,12 +56,10 @@ if (IsSet($payment))
 
 				$var = "cat".$i;
 				if (array_key_exists($var, $_REQUEST)) {
-					$cat = $$var;
+					$cat = $_REQUEST[$var];
 					$user = new Member($user_id);
 					$user->updateCategoryOnRace($race_id, $cat);
 				}
-				$i++;
-				$var = "userid".$i;
 			}
 		}
 	} catch (Exception $e) {
@@ -92,7 +89,7 @@ require_once ("./ctable.inc.php");
 DrawPageTitle('Finance závodu');
 
 if ( isset($msg) ) {
-	echo '<div class="error">Chyba: '.htmlspecialchars($msg).'</div>';	
+	echo '<div class="error">Chyba: '.htmlspecialchars($msg).'</div>';
 }
 
 

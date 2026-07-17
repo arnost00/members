@@ -26,6 +26,11 @@ const {
 const {
   createWorkflowRun,
 } = require('../helpers/workflow-runtime');
+const {
+  expectFinanceRowValues,
+  financeRow,
+  openRaceFinancePopup,
+} = require('../helpers/race-finance');
 
 const ORIS_MOCKUP_RACE_WORKFLOW = {
   name: 'Oris Mockup Race Workflow',
@@ -289,5 +294,50 @@ test.describe(ORIS_MOCKUP_RACE_WORKFLOW.name, () => {
       String(entry.ClubUserID) === ORIS_MOCKUP_RACE_WORKFLOW.memberOrisClubUserId
       || entry.RegNo === ORIS_MOCKUP_RACE_WORKFLOW.memberRegNo
     ))).toBeUndefined();
+  });
+
+  test('accountant can create and update a payment for another racer', async ({ page }) => {
+    await loginAs(page, 'accountant');
+
+    const financePopup = await openRaceFinancePopup(page, state.race.id);
+
+    try {
+      const otherRacersForm = financePopup.locator('form', {
+        has: financePopup.locator('h3', { hasText: 'Ostatní závodníci' }),
+      });
+      const firstMemberRow = otherRacersForm.locator('tr', {
+        has: financePopup.locator('a.adr_name'),
+      }).first();
+      const memberName = (await firstMemberRow.locator('td').nth(1).innerText()).trim();
+
+      await firstMemberRow.locator('input[data-col="amount"]').fill('222');
+      await firstMemberRow.locator('input[data-col="note"]').fill('Test nová platba');
+
+      await Promise.all([
+        financePopup.waitForURL(new RegExp(`race_finance_view\\.php\\?race_id=${state.race.id}.*status=ok`)),
+        otherRacersForm.locator('input[type="submit"][value="Vytvořit nové platby"]').click(),
+      ]);
+
+      const createdPayment = financeRow(financePopup, memberName);
+      await expectFinanceRowValues(createdPayment, {
+        amount: '222',
+        note: 'Test nová platba',
+      });
+
+      await createdPayment.amount.fill('234');
+      await createdPayment.note.fill('Test změna platby');
+
+      await Promise.all([
+        financePopup.waitForURL(new RegExp(`race_finance_view\\.php\\?race_id=${state.race.id}.*status=ok`)),
+        financePopup.locator('input[type="submit"][value="Změnit platby"]').click(),
+      ]);
+
+      await expectFinanceRowValues(financeRow(financePopup, memberName), {
+        amount: '234',
+        note: 'Test změna platby',
+      });
+    } finally {
+      await financePopup.close();
+    }
   });
 });
