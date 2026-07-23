@@ -100,6 +100,78 @@ async function readFormState(page, selector = 'form') {
   });
 }
 
+async function setFormFields(page, selector, fields = {}) {
+  await page.locator(selector).evaluate((form, values) => {
+    for (const [name, rawValue] of Object.entries(values)) {
+      const elements = Array.from(form.elements).filter((element) => element.name === name);
+      const value = rawValue === undefined || rawValue === null ? '' : String(rawValue);
+
+      for (const element of elements) {
+        if (element.type === 'checkbox') {
+          element.checked = !['', '0', 'false'].includes(value.toLowerCase());
+        } else if (element.type === 'radio') {
+          element.checked = String(element.value) === value;
+        } else {
+          element.value = value;
+        }
+      }
+    }
+  }, fields);
+}
+
+async function submitFormAndHandleSyncMessage(page, options = {}) {
+  const {
+    expectedOutcome = 'overview',
+    label = 'Submit form',
+    submitSelector = 'input[type="submit"]',
+    returnUrlPattern = null,
+  } = options;
+
+  if (!['message', 'overview'].includes(expectedOutcome)) {
+    throw new Error(`Unsupported expected form outcome: ${expectedOutcome}`);
+  }
+
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+    page.locator(submitSelector).click(),
+  ]);
+
+  const result = {
+    ok: true,
+    status: 200,
+    url: page.url(),
+    text: await page.content().catch(() => ''),
+  };
+
+  const returnLink = page.getByRole('link', { name: 'Zpět na přehled' });
+  const hasReturnLink = await returnLink.isVisible({ timeout: 1000 }).catch(() => false);
+
+  if (expectedOutcome === 'message' && !hasReturnLink) {
+    throw new Error(`${label} navigated to ${result.url}, expected a sync message with Zpět na přehled`);
+  }
+
+  if (expectedOutcome === 'overview' && hasReturnLink) {
+    throw new Error(`${label} showed a sync message, expected overview navigation`);
+  }
+
+  if (hasReturnLink) {
+    await Promise.all([
+      page.waitForNavigation({
+        url: returnUrlPattern || undefined,
+        waitUntil: 'domcontentloaded',
+      }),
+      returnLink.click(),
+    ]);
+
+    const backButton = page.locator('button[onclick="javascript:close_popup();"]', { hasText: 'Zpět' }).first();
+    if (await backButton.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await backButton.click();
+    }
+  }
+
+  return ensureHtmlSubmission(result, label);
+}
+
 async function firstCheckedValue(page, selector) {
   return page.locator(selector).first().getAttribute('value');
 }
@@ -131,4 +203,6 @@ module.exports = {
   openPopup,
   postFormInSession,
   readFormState,
+  setFormFields,
+  submitFormAndHandleSyncMessage,
 };

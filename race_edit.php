@@ -127,11 +127,31 @@ if ( !empty ( $ext_id ) && $connector!== null ) {
     // Get race info by race ID
     $raceInfo = $connector->getRaceInfo($ext_id);
     if ( $raceInfo == null ) {
-		$raceInfo = new RaceInfo([]);
+		$raceInfo = new RaceDTO();
 		$ext_id_info = " \u{26A0} neplatné ID závodu";
 	}
 } else {
-	$raceInfo = new RaceInfo([]);
+	$raceInfo = new RaceDTO();
+}
+
+$entryStartValue = $zaznam['entry_start'] ?? '';
+if (empty($entryStartValue) && !empty($raceInfo->entry_start)) {
+	$entryStartValue = $raceInfo->entry_start;
+}
+
+$entryStartDisplay = '';
+if (!empty($entryStartValue)) {
+	$entryStartTimestamp = strtotime($entryStartValue);
+	$entryStartDisplay = ($entryStartTimestamp !== false) ? date('d.m.Y H:i:s', $entryStartTimestamp) : $entryStartValue;
+}
+
+$entryStartButtonHtml = '';
+if ($connector !== null && !empty($raceInfo->entry_start)) {
+	$systemEntryStartTimestamp = strtotime($raceInfo->entry_start);
+	$systemEntryStartDisplay = ($systemEntryStartTimestamp !== false) ? date('d.m.Y H:i:s', $systemEntryStartTimestamp) : $raceInfo->entry_start;
+	if ($systemEntryStartDisplay !== $entryStartDisplay) {
+		$entryStartButtonHtml = '<button type="button" onclick="document.getElementById(\'entryStart\').value=\'' . htmlspecialchars($systemEntryStartDisplay, ENT_QUOTES) . '\'">' . "\u{21D0} " . $connector->getSystemName() .' (' . htmlspecialchars($systemEntryStartDisplay, ENT_QUOTES) . ')</button>';
+	}
 }
 
 if($zaznam['vicedenni'])
@@ -363,6 +383,11 @@ if ($g_enable_race_capacity)
 	<TD width="130" align="right">5. datum přihlášek</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><INPUT TYPE="text" ID="prihlasky5" NAME="prihlasky5" SIZE=8 value="<?echo Date2String($zaznam["prihlasky5"])?>">&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+</TR>
+<TR>
+	<TD width="130" align="right">Otevření přihlášek</TD>
+	<TD width="5"></TD>
+	<TD class="DataValue"><INPUT TYPE="text" ID="entryStart" NAME="entryStart" SIZE=19 maxlength=19 value="<? echo htmlspecialchars($entryStartDisplay, ENT_QUOTES); ?>">&nbsp;&nbsp;(DD.MM.RRRR HH:MM:SS) <? echo $entryStartButtonHtml; ?></TD>
 </TR>
 <TR>
 	<TD colspan="3"></TD>

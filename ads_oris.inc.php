@@ -51,21 +51,25 @@ function startsWith( $haystack, $needle ) {
      return substr( $haystack, 0, $length ) === $needle;
 }
 
-$json = file_get_contents('https://oris.orientacnisporty.cz/API/?format=json&method=getRegistration&sport=1&year='.$ORIS_year);
-$obj = json_decode($json);
+require_once './lib/OrisIntegrationService.php';
+$service = OrisIntegrationServiceFactory::create();
+$orisWriteEnabled = $service->hasClubKey();
+$obj = $service->getRegistration(1, $ORIS_year);
 
 $arr_oris = array();
 
-foreach ($obj->Data as $key=>$value)
-{
-	$user = new User();
-	$user->create($value->UserID, $value->FirstName, $value->LastName, $value->RegNo, $value->SI, $value->ClubID);
-
-	$reg = $value->RegNo;
-	if (startsWith($reg, $g_shortcut))
+if (is_array($obj) || is_object($obj)) {
+	foreach ($obj as $key=>$value)
 	{
-		$arr_oris["user"] [$reg]= $user;
-		$arr_oris["members"][$reg] = 0;
+		$user = new User();
+		$user->create($value['UserID'], $value['FirstName'], $value['LastName'], $value['RegNo'], $value['SI'], $value['ClubID']);
+
+		$reg = $value['RegNo'];
+		if (startsWith($reg, $g_shortcut))
+		{
+			$arr_oris["user"] [$reg]= $user;
+			$arr_oris["members"][$reg] = 0;
+		}
 	}
 }
 //konec nahrani dat z orisu
@@ -138,7 +142,9 @@ else
 				$oris_user_id = $arr_oris["user"][$fullreg]->getUserId();
 				$local_si = $zaznam['si'];
 				$local_id = $zaznam['id'];
-				$oris_si .= "&nbsp;<a href=\"ads_oris_si_sync.php?oris_id=$oris_user_id&id=$local_id\" title=\"Synchronizovat SI do ORISu (nastavit na $local_si)\">[<<]</a>";
+				if ($orisWriteEnabled) {
+					$oris_si .= "&nbsp;<a href=\"ads_oris_si_sync.php?oris_id=$oris_user_id&id=$local_id\" title=\"Synchronizovat SI do ORISu (nastavit na $local_si)\">[<<]</a>";
+				}
 			}
 			$row[] = $oris_si;
 			$arr_oris["members"][$fullreg]=1;

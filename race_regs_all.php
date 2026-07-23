@@ -19,6 +19,7 @@ require_once ("./ctable.inc.php");
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 require_once ("./common_race.inc.php");
 require_once ("./common_user.inc.php");
+require_once ("./ct_renderer_race.inc.php");
 require_once ('./url.inc.php');
 require_once('./csort.inc.php');
 DrawPageTitle('Hromadná přihlášky na závody');
@@ -37,6 +38,7 @@ $sub_query = $sc->get_sql_string();
 
 @$vysledek_z=query_db("SELECT * FROM ".TBL_RACE." WHERE id=$id");
 $zaznam_z = mysqli_fetch_array($vysledek_z);
+$sync_status_column = CreateRaceSyncStatusColumn($zaznam_z);
 
 DrawPageSubTitle('Vybraný závod');
 
@@ -117,7 +119,7 @@ else
 
 $sub_query2 = (IsLoggedRegistrator() || IsLoggedManager()) ? '' : ' AND '.TBL_USER.'.chief_id = '.$usr->user_id.' OR '.TBL_USER.'.id = '.$usr->user_id;
 
-$query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, datum, kat, pozn, pozn_in, termin, entry_locked, '.TBL_ZAVXUS.'.transport, '.TBL_ZAVXUS.'.sedadel, '.TBL_ZAVXUS.'.ubytovani FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query2.$sub_query;
+$query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, datum, kat, pozn, pozn_in, termin, entry_locked, '.TBL_ZAVXUS.'.transport, '.TBL_ZAVXUS.'.sedadel, '.TBL_ZAVXUS.'.ubytovani, '.TBL_ZAVXUS.'.sync_status FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query2.$sub_query;
 
 @$vysledek=query_db($query);
 
@@ -148,6 +150,8 @@ if($is_termin_show_on)
 	$data_tbl->set_header_col_with_help($col++,'T.',ALIGN_CENTER,"Číslo termínu přihlášky");
 $data_tbl->set_header_col($col++,'Poznámka',ALIGN_CENTER);
 $data_tbl->set_header_col($col++,'Poznámka(interní)',ALIGN_CENTER);
+if($sync_status_column !== null)
+	$data_tbl->set_header_col_with_help($col++,'&#x21C4;',ALIGN_CENTER,'Synchronizace s ORIS');
 
 echo $data_tbl->get_css()."\n";
 echo $data_tbl->get_header()."\n";
@@ -158,6 +162,11 @@ $data_tbl->set_sort_col(2,$sc->get_col_content(1));
 echo $data_tbl->get_sort_row()."\n";
 
 $i=1;
+$entry_start_future = false;
+if (!empty($zaznam_z['entry_start'])) {
+	$entry_start = strtotime($zaznam_z['entry_start']);
+	$entry_start_future = ($entry_start !== false && $entry_start > time());
+}
 while ($zaznam=mysqli_fetch_array($vysledek))
 {
 	$row = array();
@@ -236,6 +245,8 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	}
 	if ($zaznam['id'] == $usr->user_id) 
 		$data_tbl->set_next_row_highlighted();
+	if($sync_status_column !== null)
+		$row[] = RenderRaceSyncStatusSymbol($zaznam['sync_status'] ?? '', $entry_start_future);
 	echo $data_tbl->get_new_row_arr($row)."\n";
 }
 

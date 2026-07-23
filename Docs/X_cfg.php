@@ -102,6 +102,9 @@ $g_external_is_club_id = '205';
 $g_external_race_transport_default = 0;
 $g_external_race_accommodation_default = 0;
 
+$g_oris_base_url = 'https://oris.ceskyorientak.cz/';
+$g_oris_club_key = '';
+
 $g_custom_entry_list_text = '';
 
 ?>

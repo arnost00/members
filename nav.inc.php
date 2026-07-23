@@ -100,6 +100,7 @@ function DrawMenuGroupHeader($name)
 		DrawMenuGroupHeader('Menu&nbsp;přihlašovatele');
 		DrawMenuItem('Přihlášky na závody',_REGISTRATOR_GROUP_ID_,1);
 		DrawMenuItem('Editace závodů',_REGISTRATOR_GROUP_ID_,4);
+		DrawMenuItem('ORIS log',_REGISTRATOR_GROUP_ID_,5);
 	}
 	if(IsLoggedManager())
 	{

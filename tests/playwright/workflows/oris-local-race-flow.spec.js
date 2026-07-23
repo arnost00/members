@@ -11,7 +11,7 @@ const {
 } = require('../constants/payment-rules');
 const {
   ensureOrisRace,
-  ensureRaceParticipants,
+  readRaceParticipants,
 } = require('../helpers/oris-race-workflow');
 const {
   expandYear,
@@ -110,21 +110,31 @@ test.describe(ORIS_LOCAL_RACE_WORKFLOW.name, () => {
     expect(state.race.club).toBeTruthy();
   });
 
-  test('registrar can ensure the configured participants on the ORIS race', async ({ page }) => {
+  test('registrar can inspect the configured participants on the ORIS race', async ({ page }) => {
     await loginAs(page, 'registrar');
 
     if (!state.race) {
       state.race = await ensureOrisRace(page, ORIS_LOCAL_RACE_WORKFLOW.orisId);
     }
 
-    state.participants = await ensureRaceParticipants(
+    state.participants = await readRaceParticipants(
       page,
       state.race.id,
       ORIS_LOCAL_RACE_WORKFLOW.participants
     );
 
-    expect(state.participants['0953']).toBeTruthy();
-    expect(state.participants['8511']).toBeTruthy();
+    for (const [reg, expectedParticipant] of Object.entries(ORIS_LOCAL_RACE_WORKFLOW.participants)) {
+      const participant = state.participants[reg];
+
+      expect(participant).toBeTruthy();
+      expect(participant.category).toBe(String(expectedParticipant.kateg));
+      expect(participant.transport).toBe(Boolean(expectedParticipant.transport));
+      expect(participant.accommodation).toBe(Boolean(expectedParticipant.ubytovani));
+
+      if (expectedParticipant.term !== undefined) {
+        expect(participant.term).toBe(String(expectedParticipant.term));
+      }
+    }
   });
 
   test('accountant can open the race wizard and inspect the expected members', async ({ page }) => {

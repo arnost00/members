@@ -1,8 +1,8 @@
 services:
   web:
     build:
-      context: ./docker
-      dockerfile: Dockerfile.srv
+      context: .
+      dockerfile: docker/Dockerfile.srv
       target: base
     ports:
       - "80:10100"    #this line maps your pc port to the container port

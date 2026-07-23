@@ -1,14 +1,14 @@
 services:
   web:
     build:
-      context: ./docker
-      dockerfile: Dockerfile.srv
+      context: .
+      dockerfile: docker/Dockerfile.srv
       target: dev
     working_dir: /var/www/html/members
     ports:
       - "10100:10100"    #this line maps your pc port to the container port
       - "10300:10300"    # bank mock server UI and API
-      - "10301:10301"    # reserved for a second mock server
+      - "10301:10301"    # ORIS mock server
     depends_on:
       - db    #this line links this container to the db container
     environment:
@@ -18,8 +18,18 @@ services:
       BANK_MOCK_DB_PASSWORD: dev4password
       BANK_MOCK_DB_NAME: rb_mock
       BANK_MOCK_PORT: 10300
+      ORIS_MOCK_DB_HOST: db
+      ORIS_MOCK_DB_PORT: 3306
+      ORIS_MOCK_DB_USER: root
+      ORIS_MOCK_DB_PASSWORD: dev4password
+      ORIS_MOCK_DB_NAME: oris_mock
+      ORIS_MOCK_PORT: 10301
+      ORIS_MOCK_DEFAULT_CLUB_ID: 205
+      ORIS_MOCK_DEFAULT_CLUB_ABBR: ZBM
     volumes:
       - ./:/var/www/html/members    #this line maps the content of ./html in your pc to the /var/www/html of the container
+      - members_node_modules:/var/www/html/members/node_modules #for using node modules from container, not host 
+      - ./logs/autotest/:/var/www/html/members/logs
       # override configuration, modifiable in original place only
       - ./docker/config/dev/_cfg.php:/var/www/html/members/cfg/_cfg.php:ro
       - ./docker/config/dev/_globals.php:/var/www/html/members/cfg/_globals.php:ro
@@ -44,3 +54,7 @@ services:
       - db    #this line links this container to the db container
     environment:
       PMA_HOST: db
+
+
+volumes:
+  members_node_modules:      #for using node modules from container, not host

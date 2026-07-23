@@ -133,7 +133,7 @@ test.describe('Balance Change Workflow', () => {
       await loginAs(memberPage, 'member');
 
       const beforeTransfersBalance = await getFinalMemberBalance(memberPage, './index.php?id=200&subid=10');
-      expect(beforeTransfersBalance).not.toBeNull();
+      expect(beforeTransfersBalance).toBeGreaterThan(0);
 
       await submitMemberTransferByReg(memberPage, '8357', {
         amount: 150,

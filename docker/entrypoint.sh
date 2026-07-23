@@ -46,8 +46,33 @@ if [ -n "${BANK_MOCK_DB_NAME:-}" ] && [ -f "package.json" ]; then
     done
 fi
 
+if [ -n "${ORIS_MOCK_DB_NAME:-}" ] && [ -f "package.json" ]; then
+
+    attempt=1
+    max_attempts=30
+
+    while [ "${attempt}" -le "${max_attempts}" ]; do
+        if npm run --silent mock:oris:init >/tmp/mock-oris-init.log 2>&1; then
+            break
+        fi
+
+        if [ "${attempt}" -eq "${max_attempts}" ]; then
+            cat /tmp/mock-oris-init.log >&2
+            echo "ORIS mock DB initialization failed after ${max_attempts} attempts." >&2
+            exit 1
+        fi
+
+        attempt=$((attempt + 1))
+        sleep 1
+    done
+fi
+
 if [ "${BANK_MOCK_START:-}" = "auto" ] && [ -f "package.json" ]; then
     npm run --silent mock:bank >logs/mock-bank.log 2>&1 &
+fi
+
+if [ "${ORIS_MOCK_START:-}" = "auto" ] && [ -f "package.json" ]; then
+    npm run --silent mock:oris >logs/mock-oris.log 2>&1 &
 fi
 
 exec apache2-foreground

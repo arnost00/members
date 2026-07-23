@@ -33,6 +33,35 @@
       }
     },
     {
+      "name": "Debug ORIS Mock Server",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "--import",
+        "tsx"
+      ],
+      "args": [
+        "mocks/oris/src/server.ts"
+      ],
+      "console": "integratedTerminal",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "env": {
+        "ORIS_MOCK_HOST": "0.0.0.0",
+        "ORIS_MOCK_PORT": "10301",
+        "ORIS_MOCK_DB_HOST": "db",
+        "ORIS_MOCK_DB_PORT": "3306",
+        "ORIS_MOCK_DB_USER": "root",
+        "ORIS_MOCK_DB_PASSWORD": "dev4password",
+        "ORIS_MOCK_DB_NAME": "oris_mock",
+        "ORIS_MOCK_DEFAULT_CLUB_ID": "205",
+        "ORIS_MOCK_DEFAULT_CLUB_ABBR": "ZBM"
+      }
+    },
+    {
       "name": "Debug Bank Mock Server (Watch)",
       "type": "node",
       "request": "launch",
@@ -57,17 +86,62 @@
       }
     },
     {
-      "name": "Start Bank Mock Server",
+      "name": "Debug ORIS Mock Server (Watch)",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "--import",
+        "tsx",
+        "--watch"
+      ],
+      "args": [
+        "mocks/oris/src/server.ts"
+      ],
+      "console": "integratedTerminal",
+      "restart": true,
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "env": {
+        "ORIS_MOCK_HOST": "0.0.0.0",
+        "ORIS_MOCK_PORT": "10301",
+        "ORIS_MOCK_DB_HOST": "db",
+        "ORIS_MOCK_DB_PORT": "3306",
+        "ORIS_MOCK_DB_USER": "root",
+        "ORIS_MOCK_DB_PASSWORD": "dev4password",
+        "ORIS_MOCK_DB_NAME": "oris_mock",
+        "ORIS_MOCK_DEFAULT_CLUB_ID": "205",
+        "ORIS_MOCK_DEFAULT_CLUB_ABBR": "ZBM"
+      }
+    },
+    {
+      "name": "Run Bank Mock Server",
       "type": "node-terminal",
       "request": "launch",
       "command": "npm run mock:bank",
       "cwd": "${workspaceFolder}"
     },
     {
-      "name": "Start Bank Mock Server (Watch)",
+      "name": "Run ORIS Mock Server",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run mock:oris",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Run Bank Mock Server (Watch)",
       "type": "node-terminal",
       "request": "launch",
       "command": "npm run mock:bank:watch",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Run ORIS Mock Server (Watch)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run mock:oris:watch",
       "cwd": "${workspaceFolder}"
     }
   ]

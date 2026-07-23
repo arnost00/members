@@ -130,6 +130,24 @@ function CreateRaceTypeNumber(&$racetype)
 	return $result;
 }
 
+function EntryStart2Sql($text)
+{
+	$text = trim((string)$text);
+	if ($text === '') {
+		return '';
+	}
+
+	$formats = ['d.m.Y H:i:s', 'j.n.Y H:i:s', 'Y-m-d H:i:s'];
+	foreach ($formats as $format) {
+		$date = DateTime::createFromFormat($format, $text);
+		if ($date !== false && $date->format($format) === $text) {
+			return $date->format('Y-m-d H:i:s');
+		}
+	}
+
+	return $text;
+}
+
 function CreateModifyFlag(&$mflags)
 {
 	global $g_modify_flag_cnt;

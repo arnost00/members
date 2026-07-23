@@ -29,11 +29,16 @@ ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 # Install Playwright CLI and Chromium for browser-based tests.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends nodejs npm ca-certificates \
-    && npm install -g playwright \
-    && playwright install --with-deps chromium \
     && rm -rf /var/lib/apt/lists/*
 
-COPY entrypoint.sh /usr/local/bin/members-entrypoint.sh
+WORKDIR /var/www/html/members
+
+COPY package.json package-lock.json ./
+
+RUN npm ci \
+    && npx playwright install --with-deps chromium webkit
+
+COPY docker/entrypoint.sh /usr/local/bin/members-entrypoint.sh
 RUN chmod +x /usr/local/bin/members-entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/members-entrypoint.sh"]
@@ -41,6 +46,7 @@ ENTRYPOINT ["/usr/local/bin/members-entrypoint.sh"]
 FROM autotest as dev
 
 # Install common VS Code Container Tools dependencies.
+# bubblewrap is required for codex
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         curl \
@@ -50,8 +56,9 @@ RUN apt-get update \
         procps \
         unzip \
         wget \
+        bubblewrap \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \
     && rm -rf /var/lib/apt/lists/*
 
-COPY xdebug.ini /usr/local/etc/php/conf.d/zz-xdebug.ini
+COPY docker/xdebug.ini /usr/local/etc/php/conf.d/zz-xdebug.ini

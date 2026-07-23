@@ -225,7 +225,7 @@ if ( !empty ( $ext_id ) && $connector!== null ) {
 		}
 	}
 } else {
-	$raceInfo = new RaceInfo(0);
+	$raceInfo = new RaceDTO();
 	$racePayement = new RacePayement(0);	
 }
 $pay['regionFlag'] = $raceInClubRegions;

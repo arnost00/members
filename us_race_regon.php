@@ -28,7 +28,7 @@ $id_us = (IsSet($id_us) && is_numeric($id_us)) ? (int)$id_us : 0;
 
 DrawPageTitle('Přihláška na závod');
 
-$query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.termin, z.id_user, z.transport, z.sedadel, z.ubytovani FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' ORDER BY z.id ASC';
+$query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.termin, z.id_user, z.transport, z.sedadel, z.ubytovani, z.sync_status FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' ORDER BY z.id ASC';
 @$vysledek=query_db($query);
 // Fetch all rows into array
 $zaznamy = $vysledek ? mysqli_fetch_all($vysledek, MYSQLI_ASSOC) : [];
@@ -36,6 +36,7 @@ $num_rows = count ($zaznamy);
 
 @$vysledek_z=query_db("SELECT * FROM ".TBL_RACE." WHERE id=$id_zav");
 $zaznam_z = mysqli_fetch_array($vysledek_z);
+$sync_status_column = CreateRaceSyncStatusColumn($zaznam_z);
 
 @$vysledek_rg=query_db("SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod=$id_zav and id_user=$id_us");
 $zaznam_rg=mysqli_fetch_array($vysledek_rg);
@@ -246,6 +247,8 @@ if($is_spol_ubyt_on)
 if($zaznam_z['prihlasky'] > 1)
 	$tbl_renderer->addColumns('termin');
 $tbl_renderer->addColumns('pozn','pozn_in');
+if($sync_status_column !== null)
+	$tbl_renderer->addColumn($sync_status_column);
 
 if ($g_enable_race_capacity && isSet ($zaznam_z['kapacita']) ) {
 	$tbl_renderer->addBreak(new LimitBreakDetector($zaznam_z['kapacita']));

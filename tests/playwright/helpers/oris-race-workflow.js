@@ -1,8 +1,8 @@
 const { expect } = require('@playwright/test');
 const {
-  ensureHtmlSubmission,
   openPopup,
-  postFormInSession,
+  setFormFields,
+  submitFormAndHandleSyncMessage,
 } = require('./browser');
 const {
   formatClubReg,
@@ -192,6 +192,7 @@ async function getRaceRegistrationRow(page, reg, options = {}) {
         transport: getCheckboxValue(row, 'transport'),
         accommodation: getCheckboxValue(row, 'ubytovani'),
         term: getInputValue(row, 'term'),
+        lastColumnText: cells[cells.length - 1].textContent.trim(),
       };
     }
 
@@ -199,15 +200,37 @@ async function getRaceRegistrationRow(page, reg, options = {}) {
   }, formatClubReg(reg));
 }
 
+function raceParticipantMap(participants) {
+  return Array.isArray(participants)
+    ? Object.assign({}, ...participants)
+    : participants;
+}
+
+async function readRaceParticipants(page, raceId, participants, options = {}) {
+  const groupId = options.groupId || 400;
+  const registrationPath = `./race_regs_all.php?gr_id=${groupId}&id=${raceId}`;
+  const participantMap = raceParticipantMap(participants);
+  const participantState = {};
+
+  await page.goto(registrationPath);
+
+  for (const reg of Object.keys(participantMap)) {
+    participantState[reg] = await getRaceRegistrationRow(page, reg);
+  }
+
+  return participantState;
+}
+
 async function ensureRaceParticipants(page, raceId, participants, options = {}) {
   const groupId = options.groupId || 400;
   const registrationPath = `./race_regs_all.php?gr_id=${groupId}&id=${raceId}`;
+  const participantMap = raceParticipantMap(participants);
 
   await page.goto(registrationPath);
 
   const postFields = {};
 
-  for (const [reg, participant] of Object.entries(participants)) {
+  for (const [reg, participant] of Object.entries(participantMap)) {
     const row = await getRaceRegistrationRow(page, reg);
 
     if (!row || !row.userId) {
@@ -232,20 +255,23 @@ async function ensureRaceParticipants(page, raceId, participants, options = {}) 
     }
   }
 
-  const result = await postFormInSession(
+  await setFormFields(page, 'form[name="form1"]', postFields);
+  await submitFormAndHandleSyncMessage(page, {
+    expectedOutcome: options.expectedOutcome || 'overview',
+    label: `Ensure race participants for race ${raceId}`,
+    submitSelector: 'input[type="submit"][value="Proveď změny"]',
+    returnUrlPattern: /race_regs_all\.php/,
+  });
+
+  const verifiedParticipants = await readRaceParticipants(
     page,
-    `./race_regs_all_exc.php?gr_id=${groupId}&id=${raceId}`,
-    postFields
+    raceId,
+    participants,
+    options
   );
 
-  ensureHtmlSubmission(result, `Ensure race participants for race ${raceId}`);
-
-  const verifiedParticipants = {};
-
-  for (const [reg, participant] of Object.entries(participants)) {
-    const row = await getRaceRegistrationRow(page, reg, {
-      path: reg === Object.keys(participants)[0] ? registrationPath : undefined,
-    });
+  for (const [reg, participant] of Object.entries(participantMap)) {
+    const row = verifiedParticipants[reg];
 
     if (!row) {
       throw new Error(`Could not reload race registration row for reg ${formatClubReg(reg)} on race ${raceId}`);
@@ -265,13 +291,41 @@ async function ensureRaceParticipants(page, raceId, participants, options = {}) 
       expect(row.term).toBe(String(participant.term));
     }
 
-    verifiedParticipants[reg] = row;
   }
 
   return verifiedParticipants;
 }
 
+async function removeRaceParticipant(page, raceId, reg, options = {}) {
+  const groupId = options.groupId || 400;
+  const registrationPath = `./race_regs_all.php?gr_id=${groupId}&id=${raceId}`;
+  const row = await getRaceRegistrationRow(page, reg, { path: registrationPath });
+
+  if (!row || !row.userId || !row.category) {
+    throw new Error(`Could not find registered race participant ${formatClubReg(reg)} on race ${raceId}`);
+  }
+
+  const fields = {
+    [`kateg[${row.userId}]`]: '',
+    [`pozn[${row.userId}]`]: '',
+    [`pozn2[${row.userId}]`]: '',
+  };
+  if (row.term !== null) {
+    fields[`term[${row.userId}]`] = String(row.term);
+  }
+
+  await setFormFields(page, 'form[name="form1"]', fields);
+  return submitFormAndHandleSyncMessage(page, {
+    expectedOutcome: options.expectedOutcome || 'overview',
+    label: `Remove race participant ${formatClubReg(reg)} from race ${raceId}`,
+    submitSelector: 'input[type="submit"][value="Proveď změny"]',
+    returnUrlPattern: /race_regs_all\.php/,
+  });
+}
+
 module.exports = {
   ensureOrisRace,
   ensureRaceParticipants,
+  readRaceParticipants,
+  removeRaceParticipant,
 };

@@ -38,9 +38,20 @@ Bank mock pro vývoj:
 docker compose -p members-dev -f docker-compose.dev.yml exec web npm run mock:bank
 ```
 
-* admin UI: [http://127.0.0.1:10300/__admin](http://127.0.0.1:10300/__admin)
+* admin UI: [http://127.0.0.1:10300/__testbench](http://127.0.0.1:10300/__testbench)
 * API endpoint pro PHP konektor: `http://127.0.0.1:10300/rbcz/premium/api`
 * vývojová konfigurace v `docker/config/dev/_cfg.php` už používá `RaiffeisenbankMockConnector`
+
+ORIS mock pro vývoj:
+
+```bash
+docker compose -p members-dev -f docker-compose.dev.yml exec web npm run mock:oris
+```
+
+* admin UI: [http://127.0.0.1:10301/__testbench](http://127.0.0.1:10301/__testbench)
+* API endpoint pro ORIS mock: `http://127.0.0.1:10301/`
+* vývojová konfigurace v `docker/config/dev/_cfg.php` už používá mock server `http://127.0.0.1:10301/`
+
 
 ## Automatické testy
 
@@ -53,19 +64,24 @@ docker compose -p members-autotest -f docker-compose.autotest.yml exec web npm r
 docker compose -p members-autotest -f docker-compose.autotest.yml down
 ```
 
-Přepínač `--wait` počká, až budou kontejnery označené jako `healthy`. V autotest stacku to znamená, že je připravená databáze, běží web a bank mock odpovídá na health endpoint, takže testy můžeš spustit hned po startu bez ruční prodlevy.
+Přepínač `--wait` počká, až budou kontejnery označené jako `healthy`. V autotest stacku to znamená, že je připravená databáze, běží web a bank a ORIS mock odpovídají na health endpoint, takže testy můžeš spustit hned po startu bez další prodlevy.
 
-Pro ruční pozorování běžící aplikace a databáze přidej override soubor `docker-compose.autotest.observe.yml`:
+## Manuální testy
+
+Pro manuální testy nebo analýzu automatických testů přidej override soubor `docker-compose.autotest.observe.yml`:
 
 ```bash
 docker compose -p members-autotest -f docker-compose.autotest.yml -f docker-compose.autotest.observe.yml up -d --build --wait
+...
 ```
+Je potřeba ručně přenastavit _cfg.php na $g_baseadr='http://127.0.0.1:10090/members/';
 
 Dostupné služby:
 
 * [members](http://127.0.0.1:10090/members)
 * [phpMyAdmin](http://127.0.0.1:10091)
-* [bank](http://127.0.0.1:10093/_admin)
+* [bank](http://127.0.0.1:10093/__testbench)
+* [ORIS](http://127.0.0.1:10094/__testbench)
 
 ## Minimální konfigurace
 

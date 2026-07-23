@@ -49,6 +49,8 @@ type CreateTransactionInput = {
   counterpartyName?: string;
 };
 
+const ADMIN_BASE_PATHS = ['/__admin', '/__testbench'];
+
 const config = {
   host: process.env.BANK_MOCK_HOST ?? '0.0.0.0',
   port: parseInt(process.env.BANK_MOCK_PORT ?? '10300', 10),
@@ -64,6 +66,14 @@ const config = {
 };
 
 let pool: Pool;
+
+function adminPaths(suffix = ''): string[] {
+  return ADMIN_BASE_PATHS.map((basePath) => `${basePath}${suffix}`);
+}
+
+function adminBasePath(req: Request): string {
+  return req.path.startsWith('/__testbench') ? '/__testbench' : '/__admin';
+}
 
 function toDateTimeLocalValue(value?: string): string {
   const date = value ? new Date(value) : new Date();
@@ -433,7 +443,7 @@ async function maybeApplyFaultMode(req: Request, res: Response): Promise<boolean
   return false;
 }
 
-function renderAdminPage(settings: MockSettings, transactions: TransactionRow[]): string {
+function renderAdminPage(settings: MockSettings, transactions: TransactionRow[], basePath = '/__admin'): string {
   const rows = transactions
     .map((transaction) => {
       const symbols = [
@@ -602,7 +612,7 @@ function renderAdminPage(settings: MockSettings, transactions: TransactionRow[])
       <article class="card">
         <h2>Create transaction</h2>
         <p class="caption">Omit the date to create a payment at the current time.</p>
-        <form method="post" action="/__admin/transactions">
+        <form method="post" action="${basePath}/transactions">
           <div class="two-col">
             <label>Amount
               <input type="number" step="0.01" name="amount" value="350.00" required />
@@ -648,7 +658,7 @@ function renderAdminPage(settings: MockSettings, transactions: TransactionRow[])
       <article class="card">
         <h2>Fault injection</h2>
         <p class="caption">Use the API or this form to flip between normal responses and controlled failures.</p>
-        <form method="post" action="/__admin/settings">
+        <form method="post" action="${basePath}/settings">
           <label>Mode
             <select name="mode">
               <option value="normal" ${selected('normal')}>normal</option>
@@ -718,7 +728,7 @@ async function main(): Promise<void> {
     });
   });
 
-  app.get('/__admin', async (_req, res) => {
+  app.get(adminPaths(), async (req, res) => {
     const settings = await getSettings();
     const [transactions] = await pool.query<TransactionRow[]>(
       `
@@ -730,14 +740,14 @@ async function main(): Promise<void> {
         LIMIT 100
       `,
     );
-    res.type('html').send(renderAdminPage(settings, transactions));
+    res.type('html').send(renderAdminPage(settings, transactions, adminBasePath(req)));
   });
 
-  app.get('/__admin/api/settings', async (_req, res) => {
+  app.get(adminPaths('/api/settings'), async (_req, res) => {
     res.json(await getSettings());
   });
 
-  app.post('/__admin/api/settings', async (req, res) => {
+  app.post(adminPaths('/api/settings'), async (req, res) => {
     const settings = await updateSettings({
       mode: req.body.mode as RuntimeMode | undefined,
       responseDelayMs: req.body.responseDelayMs === undefined ? undefined : parseNumber(req.body.responseDelayMs, 0),
@@ -748,7 +758,7 @@ async function main(): Promise<void> {
     res.json(settings);
   });
 
-  app.post('/__admin/settings', async (req, res) => {
+  app.post(adminPaths('/settings'), async (req, res) => {
     await updateSettings({
       mode: req.body.mode as RuntimeMode | undefined,
       responseDelayMs: parseNumber(req.body.responseDelayMs, 0),
@@ -756,10 +766,10 @@ async function main(): Promise<void> {
       pageSize: parseNumber(req.body.pageSize, 50),
     });
 
-    res.redirect('/__admin');
+    res.redirect(adminBasePath(req));
   });
 
-  app.get('/__admin/api/transactions', async (req, res) => {
+  app.get(adminPaths('/api/transactions'), async (req, res) => {
     const limit = Math.max(1, Math.min(500, parseNumber(req.query.limit, 100)));
     const [transactions] = await pool.query<TransactionRow[]>(
       `
@@ -779,7 +789,7 @@ async function main(): Promise<void> {
     });
   });
 
-  app.post('/__admin/api/transactions', async (req, res) => {
+  app.post(adminPaths('/api/transactions'), async (req, res) => {
     const input = normalizeTransactionInput(req.body as Record<string, unknown>);
     const connection = await pool.getConnection();
     try {
@@ -791,7 +801,7 @@ async function main(): Promise<void> {
     res.status(201).json({ ok: true });
   });
 
-  app.post('/__admin/transactions', async (req, res) => {
+  app.post(adminPaths('/transactions'), async (req, res) => {
     const input = normalizeTransactionInput(req.body as Record<string, unknown>);
     const connection = await pool.getConnection();
     try {
@@ -800,7 +810,7 @@ async function main(): Promise<void> {
       connection.release();
     }
 
-    res.redirect('/__admin');
+    res.redirect(adminBasePath(req));
   });
 
   app.get('/rbcz/premium/api/accounts/:accountNumber/CZK/transactions', async (req, res) => {
@@ -900,6 +910,7 @@ async function main(): Promise<void> {
   app.listen(config.port, config.host, () => {
     console.log(`Bank mock server listening on http://${config.host}:${config.port}`);
     console.log(`Admin UI: http://127.0.0.1:${config.port}/__admin`);
+    console.log(`Testbench UI: http://127.0.0.1:${config.port}/__testbench`);
   });
 }
 

@@ -102,6 +102,8 @@ $g_enable_race_capacity = true;
 $g_external_is_connector = 'OrisCZConnector';
 // Identifikator oddilu v informacnim systemu
 $g_external_is_club_id = '205';
+$g_oris_base_url = 'http://127.0.0.1:10301/';
+$g_oris_club_key = 'mockClubKey';
 
 $g_custom_entry_list_text = '';
 

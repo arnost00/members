@@ -41,8 +41,17 @@ if (!empty($ext_id)) {
 
 	$connector = ConnectorFactory::create();
 
-	// Get race info by race ID
-	$raceInfo = $connector->getRaceInfo($ext_id);
+	if ( $connector !== null ) {
+		// Get race info by race ID
+		$raceInfo = $connector->getRaceInfo($ext_id);
+		if ( $raceInfo == null ) {
+			$raceInfo = new RaceDTO(['ext_id' => (string)$ext_id]);
+			$ext_id_info = " \u{26A0} neplatné ID závodu";
+		}
+	} else {
+		$raceInfo = new RaceDTO(['ext_id' => (string)$ext_id]);
+		$ext_id_info = " \u{26A0} externí systém není dostupný";
+	}
 
 	$type = $raceInfo->vicedenni;
 
@@ -63,7 +72,13 @@ if (!empty($ext_id)) {
 
 if ($raceInfo === null) {
     // default
-    $raceInfo = new RaceInfo([]);
+    $raceInfo = new RaceDTO([]);
+}
+
+$entryStartDisplay = '';
+if (!empty($raceInfo->entry_start)) {
+	$entryStartTimestamp = strtotime($raceInfo->entry_start);
+	$entryStartDisplay = ($entryStartTimestamp !== false) ? date('d.m.Y H:i:s', $entryStartTimestamp) : $raceInfo->entry_start;
 }
 
 $type = (IsSet($type) && is_numeric($type)) ? (int)$type : 0;
@@ -266,6 +281,11 @@ if($type == 1)
 	<TD width="130" align="right">5. datum přihlášek</TD>
 	<TD width="5"></TD>
 	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky5" SIZE=8 <? if (!empty($raceInfo->prihlasky4))echo ('value="'. Date2String($raceInfo->prihlasky4 - 86400).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+</TR>
+<TR>
+	<TD width="130" align="right">Otevření přihlášek</TD>
+	<TD width="5"></TD>
+	<TD class="DataValue"><INPUT TYPE="text" NAME="entryStart" SIZE=19 maxlength=19 value="<? echo htmlspecialchars($entryStartDisplay, ENT_QUOTES); ?>">&nbsp;&nbsp;(DD.MM.RRRR HH:MM:SS)</TD>
 </TR>
 <TR>
 	<TD colspan="3"></TD>

@@ -1,8 +1,8 @@
 services:
   web:
     build:
-      context: ./docker
-      dockerfile: Dockerfile.srv
+      context: .
+      dockerfile: docker/Dockerfile.srv
       target: autotest
     working_dir: /var/www/html/members
     depends_on:
@@ -16,8 +16,18 @@ services:
       BANK_MOCK_DB_NAME: rb_mock
       BANK_MOCK_PORT: 10300
       BANK_MOCK_START: auto
+      ORIS_MOCK_DB_HOST: db
+      ORIS_MOCK_DB_PORT: 3306
+      ORIS_MOCK_DB_USER: root
+      ORIS_MOCK_DB_PASSWORD: lkj234@sf!--+KLM
+      ORIS_MOCK_DB_NAME: oris_mock
+      ORIS_MOCK_PORT: 10301
+      ORIS_MOCK_START: auto
+      ORIS_MOCK_DEFAULT_CLUB_ID: 205
+      ORIS_MOCK_DEFAULT_CLUB_ABBR: ZBM
     volumes:
       - ./:/var/www/html/members    #this line maps the content of ./html in your pc to the /var/www/html of the container
+      - members_node_modules:/var/www/html/members/node_modules #for using node modules from container, not host 
       - ./logs/autotest/:/var/www/html/members/logs
       # override configuration, modifiable in original place only
       - ./docker/config/autotest/_cfg.php:/var/www/html/members/cfg/_cfg.php:ro
@@ -27,7 +37,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "node -e \"const http=require('http');const urls=['http://127.0.0.1:10100/members/','http://127.0.0.1:10300/health'];let pending=urls.length;let done=false;const finish=(code)=>{if(!done){done=true;process.exit(code);}};const timer=setTimeout(()=>finish(1),3000);for(const url of urls){http.get(url,res=>{res.resume();if(res.statusCode>=200&&res.statusCode<500){if(--pending===0){clearTimeout(timer);finish(0);}}else{clearTimeout(timer);finish(1);}}).on('error',()=>{clearTimeout(timer);finish(1);});}\""
+          "node -e \"const http=require('http');const urls=['http://127.0.0.1:10100/members/','http://127.0.0.1:10300/health','http://127.0.0.1:10301/health'];let pending=urls.length;let done=false;const finish=(code)=>{if(!done){done=true;process.exit(code);}};const timer=setTimeout(()=>finish(1),3000);for(const url of urls){http.get(url,res=>{res.resume();if(res.statusCode>=200&&res.statusCode<500){if(--pending===0){clearTimeout(timer);finish(0);}}else{clearTimeout(timer);finish(1);}}).on('error',()=>{clearTimeout(timer);finish(1);});}\""
         ]
       interval: 2s
       timeout: 5s
@@ -49,3 +59,6 @@ services:
     volumes:
       # initial database content
       - ./docker/db_init/d235220_members_latest.sql:/docker-entrypoint-initdb.d/d235220_members.sql
+
+volumes:
+  members_node_modules:      #for using node modules from container, not host

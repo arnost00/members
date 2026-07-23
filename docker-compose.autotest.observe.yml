@@ -3,6 +3,7 @@ services:
     ports:
       - "10090:10100"    # this line maps your pc port to the container port
       - "10093:10300"    # this line maps your pc port to the container port
+      - "10094:10301"    # ORIS mock server
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     ports:

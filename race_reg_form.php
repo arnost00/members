@@ -43,7 +43,7 @@ else	// kontrola rozsahu
 	$regsend = -1;
 //------------------------------
 
-$query = 'SELECT u.jmeno, u.prijmeni, u.reg, u.si_chip, z.id, z.kat, z.pozn, z.pozn_in, z.termin, z.si_chip as t_si_chip FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' AND u.hidden = 0 ORDER BY z.termin ASC, z.id ASC';
+$query = 'SELECT u.jmeno, u.prijmeni, u.reg, u.si_chip, z.id, z.kat, z.pozn, z.pozn_in, z.termin, z.si_chip as t_si_chip, z.sync_status FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' AND u.hidden = 0 ORDER BY z.termin ASC, z.id ASC';
 @$vysledek=query_db($query);
 // Fetch all rows into array
 $zaznamy = $vysledek ? mysqli_fetch_all($vysledek, MYSQLI_ASSOC) : [];
@@ -51,6 +51,7 @@ $num_rows = count ($zaznamy);
 
 @$vysledek_z=query_db("SELECT * FROM ".TBL_RACE." WHERE id=$id_zav LIMIT 1");
 $zaznam_z = mysqli_fetch_array($vysledek_z);
+$sync_status_column = CreateRaceSyncStatusColumn($zaznam_z);
 
 $regsend = $zaznam_z['send'];
 
@@ -181,6 +182,8 @@ $tbl_renderer->addColumns([new DefaultHeaderRenderer('Kontrola',ALIGN_CENTER),
 if($zaznam_z['prihlasky'] > 1)
 	$tbl_renderer->addColumns('termin');
 $tbl_renderer->addColumns('pozn','pozn_in');
+if($sync_status_column !== null)
+	$tbl_renderer->addColumn($sync_status_column);
 
 if ($g_enable_race_capacity && isSet ($zaznam_z['kapacita']) ) {
 	$tbl_renderer->addBreak(new LimitBreakDetector($zaznam_z['kapacita']));

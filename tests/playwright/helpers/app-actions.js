@@ -4,6 +4,8 @@ const {
   ensureHtmlSubmission,
   postFormInSession,
   readFormState,
+  setFormFields,
+  submitFormAndHandleSyncMessage,
 } = require('./browser');
 
 async function createPaymentRule(page, overrides = {}) {
@@ -316,6 +318,55 @@ async function ensureClubMembers(page, registrationIds, options = {}) {
   return ensuredMembers;
 }
 
+async function ensureMemberLogin(page, userId, overrides = {}) {
+  if (!userId) {
+    throw new Error('Cannot ensure a member login without a user id');
+  }
+
+  await page.goto(`./user_login_edit.php?id=${userId}&cb=700`);
+  const form = await readFormState(page, 'form[action*="type=1"], form[action*="type=2"]');
+  const createsAccount = /[?&]type=2(?:&|$)/.test(form.action);
+  const accountFields = {
+    ...form.fields,
+    action_type: '1',
+    login: overrides.login,
+    podpis: overrides.signature || overrides.login,
+  };
+
+  if (createsAccount) {
+    accountFields.nheslo = overrides.password;
+    accountFields.nheslo2 = overrides.password;
+  }
+
+  const accountResult = await postFormInSession(page, form.action, accountFields);
+  ensureHtmlSubmission(accountResult, `Ensure login for user ${userId}`);
+
+  if (!createsAccount) {
+    const passwordResult = await postFormInSession(
+      page,
+      `./user_login_edit_exc.php?type=3&id=${userId}`,
+      {
+        action_type: '1',
+        nheslo: overrides.password,
+        nheslo2: overrides.password,
+      }
+    );
+    ensureHtmlSubmission(passwordResult, `Ensure password for user ${userId}`);
+  }
+}
+
+async function setMemberSmallManager(page, userId, smallManagerId) {
+  if (!userId || !smallManagerId) {
+    throw new Error('Cannot assign a small manager without both user ids');
+  }
+
+  const result = await postFormInSession(page, `./mng_edit_exc.php?id=${userId}`, {
+    mng: String(smallManagerId),
+  });
+
+  return ensureHtmlSubmission(result, `Assign small manager for user ${userId}`);
+}
+
 async function setMemberFinanceType(page, userId, financeType) {
   if (!userId) {
     throw new Error('Cannot set member finance type without a user id');
@@ -471,6 +522,10 @@ async function findRaceUserIdByReg(page, raceId, options = {}) {
 }
 
 async function createRace(page, request, overrides = {}) {
+  if (overrides.categories === undefined) {
+    throw new Error('Create race requires categories');
+  }
+
   await page.goto('./race_new.php?type=0');
 
   const result = await postFormInSession(page, './race_new_exc.php?rtype=0', {
@@ -493,7 +548,7 @@ async function createRace(page, request, overrides = {}) {
     prihlasky3: '',
     prihlasky4: '',
     prihlasky5: '',
-    kategorie: overrides.categories || 'H21;D21',
+    kategorie: overrides.categories,
     ...overrides.fields,
   });
 
@@ -513,37 +568,50 @@ async function createRace(page, request, overrides = {}) {
 async function updateRace(page, raceId, overrides = {}) {
   await page.goto(`./race_edit.php?id=${raceId}`);
 
-  const form = await readFormState(page, 'form[name="form2"]');
-  const result = await postFormInSession(page, form.action, {
-    ...form.fields,
-    ...overrides,
-  });
+  await setFormFields(page, 'form[name="form2"]', overrides);
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+    page.locator('form[name="form2"] input[type="submit"][value="Aktualizovat údaje"]').click(),
+  ]);
+
+  const result = {
+    ok: true,
+    status: 200,
+    url: page.url(),
+    text: await page.content(),
+  };
 
   return ensureHtmlSubmission(result, `Update race ${raceId}`);
 }
 
-async function submitMemberRaceRegistration(page, fields) {
-  const result = await postFormInSession(page, './us_race_regon_exc.php', fields);
-  return ensureHtmlSubmission(result, 'Submit member race registration');
+async function submitMemberRaceRegistration(page, fields, options = {}) {
+  await setFormFields(page, 'form[name="form1"]', fields);
+  return submitFormAndHandleSyncMessage(page, {
+    expectedOutcome: options.expectedOutcome || 'overview',
+    label: 'Submit member race registration',
+    submitSelector: 'form[name="form1"] input[type="submit"]',
+    returnUrlPattern: /us_race_regon\.php/,
+  });
 }
 
-async function submitManagedRaceRegistration(page, raceId, fields) {
+async function submitManagedRaceRegistration(page, raceId, fields, options = {}) {
   const groupId = fields.groupId || 600;
   const postFields = { ...fields };
   delete postFields.groupId;
 
-  const result = await postFormInSession(
-    page,
-    `./race_regs_1_exc.php?gr_id=${groupId}&id=${raceId}&show_ed=1`,
-    postFields
-  );
-
-  return ensureHtmlSubmission(result, 'Submit small-manager race registration');
+  await setFormFields(page, 'form[name="form1"]', postFields);
+  return submitFormAndHandleSyncMessage(page, {
+    expectedOutcome: options.expectedOutcome || 'overview',
+    label: 'Submit small-manager race registration',
+    submitSelector: 'input[type="submit"][value="Proveď změnu"]',
+    returnUrlPattern: /race_regs_1\.php/,
+  });
 }
 
 module.exports = {
   ensureClubMember,
   ensureClubMembers,
+  ensureMemberLogin,
   findRaceUserIdByReg,
   createPaymentRule,
   ensurePaymentRules,
@@ -551,6 +619,7 @@ module.exports = {
   formatClubReg,
   getFinanceDirectoryEntryByReg,
   setMemberFinanceType,
+  setMemberSmallManager,
   stornoFirstMemberFinanceEntry,
   updateFirstMemberFinanceEntry,
   submitFinanceTransferByReg,

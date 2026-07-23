@@ -1087,7 +1087,8 @@ INSERT INTO `tst_users` (`id`, `prijmeni`, `jmeno`, `datum`, `adresa`, `mesto`, 
 (34, 'Gross', 'Michal', '0000-00-00', '', '', '', '', '', '', '', 6946, 0, 0, 'Gross Michal', 'H', 'C', '-', '-', 0, NULL, 0, '', 'CZ', 0, NULL, 0),
 (36, 'Štěrbák', 'Řehoř', '0000-00-00', '', '', '', '', '', '', 'arnost@eob.cz', 8006, 0, 0, 'Štěrbák Řehoř', 'H', 'C', '-', '-', 0, NULL, 0, '', 'CZ', 0, NULL, 0),
 (37, 'Mocvesely', 'Osvald', '1944-01-01', '', '', '', '', '', '', '', 4400, 0, 0, 'Mocvesely Osvald', 'H', 'C', '-', '-', 0, NULL, 0, '', 'BW', 1, NULL, 8),
-(38, 'Matula', 'Petr', '1982-05-17', '', '', '', '', '', '', '', 8202, 2042531, 0, 'Matula Petr', 'H', 'C', '-', '-', 0, NULL, 0, '', 'CZ', 0, NULL, 5);
+(38, 'Matula', 'Petr', '1982-05-17', '', '', '', '', '', '', '', 8202, 2042531, 0, 'Matula Petr', 'H', 'C', '-', '-', 0, NULL, 0, '', 'CZ', 0, NULL, 5),
+(39, 'Coufalová', 'Rea', '2009-11-21', 'Na Louce 27', '', '', '544903118', '531228640', '728305417', 'rea.coufalova.0953@example.test', 0953, 123, 0, 'Coufalová Rea', 'D', 'A', '-', '-', 0, '', 0, '0953066978', 'CZ', 0, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -1162,7 +1163,8 @@ CREATE TABLE `tst_zavod` (
   `ubytovani` tinyint(1) DEFAULT NULL,
   `kapacita` smallint(6) DEFAULT NULL,
   `prihlasenych` smallint(6) NOT NULL DEFAULT 0,
-  `cancelled` tinyint(1) NOT NULL DEFAULT 0
+  `cancelled` tinyint(1) NOT NULL DEFAULT 0,
+  `entry_start` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci COMMENT='tabulka popisu zavodu';
 
 --
@@ -1216,7 +1218,8 @@ INSERT INTO `tst_zavod` (`id`, `ext_id`, `datum`, `datum2`, `nazev`, `misto`, `t
 (47, NULL, 1615590000, 0, 'Pokus', 'XXX', 'ob', 'Z', 0, 1, '1', '', 2, 1607727600, 1610406000, 0, 0, 0, 1, 'D10N;D12C;D14C;D16C;D18C;D21C;D21D;D35C;D45C;D55C;H10N;H12C;H14C;H16C;H18C;H21C;H21D;H35C;H45C;H55C;HDR', '', 0, 0, 'kkk', 1, 2, 0, 0, NULL, 5, 0),
 (48, NULL, 1658354400, 0, 'Letni test', 'Brno - Salingrad', 'jine', 'Z', 0, 17, '0', '', 2, 1658095200, 1658268000, 0, 0, 0, 1, 'D16A;D18A;D20A;D21A;D21E;H16A;H18A;H20A;H21A;H21E', '', 0, 0, 'FAK', 0, 2, 2, 2, NULL, 9, 0),
 (49, NULL, 1675378800, 0, 'MČR Klasika', 'Dolní Lhota', 'ob', 'Z', 0, 1, '1', '', 2, 1674169200, 1674255600, 0, 0, 0, 1, 'H18D;H18N;H20B;H20C;H21E;H21A;D10N;D12;D14;D16;D18;D21C;D21D;D35;D45;D55;H10N;H12;H14;H16;H18;H21C;H21D;H35;H45;H55;HDR;D16A;D18A;D20A;D21A;D21E;H16A;H18A;H20A', '', 0, 0, 'GBM', 0, 2, 1, 2, NULL, 1, 0),
-(50, NULL, 1699311600, 0, 'Kamenec pod Vtáčnikom Middle sobota', 'Kamenec pod Vtáčnikom', 'ob', 'Z', 0, 1, '1', 'is.orienteering.sk/competitions/1759', 3, 1696111200, 1696370400, 1698793200, 0, 0, 1, 'D10N;D12;D14;D16;D18;D21C;D21D;D35;D45;D55;H10N;H12;H14;H16;H18;H21C;H21D;H35;H45;H55;HDR', 'Slovenský rebríček jednotlivcov - E1	07.10.2023	Stredná trať	205\r\nSlovenský rebríček jednotlivcov - E2	08.10.2023	Stredná trať	212', 0, 0, 'SKS', 0, 2, 0, 0, NULL, 2, 0);
+(50, NULL, 1699311600, 0, 'Kamenec pod Vtáčnikom Middle sobota', 'Kamenec pod Vtáčnikom', 'ob', 'Z', 0, 1, '1', 'is.orienteering.sk/competitions/1759', 3, 1696111200, 1696370400, 1698793200, 0, 0, 1, 'D10N;D12;D14;D16;D18;D21C;D21D;D35;D45;D55;H10N;H12;H14;H16;H18;H21C;H21D;H35;H45;H55;HDR', 'Slovenský rebríček jednotlivcov - E1	07.10.2023	Stredná trať	205\r\nSlovenský rebríček jednotlivcov - E2	08.10.2023	Stredná trať	212', 0, 0, 'SKS', 0, 2, 0, 0, NULL, 2, 0),
+(51, '8971', 1780790400, 0, 'Mistrovství oblasti na klasické trati', 'Bunkr - bývalý vojenský areál, Mokrá - Horákov', 'ob', 'Z', 0, 24, '1', 'http://127.0.0.1/Zavod?id=8971', 2, 1780272000, 1780444800, 0, 0, 0, 1, 'D10;D10N;D12;D14;D16;D18;D21C;D21D;D35;D45;D55;D65;D70;H10;H10N;H12;H14;H16;H18;H21C;H21D;H35;H45;H55;H65;H70;HDR;P', '', 0, 0, 'PBM', 0, 2, 1, 1, NULL, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -1237,7 +1240,11 @@ CREATE TABLE `tst_zavxus` (
   `sedadel` tinyint(1) DEFAULT NULL,
   `ubytovani` tinyint(1) DEFAULT NULL,
   `participated` tinyint(1) DEFAULT NULL,
-  `add_by_fin` tinyint(1) DEFAULT NULL
+  `add_by_fin` tinyint(1) DEFAULT NULL,
+  `entry_id` int(10) UNSIGNED DEFAULT NULL,
+  `sync_status` enum('LOCAL_ONLY','SYNCED','PENDING_CREATE','PENDING_UPDATE','PENDING_DELETE','FAILED_CREATE','FAILED_UPDATE','FAILED_DELETE') NOT NULL DEFAULT 'LOCAL_ONLY',
+  `sync_timestamp` datetime DEFAULT NULL,
+  `sync_error_payload` text DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci COMMENT='tabulka prihlasek - clovek X zavod';
 
 --
@@ -1346,7 +1353,9 @@ INSERT INTO `tst_zavxus` (`id`, `id_user`, `id_zavod`, `kat`, `pozn`, `pozn_in`,
 (130, 4, 50, 'H45', '', '', 3, 0, 0, NULL, 0, NULL, NULL),
 (131, 6, 13, 'D21C', '', '', 1, 0, 0, NULL, 0, NULL, NULL),
 (132, 4, 11, 'H', '', '', 1, 0, 0, NULL, 0, NULL, NULL),
-(133, 4, 13, 'H', '', '', 1, 0, 0, NULL, 0, NULL, NULL);
+(133, 4, 13, 'H', '', '', 1, 0, 0, NULL, 0, NULL, NULL),
+(134, 11, 51, 'H21', '', '', 1, 0, 1, NULL, 1, NULL, NULL),
+(135, 39, 51, 'D16', '', '', 1, 0, 1, NULL, 1, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -1444,7 +1453,8 @@ ALTER TABLE `tst_zavod` ADD FULLTEXT KEY `misto` (`misto`);
 ALTER TABLE `tst_zavxus`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_termin` (`termin`,`id`),
-  ADD KEY `id_user` (`id_user`);
+  ADD KEY `id_user` (`id_user`),
+  ADD KEY `sync_status` (`sync_status`);
 
 --
 -- AUTO_INCREMENT for dumped tables

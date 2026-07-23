@@ -15,7 +15,9 @@ const {
   ensureRaceParticipants,
 } = require('../helpers/oris-race-workflow');
 const {
+  addUtcDays,
   expandYear,
+  formatCzDate,
 } = require('../helpers/workflow-runtime');
 const {
   expectFinanceRowValues,
@@ -65,6 +67,24 @@ const ORIS_PUBLIC_MULTISTAGE_RACE_WORKFLOW = {
     },
   },
 };
+
+async function readRaceDateFields(page, raceId) {
+  await page.goto(`./race_edit.php?id=${raceId}`);
+
+  return page.evaluate(() => {
+    const inputValue = (name) => {
+      const input = document.querySelector(`[name="${name}"]`);
+      return input ? input.value : '';
+    };
+
+    return {
+      datum: inputValue('datum'),
+      datum2: inputValue('datum2'),
+      entryStart: inputValue('entryStart'),
+      prihlasky1: inputValue('prihlasky1'),
+    };
+  });
+}
 
 test.describe(ORIS_PUBLIC_MULTISTAGE_RACE_WORKFLOW.name, () => {
   test.describe.configure({ mode: 'serial' });
@@ -121,17 +141,35 @@ test.describe(ORIS_PUBLIC_MULTISTAGE_RACE_WORKFLOW.name, () => {
       state.race = await ensureOrisRace(page, ORIS_PUBLIC_MULTISTAGE_RACE_WORKFLOW.orisId);
     }
 
-    await updateRace(page, state.race.id, ORIS_PUBLIC_MULTISTAGE_RACE_WORKFLOW.raceSetup);
+    const previousRaceDates = await readRaceDateFields(page, state.race.id);
+    const now = new Date();
 
-    state.participants = await ensureRaceParticipants(
-      page,
-      state.race.id,
-      ORIS_PUBLIC_MULTISTAGE_RACE_WORKFLOW.participants
-    );
+    await updateRace(page, state.race.id, {
+      datum: formatCzDate(addUtcDays(now, 3)),
+      datum2: formatCzDate(addUtcDays(now, 5)),
+      entryStart: formatCzDate(addUtcDays(now, 1)) + ` 21:00:00`,
+      prihlasky1: formatCzDate(addUtcDays(now, 2)),
+    });
+
+    try {
+      await updateRace(page, state.race.id, ORIS_PUBLIC_MULTISTAGE_RACE_WORKFLOW.raceSetup);
+      state.participants = await ensureRaceParticipants(
+        page,
+        state.race.id,
+        ORIS_PUBLIC_MULTISTAGE_RACE_WORKFLOW.participants,
+        {expectedOutcome: 'message'}
+      );
+    } finally {
+      await updateRace(page, state.race.id, previousRaceDates);
+      state.race.date = previousRaceDates.datum;
+    }
 
     expect(state.participants['0953']).toBeTruthy();
     expect(state.participants['6700']).toBeTruthy();
     expect(state.participants['9711']).toBeTruthy();
+    expect(state.participants['0953'].lastColumnText).toContain('🕒');
+    expect(state.participants['6700'].lastColumnText).toContain('🕒');
+    expect(state.participants['9711'].lastColumnText).toContain('🕒');
   });
 
   test('accountant can inspect the race wizard without overwriting seeded finance rows', async ({ page }) => {
