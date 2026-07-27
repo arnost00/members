@@ -84,7 +84,7 @@ echo('<FORM METHOD=POST ACTION="./race_regs_1_exc.php?gr_id='.$gr_id.'&id='.$id.
 
 $sub_query = (IsLoggedRegistrator() || IsLoggedManager()) ? '' : ' AND '.TBL_USER.'.chief_id = '.$usr->user_id.' OR '.TBL_USER.'.id = '.$usr->user_id;
 
-$query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, kat, pozn, pozn_in, termin, entry_locked, '.TBL_ZAVXUS.'.transport, '.TBL_ZAVXUS.'.sedadel, '.TBL_ZAVXUS.'.ubytovani FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query.' ORDER BY sort_name ASC';
+$query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, kat, pozn, pozn_in, termin, entry_locked, '.TBL_ZAVXUS.'.transport, '.TBL_ZAVXUS.'.sedadel, '.TBL_ZAVXUS.'.ubytovani, '.TBL_ZAVXUS.'.etapy FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query.' ORDER BY sort_name ASC';
 
 @$vysledek=query_db($query);
 
@@ -101,6 +101,8 @@ $is_sdil_dopr_on = ($zaznam_z["transport"]==3) && $g_enable_race_transport;
 $is_spol_dopr_auto = ($zaznam_z["transport"]==2) && $g_enable_race_transport;
 $is_spol_ubyt_on = ($zaznam_z["ubytovani"]==1) && $g_enable_race_accommodation;
 $is_spol_ubyt_auto = ($zaznam_z["ubytovani"]==2) && $g_enable_race_accommodation;
+$is_multi_etapa = IsMultiEtapaRace($zaznam_z);
+$etap_count = $is_multi_etapa ? (int)$zaznam_z['etap'] : 0;
 
 $i=0;
 $us_rows = array();
@@ -119,6 +121,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 				$us_rows[$i][4] = ($is_spol_dopr_on||$is_sdil_dopr_on) ? $zaznam['transport'] == 1 : 0;
 				$us_rows[$i][5] = ($is_sdil_dopr_on) ? $zaznam['sedadel'] : null;
 				$us_rows[$i][6] = ($is_spol_ubyt_on) ? $zaznam['ubytovani'] == 1 : 0;
+				$us_rows[$i][7] = ($is_multi_etapa) ? ($zaznam['etapy'] ?? '') : '';
 			}
 			else
 			{
@@ -143,7 +146,7 @@ echo'//<!--'."\n";
 echo 'us_rows = new Array('.sizeof($us_rows).');'."\n";
 foreach ($us_rows as $i => $value)
 {
-	echo 'us_rows['.$i.'] = ["'.$value[0].'","'.$value[1].'","'.$value[2].'","'.$value[3].'","'.($value[4] ? 'true' : 'false').'","'.$value[5].'","'.($value[6] ? 'true' : 'false').'"];'."\n";
+	echo 'us_rows['.$i.'] = ["'.$value[0].'","'.$value[1].'","'.$value[2].'","'.$value[3].'","'.($value[4] ? 'true' : 'false').'","'.$value[5].'","'.($value[6] ? 'true' : 'false').'","'.$value[7].'"];'."\n";
 }
 
 echo'//-->'."\n";
@@ -154,6 +157,15 @@ echo '<TD align="right">Kategorie</TD>';
 echo '<TD width="5"></TD>';
 echo '<TD><INPUT TYPE="text" NAME="kateg" SIZE=5></TD>';
 echo '</TR>';
+if($is_multi_etapa)
+{
+	echo '<TR>';
+	echo '<TD align="right">Etapy</TD>';
+	echo '<TD width="5"></TD>';
+	echo '<TD>';
+	RenderEtapyCheckboxes($etap_count, range(1, $etap_count));
+	echo '</TD></TR>';
+}
 if($is_spol_dopr_on)
 {
 	echo '<TR>';
@@ -245,7 +257,16 @@ function aktu_line()
 	if (us_rows[idx] != null)
 	{
 		document.form1.kateg.value=us_rows[idx][0];
-<? 
+<?
+	if($is_multi_etapa)
+	{
+?>
+		var selEtapy = us_rows[idx][7] ? us_rows[idx][7].split(",") : [];
+		document.form1.querySelectorAll('input[name="etapy[]"]').forEach(function(cb) {
+			cb.checked = (selEtapy.length == 0) || (selEtapy.indexOf(cb.value) != -1);
+		});
+<?
+	}
 	if($is_spol_dopr_on)
 	{
 ?>
@@ -283,6 +304,12 @@ function aktu_line()
 	{
 		document.form1.kateg.value="";
 <?
+	if($is_multi_etapa)
+	{
+?>
+		document.form1.querySelectorAll('input[name="etapy[]"]').forEach(function(cb) { cb.checked = true; });
+<?
+	}
 	if($is_spol_dopr_on)
 	{
 ?>

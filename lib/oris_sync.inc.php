@@ -2,6 +2,7 @@
 require_once("connect.inc.php");
 require_once("lib/OrisIntegrationService.php");
 require_once("oris_user.class.php");
+require_once("common_race.inc.php");
 
 function processEntry($row, $action, $service) {
     global $g_shortcut;
@@ -142,6 +143,19 @@ function processEntry($row, $action, $service) {
     $rentSi = $row['rent_si'] ?? 0;
     $note = $row['pozn'] ?? '';
 
+    $etapCount = IsMultiEtapaRace($raceRow) ? (int)$raceRow['etap'] : 0;
+    $selectedEtapy = $etapCount > 0 ? ParseEtapyString($row['etapy'] ?? null) : [];
+
+    if ($etapCount > 0 && $action !== 'delete' && empty($selectedEtapy)) {
+        $errorPayload = correct_sql_string(json_encode(['status' => 'error', 'message' => 'Je třeba vybrat alespoň jednu etapu.']));
+        $failedStatus = 'FAILED_' . strtoupper($action);
+        $res = query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_status` = '$failedStatus', `sync_error_payload` = '$errorPayload' WHERE `id` = " . (int)$id);
+        if (!$res) {
+            query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_error_payload` = '$errorPayload' WHERE `id` = " . (int)$id);
+        }
+        return false;
+    }
+
     if (empty($clubuser)) {
         $errorPayload = correct_sql_string(json_encode(['status' => 'error', 'message' => 'Chybí ORIS ID uživatele v klubu (clubuser).']));
         $failedStatus = 'FAILED_' . strtoupper($action);
@@ -174,11 +188,11 @@ function processEntry($row, $action, $service) {
             }
 
             if (!empty($existingEntryId)) {
-                $updateDto = new OrisEntryRequestDTO($clubuser, $classId, $si, (bool)$rentSi, $note, $existingEntryId);
+                $updateDto = new OrisEntryRequestDTO($clubuser, $classId, $si, (bool)$rentSi, $note, $existingEntryId, $etapCount, $selectedEtapy);
                 $response = $service->updateEntry($updateDto);
                 $action = 'update';
             } else {
-                $createDto = new OrisEntryRequestDTO($clubuser, $classId, $si, (bool)$rentSi, $note);
+                $createDto = new OrisEntryRequestDTO($clubuser, $classId, $si, (bool)$rentSi, $note, null, $etapCount, $selectedEtapy);
                 $response = $service->createEntry($createDto);
             }
         } elseif ($action === 'update') {
@@ -202,10 +216,10 @@ function processEntry($row, $action, $service) {
 
             if (empty($entryIdToUpdate)) {
                 // Fall back to create if no existing entry found
-                $createDto = new OrisEntryRequestDTO($clubuser, $classId, $si, (bool)$rentSi, $note);
+                $createDto = new OrisEntryRequestDTO($clubuser, $classId, $si, (bool)$rentSi, $note, null, $etapCount, $selectedEtapy);
                 $response = $service->createEntry($createDto);
             } else {
-                $updateDto = new OrisEntryRequestDTO($clubuser, $classId, $si, (bool)$rentSi, $note, $entryIdToUpdate);
+                $updateDto = new OrisEntryRequestDTO($clubuser, $classId, $si, (bool)$rentSi, $note, $entryIdToUpdate, $etapCount, $selectedEtapy);
                 $response = $service->updateEntry($updateDto);
             }
         } elseif ($action === 'delete') {

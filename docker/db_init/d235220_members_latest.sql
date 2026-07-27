@@ -1236,6 +1236,7 @@ CREATE TABLE `tst_zavxus` (
   `pozn_in` varchar(255) DEFAULT NULL,
   `termin` tinyint(4) UNSIGNED NOT NULL DEFAULT 1,
   `si_chip` int(9) UNSIGNED NOT NULL DEFAULT 0,
+  `etapy` varchar(20) DEFAULT NULL,
   `transport` tinyint(1) DEFAULT NULL,
   `sedadel` tinyint(1) DEFAULT NULL,
   `ubytovani` tinyint(1) DEFAULT NULL,

@@ -28,7 +28,7 @@ $id_us = (IsSet($id_us) && is_numeric($id_us)) ? (int)$id_us : 0;
 
 DrawPageTitle('Přihláška na závod');
 
-$query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.termin, z.id_user, z.transport, z.sedadel, z.ubytovani, z.sync_status FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' ORDER BY z.id ASC';
+$query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.termin, z.id_user, z.transport, z.sedadel, z.ubytovani, z.etapy, z.sync_status FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id_zav.' ORDER BY z.id ASC';
 @$vysledek=query_db($query);
 // Fetch all rows into array
 $zaznamy = $vysledek ? mysqli_fetch_all($vysledek, MYSQLI_ASSOC) : [];
@@ -61,8 +61,13 @@ function check_reg(vstup)
 		alert("Musíš zadat kategorii pro přihlášení do závodu.");
 		return false;
 	}
-	else
-		return true;
+	if (vstup.querySelectorAll('input[name="etapy[]"]:checked').length == 0
+		&& vstup.querySelectorAll('input[name="etapy[]"]').length > 0)
+	{
+		alert("Musíš vybrat alespoň jednu etapu.");
+		return false;
+	}
+	return true;
 }
 
 function submit_off()
@@ -94,7 +99,12 @@ else
 	$zaznam_rg['transport'] = null;
 	$zaznam_rg['sedadel'] = null;
 	$zaznam_rg['ubytovani'] = null;
+	$zaznam_rg['etapy'] = null;
 }
+
+$is_multi_etapa = IsMultiEtapaRace($zaznam_z);
+$etap_count = $is_multi_etapa ? (int)$zaznam_z['etap'] : 0;
+$selected_etapy = $new ? range(1, $etap_count) : ParseEtapyString($zaznam_rg['etapy'] ?? null);
 ?>
 <BR>
 <BUTTON onclick="javascript:close_popup();">Zpět</BUTTON>
@@ -156,6 +166,14 @@ for ($i=0; $i<count($kategorie); $i++)
 echo('<BR><BR>Vybraná kategorie:&nbsp;');
 echo('<INPUT TYPE="text" NAME="kat" size=6 value="'.xss_prevent($zaznam_rg['kat']).'">');
 echo("<BR>\n");
+
+if ($is_multi_etapa)
+{
+	echo "<BR>\n";
+	echo 'Vyberte etapy, kterých se chcete zúčastnit:<BR>'."\n";
+	RenderEtapyCheckboxes($etap_count, $selected_etapy);
+	echo "<BR>\n";
+}
 
 if ($g_enable_race_transport || $g_enable_race_accommodation)
 	echo "<BR>\n";
