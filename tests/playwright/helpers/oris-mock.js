@@ -96,6 +96,10 @@ async function getOrisMockRaceEntries(request, eventId) {
   return getJson(request, `/races/${eventId}/entries`);
 }
 
+async function getOrisMockParticipants(request) {
+  return getJson(request, '/participants');
+}
+
 async function deleteOrisMockRaceEntry(request, eventId, entryId) {
   return deleteJson(request, `/races/${eventId}/entries/${entryId}`);
 }
@@ -139,6 +143,7 @@ module.exports = {
   deleteOrisMockRaceEntry,
   getOrisApiEvent,
   getOrisApiEventEntries,
+  getOrisMockParticipants,
   getOrisMockRaceEntries,
   resetOrisMock,
   setOrisMockSettings,
