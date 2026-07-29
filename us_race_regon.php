@@ -171,8 +171,10 @@ if ($is_multi_etapa)
 {
 	echo 'Etapy: ';
 	RenderEtapyCheckboxes($etap_count, $selected_etapy);
+	echo "<BR>\n";
 }
-else if ($g_enable_race_transport || $g_enable_race_accommodation)
+
+if ($g_enable_race_transport || $g_enable_race_accommodation)
 	echo "<BR>\n";
 
 if ($g_enable_race_transport)
