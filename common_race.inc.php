@@ -548,7 +548,7 @@ function ParseEtapyString($etapy) {
 function RenderEtapyCheckboxes($etapCount, array $selected, $inputName = 'etapy[]') {
 	for ($e = 1; $e <= (int)$etapCount; $e++) {
 		$checked = in_array($e, $selected) ? ' checked' : '';
-		echo '<label><input type="checkbox" name="'.$inputName.'" value="'.$e.'"'.$checked.'> Etapa '.$e.'</label>&nbsp;&nbsp;';
+		echo '<label><input type="checkbox" name="'.$inputName.'" value="'.$e.'"'.$checked.'> Etapa '.$e.'</label> ';
 	}
 }
 
