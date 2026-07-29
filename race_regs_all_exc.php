@@ -9,6 +9,7 @@ $transport = $_REQUEST['transport'] ?? null;
 $sedadel = $_REQUEST['sedadel'] ?? null;
 $ubytovani = $_REQUEST['ubytovani'] ?? null;
 $term = $_REQUEST['term'] ?? null;
+$etapy = $_REQUEST['etapy'] ?? [];
 
 //TBD: podpora entry_locked
 
@@ -48,9 +49,10 @@ $termin = raceterms::GetCurr4RegTerm($zaznam_z);
 $has_ext_id = !empty($zaznam_z['ext_id']);
 $sync_queue = [];
 
-// vicedenni (etapovy) zavod - hromadna prihlaska automaticky zaridi vsechny etapy
+// vicedenni (etapovy) zavod - vyber etap se preberě ze zaskrtavatek, pokud nejsou
+// vyplnene (napr. radek zamceny/needitovatelny), zustava puvodni vyber zachovan
 $is_multi_etapa = IsMultiEtapaRace($zaznam_z);
-$etapy_sql = $is_multi_etapa ? "'".AllEtapyString($zaznam_z['etap'])."'" : 'NULL';
+$etap_count = $is_multi_etapa ? (int)$zaznam_z['etap'] : 0;
 
 while ($zaznamZ=mysqli_fetch_array($vysledek))
 {
@@ -93,6 +95,15 @@ while ($zaznamZ=mysqli_fetch_array($vysledek))
 			$q_zavxus = query_db("SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod='$id' AND id_user='$user'");
 			$row_zx = mysqli_fetch_assoc($q_zavxus);
 			$zx_id = $row_zx['id'] ?? 0;
+
+			if ($is_multi_etapa) {
+				$submittedEtapy = array_values(array_intersect(range(1, $etap_count), array_map('intval', (array)($etapy[$user] ?? []))));
+				$etapy_sql = !empty($submittedEtapy)
+					? "'".BuildEtapyString($submittedEtapy)."'"
+					: (!empty($row_zx['etapy']) ? "'".correct_sql_string($row_zx['etapy'])."'" : 'NULL');
+			} else {
+				$etapy_sql = 'NULL';
+			}
 
 			if ($kat == "")
 			{	// del
@@ -143,7 +154,14 @@ while ($zaznamZ=mysqli_fetch_array($vysledek))
 				$poz=correct_sql_string($poz);
 				$poz2=correct_sql_string($poz2);
 				$cterm=correct_sql_string($cterm);
-			
+
+				if ($is_multi_etapa) {
+					$submittedEtapy = array_values(array_intersect(range(1, $etap_count), array_map('intval', (array)($etapy[$user] ?? []))));
+					$etapy_sql = !empty($submittedEtapy) ? "'".BuildEtapyString($submittedEtapy)."'" : "'".AllEtapyString($etap_count)."'";
+				} else {
+					$etapy_sql = 'NULL';
+				}
+
 				$sync_status = $has_ext_id ? 'PENDING_CREATE' : 'LOCAL_ONLY';
 
 				$result=query_db("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in, termin, transport, sedadel,ubytovani, etapy, sync_status) VALUES ('$user','$id','$kat','$poz','$poz2','$cterm',$trans,$sedl,$ubyt,".$etapy_sql.",'$sync_status')")

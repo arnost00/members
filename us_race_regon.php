@@ -163,14 +163,13 @@ for ($i=0; $i<count($kategorie); $i++)
 		echo "<button onclick=\"javascript:zmen_kat('".xss_prevent($kategorie[$i])."');return false;\">".xss_prevent($kategorie[$i])."</button>";
 }
 
-echo('<BR><BR>Vybraná kategorie:&nbsp;');
+echo('<BR>Vybraná kategorie:&nbsp;');
 echo('<INPUT TYPE="text" NAME="kat" size=6 value="'.xss_prevent($zaznam_rg['kat']).'">');
 echo("<BR>\n");
 
 if ($is_multi_etapa)
 {
-	echo "<BR>\n";
-	echo 'Vyberte etapy, kterých se chcete zúčastnit:<BR>'."\n";
+	echo 'Etapy:&nbsp;';
 	RenderEtapyCheckboxes($etap_count, $selected_etapy);
 	echo "<BR>\n";
 }
