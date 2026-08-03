@@ -165,3 +165,29 @@ function toggleDisplayByData(key,value) {
         (lst[i].style.display == '')?(lst[i].style.display='none'):(lst[i].style.display='');
 	}
 }
+
+function selectAllRaceStagesForCategory(categoryInput)
+{
+	if (!categoryInput || categoryInput.value.trim() === '')
+		return;
+
+	var row = categoryInput.closest('tr');
+	if (!row)
+		return;
+
+	var stages = row.querySelectorAll('input[type="checkbox"][name^="etapy["]');
+	for (var i = 0; i < stages.length; i++)
+		stages[i].checked = true;
+}
+
+function registerRaceCategoryStageSelection()
+{
+	var categoryInputs = document.querySelectorAll('input[name^="kateg["]');
+	for (var i = 0; i < categoryInputs.length; i++)
+	{
+		categoryInputs[i].addEventListener('input', function(event) {
+			selectAllRaceStagesForCategory(event.target);
+		});
+	}
+}
+

@@ -10,6 +10,7 @@ const {
 } = require('../helpers/browser');
 const {
   ensureClubMembers,
+  submitManagedRaceRegistration,
 } = require('../helpers/app-actions');
 const {
   createOrisMockRace,
@@ -43,13 +44,21 @@ function raceListRow(page, raceName) {
     .locator('xpath=ancestor::tr[1]');
 }
 
-function bulkCategoryInput(popup, reg) {
+function bulkRegistrationRow(popup, reg) {
   return popup
     .locator('td')
     .filter({ hasText: new RegExp(`^${reg}$`) })
     .first()
-    .locator('xpath=ancestor::tr[1]')
-    .locator('input[name^="kateg["]');
+    .locator('xpath=ancestor::tr[1]');
+}
+
+function bulkCategoryInput(popup, reg) {
+  return bulkRegistrationRow(popup, reg).locator('input[name^="kateg["]');
+}
+
+function bulkStageCheckbox(popup, reg, stage) {
+  return bulkRegistrationRow(popup, reg)
+    .locator(`input[name^="etapy["][value="${stage}"]`);
 }
 
 async function saveRegistrationAndExpectClose(popup) {
@@ -209,8 +218,27 @@ test.describe('ORIS Mockup Multistage Race Workflow', () => {
 
     const firstCategory = bulkCategoryInput(popup, '8511');
     const secondCategory = bulkCategoryInput(popup, '7203');
+
+    for (const stage of [1, 2, 3]) {
+      await expect(bulkStageCheckbox(popup, '8511', stage)).not.toBeChecked();
+      await expect(bulkStageCheckbox(popup, '7203', stage)).not.toBeChecked();
+    }
+
+    await expect(bulkStageCheckbox(popup, '9952', 1)).toBeChecked();
+    await expect(bulkStageCheckbox(popup, '9952', 2)).toBeChecked();
+    await expect(bulkStageCheckbox(popup, '9952', 3)).not.toBeChecked();
+
     await firstCategory.fill('H35');
     await secondCategory.fill('H35');
+
+    for (const stage of [1, 2, 3]) {
+      await expect(bulkStageCheckbox(popup, '8511', stage)).toBeChecked();
+      await expect(bulkStageCheckbox(popup, '7203', stage)).toBeChecked();
+    }
+
+    await bulkStageCheckbox(popup, '8511', 2).uncheck();
+    await bulkStageCheckbox(popup, '8511', 3).uncheck();
+
     const verificationUrl = new URL(
       `./race_regs_all.php?gr_id=400&id=${state.race.id}`,
       page.url()
@@ -224,6 +252,9 @@ test.describe('ORIS Mockup Multistage Race Workflow', () => {
 
     await expect(bulkCategoryInput(popup, '8511')).toHaveValue('H35');
     await expect(bulkCategoryInput(popup, '7203')).toHaveValue('H35');
+    await expect(bulkStageCheckbox(popup, '8511', 1)).toBeChecked();
+    await expect(bulkStageCheckbox(popup, '8511', 2)).not.toBeChecked();
+    await expect(bulkStageCheckbox(popup, '8511', 3)).not.toBeChecked();
     await popup.close();
 
     const { participants } = await getOrisMockParticipants(request);
@@ -234,7 +265,7 @@ test.describe('ORIS Mockup Multistage Race Workflow', () => {
     expect(raceParticipants).toHaveLength(3);
     expect(raceParticipants).toEqual(expect.arrayContaining([
       expect.objectContaining({ club_user_id: '39952', stages: '1,2' }),
-      expect.objectContaining({ club_user_id: '38511', stages: '1,2,3' }),
+      expect.objectContaining({ club_user_id: '38511', stages: '1' }),
       expect.objectContaining({ club_user_id: '37517', stages: '1,2,3' }),
     ]));
   });
@@ -282,9 +313,63 @@ test.describe('ORIS Mockup Multistage Race Workflow', () => {
 
     expect(raceParticipants).toHaveLength(2);
     expect(raceParticipants).toEqual(expect.arrayContaining([
-      expect.objectContaining({ club_user_id: '38511', stages: '1,2,3' }),
+      expect.objectContaining({ club_user_id: '38511', stages: '1' }),
       expect.objectContaining({ club_user_id: '37517', stages: '1,2,3' }),
     ]));
+    expect(raceParticipants).not.toEqual(expect.arrayContaining([
+      expect.objectContaining({ club_user_id: '39952' }),
+    ]));
+  });
+
+  test('small manager bulk-adds the removed member and removes them with single edit', async ({ page, request }) => {
+    await loginAs(page, 'smallManager');
+
+    const bulkUrl = `./race_regs_all.php?gr_id=600&id=${state.race.id}`;
+    await page.goto(bulkUrl);
+
+    const category = bulkCategoryInput(page, '9952');
+    await expect(category).toHaveValue('');
+    for (const stage of [1, 2, 3]) {
+      await expect(bulkStageCheckbox(page, '9952', stage)).not.toBeChecked();
+    }
+
+    await category.fill('H35');
+    for (const stage of [1, 2, 3]) {
+      await expect(bulkStageCheckbox(page, '9952', stage)).toBeChecked();
+    }
+
+    await Promise.all([
+      page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+      page.locator('input[type="submit"][value="Proveď změny"]').click(),
+    ]);
+
+    await expect(bulkCategoryInput(page, '9952')).toHaveValue('H35');
+
+    const singleEditUrl = `./race_regs_1.php?gr_id=600&id=${state.race.id}&show_ed=1`;
+    await page.goto(singleEditUrl);
+
+    const memberOption = page.locator(
+      `select[name="user_id"] option[value="${state.memberUser.user_id}"]`
+    );
+    await expect(memberOption).toContainText('[9952]');
+    await page.locator('select[name="user_id"]').selectOption(String(state.memberUser.user_id));
+
+    await expect(page.locator('input[name="kateg"]')).toHaveValue('H35');
+    for (const stage of [1, 2, 3]) {
+      await expect(stageCheckbox(page, stage)).toBeChecked();
+    }
+
+    await submitManagedRaceRegistration(page, state.race.id, {
+      user_id: String(state.memberUser.user_id),
+      kateg: '',
+    });
+
+    const { participants } = await getOrisMockParticipants(request);
+    const raceParticipants = participants.filter((participant) => (
+      String(participant.event_id) === state.orisId
+    ));
+
+    expect(raceParticipants).toHaveLength(2);
     expect(raceParticipants).not.toEqual(expect.arrayContaining([
       expect.objectContaining({ club_user_id: '39952' }),
     ]));

@@ -90,10 +90,14 @@ function zmen_kat(kat)
 	if (focused_row != -1)
 	{
 		kat_name = 'kateg[' + focused_row +']';
-		document.form1.elements[kat_name].value = kat;
+		kat_input = document.form1.elements[kat_name];
+		kat_input.value = kat;
+		selectAllRaceStagesForCategory(kat_input);
 	}
 	return false;
 }
+
+window.addEventListener('load', registerRaceCategoryStageSelection);
 
 //-->
 </SCRIPT>
@@ -246,7 +250,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	{	// neprihlasen
 		$row[] = ($entry_lock) ? '-':'<INPUT TYPE="text" NAME="kateg['.$u.']" SIZE=5 onfocus="javascript:select_row('.$u.');">';
 		if($is_multi_etapa)
-			$row[] = ($entry_lock) ? '-' : RenderEtapyCell($u, $etap_count, range(1, $etap_count), false);
+			$row[] = ($entry_lock) ? '-' : RenderEtapyCell($u, $etap_count, [], false);
 		if($is_spol_dopr_on||$is_sdil_dopr_on)
 			$row[] = '<INPUT TYPE="checkbox" NAME="transport['.$u.']" onfocus="javascript:select_row('.$u.');" onchange="javascript:update_transport(this,'.$u.');">';
 		if($is_sdil_dopr_on)
