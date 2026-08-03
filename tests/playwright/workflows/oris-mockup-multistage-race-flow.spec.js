@@ -228,6 +228,11 @@ test.describe('ORIS Mockup Multistage Race Workflow', () => {
     await expect(bulkStageCheckbox(popup, '9952', 2)).toBeChecked();
     await expect(bulkStageCheckbox(popup, '9952', 3)).not.toBeChecked();
 
+    await bulkCategoryInput(popup, '9952').fill('H35');
+    await expect(bulkStageCheckbox(popup, '9952', 1)).toBeChecked();
+    await expect(bulkStageCheckbox(popup, '9952', 2)).toBeChecked();
+    await expect(bulkStageCheckbox(popup, '9952', 3)).not.toBeChecked();
+
     await firstCategory.fill('H35');
     await secondCategory.fill('H35');
 

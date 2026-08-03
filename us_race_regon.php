@@ -104,7 +104,9 @@ else
 
 $is_multi_etapa = IsMultiEtapaRace($zaznam_z);
 $etap_count = $is_multi_etapa ? (int)$zaznam_z['etap'] : 0;
-$selected_etapy = $new ? range(1, $etap_count) : ParseEtapyString($zaznam_rg['etapy'] ?? null);
+$selected_etapy = ParseEtapyString($zaznam_rg['etapy'] ?? null);
+if ($is_multi_etapa && empty($selected_etapy))
+	$selected_etapy = range(1, $etap_count);
 ?>
 <BR>
 <BUTTON onclick="javascript:close_popup();">Zpět</BUTTON>
@@ -255,6 +257,8 @@ $is_spol_ubyt_on = ($zaznam_z["ubytovani"]==1) && $g_enable_race_accommodation;
 // define table
 $tbl_renderer = RaceRendererFactory::createTable();
 $tbl_renderer->addColumns('id','jmeno','prijmeni','kat');
+if($is_multi_etapa)
+	$tbl_renderer->addColumns('etapy');
 if($is_spol_dopr_on||$is_sdil_dopr_on)
 	$tbl_renderer->addColumns('transport');
 if($is_sdil_dopr_on)
