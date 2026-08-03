@@ -177,6 +177,12 @@ function selectAllRaceStagesForCategory(categoryInput)
 
 	var stages = row.querySelectorAll('input[type="checkbox"][name^="etapy["]');
 	for (var i = 0; i < stages.length; i++)
+	{
+		if (stages[i].checked)
+			return;
+	}
+
+	for (var i = 0; i < stages.length; i++)
 		stages[i].checked = true;
 }
 
