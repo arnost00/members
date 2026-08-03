@@ -40,6 +40,7 @@ These files are not part of the PHP runtime and must not be deployed to the prod
   - `TEST_USERS.member` = `tnov_5`
   - `TEST_USERS.accountant` = `tnov_6`
 - Shared reusable member fixtures keyed by registration id live in `tests/playwright/constants/members.js`
+- The test-only `member-7203-setup` project ensures the shared `7203` fixture before parallel workflow projects start and fails if that registration is already duplicated
 - Shared group IDs, route maps, and per-role login expectations live in `tests/playwright/constants/routes.js`
 - Prefer importing `TEST_USERS` in specs instead of hardcoding seeded usernames
 - Reusable workflow helpers live under `tests/playwright/helpers/`

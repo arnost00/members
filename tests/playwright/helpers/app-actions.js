@@ -117,11 +117,12 @@ function getMemberDirectoryPath(role = 'clubAdmin') {
   }
 }
 
-async function findClubMemberByReg(page, reg, role) {
+async function findClubMembersByReg(page, reg, role) {
   await page.goto(getMemberDirectoryPath(role));
 
   return page.evaluate((formattedReg) => {
     const rows = Array.from(document.querySelectorAll('table.ctmc tbody tr'));
+    const matches = [];
 
     for (const row of rows) {
       const cells = row.querySelectorAll('td');
@@ -135,14 +136,29 @@ async function findClubMemberByReg(page, reg, role) {
       }
 
       const editLink = row.querySelector('a[href*="./user_edit.php"], a[href*="user_edit.php"]');
-      return {
+      matches.push({
         reg: regText,
         editPath: editLink ? editLink.getAttribute('href') : null,
-      };
+      });
     }
 
-    return null;
+    return matches;
   }, formatClubReg(reg));
+}
+
+async function findClubMemberByReg(page, reg, role, options = {}) {
+  const matches = await findClubMembersByReg(page, reg, role);
+
+  if (options.requireUnique && matches.length > 1) {
+    const userIds = matches.map((member) => (
+      getUserIdFromEditPath(member.editPath) || 'unknown'
+    ));
+    throw new Error(
+      `Expected one club member with reg ${formatClubReg(reg)}, found ${matches.length} (user IDs: ${userIds.join(', ')})`
+    );
+  }
+
+  return matches[0] || null;
 }
 
 async function getFinanceDirectoryEntryByReg(page, reg, options = {}) {
@@ -228,7 +244,8 @@ async function getFinanceDirectoryEntryByReg(page, reg, options = {}) {
 async function ensureClubMember(page, overrides = {}) {
   const role = overrides.role || 'clubAdmin';
   const financePage = overrides.financePage;
-  const existingMember = await findClubMemberByReg(page, overrides.reg, role);
+  const lookupOptions = { requireUnique: Boolean(overrides.requireUnique) };
+  const existingMember = await findClubMemberByReg(page, overrides.reg, role, lookupOptions);
 
   if (existingMember) {
     const existingUserId = getUserIdFromEditPath(existingMember.editPath);
@@ -272,7 +289,7 @@ async function ensureClubMember(page, overrides = {}) {
 
   ensureHtmlSubmission(result, 'Ensure club member');
 
-  const createdMember = await findClubMemberByReg(page, overrides.reg, role);
+  const createdMember = await findClubMemberByReg(page, overrides.reg, role, lookupOptions);
   if (!createdMember) {
     throw new Error(`Club member with reg ${formatClubReg(overrides.reg)} was not found after ensure`);
   }
@@ -294,6 +311,7 @@ async function ensureClubMember(page, overrides = {}) {
 async function ensureClubMembers(page, registrationIds, options = {}) {
   const role = options.role || 'clubAdmin';
   const financePage = options.financePage;
+  const requireUnique = Boolean(options.requireUnique);
   const ensuredMembers = [];
 
   for (const registrationId of registrationIds) {
@@ -306,6 +324,7 @@ async function ensureClubMembers(page, registrationIds, options = {}) {
     const member = await ensureClubMember(page, {
       role,
       financePage,
+      requireUnique,
       ...fixture,
     });
 

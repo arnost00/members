@@ -22,7 +22,16 @@ module.exports = defineConfig({
   },
   projects: [
     {
+      name: 'member-7203-setup',
+      testMatch: '**/member-7203.setup.js',
+    },
+    {
       name: 'chromium',
+      testIgnore: [
+        '**/bank-connector-errors.spec.js',
+        '**/member-7203.setup.js',
+      ],
+      dependencies: ['member-7203-setup'],
       use: {
         ...devices['Desktop Chrome'],
       },
