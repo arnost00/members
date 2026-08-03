@@ -58,7 +58,8 @@ test.describe('Multi-User Race Workflow', () => {
     state.run = createWorkflowRun('multi-user-race-flow');
 
     const today = new Date();
-    const entryDate = formatCzDate(addUtcDays(today, 7));
+    const entryDate1 = formatCzDate(addUtcDays(today, -2));
+    const entryDate2 = formatCzDate(addUtcDays(today, 7));
     const raceDate = formatCzDate(addUtcDays(today, 14));
 
     state.managerRaceUser = getTestMemberFixture('8511');
@@ -118,7 +119,8 @@ test.describe('Multi-User Race Workflow', () => {
     state.race = await createRace(registrarPage, request, {
       name: state.labels.raceName,
       note: state.labels.raceNoteInitial,
-      entryDate1: entryDate,
+      entryDate1: entryDate1,
+      entryDate2: entryDate2,
       date: raceDate,
       eventType: 'T',
       transport: '3',

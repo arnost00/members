@@ -31,6 +31,9 @@ type EventRow = MockRow & {
   name: string | null;
   place: string | null;
   stages: number | null;
+  stage1_id: string | null;
+  stage2_id: string | null;
+  stage3_id: string | null;
   sport_id: string | null;
   level_id: string | null;
   ranking: string | null;
@@ -79,6 +82,7 @@ type EntryRow = MockRow & {
   entry_stop: number | null;
   si: string | null;
   note: string | null;
+  stages: string | null;
 };
 
 type ServiceRow = MockRow & {
@@ -183,6 +187,10 @@ function apiClosedRegistration(method: string): JsonObject {
     ExportCreated: new Date().toISOString().slice(0, 19).replace('T', ' '),
     Data: [],
   };
+}
+
+function apiMissingStages(): JsonObject {
+  return { Status: 'Je třeba vybrat alespoň jednu etapu', Data: {} };
 }
 
 function isPlainObject(value: unknown): value is JsonObject {
@@ -501,6 +509,9 @@ async function ensureDatabase(): Promise<void> {
       name VARCHAR(255) NULL,
       place VARCHAR(255) NULL,
       stages INT NULL,
+      stage1_id VARCHAR(32) NULL,
+      stage2_id VARCHAR(32) NULL,
+      stage3_id VARCHAR(32) NULL,
       sport_id ENUM('OB', 'LOB', 'MTBO', 'TRAIL') NULL,
       level_id VARCHAR(255) NULL,
       ranking VARCHAR(32) NULL,
@@ -519,6 +530,13 @@ async function ensureDatabase(): Promise<void> {
       INDEX idx_date (date),
       INDEX idx_deleted (deleted)
     )
+  `);
+
+  await pool.query(`
+    ALTER TABLE mock_events
+    ADD COLUMN IF NOT EXISTS stage1_id VARCHAR(32) NULL AFTER stages,
+    ADD COLUMN IF NOT EXISTS stage2_id VARCHAR(32) NULL AFTER stage1_id,
+    ADD COLUMN IF NOT EXISTS stage3_id VARCHAR(32) NULL AFTER stage2_id
   `);
 
   await pool.query(`
@@ -571,12 +589,18 @@ async function ensureDatabase(): Promise<void> {
       entry_stop INT NULL,
       si VARCHAR(32) NULL,
       note VARCHAR(512) NULL,
+      stages VARCHAR(255) NULL,
       proxy_only TINYINT(1) NOT NULL DEFAULT 1,
       deleted TINYINT(1) NOT NULL DEFAULT 0,
       updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       INDEX idx_event (event_id, deleted),
       INDEX idx_club_user (club_user_id)
     )
+  `);
+
+  await pool.query(`
+    ALTER TABLE mock_entries
+    ADD COLUMN IF NOT EXISTS stages VARCHAR(255) NULL AFTER note
   `);
 
   await pool.query(`
@@ -834,6 +858,9 @@ function composeEvent(row: EventRow, classRows: EventClassRow[], upstreamEvent: 
   overlayValue(row.name, (value) => { overlay.Name = value; });
   overlayValue(row.place, (value) => { overlay.Place = value; });
   overlayValue(row.stages, (value) => { overlay.Stages = Number(value); });
+  overlayValue(row.stage1_id, (value) => { overlay.Stage1 = value; });
+  overlayValue(row.stage2_id, (value) => { overlay.Stage2 = value; });
+  overlayValue(row.stage3_id, (value) => { overlay.Stage3 = value; });
   overlayValue(row.sport_id, (value) => { overlay.Sport = composeSport(value); });
   overlayValue(row.level_id, (value) => { overlay.Level = composeLevel(value); });
   overlayValue(row.ranking, (value) => { overlay.Ranking = value; });
@@ -913,6 +940,7 @@ function composeEntry(row: EntryRow, upstreamEntry: JsonObject | null, event: Js
       EntryStop: 1,
       SI: asString(user?.SI, ''),
       Note: '',
+      Stages: composeEntryStages(row.stages, event),
     }
     : { ...upstreamEntry };
 
@@ -930,7 +958,46 @@ function composeEntry(row: EntryRow, upstreamEntry: JsonObject | null, event: Js
   overlayValue(row.entry_stop, (value) => { overlay.EntryStop = Number(value); });
   overlayValue(row.si, (value) => { overlay.SI = value; });
   overlayValue(row.note, (value) => { overlay.Note = value; });
+  overlayValue(row.stages, (value) => { overlay.Stages = composeEntryStages(value, event); });
   return mergeJson(base, overlay);
+}
+
+function eventStageCount(event: JsonObject | null): number {
+  return Math.max(1, Math.trunc(asNumber(event?.Stages, 1)));
+}
+
+function stageIndexes(value: unknown, stageCount: number): number[] {
+  const indexes = Array.isArray(value) ? value : asString(value).split(',');
+  return Array.from(new Set(indexes
+    .map((item) => Math.trunc(Number(item)))
+    .filter((index) => Number.isFinite(index) && index >= 1 && index <= stageCount)))
+    .sort((left, right) => left - right);
+}
+
+function inputStageIndexes(input: JsonObject, event: JsonObject | null): number[] {
+  const stageCount = eventStageCount(event);
+  if (Object.prototype.hasOwnProperty.call(input, 'stages')) {
+    return stageIndexes(input.stages, stageCount);
+  }
+  if (Object.prototype.hasOwnProperty.call(input, 'Stages') && !isPlainObject(input.Stages)) {
+    return stageIndexes(input.Stages, stageCount);
+  }
+
+  const indexes: number[] = [];
+  for (let index = 1; index <= stageCount; index += 1) {
+    if (asBool(input[`stage${index}`] ?? input[`Stage${index}`])) indexes.push(index);
+  }
+  return indexes;
+}
+
+function composeEntryStages(value: unknown, event: JsonObject | null): JsonObject {
+  const stageCount = eventStageCount(event);
+  const selected = new Set(stageCount === 1 ? [1] : stageIndexes(value, stageCount));
+  const stages: JsonObject = {};
+  for (let index = 1; index <= stageCount; index += 1) {
+    stages[`Stage${index}`] = selected.has(index) ? 1 : 0;
+  }
+  return stages;
 }
 
 function composeService(row: ServiceRow, upstreamService: JsonObject | null): JsonObject {
@@ -985,9 +1052,10 @@ async function findEventByClass(classId: string): Promise<JsonObject | null> {
 type EntryMutationValidation =
   | { type: 'ok' }
   | { type: 'closedRegistration' }
+  | { type: 'missingStages' }
   | { type: 'error'; message: string };
 
-function validateEntryMutation(event: JsonObject | null, classId: string): EntryMutationValidation {
+function validateEntryMutation(event: JsonObject | null, classId: string, input: JsonObject = {}): EntryMutationValidation {
   if (!event) {
     return { type: 'error', message: `Class ${classId || '(missing)'} is not defined for an event.` };
   }
@@ -997,12 +1065,23 @@ function validateEntryMutation(event: JsonObject | null, classId: string): Entry
     return { type: 'error', message: `Class ${classId || '(missing)'} is not defined for event ${asString(event.ID)}.` };
   }
 
-  const deadline = normalizeDateTimeValue(event.EntryDate1).replace(' ', 'T');
-  if (deadline) {
+  if (eventStageCount(event) > 1 && inputStageIndexes(input, event).length === 0) {
+    return { type: 'missingStages' };
+  }
+
+  const deadlineTimestamps = [
+    event.EntryDate1,
+    event.EntryDate2,
+    event.EntryDate3,
+  ].flatMap((value) => {
+    const deadline = normalizeDateTimeValue(value).replace(' ', 'T');
+    if (!deadline) return [];
     const timestamp = Date.parse(`${deadline}Z`);
-    if (Number.isFinite(timestamp) && timestamp < Date.now()) {
-      return { type: 'closedRegistration' };
-    }
+    return Number.isFinite(timestamp) ? [timestamp] : [];
+  });
+  const deadline = Math.max(...deadlineTimestamps);
+  if (deadlineTimestamps.length > 0 && deadline < Date.now()) {
+    return { type: 'closedRegistration' };
   }
 
   return { type: 'ok' };
@@ -1166,16 +1245,20 @@ async function upsertEvent(input: JsonObject): Promise<JsonObject> {
   await pool.query(
     `
       INSERT INTO mock_events (
-        id, date, name, place, stages, sport_id, level_id, ranking, entry_date1, entry_date2,
+        id, date, name, place, stages, stage1_id, stage2_id, stage3_id,
+        sport_id, level_id, ranking, entry_date1, entry_date2,
         entry_date3, entry_koef2, entry_koef3, entry_start, org_abbr, region_id, cancelled,
         proxy_only, deleted
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)
       ON DUPLICATE KEY UPDATE
         date = COALESCE(VALUES(date), date),
         name = COALESCE(VALUES(name), name),
         place = COALESCE(VALUES(place), place),
         stages = COALESCE(VALUES(stages), stages),
+        stage1_id = COALESCE(VALUES(stage1_id), stage1_id),
+        stage2_id = COALESCE(VALUES(stage2_id), stage2_id),
+        stage3_id = COALESCE(VALUES(stage3_id), stage3_id),
         sport_id = COALESCE(VALUES(sport_id), sport_id),
         level_id = COALESCE(VALUES(level_id), level_id),
         ranking = COALESCE(VALUES(ranking), ranking),
@@ -1197,6 +1280,9 @@ async function upsertEvent(input: JsonObject): Promise<JsonObject> {
       nullableString(input, 'name', 'Name'),
       nullableString(input, 'place', 'Place'),
       nullableNumber(input, 'stages', 'Stages') ?? (proxyOnly ? 1 : null),
+      nullableString(input, 'stage1', 'Stage1') ?? (generatedRace ? id : null),
+      nullableString(input, 'stage2', 'Stage2'),
+      nullableString(input, 'stage3', 'Stage3'),
       nullableSportName(input, 'sport', 'sportId', 'Sport') ?? (generatedRace ? 'OB' : null),
       nullableLevelNames(input, 'levels', 'levelIds', 'levelId', 'Level') ?? (generatedRace ? 'OŽ' : null),
       nullableString(input, 'ranking', 'Ranking') ?? (generatedRace ? '1' : null),
@@ -1287,13 +1373,14 @@ async function upsertEntry(input: JsonObject): Promise<JsonObject> {
 
   const classId = nullableString(input, 'classId', 'class', 'ClassID') ?? (isPlainObject(input.Class) ? nullableString(input.Class, 'ID') : null);
   const classDesc = nullableString(input, 'classDesc', 'ClassDesc') ?? (isPlainObject(input.Class) ? nullableString(input.Class, 'Name') : null);
+  const stages = inputStageIndexes(input, event).join(',') || null;
   await pool.query(
     `
       INSERT INTO mock_entries (
         entry_id, event_id, club_user_id, reg_no, class_id, class_desc, name, rent_si, licence,
-        fee, entry_stop, si, note, proxy_only, deleted
+        fee, entry_stop, si, note, stages, proxy_only, deleted
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)
       ON DUPLICATE KEY UPDATE
         event_id = VALUES(event_id),
         club_user_id = COALESCE(VALUES(club_user_id), club_user_id),
@@ -1307,6 +1394,7 @@ async function upsertEntry(input: JsonObject): Promise<JsonObject> {
         entry_stop = COALESCE(VALUES(entry_stop), entry_stop),
         si = COALESCE(VALUES(si), si),
         note = COALESCE(VALUES(note), note),
+        stages = COALESCE(VALUES(stages), stages),
         proxy_only = VALUES(proxy_only),
         deleted = 0
     `,
@@ -1324,6 +1412,7 @@ async function upsertEntry(input: JsonObject): Promise<JsonObject> {
       nullableNumber(input, 'entryStop', 'EntryStop'),
       nullableString(input, 'si', 'SI'),
       nullableString(input, 'note', 'Note'),
+      stages,
       proxyOnly ? 1 : 0,
     ],
   );
@@ -1520,11 +1609,13 @@ async function handleCreateEntry(req: Request, res: Response): Promise<void> {
   try {
     const classId = asString(req.body.class);
     const event = await findEventByClass(classId);
-    const validation = validateEntryMutation(event, classId);
+    const validation = validateEntryMutation(event, classId, req.body);
     if (validation.type !== 'ok') {
       res.json(validation.type === 'closedRegistration'
         ? apiClosedRegistration('createEntry')
-        : apiError(validation.message));
+        : validation.type === 'missingStages'
+          ? apiMissingStages()
+          : apiError(validation.message));
       return;
     }
 
@@ -1557,11 +1648,13 @@ async function handleUpdateEntry(req: Request, res: Response): Promise<void> {
     return;
   }
   const classId = asString(req.body.class ?? rows[0].class_id);
-  const validation = validateEntryMutation(await getEvent(rows[0].event_id), classId);
+  const validation = validateEntryMutation(await getEvent(rows[0].event_id), classId, req.body);
   if (validation.type !== 'ok') {
     res.json(validation.type === 'closedRegistration'
       ? apiClosedRegistration('updateEntry')
-      : apiError(validation.message));
+      : validation.type === 'missingStages'
+        ? apiMissingStages()
+        : apiError(validation.message));
     return;
   }
   const entry = await upsertEntry({
@@ -1787,6 +1880,7 @@ function renderTestbenchPage(
       <td>${escapeHtml(eventLabel(row.event_id))}</td>
       <td>${escapeHtml(userLabel(userId))}</td>
       <td>${escapeHtml(row.class_desc ?? row.class_id)}</td>
+      <td>${escapeHtml(row.stages)}</td>
       <td class="links">
         ${apiLink('getEventEntries', { method: 'getEventEntries', eventid: row.event_id })}
         ${apiLink('getEvent', { method: 'getEvent', id: row.event_id })}
@@ -1896,7 +1990,7 @@ function renderTestbenchPage(
     </section>
     <section id="tab-participants" class="tab">
       <div class="toolbar"><h2>Participants</h2><button type="button" class="create-row" data-table="participants">Create</button></div>
-      <div class="table-wrap"><table><thead><tr><th>Entry ID</th><th>Race</th><th>User</th><th>Class</th><th>API requests</th><th>Action</th></tr></thead><tbody>${entryRows}</tbody></table></div>
+      <div class="table-wrap"><table><thead><tr><th>Entry ID</th><th>Race</th><th>User</th><th>Class</th><th>Stages</th><th>API requests</th><th>Action</th></tr></thead><tbody>${entryRows}</tbody></table></div>
     </section>
     <section id="tab-network" class="tab">
       <div class="toolbar"><h2>Network</h2></div>
@@ -1992,6 +2086,7 @@ function renderTestbenchPage(
         { name: 'entryStop', row: 'entry_stop', label: 'Entry stop', type: 'number' },
         { name: 'si', row: 'si', label: 'SI' },
         { name: 'note', row: 'note', label: 'Note', type: 'textarea', wide: true },
+        { name: 'stages', row: 'stages', label: 'Stages', wide: true },
       ],
     };
 

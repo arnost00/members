@@ -1,4 +1,4 @@
-FROM php:8.2-apache as base
+FROM php:8.2-apache AS base
 
 # Install mysqli and clean up
 RUN docker-php-ext-install mysqli
@@ -22,7 +22,7 @@ Alias /members /var/www/html/members\n\
 
 EXPOSE 10100
 
-FROM base as autotest
+FROM base AS autotest
 
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
@@ -43,7 +43,7 @@ RUN chmod +x /usr/local/bin/members-entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/members-entrypoint.sh"]
 
-FROM autotest as dev
+FROM autotest AS dev
 
 # Install common VS Code Container Tools dependencies.
 # bubblewrap is required for codex

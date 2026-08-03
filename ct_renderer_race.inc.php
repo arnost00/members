@@ -131,6 +131,7 @@ class RaceRendererFactory extends AColumnRendererFactory {
             'reg' => new HelpHeaderRenderer('Reg.č.',ALIGN_CENTER,"Registrační číslo"),
             'si_chip' => new DefaultHeaderRenderer('SI čip',ALIGN_RIGHT),
             'kat' => new KategoryHeadderRenderer('Kategorie',ALIGN_CENTER,"Zobrazí počet účastníků v jednotlivých kategoriích"),
+            'etapy' => new DefaultHeaderRenderer('Etapy',ALIGN_CENTER),
             'transport' => new HelpHeaderRenderer('SD',ALIGN_CENTER,"Společná"),
             'sedadel' => new HelpHeaderRenderer('&#x1F697;',ALIGN_CENTER,'Nabízených sedadel'),
             'ubytovani' => new HelpHeaderRenderer('SU',ALIGN_CENTER,"Společné ubytování"),

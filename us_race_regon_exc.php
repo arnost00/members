@@ -10,6 +10,7 @@ $sedadel = $_REQUEST['sedadel'] ?? null;
 $transport = $_REQUEST['transport'] ?? null;
 $ubytovani = $_REQUEST['ubytovani'] ?? null;
 $novy = $_REQUEST['novy'] ?? null;
+$etapy = $_REQUEST['etapy'] ?? [];
 
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
@@ -44,13 +45,21 @@ if ($kat != '')
 		$pozn=correct_sql_string($pozn);
 		$pozn2=correct_sql_string($pozn2);
 
-		@$vysledek_z=query_db("SELECT datum, vicedenni, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, transport, ext_id FROM ".TBL_RACE." WHERE id=$id_zav");
+		@$vysledek_z=query_db("SELECT datum, vicedenni, etap, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, transport, ext_id FROM ".TBL_RACE." WHERE id=$id_zav");
 		$zaznam_z = mysqli_fetch_array($vysledek_z);
 
 		$termin = raceterms::GetCurr4RegTerm($zaznam_z);
 
-		if ($termin != 0) // not process if invalid termin number
+		$is_multi_etapa = IsMultiEtapaRace($zaznam_z);
+		$etap_count = $is_multi_etapa ? (int)$zaznam_z['etap'] : 0;
+		$selected_etapy = $is_multi_etapa ? array_values(array_intersect(range(1, $etap_count), array_map('intval', (array)$etapy))) : [];
+
+		if ($is_multi_etapa && empty($selected_etapy)) {
+			$sync_error_msg = 'Musíte vybrat alespoň jednu etapu.';
+		}
+		else if ($termin != 0) // not process if invalid termin number
 		{
+			$etapy_sql = $is_multi_etapa ? "'".BuildEtapyString($selected_etapy)."'" : 'NULL';
 			if ( $zaznam_z["transport"] == 3 ) {
 				// shared transport
 				if ( !isset($sedadel) || $sedadel=='' || $sedadel=='null') {
@@ -83,7 +92,7 @@ if ($kat != '')
 					$previous_state = $zaznam;
 					$sync_status_update = ($has_ext_id && $zaznam['sync_status'] !== 'PENDING_CREATE') ? ", sync_status='PENDING_UPDATE'" : "";
 					$sync_action = ($has_ext_id && $zaznam['sync_status'] === 'PENDING_CREATE') ? 'create' : 'update';
-					query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$pozn', pozn_in='$pozn2', termin='$termin', transport=$transport, sedadel=$sedadel, ubytovani=$ubytovani".$sync_status_update." WHERE id='".$zaznam['id']."'");
+					query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$pozn', pozn_in='$pozn2', termin='$termin', transport=$transport, sedadel=$sedadel, ubytovani=$ubytovani, etapy=$etapy_sql".$sync_status_update." WHERE id='".$zaznam['id']."'");
 					$inserted_or_updated_id = $zaznam['id'];
 				}
 				else
@@ -91,7 +100,7 @@ if ($kat != '')
 					$is_new_insert = true;
 					$sync_status = $has_ext_id ? 'PENDING_CREATE' : 'LOCAL_ONLY';
 					$sync_action = $has_ext_id ? 'create' : '';
-					$vysledek = query_db("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in, termin, transport, sedadel, ubytovani, sync_status) VALUES ('$id_us','$id_zav','$kat','$pozn','$pozn2','$termin',$transport, $sedadel, $ubytovani, '$sync_status')");	
+					$vysledek = query_db("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in, termin, transport, sedadel, ubytovani, etapy, sync_status) VALUES ('$id_us','$id_zav','$kat','$pozn','$pozn2','$termin',$transport, $sedadel, $ubytovani, $etapy_sql, '$sync_status')");
 					if ($vysledek !== false && mysqli_affected_rows($db_conn) > 0) {
 						$inserted_or_updated_id = mysqli_insert_id($db_conn);
 						query_db("UPDATE ".TBL_RACE." SET prihlasenych = prihlasenych + 1 WHERE id = '$id_zav'");
@@ -106,7 +115,7 @@ if ($kat != '')
 					$previous_state = $zaznam;
 					$sync_status_update = ($has_ext_id && $zaznam['sync_status'] !== 'PENDING_CREATE') ? ", sync_status='PENDING_UPDATE'" : "";
 					$sync_action = ($has_ext_id && $zaznam['sync_status'] === 'PENDING_CREATE') ? 'create' : 'update';
-					query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$pozn', pozn_in='$pozn2', transport=$transport, sedadel=$sedadel, ubytovani=$ubytovani".$sync_status_update." WHERE id='".$id_z."'");
+					query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$pozn', pozn_in='$pozn2', transport=$transport, sedadel=$sedadel, ubytovani=$ubytovani, etapy=$etapy_sql".$sync_status_update." WHERE id='".$id_z."'");
 					$inserted_or_updated_id = $id_z;
 				}
 			}
@@ -138,9 +147,10 @@ if ($kat != '')
 								$prev_transport = (int)$previous_state['transport'];
 								$prev_sedadel = (!isset($previous_state['sedadel']) || $previous_state['sedadel'] === null) ? 'null' : (int)$previous_state['sedadel'];
 								$prev_ubytovani = (!isset($previous_state['ubytovani']) || $previous_state['ubytovani'] === null) ? 'null' : (int)$previous_state['ubytovani'];
+								$prev_etapy = empty($previous_state['etapy']) ? 'NULL' : "'".correct_sql_string($previous_state['etapy'])."'";
 								$prev_sync_status = correct_sql_string($previous_state['sync_status']);
 
-								query_db("UPDATE ".TBL_ZAVXUS." SET kat='$prev_kat', pozn='$prev_pozn', pozn_in='$prev_pozn_in', termin='$prev_termin', transport=$prev_transport, sedadel=$prev_sedadel, ubytovani=$prev_ubytovani, sync_status='$prev_sync_status' WHERE id='$inserted_or_updated_id'");
+								query_db("UPDATE ".TBL_ZAVXUS." SET kat='$prev_kat', pozn='$prev_pozn', pozn_in='$prev_pozn_in', termin='$prev_termin', transport=$prev_transport, sedadel=$prev_sedadel, ubytovani=$prev_ubytovani, etapy=$prev_etapy, sync_status='$prev_sync_status' WHERE id='$inserted_or_updated_id'");
 							}
 						}
 					}

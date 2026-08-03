@@ -521,4 +521,35 @@ function RenderCategoryCounts ( array $category_counts ) {
 	</script>';
 }
 
+// vicedenni (etapovy) zavod s vice nez 1 etapou - ORIS vyzaduje vyber etap pri prihlasce
+function IsMultiEtapaRace($race) {
+	return is_array($race) && !empty($race['vicedenni']) && (int)($race['etap'] ?? 0) > 1;
+}
+
+// serazeny, deduplikovany seznam cisel etap (1..N) jako retezec "1,2,3"
+function BuildEtapyString(array $stages) {
+	$stages = array_unique(array_map('intval', $stages));
+	sort($stages);
+	return implode(',', $stages);
+}
+
+// retezec se vsemi etapami zavodu, napr. pro 3 etapy "1,2,3"
+function AllEtapyString($etapCount) {
+	return implode(',', range(1, (int)$etapCount));
+}
+
+// rozparsuje ulozeny retezec "1,2,3" na pole celych cisel
+function ParseEtapyString($etapy) {
+	if (empty($etapy)) return [];
+	return array_values(array_filter(array_map('intval', explode(',', $etapy))));
+}
+
+// vykresli checkboxy pro vyber etap, $selected = pole cisel etap ktere maji byt zaskrtnute
+function RenderEtapyCheckboxes($etapCount, array $selected, $inputName = 'etapy[]') {
+	for ($e = 1; $e <= (int)$etapCount; $e++) {
+		$checked = in_array($e, $selected) ? ' checked' : '';
+		echo '<label><input type="checkbox" name="'.$inputName.'" value="'.$e.'"'.$checked.'> Etapa '.$e.'</label> ';
+	}
+}
+
 ?>

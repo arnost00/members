@@ -26,7 +26,7 @@ DrawPageTitle('Seznam závodníků přihlášených na závod');
 
 db_Connect();
 
-$query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.termin, z.si_chip as t_si_chip, z.id_user, z.transport transport, z.sedadel, z.ubytovani ubytovani, z.sync_status FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id.' ORDER BY z.termin ASC, z.id ASC';
+$query = 'SELECT u.*, z.kat, z.pozn, z.pozn_in, z.termin, z.si_chip as t_si_chip, z.id_user, z.transport transport, z.sedadel, z.ubytovani ubytovani, z.etapy, z.sync_status FROM '.TBL_ZAVXUS.' as z, '.TBL_USER.' as u WHERE z.id_user = u.id AND z.id_zavod='.$id.' ORDER BY z.termin ASC, z.id ASC';
 @$vysledek=query_db($query);
 // Fetch all rows into array
 $zaznamy = $vysledek ? mysqli_fetch_all($vysledek, MYSQLI_ASSOC) : [];
@@ -58,6 +58,8 @@ $tbl_renderer->addColumns('id','jmeno','prijmeni');
 if ($us == 0) 
 	$tbl_renderer->addColumns('reg','si_chip');
 $tbl_renderer->addColumns('kat');
+if(IsMultiEtapaRace($zaznam_z))
+	$tbl_renderer->addColumns('etapy');
 if($is_spol_dopr_on||$is_sdil_dopr_on)
 	$tbl_renderer->addColumns('transport');
 if($is_sdil_dopr_on)

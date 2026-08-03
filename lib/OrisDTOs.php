@@ -73,6 +73,8 @@ class OrisEntryRequestDTO {
     public int $rentSi;
     public ?string $note;
     public ?string $entryId;
+    public int $etapCount;
+    public array $selectedEtapy;
 
     public function __construct(
         ?string $clubuser,
@@ -80,7 +82,9 @@ class OrisEntryRequestDTO {
         ?string $si,
         bool $rentSi = false,
         ?string $note = null,
-        ?string $entryId = null
+        ?string $entryId = null,
+        int $etapCount = 0,
+        array $selectedEtapy = []
     ) {
         $this->clubuser = $clubuser;
         $this->classId = $classId;
@@ -88,6 +92,8 @@ class OrisEntryRequestDTO {
         $this->rentSi = $rentSi ? 1 : 0;
         $this->note = $note;
         $this->entryId = $entryId;
+        $this->etapCount = $etapCount;
+        $this->selectedEtapy = $selectedEtapy;
     }
 
     public function toArray(): array {
@@ -100,6 +106,10 @@ class OrisEntryRequestDTO {
         $data['rent_si'] = $this->rentSi ? 1 : 0;
         if ($this->note !== null && $this->note !== '') $data['note'] = $this->note;
         if ($this->entryId !== null) $data['entryid'] = $this->entryId;
+        // Vicedenni (etapovy) zavod - ORIS vyzaduje stageX=1/0 pro kazdou etapu 1..N
+        for ($stage = 1; $stage <= $this->etapCount; $stage++) {
+            $data['stage'.$stage] = in_array($stage, $this->selectedEtapy) ? 1 : 0;
+        }
         return $data;
     }
 }

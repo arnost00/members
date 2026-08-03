@@ -11,6 +11,7 @@ $new_termin = $_REQUEST['new_termin'] ?? null;
 $transport = $_REQUEST['transport'] ?? null;
 $sedadel = $_REQUEST['sedadel'] ?? null;
 $ubytovani = $_REQUEST['ubytovani'] ?? null;
+$etapy = $_REQUEST['etapy'] ?? [];
 
 //TBD: podpora entry_locked
 
@@ -85,7 +86,15 @@ if ( $is_spol_dopr_on) {
 
 $ubytovani = ($is_spol_ubyt_on) ? $ubytovani : 0;
 
-if($termin != 0)
+$is_multi_etapa = IsMultiEtapaRace($zaznam_z);
+$etap_count = $is_multi_etapa ? (int)$zaznam_z['etap'] : 0;
+$selected_etapy = $is_multi_etapa ? array_values(array_intersect(range(1, $etap_count), array_map('intval', (array)$etapy))) : [];
+$etapy_sql = $is_multi_etapa ? "'".BuildEtapyString($selected_etapy)."'" : 'NULL';
+
+if ($is_multi_etapa && $kateg != '' && empty($selected_etapy)) {
+	$sync_error = 'Musíte vybrat alespoň jednu etapu.';
+}
+else if($termin != 0)
 {
 	$sync_action = '';
 	$inserted_or_updated_id = 0;
@@ -128,7 +137,7 @@ if($termin != 0)
 				$sync_status_update = ", sync_status='PENDING_UPDATE'";
 			}
 			
-			$result=query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kateg', pozn='$pozn', pozn_in='$pozn2', termin='$termin', transport = '$transport', sedadel = ".$sedadel.", ubytovani = '$ubytovani'".$sync_status_update." WHERE id_zavod = '$id' AND id_user = '$user_id'")
+			$result=query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kateg', pozn='$pozn', pozn_in='$pozn2', termin='$termin', transport = '$transport', sedadel = ".$sedadel.", ubytovani = '$ubytovani', etapy = ".$etapy_sql.$sync_status_update." WHERE id_zavod = '$id' AND id_user = '$user_id'")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se změnit přihlášku člena.");
@@ -150,7 +159,7 @@ if($termin != 0)
 			
 			$sync_status = !empty($zaznam_z['ext_id']) ? 'PENDING_CREATE' : 'LOCAL_ONLY';
 
-			$result=query_db("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in,termin,transport,sedadel,ubytovani,sync_status) VALUES ('$user_id','$id','$kateg', '$pozn', '$pozn2','$termin','$transport',".$sedadel.",'$ubytovani','$sync_status')")
+			$result=query_db("INSERT INTO ".TBL_ZAVXUS." (id_user, id_zavod, kat, pozn, pozn_in,termin,transport,sedadel,ubytovani,etapy,sync_status) VALUES ('$user_id','$id','$kateg', '$pozn', '$pozn2','$termin','$transport',".$sedadel.",'$ubytovani',".$etapy_sql.",'$sync_status')")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se změnit přihlášku člena.");
@@ -205,9 +214,10 @@ if($termin != 0)
 							$prev_transport = (int)$previous_state['transport'];
 							$prev_sedadel = (!isset($previous_state['sedadel']) || $previous_state['sedadel'] === null) ? 'null' : (int)$previous_state['sedadel'];
 							$prev_ubytovani = (!isset($previous_state['ubytovani']) || $previous_state['ubytovani'] === null) ? 'null' : (int)$previous_state['ubytovani'];
+							$prev_etapy = empty($previous_state['etapy']) ? 'NULL' : "'".correct_sql_string($previous_state['etapy'])."'";
 							$prev_sync_status = correct_sql_string($previous_state['sync_status']);
 
-							query_db("UPDATE ".TBL_ZAVXUS." SET kat='$prev_kat', pozn='$prev_pozn', pozn_in='$prev_pozn_in', termin='$prev_termin', transport=$prev_transport, sedadel=$prev_sedadel, ubytovani=$prev_ubytovani, sync_status='$prev_sync_status' WHERE id='$inserted_or_updated_id'");
+							query_db("UPDATE ".TBL_ZAVXUS." SET kat='$prev_kat', pozn='$prev_pozn', pozn_in='$prev_pozn_in', termin='$prev_termin', transport=$prev_transport, sedadel=$prev_sedadel, ubytovani=$prev_ubytovani, etapy=$prev_etapy, sync_status='$prev_sync_status' WHERE id='$inserted_or_updated_id'");
 						}
 					}
 				}

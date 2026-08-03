@@ -50,12 +50,18 @@ The server listens on port `10301` by default.
 - `POST /__testbench/api/races/:eventId/services`
 
 Race create/update accepts `proxy_only` (`1` for mock/local-only, `0` for upstream overlay).
+Mock multistage races can link their component events with `stage1`, `stage2`, and
+`stage3` (or the equivalent ORIS-style `Stage1`, `Stage2`, and `Stage3` fields).
 Race sport is stored by name (`OB`, `LOB`, `MTBO`, or `TRAIL`) in an enum column.
 Levels are stored by name (for example `MČR,OŽ`), while regions continue to use ORIS region IDs.
 For compatibility, race input may use either names (`sport`, `levels`) or ORIS IDs (`sportId`, `levelIds`).
 When omitted, `entryStart` remains empty for newly created races.
 When an upstream overlay race is saved, the mock fetches the upstream event and stores all returned classes in the mock database so later local entry mutations can resolve `class` IDs without another event lookup.
 Successful upstream `getEvent` requests through the mock also refresh the stored class snapshot.
+Participant `stages` values are stored as comma-separated, one-based stage indexes (for example `1,3`).
+ORIS-compatible `createEntry` and `updateEntry` calls accept stage flags such as
+`stage1=1&stage2=0&stage3=1`; a multistage entry must select at least one stage.
+`getEventEntries` exposes the selection as a `Stages` object containing `Stage1`, `Stage2`, and so on.
 
 The API log path can be overridden with `ORIS_MOCK_API_LOG_FILE`.
 
