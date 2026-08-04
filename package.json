@@ -12,6 +12,7 @@
     "test:e2e:no-oris": "MEMBERS_E2E_SUITE=no-oris playwright test",
     "test:e2e:no-oris-key": "MEMBERS_E2E_SUITE=no-oris-key playwright test",
     "test:e2e:bank-errors": "playwright test -c playwright.bank-errors.config.js",
+    "test:e2e:oris-errors": "playwright test -c playwright.oris-errors.config.js",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:ui": "playwright test --ui",
     "playwright:install": "playwright install chromium"

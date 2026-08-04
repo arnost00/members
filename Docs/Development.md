@@ -63,12 +63,15 @@ docker compose -p members-autotest -f docker-compose.autotest.yml exec web npm r
 docker compose -p members-autotest -f docker-compose.autotest.yml exec web npm run test:e2e:no-oris
 docker compose -p members-autotest -f docker-compose.autotest.yml exec web npm run test:e2e:no-oris-key
 docker compose -p members-autotest -f docker-compose.autotest.yml exec web npm run test:e2e:bank-errors
+docker compose -p members-autotest -f docker-compose.autotest.yml exec web npm run test:e2e:oris-errors
 docker compose -p members-autotest -f docker-compose.autotest.yml down
 ```
 
 Přepínač `--wait` počká, až budou kontejnery označené jako `healthy`. V autotest stacku to znamená, že je připravená databáze, běží web a bank a ORIS mock odpovídají na health endpoint, takže testy můžeš spustit hned po startu bez další prodlevy.
 
-Sada `no-oris` opakuje testy nezávislé na ORIS s vypnutou integrací a ORIS mockem v režimu `service_down` (HTTP 503). Sada `no-oris-key` ponechá integraci i mock server zapnuté, ale aplikaci neposkytne klubový klíč. Obě sady po dokončení obnoví přesné předchozí síťové nastavení ORIS mocku a vynechávají ORIS workflow i samostatné testy chyb banky.
+Sada `no-oris` opakuje testy nezávislé na ORIS s vypnutou integrací a ORIS mockem v režimu `service_down` (HTTP 503). Sada `no-oris-key` ponechá integraci i mock server zapnuté, ale aplikaci neposkytne klubový klíč. Obě sady po dokončení obnoví přesné předchozí síťové nastavení ORIS mocku a vynechávají ORIS workflow i samostatné testy chyb konektorů.
+
+Sady `bank-errors` a `oris-errors` jsou záměrně oddělené od výchozího paralelního běhu. Přepínají globální chybové režimy příslušného mocku; ORIS sada navíc ověřuje import závodu a vytvoření i odstranění přihlášky při síťových a HTTP chybách.
 
 ## Manuální testy
 

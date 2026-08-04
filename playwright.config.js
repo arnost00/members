@@ -9,7 +9,10 @@ const alternateOrisSuite = noOrisSuite || noOrisKeySuite;
 const applicationHeaders = alternateOrisSuite
   ? { 'X-Members-Autotest-Suite': testSuite }
   : undefined;
-const regularTestIgnore = ['**/bank-connector-errors.spec.js'];
+const regularTestIgnore = [
+  '**/bank-connector-errors.spec.js',
+  '**/oris-connector-errors.spec.js',
+];
 const alternateTestIgnore = [
   ...regularTestIgnore,
   '**/workflows/oris-*.spec.js',

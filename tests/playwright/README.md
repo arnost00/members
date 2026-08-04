@@ -23,8 +23,9 @@ These files are not part of the PHP runtime and must not be deployed to the prod
 5. Run the manual-only bank connector error suite:
    ```bash
    npm run test:e2e:bank-errors
+   npm run test:e2e:oris-errors
    ```
-   This suite is intentionally excluded from the default `npm run test:e2e` run because it toggles global bank mock failure modes and can interfere with other finance workflows.
+   These suites are intentionally excluded from the default `npm run test:e2e` run because they toggle global mock failure modes and can interfere with other workflows.
 6. Write new specs using shared constants instead of hardcoded usernames:
    ```js
    const { TEST_USERS } = require('./constants/users');
@@ -56,3 +57,5 @@ These files are not part of the PHP runtime and must not be deployed to the prod
 - Manual-only suites can use a dedicated Playwright config when they must stay out of the default parallel run
   - Bank connector error checks: `npm run test:e2e:bank-errors`
   - Config: `playwright.bank-errors.config.js`
+  - ORIS connector error checks: `npm run test:e2e:oris-errors`
+  - Config: `playwright.oris-errors.config.js`

@@ -326,6 +326,8 @@ async function removeRaceParticipant(page, raceId, reg, options = {}) {
 module.exports = {
   ensureOrisRace,
   ensureRaceParticipants,
+  openOrisRaceImportPopup,
+  readOrisRaceSummary,
   readRaceParticipants,
   removeRaceParticipant,
 };
