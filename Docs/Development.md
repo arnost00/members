@@ -25,7 +25,7 @@ PHP debug ve Visual Studio Code:
 * spusť konfiguraci `Listen for PHP Xdebug` z `.vscode/launch.json`
 * Xdebug v dev image poslouchá na portu `9003` a startuje se pro každý request
 
-Konfigurační soubory, které aplikace v kontejneru používá, jsou publikované v gitu a připojené z `docker/config/dev` do `cfg` jako read-only. Upravuj proto soubory v `docker/config/dev`, ne jejich cíle v `cfg`.
+Konfigurační soubory, které aplikace v kontejneru používá, jsou publikované v gitu a připojené z `docker/config/dev` do `www/cfg` jako read-only. Upravuj proto soubory v `docker/config/dev`, ne jejich cíle v `www/cfg`.
 
 Dostupné služby:
 
@@ -94,18 +94,19 @@ Dostupné služby:
 
 Vhodná pro manuální testování a změny nastavení.
 
-* zkopíruj `members/cfg/_cfg.php.default` do `members/cfg/_cfg.php` a uprav jej, nebo použij připravený [`_cfg.php`](X_cfg.php)
-* zkopíruj `members/cfg/_globals.php.default` do `members/cfg/_globals.php` a uprav jej, nebo použij připravený [`_globals.php`](X_globals.php)
-* zkopíruj `members/cfg/_tables.php.default` do `members/cfg/_tables.php` a uprav jej, nebo použij připravený [`_tables.php`](X_tables.php)
+* zkopíruj `members/www/cfg/_cfg.php.default` do `members/www/cfg/_cfg.php` a uprav jej, nebo použij připravený [`_cfg.php`](X_cfg.php)
+* zkopíruj `members/www/cfg/_globals.php.default` do `members/www/cfg/_globals.php` a uprav jej, nebo použij připravený [`_globals.php`](X_globals.php)
+* zkopíruj `members/www/cfg/_tables.php.default` do `members/www/cfg/_tables.php` a uprav jej, nebo použij připravený [`_tables.php`](X_tables.php)
 
 Výsledná struktura:
 
 ```text
 members
-├── cfg
-│   ├── _cfg.php
-│   ├── _globals.php
-│   └── _tables.php
+├── www
+│   └── cfg
+│       ├── _cfg.php
+│       ├── _globals.php
+│       └── _tables.php
 ├── docker
 │   └── db_init
 └── ...
@@ -135,7 +136,7 @@ Databáze:
 
 Práce s kontejnery:
 
-* kód můžeš měnit z hosta i z kontejneru, logy jsou v `members/logs`
+* kód můžeš měnit z hosta i z kontejneru, aplikační logy jsou v `members/www/logs`
 * CLI přístup do PHP kontejneru:
 
 ```bash
@@ -172,8 +173,8 @@ docker compose up --build
 Nevytvoří se adresář `logs`:
 
 ```bash
-docker compose exec web mkdir -p /var/www/html/members/logs
-docker compose exec web chown -R www-data:www-data /var/www/html/members/logs
+docker compose exec web mkdir -p /var/www/html/members/www/logs
+docker compose exec web chown -R www-data:www-data /var/www/html/members/www/logs
 ```
 
 ## Jak dodat změny

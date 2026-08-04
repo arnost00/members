@@ -106,7 +106,7 @@ const config = {
   upstreamBaseUrl: normalizeBaseUrl(process.env.ORIS_MOCK_UPSTREAM_BASE_URL ?? 'https://oris.ceskyorientak.cz/'),
   defaultClubId: process.env.ORIS_MOCK_DEFAULT_CLUB_ID ?? '205',
   defaultClubAbbr: process.env.ORIS_MOCK_DEFAULT_CLUB_ABBR ?? 'ZBM',
-  apiLogFile: process.env.ORIS_MOCK_API_LOG_FILE ?? path.join(process.cwd(), 'logs', 'oris_mock_api.log'),
+  apiLogFile: process.env.ORIS_MOCK_API_LOG_FILE ?? path.join(process.cwd(), 'www', 'logs', 'oris_mock_api.log'),
 };
 
 const TESTBENCH_BASE = '/__testbench';

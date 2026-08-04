@@ -20,3 +20,8 @@ See accompanying file `LICENSE_1_0.txt` or copy at http://www.boost.org/LICENSE_
 
 # Development
 See the [manual for developers](Docs/Development.md)
+
+# Deployment
+The productive LAMP web root is `www/`. Deploy its contents as the existing
+`/members` application; repository tooling such as Docker, tests, mocks, and
+Node packages must remain outside the productive web root.
