@@ -86,9 +86,10 @@ function processEntry($row, $action, $service) {
         return;
     }
 
-    // Ignore relays
-    if ($raceRow && isset($raceRow['typ0']) && $raceRow['typ0'] === 'S') {
-        query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_status` = 'LOCAL_ONLY' WHERE `id` = " . (int)$id);
+    // Relay races (zebricek flag 32 = Štafety) use a completely different ORIS entry
+    // process (team/leg registration) - always skip, don't persist any sync_status so
+    // the entry resumes normal syncing automatically if the flag is ever corrected.
+    if (((int)($raceRow['zebricek'] ?? 0) & 32) !== 0) {
         return;
     }
 
