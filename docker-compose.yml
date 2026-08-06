@@ -10,7 +10,7 @@ services:
       db:    #this line links this container to the db container
         condition: service_healthy    # wait until the autotest database import is complete
     volumes:
-      - ./:/var/www/html/members    #this line maps the content of ./html in your pc to the /var/www/html of the container
+      - ./:/var/www/html/members    # mount the repository; Apache exposes only the www runtime
   db:
     image: mariadb:10.11
     environment:

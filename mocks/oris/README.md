@@ -13,8 +13,11 @@ Development and autotest sidecar for the members ORIS integration.
 - keeps mutating calls local-only: `createEntry`, `updateEntry`, `deleteEntry`, `createPerson`, `editPerson`, `createClubUser`, `editClubUser`
 - provides a testbench UI at `/__testbench`
 - provides JSON endpoints under `/__testbench/api/*` for automatic tests
-- logs ORIS-compatible `/API/` requests to `logs/oris_mock_api.log` by default
+- logs ORIS-compatible `/API/` requests to `www/logs/oris_mock_api.log` by default
 - supports network disturbance modes: `normal`, `force_client_error`, `service_down`, `delay`, `hang`, `close_connection`
+- requires the exact key `mockClubKey` for the same protected methods as `OrisIntegrationService::CLUB_KEY_REQUIRED_METHODS`
+
+Protected methods without `clubkey` return the ORIS status `Zadejte všechny požadované informace`. A supplied key other than `mockClubKey` returns `Key not valid`. Both responses keep the normal ORIS JSON envelope (`Method`, `Format`, `Status`, `ExportCreated`, and an empty `Data` array).
 
 ## Run inside the dev web container
 

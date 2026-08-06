@@ -50,6 +50,10 @@ async function setOrisMockSettings(request, overrides = {}) {
   return postJson(request, '/settings', overrides);
 }
 
+async function getOrisMockSettings(request) {
+  return getJson(request, '/settings');
+}
+
 async function createOrisMockRace(request, overrides = {}) {
   const hasClasses = overrides.classes !== undefined || overrides.Classes !== undefined;
   const defaults = {
@@ -161,6 +165,7 @@ module.exports = {
   getOrisApiEventEntries,
   getOrisMockParticipants,
   getOrisMockRaceEntries,
+  getOrisMockSettings,
   resetOrisMock,
   setOrisMockSettings,
   updateOrisMockRace,

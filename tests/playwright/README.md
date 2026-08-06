@@ -14,12 +14,19 @@ These files are not part of the PHP runtime and must not be deployed to the prod
    ```bash
    npm run test:e2e
    ```
-4. Run the manual-only bank connector error suite:
+4. Repeat the non-ORIS workflows with ORIS fully disabled or with only its club key omitted:
+   ```bash
+   npm run test:e2e:no-oris
+   npm run test:e2e:no-oris-key
+   ```
+   These command-line-only suites send a test header understood only by the committed Docker autotest configuration. They keep the ORIS mock process and health endpoint running, temporarily select the required mock mode, and restore its exact previous mode, status code, and delay after the run.
+5. Run the manual-only bank connector error suite:
    ```bash
    npm run test:e2e:bank-errors
+   npm run test:e2e:oris-errors
    ```
-   This suite is intentionally excluded from the default `npm run test:e2e` run because it toggles global bank mock failure modes and can interfere with other finance workflows.
-5. Write new specs using shared constants instead of hardcoded usernames:
+   These suites are intentionally excluded from the default `npm run test:e2e` run because they toggle global mock failure modes and can interfere with other workflows.
+6. Write new specs using shared constants instead of hardcoded usernames:
    ```js
    const { TEST_USERS } = require('./constants/users');
    const user = TEST_USERS.member;
@@ -28,6 +35,8 @@ These files are not part of the PHP runtime and must not be deployed to the prod
 ## Configuration
 
 - `PLAYWRIGHT_BASE_URL` overrides the application URL. Default: `http://web:10100/members/`
+- `MEMBERS_E2E_SUITE=no-oris` disables all ORIS configuration for application requests and makes mock `/API` return HTTP 503
+- `MEMBERS_E2E_SUITE=no-oris-key` leaves ORIS enabled but omits `$g_oris_club_key` for application requests
 - The reusable login helper lives in `tests/playwright/components/login.js`
 - Shared auth constants live in `tests/playwright/constants/auth.js`
   - `DEFAULT_PASSWORD` = `54321`
@@ -49,3 +58,5 @@ These files are not part of the PHP runtime and must not be deployed to the prod
 - Manual-only suites can use a dedicated Playwright config when they must stay out of the default parallel run
   - Bank connector error checks: `npm run test:e2e:bank-errors`
   - Config: `playwright.bank-errors.config.js`
+  - ORIS connector error checks: `npm run test:e2e:oris-errors`
+  - Config: `playwright.oris-errors.config.js`

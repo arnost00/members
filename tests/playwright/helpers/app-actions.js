@@ -545,11 +545,15 @@ async function createRace(page, request, overrides = {}) {
     throw new Error('Create race requires categories');
   }
 
-  await page.goto('./race_new.php?type=0');
+  const multistage = overrides.endDate !== undefined || overrides.stages !== undefined;
+  const raceType = multistage ? 1 : 0;
 
-  const result = await postFormInSession(page, './race_new_exc.php?rtype=0', {
+  await page.goto(`./race_new.php?type=${raceType}`);
+
+  const result = await postFormInSession(page, `./race_new_exc.php?rtype=${raceType}`, {
     ext_id: '',
     datum: overrides.date,
+    datum2: overrides.endDate || '',
     nazev: overrides.name,
     misto: overrides.place || 'Brno',
     oddil: overrides.club || 'TST',
@@ -560,7 +564,7 @@ async function createRace(page, request, overrides = {}) {
     accommodation: overrides.accommodation || '0',
     kapacita: overrides.capacity || '20',
     odkaz: overrides.url || '',
-    etap: '1',
+    etap: String(overrides.stages || '1'),
     poznamka: overrides.note || '',
     prihlasky1: overrides.entryDate1,
     prihlasky2: overrides.entryDate2 || '',

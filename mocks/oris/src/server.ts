@@ -106,7 +106,7 @@ const config = {
   upstreamBaseUrl: normalizeBaseUrl(process.env.ORIS_MOCK_UPSTREAM_BASE_URL ?? 'https://oris.ceskyorientak.cz/'),
   defaultClubId: process.env.ORIS_MOCK_DEFAULT_CLUB_ID ?? '205',
   defaultClubAbbr: process.env.ORIS_MOCK_DEFAULT_CLUB_ABBR ?? 'ZBM',
-  apiLogFile: process.env.ORIS_MOCK_API_LOG_FILE ?? path.join(process.cwd(), 'logs', 'oris_mock_api.log'),
+  apiLogFile: process.env.ORIS_MOCK_API_LOG_FILE ?? path.join(process.cwd(), 'www', 'logs', 'oris_mock_api.log'),
 };
 
 const TESTBENCH_BASE = '/__testbench';
@@ -161,6 +161,24 @@ const ORIS_REGIONS = [
   { id: 'ZČ', name: 'Západočeská' },
 ];
 
+// Keep this list aligned with OrisIntegrationService::CLUB_KEY_REQUIRED_METHODS.
+const ENTRY_MUTATION_METHODS = new Set([
+  'createEntry',
+  'updateEntry',
+  'deleteEntry',
+  'createServiceEntry',
+  'updateServiceEntry',
+  'deleteServiceEntry',
+  'getClubEntryRights',
+  'setClubEntryRights',
+  'getClubUserList',
+  'createPerson',
+  'editPerson',
+  'createClubUser',
+  'editClubUser',
+  'createUserLogin',
+]);
+
 let pool: Pool;
 
 function normalizeBaseUrl(value: string): string {
@@ -184,6 +202,16 @@ function apiClosedRegistration(method: string): JsonObject {
     Method: method,
     Format: 'json',
     Status: 'Mimo termín přihlášek',
+    ExportCreated: new Date().toISOString().slice(0, 19).replace('T', ' '),
+    Data: [],
+  };
+}
+
+function apiClubKeyError(method: string, status: string): JsonObject {
+  return {
+    Method: method,
+    Format: 'json',
+    Status: status,
     ExportCreated: new Date().toISOString().slice(0, 19).replace('T', ' '),
     Data: [],
   };
@@ -1682,6 +1710,10 @@ async function handleUpdateEntry(req: Request, res: Response): Promise<void> {
 
 async function handleDeleteEntry(req: Request, res: Response): Promise<void> {
   const entryId = asString(req.body.entryid);
+  if (!entryId) {
+    res.json(apiClubKeyError('deleteEntry', 'Zadejte všechny požadované informace'));
+    return;
+  }
   const eventId = asString(req.body.eventid ?? req.body.eventId);
   const [existingRows] = await pool.query<EntryRow[]>(
     'SELECT * FROM mock_entries WHERE entry_id = ? AND deleted = 0 LIMIT 1',
@@ -1778,6 +1810,18 @@ async function handleOrisApi(req: Request, res: Response): Promise<void> {
   if (await maybeApplyFaultMode(req, res)) return;
 
   const method = asString(req.query.method ?? req.body.method);
+  if (ENTRY_MUTATION_METHODS.has(method)) {
+    const clubKey = asString(req.query.clubkey ?? req.body.clubkey);
+    if (!clubKey) {
+      res.json(apiClubKeyError(method, 'Zadejte všechny požadované informace'));
+      return;
+    }
+    if (clubKey !== 'mockClubKey') {
+      res.json(apiClubKeyError(method, 'Key not valid'));
+      return;
+    }
+  }
+
   switch (method) {
     case 'getEvent':
       await handleGetEvent(req, res);
