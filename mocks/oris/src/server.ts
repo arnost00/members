@@ -1083,7 +1083,12 @@ type EntryMutationValidation =
   | { type: 'missingStages' }
   | { type: 'error'; message: string };
 
-function validateEntryMutation(event: JsonObject | null, classId: string, input: JsonObject = {}): EntryMutationValidation {
+function validateEntryMutation(
+  event: JsonObject | null,
+  classId: string,
+  input: JsonObject = {},
+  rejectRelay = false,
+): EntryMutationValidation {
   if (!event) {
     return { type: 'error', message: `Class ${classId || '(missing)'} is not defined for an event.` };
   }
@@ -1091,6 +1096,12 @@ function validateEntryMutation(event: JsonObject | null, classId: string, input:
   const classes = classList(event.Classes);
   if (!classes.some((item) => asString(item.ID) === classId)) {
     return { type: 'error', message: `Class ${classId || '(missing)'} is not defined for event ${asString(event.ID)}.` };
+  }
+
+  // ORIS level 7 (ČPŠ / Czech Relay Cup) maps to the Members relay flag (zebricek & 32).
+  // Relay entries use a team/leg API, so the individual createEntry call is unavailable.
+  if (rejectRelay && idList(event.Level).includes('7')) {
+    return { type: 'closedRegistration' };
   }
 
   if (eventStageCount(event) > 1 && inputStageIndexes(input, event).length === 0) {
@@ -1637,7 +1648,7 @@ async function handleCreateEntry(req: Request, res: Response): Promise<void> {
   try {
     const classId = asString(req.body.class);
     const event = await findEventByClass(classId);
-    const validation = validateEntryMutation(event, classId, req.body);
+    const validation = validateEntryMutation(event, classId, req.body, true);
     if (validation.type !== 'ok') {
       res.json(validation.type === 'closedRegistration'
         ? apiClosedRegistration('createEntry')

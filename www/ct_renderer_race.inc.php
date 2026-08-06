@@ -29,6 +29,12 @@ function CreateRaceSyncStatusColumn($race): ?TableColumn {
         return null;
     }
 
+    // Relay races (zebricek flag 32 = Štafety) always stay local-only (different ORIS
+    // entry process) - hide sync column
+    if (((int)($race['zebricek'] ?? 0) & 32) !== 0) {
+        return null;
+    }
+
     $entry_start_future = false;
     if (is_array($race) && !empty($race['entry_start'])) {
         $entry_start = strtotime($race['entry_start']);

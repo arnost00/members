@@ -140,7 +140,23 @@ async function getOrisApiEventEntries(request, eventId) {
   return json.Data;
 }
 
+async function createOrisApiEntry(request, overrides = {}) {
+  const response = await request.post(DEFAULT_ORIS_MOCK_API_URL, {
+    form: {
+      method: 'createEntry',
+      format: 'json',
+      ...overrides,
+    },
+  });
+
+  return {
+    httpStatus: response.status(),
+    body: await response.json(),
+  };
+}
+
 module.exports = {
+  createOrisApiEntry,
   createOrisMockEntry,
   createOrisMockRace,
   createOrisMockUser,

@@ -54,6 +54,7 @@ These files are not part of the PHP runtime and must not be deployed to the prod
 - Prefer importing `TEST_USERS` in specs instead of hardcoding seeded usernames
 - Reusable workflow helpers live under `tests/playwright/helpers/`
 - Shared multi-step workflow specs can live under `tests/playwright/workflows/`
+- `workflows/oris-relay-race-flow.spec.js` covers imported relay races, whose registrations stay local and do not create individual ORIS entries
 - Manual-only suites can use a dedicated Playwright config when they must stay out of the default parallel run
   - Bank connector error checks: `npm run test:e2e:bank-errors`
   - Config: `playwright.bank-errors.config.js`
