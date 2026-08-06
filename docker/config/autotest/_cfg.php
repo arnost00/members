@@ -99,11 +99,22 @@ $g_race_accommodation_default = 1;
 $g_enable_race_capacity = true;
 
 // Externi informacni system - podporovane hodnoty 'OrisCZConnector' a ''
-$g_external_is_connector = 'OrisCZConnector';
-// Identifikator oddilu v informacnim systemu
-$g_external_is_club_id = '205';
-$g_oris_base_url = 'http://127.0.0.1:10301/';
-$g_oris_club_key = 'mockClubKey';
+$members_autotest_suite = $_SERVER['HTTP_X_MEMBERS_AUTOTEST_SUITE'] ?? '';
+if ($members_autotest_suite === 'no-oris') {
+    $g_external_is_connector = '';
+    // Identifikator oddilu v informacnim systemu
+    $g_external_is_club_id = '';
+    $g_oris_base_url = '';
+    $g_oris_club_key = '';
+} else {
+    $g_external_is_connector = 'OrisCZConnector';
+    // Identifikator oddilu v informacnim systemu
+    $g_external_is_club_id = '205';
+    $g_oris_base_url = 'http://127.0.0.1:10301/';
+    if ($members_autotest_suite !== 'no-oris-key') {
+        $g_oris_club_key = 'mockClubKey';
+    }
+}
 
 $g_custom_entry_list_text = '';
 

@@ -50,6 +50,10 @@ async function setOrisMockSettings(request, overrides = {}) {
   return postJson(request, '/settings', overrides);
 }
 
+async function getOrisMockSettings(request) {
+  return getJson(request, '/settings');
+}
+
 async function createOrisMockRace(request, overrides = {}) {
   const hasClasses = overrides.classes !== undefined || overrides.Classes !== undefined;
   const defaults = {
@@ -136,7 +140,23 @@ async function getOrisApiEventEntries(request, eventId) {
   return json.Data;
 }
 
+async function createOrisApiEntry(request, overrides = {}) {
+  const response = await request.post(DEFAULT_ORIS_MOCK_API_URL, {
+    form: {
+      method: 'createEntry',
+      format: 'json',
+      ...overrides,
+    },
+  });
+
+  return {
+    httpStatus: response.status(),
+    body: await response.json(),
+  };
+}
+
 module.exports = {
+  createOrisApiEntry,
   createOrisMockEntry,
   createOrisMockRace,
   createOrisMockUser,
@@ -145,6 +165,7 @@ module.exports = {
   getOrisApiEventEntries,
   getOrisMockParticipants,
   getOrisMockRaceEntries,
+  getOrisMockSettings,
   resetOrisMock,
   setOrisMockSettings,
   updateOrisMockRace,

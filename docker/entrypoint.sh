@@ -4,10 +4,10 @@ set -eu
 # Keep group write access on newly created files, including root-created logs.
 umask 0002
 
-mkdir -p /var/www/html/members/logs
-chown www-data:www-data /var/www/html/members/logs
+mkdir -p /var/www/html/members/www/logs
+chown www-data:www-data /var/www/html/members/www/logs
 # Assign new created files to the group of logs
-chmod 3775 /var/www/html/members/logs
+chmod 3775 /var/www/html/members/www/logs
 
 if [ -z "${BANK_SYNC_START_DATE:-}" ]; then
     export BANK_SYNC_START_DATE="$(date -d '2 days ago' +%F)"
@@ -68,11 +68,11 @@ if [ -n "${ORIS_MOCK_DB_NAME:-}" ] && [ -f "package.json" ]; then
 fi
 
 if [ "${BANK_MOCK_START:-}" = "auto" ] && [ -f "package.json" ]; then
-    npm run --silent mock:bank >logs/mock-bank.log 2>&1 &
+    npm run --silent mock:bank >www/logs/mock-bank.log 2>&1 &
 fi
 
 if [ "${ORIS_MOCK_START:-}" = "auto" ] && [ -f "package.json" ]; then
-    npm run --silent mock:oris >logs/mock-oris.log 2>&1 &
+    npm run --silent mock:oris >www/logs/mock-oris.log 2>&1 &
 fi
 
 exec apache2-foreground

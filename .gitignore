@@ -1,10 +1,12 @@
 *.bak
 *~
-cfg/_tables.php
-cfg/_globals.php
-cfg/_cfg.php
+www/cfg/_tables.php
+www/cfg/_globals.php
+www/cfg/_cfg.php
 db_data/
 /logs
+www/logs/*
+!www/logs/.htaccess
 node_modules/
 playwright-report/
 test-results/

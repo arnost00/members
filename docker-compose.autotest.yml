@@ -26,13 +26,13 @@ services:
       ORIS_MOCK_DEFAULT_CLUB_ID: 205
       ORIS_MOCK_DEFAULT_CLUB_ABBR: ZBM
     volumes:
-      - ./:/var/www/html/members    #this line maps the content of ./html in your pc to the /var/www/html of the container
+      - ./:/var/www/html/members    # repository tooling remains available in the test container
       - members_node_modules:/var/www/html/members/node_modules #for using node modules from container, not host 
-      - ./logs/autotest/:/var/www/html/members/logs
+      - ./logs/autotest/:/var/www/html/members/www/logs
       # override configuration, modifiable in original place only
-      - ./docker/config/autotest/_cfg.php:/var/www/html/members/cfg/_cfg.php:ro
-      - ./docker/config/autotest/_globals.php:/var/www/html/members/cfg/_globals.php:ro
-      - ./docker/config/autotest/_tables.php:/var/www/html/members/cfg/_tables.php:ro
+      - ./docker/config/autotest/_cfg.php:/var/www/html/members/www/cfg/_cfg.php:ro
+      - ./docker/config/autotest/_globals.php:/var/www/html/members/www/cfg/_globals.php:ro
+      - ./docker/config/autotest/_tables.php:/var/www/html/members/www/cfg/_tables.php:ro
     healthcheck:
       test:
         [
