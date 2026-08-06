@@ -62,6 +62,8 @@ Participant `stages` values are stored as comma-separated, one-based stage index
 ORIS-compatible `createEntry` and `updateEntry` calls accept stage flags such as
 `stage1=1&stage2=0&stage3=1`; a multistage entry must select at least one stage.
 `getEventEntries` exposes the selection as a `Stages` object containing `Stage1`, `Stage2`, and so on.
+For relay races (ORIS level `7`, `ČPŠ` / Czech Relay Cup), `createEntry` always returns the ORIS
+closed-registration response because relay teams and legs use a different ORIS API.
 
 The API log path can be overridden with `ORIS_MOCK_API_LOG_FILE`.
 
