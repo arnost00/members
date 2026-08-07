@@ -37,6 +37,8 @@ These files are not part of the PHP runtime and must not be deployed to the prod
 - `PLAYWRIGHT_BASE_URL` overrides the application URL. Default: `http://web:10100/members/`
 - `MEMBERS_E2E_SUITE=no-oris` disables all ORIS configuration for application requests and makes mock `/API` return HTTP 503
 - `MEMBERS_E2E_SUITE=no-oris-key` leaves ORIS enabled but omits `$g_oris_club_key` for application requests
+- `MAILPIT_URL` overrides the Mailpit API base URL used by `tests/playwright/helpers/mail.js`. Default: `http://mailpit:8025`
+- Captured outgoing email can be inspected/asserted on via `tests/playwright/helpers/mail.js` (`clearMailbox`, `waitForEmailTo`)
 - The reusable login helper lives in `tests/playwright/components/login.js`
 - Shared auth constants live in `tests/playwright/constants/auth.js`
   - `DEFAULT_PASSWORD` = `54321`

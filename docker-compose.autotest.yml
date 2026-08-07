@@ -63,9 +63,7 @@ services:
       - ./docker/db_init/d235220_members_latest.sql:/docker-entrypoint-initdb.d/d235220_members.sql
 
   mailpit:
-    image: axllent/mailpit:latest
-    ports:
-      - "8025:8025"    # web UI + REST API
+    image: axllent/mailpit:v1.30.6
 
 volumes:
   members_node_modules:      #for using node modules from container, not host

@@ -1,5 +1,11 @@
 const MAILPIT_BASE_URL = process.env.MAILPIT_URL || 'http://mailpit:8025';
 
+// clearMailbox() issues a global DELETE against the shared Mailpit instance, wiping every
+// captured message regardless of which spec or worker created it. Playwright runs specs with
+// fullyParallel: true, so multiple workers can hit Mailpit concurrently. This is safe today
+// because only one spec asserts on email, but it will become a source of flakiness as soon as a
+// second email-asserting spec runs at the same time. Prefer waitForEmailTo(request, recipient, ...)
+// with a unique-per-test recipient address for isolation instead of relying on clearMailbox().
 async function clearMailbox(request) {
   const response = await request.delete(`${MAILPIT_BASE_URL}/api/v1/messages`);
 
@@ -18,7 +24,7 @@ async function findMessageSummary(request, recipient, subject) {
   const { messages } = await response.json();
 
   return messages.find((message) => {
-    const matchesRecipient = message.To.some((addr) => addr.Address === recipient);
+    const matchesRecipient = (message.To || []).some((addr) => addr.Address === recipient);
     const matchesSubject = subject === undefined || message.Subject === subject;
     return matchesRecipient && matchesSubject;
   });

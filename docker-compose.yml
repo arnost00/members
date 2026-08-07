@@ -14,7 +14,7 @@ services:
     volumes:
       - ./:/var/www/html/members    # mount the repository; Apache exposes only the www runtime
   mailpit:
-    image: axllent/mailpit:latest
+    image: axllent/mailpit:v1.30.6
     ports:
       - "8025:8025"    # web UI + REST API
   db:
