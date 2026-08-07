@@ -8,6 +8,8 @@ services:
     depends_on:
       db:
         condition: service_healthy    # wait until the autotest database import is complete
+      mailpit:
+        condition: service_started
     environment:
       BANK_MOCK_DB_HOST: db
       BANK_MOCK_DB_PORT: 3306
@@ -59,6 +61,11 @@ services:
     volumes:
       # initial database content
       - ./docker/db_init/d235220_members_latest.sql:/docker-entrypoint-initdb.d/d235220_members.sql
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025"    # web UI + REST API
 
 volumes:
   members_node_modules:      #for using node modules from container, not host
