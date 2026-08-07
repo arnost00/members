@@ -9,8 +9,14 @@ services:
     depends_on:
       db:    #this line links this container to the db container
         condition: service_healthy    # wait until the autotest database import is complete
+      mailpit:
+        condition: service_started
     volumes:
       - ./:/var/www/html/members    # mount the repository; Apache exposes only the www runtime
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025"    # web UI + REST API
   db:
     image: mariadb:10.11
     environment:
