@@ -29,7 +29,7 @@ RUN echo '\
 defaults\n\
 auth off\n\
 tls off\n\
-logfile /var/www/html/members/www/logs/msmtp.log\n\
+logfile /var/www/html/members/logs/msmtp.log\n\
 \n\
 account mailpit\n\
 host mailpit\n\
@@ -37,7 +37,8 @@ port 1025\n\
 \n\
 account default : mailpit' \
     > /etc/msmtprc \
-    && chmod 644 /etc/msmtprc
+    && chown www-data:www-data /etc/msmtprc \
+    && chmod 600 /etc/msmtprc
 
 RUN echo 'sendmail_path = "/usr/bin/msmtp -t -i"' \
     > /usr/local/etc/php/conf.d/mail.ini
