@@ -11,6 +11,7 @@ services:
       - "10301:10301"    # ORIS mock server
     depends_on:
       - db    #this line links this container to the db container
+      - mailpit
     environment:
       BANK_MOCK_DB_HOST: db
       BANK_MOCK_DB_PORT: 3306
@@ -54,6 +55,10 @@ services:
       - db    #this line links this container to the db container
     environment:
       PMA_HOST: db
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025"    # web UI + REST API
 
 
 volumes:
