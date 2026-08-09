@@ -29,7 +29,7 @@ RUN echo "defaults" > /etc/msmtprc && \
     echo "# local mail catcher only - never point this at a real relay" >> /etc/msmtprc && \
     echo "auth off" >> /etc/msmtprc && \
     echo "tls off" >> /etc/msmtprc && \
-    echo "logfile /var/www/html/members/logs/msmtp.log" >> /etc/msmtprc && \
+    echo "logfile /var/www/html/members/www/logs/msmtp.log" >> /etc/msmtprc && \
     echo "" >> /etc/msmtprc && \
     echo "account mailpit" >> /etc/msmtprc && \
     echo "host mailpit" >> /etc/msmtprc && \
