@@ -8,11 +8,7 @@ require_once("./cfg/_colors.php");
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
 
-if (!IsLoggedManager() || !IsLoggedSmallAdmin())
-{
-	header("location: ".$g_baseadr."error.php?code=21");
-	exit;
-}
+RequirePageAccess(IsLoggedManager() && IsLoggedSmallAdmin());
 
 $reg = (isset($reg) && is_numeric($reg)) ? (int)$reg : 0;
 $year = (isset($year) && is_numeric($year)) ? (int)$year : 0;

@@ -16,11 +16,7 @@ $storno = $_REQUEST['storno'] ?? null;
 
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
-if (!IsLoggedSmallManager() && !IsLoggedManager() && !IsLoggedFinance())
-{
-	header("location: ".$g_baseadr."error.php?code=21");
-	exit;
-}
+RequirePageAccess(IsLoggedSmallManager() || IsLoggedManager() || IsLoggedFinance());
 
 db_Connect();
 

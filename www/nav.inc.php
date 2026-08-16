@@ -186,6 +186,7 @@ function check_login_form(form)
 </script>
 
 	<FORM METHOD=POST ACTION="./login.php" onSubmit="return check_login_form(this);">
+	<? if (GetLoginReturnUrl() !== null) { ?><INPUT TYPE="hidden" NAME="<? echo(_VAR_LOGIN_RETURN);?>" VALUE="<? echo(htmlspecialchars(GetLoginReturnUrl(), ENT_QUOTES, 'UTF-8'));?>"><? } ?>
 	<TABLE border="0" cellpadding="0" cellspacing="2">
 	<TR><TD class="login"><label>Jméno&nbsp;</TD><TD><INPUT TYPE="text" NAME="<? echo(_VAR_USER_LOGIN);?>" SIZE="10" class="login" tabindex="1"></label></TD></TR>
 	<TR><TD class="login"><label>Heslo&nbsp;</TD><TD><INPUT TYPE="password" NAME="<? echo(_VAR_USER_PASS);?>" SIZE="10" class="login" tabindex="2"></label></TD></TR>

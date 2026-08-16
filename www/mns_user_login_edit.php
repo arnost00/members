@@ -4,11 +4,7 @@ $id = $_REQUEST['id'] ?? null;
 
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
-if (!IsLoggedSmallManager())
-{
-	header("location: ".$g_baseadr."error.php?code=21");
-	exit;
-}
+RequirePageAccess(IsLoggedSmallManager());
 require_once ("./common_user.inc.php");
 require_once ("./common.inc.php");
 

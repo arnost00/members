@@ -19,36 +19,48 @@ function uniqueRoutes(routes) {
 
 const COMMON_ROUTES = {
   updates: indexRoute(4, 0, 'Aktualitky'),
+  memberRegistrations: indexRoute(3, 0, 'Přihlášky členů'),
 };
 
 const ROUTE_GROUPS = {
   member: [
     indexRoute(GROUP_IDS.user, 2, 'Přihlášky na závody'),
+    indexRoute(GROUP_IDS.user, 10, 'Finance'),
     indexRoute(GROUP_IDS.user, 1, 'Nastavení přístupu'),
     indexRoute(GROUP_IDS.user, 3, 'Nastavení zákl.údajů'),
+    indexRoute(GROUP_IDS.user, 4, 'Upozorňování'),
   ],
   registrator: [
     indexRoute(GROUP_IDS.registrator, 1, 'Přihlášky na závody'),
     indexRoute(GROUP_IDS.registrator, 4, 'Editace závodů'),
+    indexRoute(GROUP_IDS.registrator, 5, 'ORIS log'),
   ],
   manager: [
     indexRoute(GROUP_IDS.manager, 2, 'Přihlášky na závody'),
     indexRoute(GROUP_IDS.manager, 1, 'Členská základna'),
     indexRoute(GROUP_IDS.manager, 3, 'Přiřazení skupin členů'),
     indexRoute(GROUP_IDS.manager, 4, 'Přehled m.trenérů'),
+    indexRoute(GROUP_IDS.manager, 10, 'Finance'),
   ],
   smallManager: [
     indexRoute(GROUP_IDS.smallManager, 2, 'Přihlášky na závody'),
     indexRoute(GROUP_IDS.smallManager, 1, 'Členská základna'),
+    indexRoute(GROUP_IDS.smallManager, 10, 'Finance'),
   ],
   clubAdmin: [
     indexRoute(GROUP_IDS.clubAdmin, 1, 'Členská základna'),
+    ...((process.env.MEMBERS_E2E_SUITE === 'no-oris' || process.env.MEMBERS_E2E_SUITE === 'no-oris-key')
+      ? []
+      : [indexRoute(GROUP_IDS.clubAdmin, 2, 'Členové vs. ORIS')]),
   ],
   finance: [
     indexRoute(GROUP_IDS.finance, 1, 'Členská základna'),
     indexRoute(GROUP_IDS.finance, 2, 'Přehled závodů'),
+    indexRoute(GROUP_IDS.finance, 3, 'Přehled reklamací'),
     indexRoute(GROUP_IDS.finance, 4, 'Typy příspěvků'),
     indexRoute(GROUP_IDS.finance, 5, 'Pravidla plateb'),
+    indexRoute(GROUP_IDS.finance, 6, 'Nespárované bankovní platby'),
+    indexRoute(GROUP_IDS.finance, 7, 'Historie transakcí'),
   ],
   admin: [
     indexRoute(GROUP_IDS.admin, 1, 'Servisní menu'),
@@ -65,6 +77,7 @@ const LOGIN_EXPECTATIONS = {
   administrator: {
     landingRoute: ROUTE_GROUPS.admin[0],
     accessibleRoutes: [
+      COMMON_ROUTES.memberRegistrations,
       ...ROUTE_GROUPS.registrator,
       ...ROUTE_GROUPS.manager,
       ...ROUTE_GROUPS.clubAdmin,
@@ -75,6 +88,7 @@ const LOGIN_EXPECTATIONS = {
   registrar: {
     landingRoute: COMMON_ROUTES.updates,
     accessibleRoutes: [
+      COMMON_ROUTES.memberRegistrations,
       ...ROUTE_GROUPS.member,
       ...ROUTE_GROUPS.registrator,
     ],
@@ -82,6 +96,7 @@ const LOGIN_EXPECTATIONS = {
   manager: {
     landingRoute: COMMON_ROUTES.updates,
     accessibleRoutes: [
+      COMMON_ROUTES.memberRegistrations,
       ...ROUTE_GROUPS.member,
       ...ROUTE_GROUPS.manager,
     ],
@@ -89,6 +104,7 @@ const LOGIN_EXPECTATIONS = {
   clubAdmin: {
     landingRoute: COMMON_ROUTES.updates,
     accessibleRoutes: [
+      COMMON_ROUTES.memberRegistrations,
       ...ROUTE_GROUPS.member,
       ...ROUTE_GROUPS.registrator,
       ...ROUTE_GROUPS.manager,
@@ -99,24 +115,29 @@ const LOGIN_EXPECTATIONS = {
   smallManager: {
     landingRoute: COMMON_ROUTES.updates,
     accessibleRoutes: [
+      COMMON_ROUTES.memberRegistrations,
       ...ROUTE_GROUPS.member,
       ...ROUTE_GROUPS.smallManager,
     ],
   },
   member: {
     landingRoute: COMMON_ROUTES.updates,
-    accessibleRoutes: ROUTE_GROUPS.member,
+    accessibleRoutes: [COMMON_ROUTES.memberRegistrations, ...ROUTE_GROUPS.member],
   },
   accountant: {
     landingRoute: COMMON_ROUTES.updates,
     accessibleRoutes: [
+      COMMON_ROUTES.memberRegistrations,
       ...ROUTE_GROUPS.member,
       ...ROUTE_GROUPS.finance,
     ],
   },
 };
 
-const ALL_PROTECTED_ROUTES = uniqueRoutes(Object.values(ROUTE_GROUPS).flat());
+const ALL_PROTECTED_ROUTES = uniqueRoutes([
+  COMMON_ROUTES.memberRegistrations,
+  ...Object.values(ROUTE_GROUPS).flat(),
+]);
 
 module.exports = {
   ALL_PROTECTED_ROUTES,

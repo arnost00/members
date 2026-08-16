@@ -6,11 +6,7 @@ require_once('./cfg/_colors.php');
 require_once ('./connect.inc.php');
 require_once ('./sess.inc.php');
 
-if (!IsLoggedManager() && !IsLoggedRegistrator() && !IsLoggedSmallAdmin() && !IsLoggedAdmin())
-{
-	header('location: '.$g_baseadr.'error.php?code=21');
-	exit;
-}
+RequirePageAccess(IsLoggedManager() || IsLoggedRegistrator() || IsLoggedSmallAdmin() || IsLoggedAdmin());
 
 require_once ('./header.inc.php'); // header obsahuje uvod html a konci <BODY>
 require_once ('./common.inc.php');

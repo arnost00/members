@@ -4,11 +4,7 @@ define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 require_once ("connect.inc.php");
 require_once ("sess.inc.php");
 require_once ("ctable.inc.php");
-if (!IsLoggedEditor())
-{
-	header("location: ".$g_baseadr."error.php?code=21");
-	exit;
-}
+RequirePageAccess(IsLoggedEditor());
 require_once("cfg/_globals.php");
 
 db_Connect();

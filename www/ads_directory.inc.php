@@ -114,7 +114,9 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 {
 	$row = array();
 	$row[] = $i++;
-	$row[] = '<a href="javascript:open_win(\'./view_adm_user_detail.php?id='.$zaznam['id'].'\',\'\')" class="adr_name">'.$zaznam['prijmeni'].'</a>';
+	$row[] = IsLoggedAdmin()
+		? '<a href="javascript:open_win(\'./view_adm_user_detail.php?id='.$zaznam['id'].'\',\'\')" class="adr_name">'.$zaznam['prijmeni'].'</a>'
+		: $zaznam['prijmeni'];
 	$row[] = $zaznam['jmeno'];
 	$row[] = RegNumToStr($zaznam['reg']);
 	//4. sloupec

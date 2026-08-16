@@ -11,11 +11,7 @@ require_once ("./common_race.inc.php");
 require_once ('./url.inc.php');
 require_once ('./ctable.inc.php');
 
-if (!IsLoggedRegistrator())
-{
-	header("location: ".$g_baseadr."error.php?code=21");
-	exit;
-}
+RequirePageAccess(IsLoggedRegistrator());
 
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 DrawPageTitle('Přehled předdefinovaných kategorií');

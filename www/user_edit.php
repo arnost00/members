@@ -9,11 +9,7 @@ require_once ("sess.inc.php");
 require_once ("ctable.inc.php");
 require_once("./cfg/_globals.php");
 
-if (!IsLoggedSmallAdmin() && !IsLoggedManager())
-{
-	header("location: ".$g_baseadr."error.php?code=21");
-	exit;
-}
+RequirePageAccess(IsLoggedSmallAdmin() || IsLoggedManager());
 db_Connect();
 $id = (isset($id) && is_numeric($id)) ? (int)$id : 0;
 

@@ -7,11 +7,7 @@ require_once ("connect.inc.php");
 require_once ("sess.inc.php");
 require_once("cfg/_globals.php");
 
-if (!IsLoggedRegistrator())
-{
-	header("location: ".$g_baseadr."error.php?code=21");
-	exit;
-}
+RequirePageAccess(IsLoggedRegistrator());
 
 require_once ("ctable.inc.php");
 require_once ("./connectors.php");

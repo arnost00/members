@@ -11,11 +11,7 @@ require_once ("./common.inc.php");
 require_once ("./common_race.inc.php");
 require_once ('./url.inc.php');
 
-if (!IsLoggedRegistrator())
-{
-	header("location: ".$g_baseadr."error.php?code=21");
-	exit;
-}
+RequirePageAccess(IsLoggedRegistrator());
 
 require_once ("./connectors.php");
 

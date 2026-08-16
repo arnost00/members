@@ -9,11 +9,7 @@ require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
 require_once ("./common.inc.php");
 
-if (!IsLoggedRegistrator() && !IsLoggedManager()&& !IsLoggedSmallManager())
-{
-	header("location: ".$g_baseadr."error.php?code=21");
-	exit;
-}
+RequirePageAccess(IsLoggedRegistrator() || IsLoggedManager() || IsLoggedSmallManager());
 
 require_once ("./ctable.inc.php");
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>

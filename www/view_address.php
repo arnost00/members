@@ -7,11 +7,7 @@ require_once("./cfg/_colors.php");
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
 
-if (!IsLogged())
-{
-	header("location: ".$g_baseadr."error.php?code=21");
-	exit;
-}
+RequirePageAccess(IsLogged());
 
 require_once ("./ctable.inc.php");
 

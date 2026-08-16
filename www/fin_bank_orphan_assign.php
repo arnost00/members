@@ -5,6 +5,8 @@ define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
+RequirePageAccess(IsLoggedFinance());
+
 require_once ("./common.inc.php");
 require_once 'payment.inc.php';
 

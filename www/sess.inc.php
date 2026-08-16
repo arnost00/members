@@ -18,6 +18,8 @@ define('_FINANCE_GROUP_ID_',800);
 
 define('_VAR_USER_LOGIN','mbr_l_'.$g_shortcut.(($g_is_release) ? '' : '_dbg'));
 define('_VAR_USER_PASS','mbr_p_'.$g_shortcut.(($g_is_release) ? '' : '_dbg'));
+define('_VAR_LOGIN_RETURN','mbr_return_to');
+define('_SESSION_LOGIN_RETURN','login_return_to');
 
 class sess
 {
@@ -109,6 +111,163 @@ function IsLogged ()	// je nekdo prihlasen
 {
 	global $usr;
 	return ($usr->logged) ? 1 : 0;
+}
+
+/**
+ * Validate a post-login destination and return it relative to the members root.
+ * Only explicitly listed display pages and their read-only parameters are accepted.
+ */
+function ValidateLoginReturnUrl($url)
+{
+	global $g_baseadr;
+
+	$allowed_pages = array(
+		'index.php' => array('id', 'subid'),
+		'categ_predef.php' => array(),
+		'categ_predef_edit.php' => array('id'),
+		'claim.php' => array('payment_id'),
+		'export_directory.php' => array(),
+		'fin_bank_orphan_assign.php' => array('tx_id'),
+		'fin_payrule_edit.php' => array('id'),
+		'fin_type_edit.php' => array('id'),
+		'find_reg.php' => array('reg', 'year'),
+		'mng_edit.php' => array('id'),
+		'mng_smng_view.php' => array('id'),
+		'mns_user_edit.php' => array('id'),
+		'mns_user_login_edit.php' => array('id'),
+		'news_edit.php' => array('id'),
+		'race_boss.php' => array('id'),
+		'race_edit.php' => array('id', 'ext_id', 'refresh_parent'),
+		'race_finance_view.php' => array('race_id'),
+		'race_imports.php' => array('from', 'to'),
+		'race_imports_update.php' => array(),
+		'race_kat.php' => array('id'),
+		'race_new.php' => array('ext_id', 'type'),
+		'race_reg_chip.php' => array('id_zav'),
+		'race_reg_form.php' => array('id_zav'),
+		'race_reg_form_all.php' => array('gen', 'rt', 'kateg', 'pozn', 'chip'),
+		'race_regs_1.php' => array('gr_id', 'id', 'show_ed'),
+		'race_regs_all.php' => array('gr_id', 'id'),
+		'race_show_all.php' => array('old'),
+		'us_race_regon.php' => array('id_zav', 'id_us'),
+		'user_edit.php' => array('id', 'cb'),
+		'user_finance_type.php' => array('user_id'),
+		'user_finance_view.php' => array('user_id', 'race_id', 'id_from'),
+		'user_login_edit.php' => array('id', 'cb'),
+		'user_view.php' => array('id'),
+		'view_address.php' => array('id'),
+		'view_adm_user_detail.php' => array('id'),
+	);
+
+	if (!is_string($url) || $url === '' || strlen($url) > 2048 || preg_match('/[\x00-\x1F\x7F\\\\]/', $url))
+		return null;
+
+	$parts = @parse_url($url);
+	if ($parts === false || isset($parts['scheme']) || isset($parts['host']) || isset($parts['user']) || isset($parts['pass']))
+		return null;
+
+	$path = $parts['path'] ?? '';
+	if (substr($path, 0, 2) === '//')
+		return null;
+
+	$base_path = parse_url($g_baseadr, PHP_URL_PATH);
+	$base_path = rtrim(is_string($base_path) ? $base_path : '', '/').'/';
+	if (substr($path, 0, 1) === '/')
+	{
+		if ($base_path !== '/' && strpos($path, $base_path) !== 0)
+			return null;
+		$path = ($base_path === '/') ? substr($path, 1) : substr($path, strlen($base_path));
+	}
+	else if (strpos($path, './') === 0)
+		$path = substr($path, 2);
+
+	if ($path === '' || strpos($path, '/') !== false || strpos($path, '..') !== false || !preg_match('/^[A-Za-z0-9_]+\.php$/', $path))
+		return null;
+
+	if (!array_key_exists($path, $allowed_pages))
+		return null;
+
+	$query = $parts['query'] ?? '';
+	if ($query !== '')
+	{
+		parse_str($query, $query_params);
+		foreach (array_keys($query_params) as $query_param)
+			if (!in_array($query_param, $allowed_pages[$path], true))
+				return null;
+	}
+
+	return $path.(($query !== '') ? '?'.$query : '');
+}
+
+function SetLoginReturnUrl($url)
+{
+	$validated = ValidateLoginReturnUrl($url);
+	if ($validated === null)
+	{
+		unset($_SESSION[_SESSION_LOGIN_RETURN]);
+		return null;
+	}
+	$_SESSION[_SESSION_LOGIN_RETURN] = $validated;
+	return $validated;
+}
+
+function GetLoginReturnUrl()
+{
+	if (!isset($_SESSION[_SESSION_LOGIN_RETURN]))
+		return null;
+	$validated = ValidateLoginReturnUrl($_SESSION[_SESSION_LOGIN_RETURN]);
+	if ($validated === null)
+		unset($_SESSION[_SESSION_LOGIN_RETURN]);
+	return $validated;
+}
+
+function ConsumeLoginReturnUrl()
+{
+	$url = GetLoginReturnUrl();
+	unset($_SESSION[_SESSION_LOGIN_RETURN]);
+	return $url;
+}
+
+function ClearLoginReturnUrl()
+{
+	unset($_SESSION[_SESSION_LOGIN_RETURN]);
+}
+
+function CaptureCurrentLoginReturnUrl()
+{
+	if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'GET')
+		return null;
+	return SetLoginReturnUrl($_SERVER['REQUEST_URI'] ?? '');
+}
+
+function RedirectAnonymousToLogin()
+{
+	global $g_baseadr;
+	if (IsLogged())
+		return;
+	if (CaptureCurrentLoginReturnUrl() === null)
+	{
+		header('location: '.$g_baseadr.'error.php?code=21');
+		exit;
+	}
+	header('location: '.$g_baseadr);
+	exit;
+}
+
+/**
+ * Require an authenticated user with the supplied page permission.
+ * Anonymous GET requests resume after login; authenticated users without the
+ * permission retain the existing access-denied response.
+ */
+function RequirePageAccess($has_access)
+{
+	global $g_baseadr;
+	if ($has_access)
+		return;
+
+	RedirectAnonymousToLogin();
+	header('location: '.$g_baseadr.'error.php?code=21');
+	exit;
 }
 
 function IsCalledByRegistrator ($gr_id)	// vola "prihlasovatel"
