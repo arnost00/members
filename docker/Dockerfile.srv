@@ -20,6 +20,29 @@ Alias /members /var/www/html/members/www\n\
     > /etc/apache2/conf-available/members.conf \
     && a2enconf members
 
+# Relay PHP's mail() to the local mailpit catcher instead of a real MTA.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends msmtp ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN echo "defaults" > /etc/msmtprc && \
+    echo "# local mail catcher only - never point this at a real relay" >> /etc/msmtprc && \
+    echo "auth off" >> /etc/msmtprc && \
+    echo "tls off" >> /etc/msmtprc && \
+    echo "logfile /var/www/html/members/www/logs/msmtp.log" >> /etc/msmtprc && \
+    echo "" >> /etc/msmtprc && \
+    echo "account mailpit" >> /etc/msmtprc && \
+    echo "host mailpit" >> /etc/msmtprc && \
+    echo "port 1025" >> /etc/msmtprc && \
+    echo "from noreply@members.local" >> /etc/msmtprc && \
+    echo "" >> /etc/msmtprc && \
+    echo "account default : mailpit" >> /etc/msmtprc && \
+    chown www-data:www-data /etc/msmtprc && \
+    chmod 600 /etc/msmtprc
+
+RUN echo 'sendmail_path = "/usr/bin/msmtp -t -i"' \
+    > /usr/local/etc/php/conf.d/mail.ini
+
 EXPOSE 10100
 
 FROM base AS autotest
