@@ -116,9 +116,9 @@ class OrisCZConnector implements ConnectorInterface {
 		];
 		$zebricek = $map[$levelId] ?? 0x0080; // Default to 0x80 if not found
 
-		// Sprint relays and teams are relay events too, even though their ORIS level
+		// Relays, sprint relays and teams are relay events, even though their ORIS level
 		// can be MCR rather than CPS (for example ORIS events 9285 and 9289).
-		if (in_array((int)$disciplineId, [6, 15], true)) {
+		if (in_array((int)$disciplineId, [5, 6, 15], true)) {
 			$zebricek |= 32;
 		}
 
