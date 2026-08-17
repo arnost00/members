@@ -77,11 +77,10 @@ test.describe(ORIS_CURRENT_SI_WORKFLOW.name, () => {
     await expect(row.locator('a[href*="ads_oris_si_sync.php"]')).toHaveCount(0);
   });
 
-  test('page falls back to the registration SI when the clubkey lacks getClubUserList scope', async ({ page, request }) => {
-    // Mirrors a real, undocumented ORIS behaviour: the clubkey configured for
-    // editPerson/createEntry can be rejected ("Key not valid") specifically for
-    // getClubUserList. The page must degrade to its old registration-based
-    // comparison rather than breaking.
+  test('page falls back to the registration SI when getClubUserList fails', async ({ page, request }) => {
+    // getClubUserList can fail (network hiccup, ORIS-side issue, ...) independently
+    // of other clubkey-protected calls. The page must degrade to its old
+    // registration-based comparison rather than breaking.
     await setOrisMockSettings(request, { clubUserListForbidden: true });
 
     await loginAs(page, 'clubAdmin');

@@ -78,21 +78,25 @@ if (is_array($obj) || is_object($obj)) {
 //getRegistration vraci SI zaznamenane pri registraci na sezonu - po zmene SI clena
 //(ads_oris_si_sync.php -> editPerson) uz neodpovida aktualnimu stavu. getClubUserList
 //vraci aktualni udaje clenu klubu, proto se pouzije pro zobrazeni SI, pokud je dostupny.
+//Pozor, tvar odpovedi je jiny nez u getRegistration/getUser/getClubUsers: cleni jsou
+//pod klicem "ClubMembers" (ne primo v Data) a reg.cislo je pod klicem "RegNum" (ne
+//"RegNo"). Odpoved take obsahuje historicke/ukoncene clenstvi, proto se filtruje na
+//"Valid" == 1.
 $live_si = array();
 if ($orisWriteEnabled) {
 	try {
 		$clubUsers = $service->getClubUserList();
-		if (is_array($clubUsers)) {
-			foreach ($clubUsers as $clubUser) {
-				$cuReg = $clubUser['RegNo'] ?? null;
+		if (is_array($clubUsers) && isset($clubUsers['ClubMembers']) && is_array($clubUsers['ClubMembers'])) {
+			foreach ($clubUsers['ClubMembers'] as $clubUser) {
+				if (($clubUser['Valid'] ?? 0) != 1) continue;
+				$cuReg = $clubUser['RegNum'] ?? null;
 				if ($cuReg !== null && startsWith($cuReg, $g_shortcut)) {
 					$live_si[$cuReg] = $clubUser['SI'] ?? '';
 				}
 			}
 		}
 	} catch (OrisException $e) {
-		//klubovy klic nemusi mit opravneni pro getClubUserList, i kdyz funguje pro editPerson/createEntry
-		//(nedokumentovane ruzne urovne opravneni na strane ORISu) - zobrazi se aspon data z registrace
+		//getClubUserList muze selhat (sit, docasny vypadek ...) - zobrazi se aspon data z registrace
 	}
 }
 

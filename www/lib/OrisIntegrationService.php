@@ -231,12 +231,12 @@ class OrisIntegrationService {
     }
 
     /**
-     * Full club roster with current member data (name, SI, ...), keyed by clubkey.
+     * Full club roster with current member data (name, SI, ...), authorized by clubkey.
      * Unlike getRegistration (a per-sport/year registration snapshot), this reflects
-     * the member's current ORIS state. Note: on ORIS, the "clubkey" configured for
-     * entries/editPerson is not guaranteed to also be authorized for this method -
-     * ORIS may reject it with status "Key not valid" even though it's valid for
-     * other clubkey-protected calls. Callers must handle that failure gracefully.
+     * the member's current ORIS state. The response shape differs from the other
+     * read methods here: members are under Data.ClubMembers (not Data directly),
+     * keyed by "RegNum" (not "RegNo" as elsewhere), and the list includes historical/
+     * ended memberships alongside current ones - filter on Valid == 1 for current members.
      */
     public function getClubUserList() {
         return $this->makeRequest('getClubUserList', [], true);

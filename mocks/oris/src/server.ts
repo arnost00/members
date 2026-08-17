@@ -1627,9 +1627,29 @@ async function handleGetClubUsers(req: Request, res: Response): Promise<void> {
 
 // Real ORIS's getClubUserList takes only `clubkey` and always returns the whole club
 // roster (no `user` filter) - unlike getClubUsers, which looks up one person's club
-// memberships. It's also known to reject clubkeys that work fine for other
-// clubkey-protected methods (see clubUserListForbidden), so it's kept local-only here
-// rather than proxied upstream.
+// memberships. Kept local-only here (not proxied upstream) since it's clubkey-scoped
+// per-club data; clubUserListForbidden simulates ORIS rejecting the call (network
+// hiccup, revoked/misconfigured key, ...) so callers' fallback path can be tested.
+// Verified against the real ORIS API (not just docs, which don't cover this at all):
+// members live under Data.ClubMembers (not Data directly), keyed by "RegNum" (not
+// "RegNo" like every other read method here), and the list includes historical/ended
+// memberships - a real club roster had ~1.7x more ended than currently-valid ones -
+// so consumers must filter on Valid == 1.
+function composeClubMember(row: UserRow): JsonObject {
+  const user = composeUser(row, null);
+  return {
+    ID: user.ClubUserID ?? user.UserID,
+    UserID: user.UserID,
+    RegNum: user.RegNo,
+    Valid: 1,
+    MemberFrom: '2000-01-01',
+    MemberTo: '2099-01-01',
+    FirstName: user.FirstName,
+    LastName: user.LastName,
+    SI: user.SI,
+  };
+}
+
 async function handleGetClubUserList(req: Request, res: Response): Promise<void> {
   const settings = await getSettings();
   if (settings.clubUserListForbidden) {
@@ -1638,7 +1658,19 @@ async function handleGetClubUserList(req: Request, res: Response): Promise<void>
   }
 
   const [rows] = await pool.query<UserRow[]>('SELECT * FROM mock_users WHERE deleted = 0');
-  res.json(apiOk(rows.map((row) => composeClubUserPayload(composeUser(row, null)))));
+  const clubMembers: JsonObject = {};
+  for (const row of rows) {
+    const member = composeClubMember(row);
+    clubMembers[`ClubMember_${asString(member.ID)}`] = member;
+  }
+
+  res.json(apiOk({
+    Lists: {
+      SITypes: { SIType_0: { ID: 0, Name: 'Vše' } },
+      SISports: { SISport_0: { ID: 0, Name: 'Vše' } },
+    },
+    ClubMembers: clubMembers,
+  }));
 }
 
 async function handleGetEventEntries(req: Request, res: Response): Promise<void> {

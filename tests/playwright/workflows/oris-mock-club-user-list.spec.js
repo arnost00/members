@@ -8,10 +8,11 @@ const {
 
 // getClubUserList (full club roster, current member state) and getRegistration
 // (per sport/year registration snapshot) are easy to conflate: ORIS's own docs
-// don't spell out that they read from different records, or that a clubkey valid
-// for one clubkey-protected method (editPerson, createEntry, ...) is not
-// guaranteed to be valid for getClubUserList. These tests pin down that behaviour
-// against the mock so it can't silently regress.
+// don't spell out that they read from different records, or that getClubUserList's
+// response shape differs from every other read method here (members nested under
+// Data.ClubMembers, keyed by "RegNum" instead of "RegNo" - verified against a real
+// ORIS club roster). These tests pin down that behaviour against the mock so it
+// can't silently regress.
 const ORIS_CLUB_USER_LIST_WORKFLOW = {
   name: 'Oris mock getClubUserList vs getRegistration',
 };
@@ -65,14 +66,16 @@ test.describe(ORIS_CLUB_USER_LIST_WORKFLOW.name, () => {
     await setOrisMockSettings(request, { clubUserListForbidden: false });
   });
 
-  test('getClubUserList returns the whole roster with current SI, ignoring any per-user filter', async ({ request }) => {
+  test('getClubUserList returns the whole roster with current SI under Data.ClubMembers, keyed by RegNum', async ({ request }) => {
     const { httpStatus, body } = await getOrisApiClubUserList(request, 'mockClubKey');
     expect(httpStatus).toBe(200);
     expect(body.Status).toBe('OK');
 
-    const byRegNo = Object.fromEntries(body.Data.map((entry) => [entry.RegNo, entry]));
-    expect(byRegNo[state.userA.regNo].SI).toBe(state.userA.si);
-    expect(byRegNo[state.userB.regNo].SI).toBe(state.userB.si);
+    const members = Object.values(body.Data.ClubMembers);
+    const byRegNum = Object.fromEntries(members.map((entry) => [entry.RegNum, entry]));
+    expect(byRegNum[state.userA.regNo].SI).toBe(state.userA.si);
+    expect(byRegNum[state.userA.regNo].Valid).toBe(1);
+    expect(byRegNum[state.userB.regNo].SI).toBe(state.userB.si);
   });
 
   test('getRegistration returns the stale per-year snapshot SI, not the current SI', async ({ request }) => {
@@ -86,7 +89,7 @@ test.describe(ORIS_CLUB_USER_LIST_WORKFLOW.name, () => {
     expect(entry.SI).not.toBe(state.userA.si);
   });
 
-  test('a clubkey can be rejected for getClubUserList specifically, even though it is otherwise valid', async ({ request }) => {
+  test('getClubUserList failure can be simulated independently of other clubkey-protected methods', async ({ request }) => {
     await setOrisMockSettings(request, { clubUserListForbidden: true });
 
     const { httpStatus, body } = await getOrisApiClubUserList(request, 'mockClubKey');
