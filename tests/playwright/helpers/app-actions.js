@@ -112,6 +112,8 @@ function getMemberDirectoryPath(role = 'clubAdmin') {
       return './index.php?id=500&subid=1';
     case 'clubAdmin':
       return './index.php?id=700&subid=1';
+    case 'clubAdminAll':
+      return './index.php?id=700&subid=1&showHidden=1';
     default:
       throw new Error(`Unsupported member-directory role: ${role}`);
   }
@@ -335,6 +337,80 @@ async function ensureClubMembers(page, registrationIds, options = {}) {
   }
 
   return ensuredMembers;
+}
+
+async function updateMemberProfile(page, userId, overrides = {}) {
+  if (!userId) {
+    throw new Error('Cannot update a member without a user id');
+  }
+
+  const editPath = overrides.editPath || `./user_edit.php?id=${userId}`;
+  await page.goto(editPath);
+  const form = await readFormState(page, `form[action*="user_new_exc.php?update=${userId}"]`);
+  const result = await postFormInSession(page, form.action, {
+    ...form.fields,
+    ...overrides.fields,
+  });
+
+  return ensureHtmlSubmission(result, `Update member ${userId}`);
+}
+
+async function setMemberDisabled(page, userId, disabled) {
+  if (!userId) {
+    throw new Error('Cannot change member visibility without a user id');
+  }
+
+  await page.goto('./index.php?id=700&subid=1&showHidden=1');
+  const rowState = await page.evaluate((id) => {
+    const link = document.querySelector(`a[href*="user_hide_exc.php?id=${id}"]`);
+    if (!link) {
+      return null;
+    }
+
+    return {
+      href: link.getAttribute('href'),
+      currentlyDisabled: /Zviditelnit/i.test(link.textContent),
+    };
+  }, String(userId));
+
+  if (!rowState) {
+    throw new Error(`Member ${userId} was not found in the visibility directory`);
+  }
+
+  if (rowState.currentlyDisabled !== Boolean(disabled)) {
+    const result = await page.evaluate(async (href) => {
+      const response = await fetch(new URL(href, window.location.href).toString(), {
+        credentials: 'same-origin',
+      });
+      return {
+        ok: response.ok,
+        status: response.status,
+        url: response.url,
+        text: await response.text(),
+      };
+    }, rowState.href);
+    ensureHtmlSubmission(result, `${disabled ? 'Disable' : 'Enable'} member ${userId}`);
+  }
+}
+
+async function deleteMember(page, userId) {
+  if (!userId) {
+    throw new Error('Cannot delete a member without a user id');
+  }
+
+  const result = await page.evaluate(async (id) => {
+    const response = await fetch(new URL(`./user_del_exc.php?id=${id}`, window.location.href).toString(), {
+      credentials: 'same-origin',
+    });
+    return {
+      ok: response.ok,
+      status: response.status,
+      url: response.url,
+      text: await response.text(),
+    };
+  }, String(userId));
+
+  return ensureHtmlSubmission(result, `Delete member ${userId}`);
 }
 
 async function ensureMemberLogin(page, userId, overrides = {}) {
@@ -635,6 +711,8 @@ module.exports = {
   ensureClubMember,
   ensureClubMembers,
   ensureMemberLogin,
+  deleteMember,
+  findClubMemberByReg,
   findRaceUserIdByReg,
   createPaymentRule,
   ensurePaymentRules,
@@ -643,6 +721,8 @@ module.exports = {
   getFinanceDirectoryEntryByReg,
   setMemberFinanceType,
   setMemberSmallManager,
+  setMemberDisabled,
+  updateMemberProfile,
   stornoFirstMemberFinanceEntry,
   updateFirstMemberFinanceEntry,
   submitFinanceTransferByReg,
