@@ -104,7 +104,7 @@ class OrisCZConnector implements ConnectorInterface {
 		return OrisIntegrationServiceFactory::getConfiguredBaseUrl() . 'Zavod?id=' . $raceId;
 	}
 
-	private function mapLevelToZebricek2($levelId) {
+	private function mapLevelToZebricek2($levelId, $disciplineId = null) {
 		$map = [
 			1  => 17, // MCR
 			3  => 6,  // ZB
@@ -114,7 +114,15 @@ class OrisCZConnector implements ConnectorInterface {
 			11 => 24,  // OM
 			17 => 17   // VET
 		];
-		return $map[$levelId] ?? 0x0080; // Default to 0x80 if not found
+		$zebricek = $map[$levelId] ?? 0x0080; // Default to 0x80 if not found
+
+		// Sprint relays and teams are relay events too, even though their ORIS level
+		// can be MCR rather than CPS (for example ORIS events 9285 and 9289).
+		if (in_array((int)$disciplineId, [6, 15], true)) {
+			$zebricek |= 32;
+		}
+
+		return $zebricek;
 	}
 
 	private function mapSport($sportId) {
@@ -186,7 +194,10 @@ class OrisCZConnector implements ConnectorInterface {
 				'oblasti' => $oblasti,
 				'typ0' => 'Z',
 				'typ' => $this->mapSport($raceData['Sport']['ID']),
-				'zebricek2' => $this->mapLevelToZebricek2($raceData['Level']['ID']),
+				'zebricek2' => $this->mapLevelToZebricek2(
+					$raceData['Level']['ID'],
+					$raceData['Discipline']['ID'] ?? null
+				),
 				'ranking' => $raceData['Ranking'],
 				'odkaz' => $this->getRaceURL($raceData['ID']),
 				'prihlasky' => strtotime($raceData['EntryDate1']),
