@@ -74,6 +74,28 @@ if (is_array($obj) || is_object($obj)) {
 }
 //konec nahrani dat z orisu
 
+//nahraj aktualni stav clenu z ORISu (ne jen registraci k danemu roku) a preprav SI
+//getRegistration vraci SI zaznamenane pri registraci na sezonu - po zmene SI clena
+//(ads_oris_si_sync.php -> editPerson) uz neodpovida aktualnimu stavu. getClubUserList
+//vraci aktualni udaje clenu klubu, proto se pouzije pro zobrazeni SI, pokud je dostupny.
+$live_si = array();
+if ($orisWriteEnabled) {
+	try {
+		$clubUsers = $service->getClubUserList();
+		if (is_array($clubUsers)) {
+			foreach ($clubUsers as $clubUser) {
+				$cuReg = $clubUser['RegNo'] ?? null;
+				if ($cuReg !== null && startsWith($cuReg, $g_shortcut)) {
+					$live_si[$cuReg] = $clubUser['SI'] ?? '';
+				}
+			}
+		}
+	} catch (OrisException $e) {
+		//klubovy klic nemusi mit opravneni pro getClubUserList, i kdyz funguje pro editPerson/createEntry
+		//(nedokumentovane ruzne urovne opravneni na strane ORISu) - zobrazi se aspon data z registrace
+	}
+}
+
 if (count($arr_oris) == 0)
 {
 	echo('<br /><br />Pro zadaný rok se nepodařilo načíst data z ORISu<br /><br />');
@@ -135,7 +157,7 @@ else
 		{
 			$row[] = $arr_oris["user"][$fullreg]->getReg();
 			$row[] = $arr_oris["user"][$fullreg]->getLastName()." ".$arr_oris["user"][$fullreg]->getFirstName();
-			$oris_si = $arr_oris["user"][$fullreg]->getSI();
+			$oris_si = array_key_exists($fullreg, $live_si) ? $live_si[$fullreg] : $arr_oris["user"][$fullreg]->getSI();
 			if ($oris_si != $zaznam['si'])
 			{
 				$oris_si = "<font style='color:red'>".$oris_si."</font>";

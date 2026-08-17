@@ -12,6 +12,7 @@ type MockSettings = {
   mode: RuntimeMode;
   responseDelayMs: number;
   forceStatusCode: number;
+  clubUserListForbidden: boolean;
 };
 
 type MockRow = RowDataPacket & {
@@ -23,6 +24,7 @@ type SettingsRow = RowDataPacket & {
   mode: RuntimeMode;
   response_delay_ms: number;
   force_status_code: number;
+  club_user_list_forbidden: number;
 };
 
 type EventRow = MockRow & {
@@ -64,6 +66,7 @@ type UserRow = MockRow & {
   first_name: string | null;
   last_name: string | null;
   si: string | null;
+  reg_si: string | null;
   club_id: string | null;
   licence: string | null;
 };
@@ -591,6 +594,7 @@ async function ensureDatabase(): Promise<void> {
       first_name VARCHAR(128) NULL,
       last_name VARCHAR(128) NULL,
       si VARCHAR(32) NULL,
+      reg_si VARCHAR(32) NULL,
       club_id VARCHAR(32) NULL,
       licence VARCHAR(32) NULL,
       proxy_only TINYINT(1) NOT NULL DEFAULT 1,
@@ -600,6 +604,11 @@ async function ensureDatabase(): Promise<void> {
       INDEX idx_club_user (club_user_id),
       INDEX idx_registration (sport, year, deleted)
     )
+  `);
+
+  await pool.query(`
+    ALTER TABLE mock_users
+    ADD COLUMN IF NOT EXISTS reg_si VARCHAR(32) NULL AFTER si
   `);
 
   await pool.query(`
@@ -653,6 +662,7 @@ async function ensureDatabase(): Promise<void> {
       mode VARCHAR(32) NOT NULL DEFAULT 'normal',
       response_delay_ms INT NOT NULL DEFAULT 0,
       force_status_code INT NOT NULL DEFAULT 503,
+      club_user_list_forbidden TINYINT(1) NOT NULL DEFAULT 0,
       updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )
   `);
@@ -660,6 +670,11 @@ async function ensureDatabase(): Promise<void> {
   await pool.query(`
     ALTER TABLE mock_settings
     MODIFY mode VARCHAR(32) NOT NULL DEFAULT 'normal'
+  `);
+
+  await pool.query(`
+    ALTER TABLE mock_settings
+    ADD COLUMN IF NOT EXISTS club_user_list_forbidden TINYINT(1) NOT NULL DEFAULT 0
   `);
 
   await pool.query(`
@@ -671,7 +686,7 @@ async function ensureDatabase(): Promise<void> {
 
 async function getSettings(): Promise<MockSettings> {
   const [rows] = await pool.query<SettingsRow[]>(
-    'SELECT mode, response_delay_ms, force_status_code FROM mock_settings WHERE settings_key = ? LIMIT 1',
+    'SELECT mode, response_delay_ms, force_status_code, club_user_list_forbidden FROM mock_settings WHERE settings_key = ? LIMIT 1',
     ['default'],
   );
 
@@ -680,6 +695,7 @@ async function getSettings(): Promise<MockSettings> {
     mode: asRuntimeMode(row?.mode, 'normal'),
     responseDelayMs: Number(row?.response_delay_ms ?? 0),
     forceStatusCode: Number(row?.force_status_code ?? 503),
+    clubUserListForbidden: !!row?.club_user_list_forbidden,
   };
 }
 
@@ -689,15 +705,16 @@ async function updateSettings(patch: Partial<MockSettings>): Promise<MockSetting
     mode: asRuntimeMode(patch.mode, current.mode),
     responseDelayMs: Math.max(0, Math.min(600000, patch.responseDelayMs ?? current.responseDelayMs)),
     forceStatusCode: Math.max(400, Math.min(599, patch.forceStatusCode ?? current.forceStatusCode)),
+    clubUserListForbidden: patch.clubUserListForbidden ?? current.clubUserListForbidden,
   };
 
   await pool.query(
     `
       UPDATE mock_settings
-      SET mode = ?, response_delay_ms = ?, force_status_code = ?
+      SET mode = ?, response_delay_ms = ?, force_status_code = ?, club_user_list_forbidden = ?
       WHERE settings_key = ?
     `,
-    [next.mode, next.responseDelayMs, next.forceStatusCode, 'default'],
+    [next.mode, next.responseDelayMs, next.forceStatusCode, next.clubUserListForbidden ? 1 : 0, 'default'],
   );
 
   return next;
@@ -907,7 +924,7 @@ function composeEvent(row: EventRow, classRows: EventClassRow[], upstreamEvent: 
   return merged;
 }
 
-function composeUser(row: UserRow, upstreamUser: JsonObject | null): JsonObject {
+function composeUser(row: UserRow, upstreamUser: JsonObject | null, siOverride?: string | null): JsonObject {
   const localOnly = !!row.proxy_only;
   const regNo = row.reg_no ?? defaultRegNo(row.user_id);
   const userId = row.user_id;
@@ -930,7 +947,7 @@ function composeUser(row: UserRow, upstreamUser: JsonObject | null): JsonObject 
   overlayValue(row.first_name, (value) => { overlay.FirstName = value; });
   overlayValue(row.last_name, (value) => { overlay.LastName = value; });
   overlayValue(row.reg_no, (value) => { overlay.RegNo = value; });
-  overlayValue(row.si, (value) => { overlay.SI = value; });
+  overlayValue(siOverride !== undefined ? siOverride : row.si, (value) => { overlay.SI = value; });
   overlayValue(row.club_id, (value) => { overlay.ClubID = value; });
   overlayValue(row.licence, (value) => { overlay.Licence = value; });
   return mergeJson(base, overlay);
@@ -1349,10 +1366,10 @@ async function upsertUser(input: JsonObject): Promise<JsonObject> {
   await pool.query(
     `
       INSERT INTO mock_users (
-        user_id, club_user_id, reg_no, sport, year, first_name, last_name, si, club_id, licence,
+        user_id, club_user_id, reg_no, sport, year, first_name, last_name, si, reg_si, club_id, licence,
         proxy_only, deleted
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)
       ON DUPLICATE KEY UPDATE
         club_user_id = COALESCE(VALUES(club_user_id), club_user_id),
         reg_no = COALESCE(VALUES(reg_no), reg_no),
@@ -1361,6 +1378,7 @@ async function upsertUser(input: JsonObject): Promise<JsonObject> {
         first_name = COALESCE(VALUES(first_name), first_name),
         last_name = COALESCE(VALUES(last_name), last_name),
         si = COALESCE(VALUES(si), si),
+        reg_si = COALESCE(VALUES(reg_si), reg_si),
         club_id = COALESCE(VALUES(club_id), club_id),
         licence = COALESCE(VALUES(licence), licence),
         proxy_only = VALUES(proxy_only),
@@ -1375,6 +1393,7 @@ async function upsertUser(input: JsonObject): Promise<JsonObject> {
       nullableString(input, 'firstName', 'firstname', 'FirstName'),
       nullableString(input, 'lastName', 'lastname', 'LastName'),
       nullableString(input, 'si', 'SI'),
+      nullableString(input, 'regSi', 'regsi', 'RegSi', 'reg_si'),
       nullableString(input, 'clubId', 'clubid', 'ClubID'),
       nullableString(input, 'licence', 'Licence'),
       proxyOnly ? 1 : 0,
@@ -1525,7 +1544,14 @@ async function handleGetRegistration(req: Request, res: Response): Promise<void>
   const upstream = await fetchUpstream(new URLSearchParams(req.query as Record<string, string>));
   const baseItems = upstream?.Status === 'OK' && Array.isArray(upstream.Data) ? upstream.Data as JsonObject[] : [];
   const [rows] = await pool.query<UserRow[]>('SELECT * FROM mock_users WHERE sport = ? AND year = ?', [sport, year]);
-  res.json(apiOk(mergeRowsByKey(baseItems, rows, 'RegNo', (row) => row.reg_no ?? asString(composeUser(row, null).RegNo), composeUser)));
+  res.json(apiOk(mergeRowsByKey(
+    baseItems,
+    rows,
+    'RegNo',
+    (row) => row.reg_no ?? asString(composeUser(row, null).RegNo),
+    // registration snapshot SI: falls back to the current si when reg_si was never diverged from it
+    (row, base) => composeUser(row, base, row.reg_si ?? row.si),
+  )));
 }
 
 async function handleGetUser(req: Request, res: Response): Promise<void> {
@@ -1597,6 +1623,22 @@ async function handleGetClubUsers(req: Request, res: Response): Promise<void> {
     }
   }
   res.json(upstream ?? apiOk([]));
+}
+
+// Real ORIS's getClubUserList takes only `clubkey` and always returns the whole club
+// roster (no `user` filter) - unlike getClubUsers, which looks up one person's club
+// memberships. It's also known to reject clubkeys that work fine for other
+// clubkey-protected methods (see clubUserListForbidden), so it's kept local-only here
+// rather than proxied upstream.
+async function handleGetClubUserList(req: Request, res: Response): Promise<void> {
+  const settings = await getSettings();
+  if (settings.clubUserListForbidden) {
+    res.json(apiClubKeyError('getClubUserList', 'Key not valid'));
+    return;
+  }
+
+  const [rows] = await pool.query<UserRow[]>('SELECT * FROM mock_users WHERE deleted = 0');
+  res.json(apiOk(rows.map((row) => composeClubUserPayload(composeUser(row, null)))));
 }
 
 async function handleGetEventEntries(req: Request, res: Response): Promise<void> {
@@ -1836,8 +1878,10 @@ async function handleOrisApi(req: Request, res: Response): Promise<void> {
       await handleGetUser(req, res);
       return;
     case 'getClubUsers':
-    case 'getClubUserList':
       await handleGetClubUsers(req, res);
+      return;
+    case 'getClubUserList':
+      await handleGetClubUserList(req, res);
       return;
     case 'getEventEntries':
       await handleGetEventEntries(req, res);
@@ -2529,6 +2573,7 @@ async function main(): Promise<void> {
       mode: req.body.mode as RuntimeMode | undefined,
       responseDelayMs: req.body.responseDelayMs === undefined ? undefined : asNumber(req.body.responseDelayMs, 0),
       forceStatusCode: req.body.forceStatusCode === undefined ? undefined : asNumber(req.body.forceStatusCode, 503),
+      clubUserListForbidden: req.body.clubUserListForbidden === undefined ? undefined : asBool(req.body.clubUserListForbidden),
     });
     res.redirect(`${TESTBENCH_BASE}?tab=network`);
   });
@@ -2556,6 +2601,7 @@ async function main(): Promise<void> {
       mode: req.body.mode as RuntimeMode | undefined,
       responseDelayMs: req.body.responseDelayMs === undefined ? undefined : asNumber(req.body.responseDelayMs, 0),
       forceStatusCode: req.body.forceStatusCode === undefined ? undefined : asNumber(req.body.forceStatusCode, 503),
+      clubUserListForbidden: req.body.clubUserListForbidden === undefined ? undefined : asBool(req.body.clubUserListForbidden),
     });
 
     res.json(settings);

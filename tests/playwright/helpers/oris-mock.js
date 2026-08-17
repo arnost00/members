@@ -155,14 +155,37 @@ async function createOrisApiEntry(request, overrides = {}) {
   };
 }
 
+async function callOrisApi(request, params, { post = false } = {}) {
+  const query = { format: 'json', ...params };
+  const response = post
+    ? await request.post(DEFAULT_ORIS_MOCK_API_URL, { form: query })
+    : await request.get(`${DEFAULT_ORIS_MOCK_API_URL}?${new URLSearchParams(query).toString()}`);
+
+  return {
+    httpStatus: response.status(),
+    body: await response.json(),
+  };
+}
+
+function getOrisApiClubUserList(request, clubkey) {
+  return callOrisApi(request, { method: 'getClubUserList', clubkey }, { post: true });
+}
+
+function getOrisApiRegistration(request, sport, year) {
+  return callOrisApi(request, { method: 'getRegistration', sport, year });
+}
+
 module.exports = {
+  callOrisApi,
   createOrisApiEntry,
   createOrisMockEntry,
   createOrisMockRace,
   createOrisMockUser,
   deleteOrisMockRaceEntry,
+  getOrisApiClubUserList,
   getOrisApiEvent,
   getOrisApiEventEntries,
+  getOrisApiRegistration,
   getOrisMockParticipants,
   getOrisMockRaceEntries,
   getOrisMockSettings,
