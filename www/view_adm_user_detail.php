@@ -1,13 +1,21 @@
 <? /* adminova stranka - detail clena */
 define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
-$id = $_GET['id'] ?? null;
+$id = $_REQUEST['id'] ?? null;
+$edit = $_REQUEST['edit'] ?? null;
+$hidden = $_REQUEST['hidden'] ?? null;
+$entry_locked = $_REQUEST['entry_locked'] ?? null;
+$locked = $_REQUEST['locked'] ?? null;
 
 require_once("./cfg/_colors.php");
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
 
-RequirePageAccess(IsLoggedAdmin());
+if (!IsLogged())
+{
+	header("location: ".$g_baseadr."error.php?code=21");
+	exit;
+}
 
 require_once ("./ctable.inc.php");
 
@@ -15,11 +23,11 @@ $id = (IsSet($id) && is_numeric($id)) ? (int)$id : 0;
 
 db_Connect();
 
-if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['edit']))
+if (IsSet($edit) && $edit=true)
 {
-    $hidden = isset($_POST['hidden']) ? 1 : 0;
-    $entry_locked = isset($_POST['entry_locked']) ? 1 : 0;
-    $locked = isset($_POST['locked']) ? 1 : 0;
+    $hidden = (IsSet($hidden) && is_numeric($hidden)) ? (int)$hidden : 0;
+    $entry_locked = (IsSet($entry_locked) && is_numeric($entry_locked)) ? (int)$entry_locked : 0;
+    $locked = (IsSet($locked) && is_numeric($locked)) ? (int)$locked : 0;
     $updateUser = "update ".TBL_USER." set hidden='".$hidden."', entry_locked='".$entry_locked."' where id=".$id;
     $updateAccount = "update ".TBL_ACCOUNT." set locked='".$locked."' where id_users=".$id;
     query_db($updateUser);
@@ -45,8 +53,15 @@ require_once ("./common_user.inc.php");
 DrawPageTitle('Informace o členovi');
 ?>
 
-<FORM METHOD="POST" ACTION="./view_adm_user_detail.php?id=<?=$id?>">
-<INPUT TYPE="hidden" NAME="edit" VALUE="1">
+<script language="javascript">
+    function save() {
+        var locked = (document.getElementById('locked').checked)?1:0;
+        var hidden = (document.getElementById('hidden').checked)?1:0;
+        var entry_locked = (document.getElementById('entry_locked').checked)?1:0;
+        window.location.href = changeParameterValueInURL(changeParameterValueInURL(changeParameterValueInURL(this.location.href, 'entry_locked', entry_locked), 'hidden', hidden), 'locked', locked)+'&edit=true';
+    }
+</script>
+
 <TABLE width="100%" cellpadding="0" cellspacing="0" border="0">
 <TR>
 <TD width="2%"></TD>
@@ -61,13 +76,13 @@ echo $data_tbl->get_header()."\n";
 
 echo $data_tbl->get_new_row('Jméno', $zaznam["jmeno"].' '.$zaznam["prijmeni"]);
 echo $data_tbl->get_new_row('Registrační číslo', $g_shortcut.RegNumToStr($zaznam["reg"]));
-$checkbox = "<input id='hidden' name='hidden' value='1' type='checkbox' ".($zaznam['hidden']?"checked":"")."/>";
+$checkbox = "<input id='hidden' value='1' type='checkbox' ".($zaznam['hidden']?"checked":"")."/>";
 echo $data_tbl->get_new_row('Skrytý člen', $checkbox);
 if ($zaznam['aid']) //check if user has account
 {
-    $checkbox = "<input id='locked' name='locked' value='1' type='checkbox' ".($zaznam['locked']?"checked":"")."/>";
+    $checkbox = "<input id='locked' value='1' type='checkbox' ".($zaznam['locked']?"checked":"")."/>";
     echo $data_tbl->get_new_row('Zamčený účet', $checkbox);
-    $checkbox = "<input id='entry_locked' name='entry_locked' value='1' type='checkbox' ".($zaznam['entry_locked']?"checked":"")."/>";
+    $checkbox = "<input id='entry_locked' value='1' type='checkbox' ".($zaznam['entry_locked']?"checked":"")."/>";
     echo $data_tbl->get_new_row('Zamčené přihlášky', $checkbox);
 } else
 {
@@ -76,13 +91,12 @@ if ($zaznam['aid']) //check if user has account
 echo $data_tbl->get_footer()."\n";
 ?>
 
-<BR><BUTTON TYPE="button" onclick="javascript:close_popup();">Zavřít</BUTTON><BUTTON TYPE="submit" class="left-margin-50px">Uložit</BUTTON></TD></TR>
+<BR><BUTTON onclick="javascript:close_popup();">Zavřít</BUTTON><BUTTON class="left-margin-50px" onclick="save()">Uložit</BUTTON></TD></TR>
 </CENTER>
 </TD>
 <TD width="2%"></TD>
 </TR>
 </TABLE>
-</FORM>
 
 <?
 HTML_Footer();

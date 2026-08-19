@@ -74,9 +74,9 @@ if ($vysledek != FALSE && mysqli_num_rows($vysledek) > 0)
 			}
 			else
 			{
-				$row_text = '<A HREF="./mns_user_edit.php?id='.$zaznam['id'].'">Editovat</A>';
+				$row_text = '<A HREF="./mns_user_edit.php?id='.$zaznam['id'].'&cb=600">Editovat</A>';
 				if ($zaznam['aid'] != null)
-					$row_text .= '&nbsp;/&nbsp;<A HREF="./mns_user_login_edit.php?id='.$zaznam['id'].'">Účet</A>';
+					$row_text .= '&nbsp;/&nbsp;<A HREF="./mns_user_login_edit.php?id='.$zaznam['id'].'&cb=600">Účet</A>';
 			}
 			$row[] = $row_text;
 			echo $data_tbl->get_new_row_arr($row)."\n";

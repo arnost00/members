@@ -6,7 +6,11 @@ $user_id = $_REQUEST['user_id'] ?? null;
 require_once ("connect.inc.php");
 require_once ("sess.inc.php");
 require_once ("ctable.inc.php");
-RequirePageAccess(IsLoggedFinance());
+if (!IsLoggedFinance())
+{
+	header("location: ".$g_baseadr."error.php?code=21");
+	exit;
+}
 require_once("cfg/_globals.php");
 
 db_Connect();

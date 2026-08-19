@@ -10,7 +10,11 @@ require_once ("./sess.inc.php");
 require_once ("./common.inc.php");
 require_once ("./ctable.inc.php");
 
-RequirePageAccess(IsLogged());
+if (!IsLogged())
+{
+	header("location: ".$g_baseadr."error.php?code=21");
+	exit;
+}
 db_Connect();
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 

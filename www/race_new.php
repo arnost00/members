@@ -13,7 +13,11 @@ require_once ('./url.inc.php');
 
 require_once ("./connectors.php");
 
-RequirePageAccess(IsLoggedRegistrator());
+if (!IsLoggedRegistrator())
+{
+	header("location: ".$g_baseadr."error.php?code=21");
+	exit;
+}
 
 require_once ("./header.inc.php"); // header obsahuje uvod html a konci <BODY>
 DrawPageTitle('Vytvoření nového závodu');

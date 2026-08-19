@@ -7,7 +7,11 @@ $msg = $_REQUEST['msg'] ?? null;
 
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
-RequirePageAccess(IsLoggedFinance());
+if (!IsLoggedFinance())
+{
+	header("location: ".$g_baseadr."error.php?code=21");
+	exit;
+}
 
 $race_id = (IsSet($race_id) && is_numeric($race_id)) ? (int)$race_id : 0;
 

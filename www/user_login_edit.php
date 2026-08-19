@@ -5,7 +5,11 @@ $cb = $_REQUEST['cb'] ?? null;
 
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
-RequirePageAccess(IsLoggedSmallAdmin() || IsLoggedManager());
+if (!IsLoggedSmallAdmin() && !IsLoggedManager())
+{
+	header("location: ".$g_baseadr."error.php?code=21");
+	exit;
+}
 require_once ("./common_user.inc.php");
 require_once ("./common.inc.php");
 
