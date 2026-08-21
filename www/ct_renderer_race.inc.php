@@ -138,13 +138,13 @@ class RaceRendererFactory extends AColumnRendererFactory {
             'si_chip' => new DefaultHeaderRenderer('SI čip',ALIGN_RIGHT),
             'kat' => new KategoryHeadderRenderer('Kategorie',ALIGN_CENTER,"Zobrazí počet účastníků v jednotlivých kategoriích"),
             'etapy' => new DefaultHeaderRenderer('Etapy',ALIGN_CENTER),
-            'transport' => new HelpHeaderRenderer('SD',ALIGN_CENTER,"Společná"),
+            'transport' => new HelpHeaderRenderer('SD',ALIGN_CENTER,"Společná doprava"),
             'sedadel' => new HelpHeaderRenderer('&#x1F697;',ALIGN_CENTER,'Nabízených sedadel'),
             'ubytovani' => new HelpHeaderRenderer('SU',ALIGN_CENTER,"Společné ubytování"),
             'sync_status' => new HelpHeaderRenderer('&#x21C4;', ALIGN_CENTER, 'Synchronizace'),
 		    'termin' => new DefaultHeaderRenderer('Termín',ALIGN_CENTER),
-	        'pozn' => new DefaultHeaderRenderer('Pozn.'),
-            'pozn_in' => new DefaultHeaderRenderer('Pozn.(i)'),
+	        'pozn' => new HelpHeaderRenderer('Pozn.', ALIGN_LEFT, 'Určeno pořadatelům'),
+            'pozn_in' => new HelpHeaderRenderer('Pozn.(i)', ALIGN_LEFT, 'Poznámka interní'),
             default => new DefaultHeaderRenderer($column_name),
         };
     }
