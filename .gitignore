@@ -10,7 +10,6 @@ www/logs/*
 node_modules/
 playwright-report/
 test-results/
-.agents/*
 skills-lock.json
 secure
 .DS_Store

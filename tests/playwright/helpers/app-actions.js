@@ -245,9 +245,36 @@ async function ensureClubMember(page, overrides = {}) {
   const role = overrides.role || 'clubAdmin';
   const financePage = overrides.financePage;
   const lookupOptions = { requireUnique: Boolean(overrides.requireUnique) };
-  const existingMember = await findClubMemberByReg(page, overrides.reg, role, lookupOptions);
+  let existingMember = await findClubMemberByReg(page, overrides.reg, role, lookupOptions);
 
   if (existingMember) {
+    let updated = false;
+    if (overrides.updateExisting) {
+      await page.goto(existingMember.editPath);
+      const form = await readFormState(page, 'form[action*="user_new_exc.php?update="]');
+      const requestedFields = {
+        prijmeni: overrides.surname,
+        jmeno: overrides.name,
+        reg: overrides.reg === undefined ? undefined : formatClubReg(overrides.reg),
+        si: overrides.chip,
+      };
+      const changedFields = Object.fromEntries(
+        Object.entries(requestedFields).filter(([name, value]) => (
+          value !== undefined && String(form.fields[name] ?? '') !== String(value)
+        ))
+      );
+
+      if (Object.keys(changedFields).length > 0) {
+        const result = await postFormInSession(page, form.action, {
+          ...form.fields,
+          ...changedFields,
+        });
+        ensureHtmlSubmission(result, 'Update existing club member');
+        updated = true;
+        existingMember = await findClubMemberByReg(page, overrides.reg, role, lookupOptions);
+      }
+    }
+
     const existingUserId = getUserIdFromEditPath(existingMember.editPath);
 
     if (financePage && overrides.financeType !== undefined) {
@@ -256,6 +283,7 @@ async function ensureClubMember(page, overrides = {}) {
 
     return {
       created: false,
+      updated,
       reg: existingMember.reg,
       userId: existingUserId,
       editPath: existingMember.editPath,
@@ -302,6 +330,7 @@ async function ensureClubMember(page, overrides = {}) {
 
   return {
     created: true,
+    updated: false,
     reg: createdMember.reg,
     userId: createdUserId,
     editPath: createdMember.editPath,

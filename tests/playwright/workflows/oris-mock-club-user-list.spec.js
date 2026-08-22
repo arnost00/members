@@ -3,7 +3,6 @@ const {
   createOrisMockUser,
   getOrisApiClubUserList,
   getOrisApiRegistration,
-  setOrisMockSettings,
 } = require('../helpers/oris-mock');
 
 // getClubUserList (full club roster, current member state) and getRegistration
@@ -23,19 +22,18 @@ test.describe(ORIS_CLUB_USER_LIST_WORKFLOW.name, () => {
   const state = {};
 
   test.beforeAll(async ({ request }) => {
-    const stamp = Date.now().toString().slice(-6);
     state.year = new Date().getUTCFullYear();
     state.userA = {
-      userId: `71${stamp}`,
-      clubUserId: `61${stamp}`,
-      regNo: `ZBM${stamp}A`,
+      userId: '719957',
+      clubUserId: '619957',
+      regNo: 'ZBM9957',
       si: '111111',
       regSi: '222222',
     };
     state.userB = {
-      userId: `72${stamp}`,
-      clubUserId: `62${stamp}`,
-      regNo: `ZBM${stamp}B`,
+      userId: '719958',
+      clubUserId: '619958',
+      regNo: 'ZBM9958',
       si: '333333',
     };
 
@@ -62,10 +60,6 @@ test.describe(ORIS_CLUB_USER_LIST_WORKFLOW.name, () => {
     });
   });
 
-  test.afterAll(async ({ request }) => {
-    await setOrisMockSettings(request, { clubUserListForbidden: false });
-  });
-
   test('getClubUserList returns the whole roster with current SI under Data.ClubMembers, keyed by RegNum', async ({ request }) => {
     const { httpStatus, body } = await getOrisApiClubUserList(request, 'mockClubKey');
     expect(httpStatus).toBe(200);
@@ -87,18 +81,5 @@ test.describe(ORIS_CLUB_USER_LIST_WORKFLOW.name, () => {
     expect(entry).toBeTruthy();
     expect(entry.SI).toBe(state.userA.regSi);
     expect(entry.SI).not.toBe(state.userA.si);
-  });
-
-  test('getClubUserList failure can be simulated independently of other clubkey-protected methods', async ({ request }) => {
-    await setOrisMockSettings(request, { clubUserListForbidden: true });
-
-    const { httpStatus, body } = await getOrisApiClubUserList(request, 'mockClubKey');
-    expect(httpStatus).toBe(200);
-    expect(body.Status).toBe('Key not valid');
-    expect(body.Data).toEqual([]);
-
-    await setOrisMockSettings(request, { clubUserListForbidden: false });
-    const restored = await getOrisApiClubUserList(request, 'mockClubKey');
-    expect(restored.body.Status).toBe('OK');
   });
 });

@@ -11,6 +11,8 @@ const projects = baseConfig.projects
 
 module.exports = defineConfig({
   ...baseConfig,
+  // This suite changes shared ORIS-mock settings, so its tests must not overlap.
+  workers: 1,
   testIgnore: undefined,
   testMatch: ['**/oris-connector-errors.spec.js'],
   projects,

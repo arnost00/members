@@ -9,6 +9,8 @@ const projects = baseConfig.projects.map((project) => (
 
 module.exports = defineConfig({
   ...baseConfig,
+  // This suite changes shared bank-mock settings, so its tests must not overlap.
+  workers: 1,
   testIgnore: undefined,
   testMatch: ['**/bank-connector-errors.spec.js'],
   projects,

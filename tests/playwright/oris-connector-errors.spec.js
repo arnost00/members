@@ -9,11 +9,13 @@ const {
   loginAs,
 } = require('./helpers/browser');
 const {
+  ensureClubMember,
   submitMemberRaceRegistration,
 } = require('./helpers/app-actions');
 const {
   createOrisMockRace,
   createOrisMockUser,
+  getOrisApiClubUserList,
   getOrisApiEventEntries,
   getOrisMockSettings,
   setOrisMockSettings,
@@ -31,6 +33,14 @@ const TRANSIENT_FAILURES = [
   { name: 'a closed connection', settings: { mode: 'close_connection' } },
   { name: 'HTTP 503', settings: { mode: 'service_down', forceStatusCode: 503 } },
 ];
+
+function memberRow(page, reg) {
+  return page
+    .locator('td')
+    .filter({ hasText: new RegExp(`^${reg}$`) })
+    .first()
+    .locator('xpath=ancestor::tr[1]');
+}
 
 function memberEntry(entries, state) {
   return entries.find((entry) => (
@@ -129,18 +139,40 @@ test.describe('Oris Connector Errors', () => {
     memberRegNo: 'ZBM9952',
     memberOrisUserId: '29952',
     memberOrisClubUserId: '39952',
+    currentSiReg: '9959',
+    currentSiRegNo: 'ZBM9959',
+    currentSiOrisUserId: '29959',
+    currentSiOrisClubUserId: '39959',
+    currentSi: '2181929',
+    staleRegistrationSi: '999999',
   };
 
   let savedMockSettings;
 
-  test.beforeAll(async ({ request }) => {
+  test.beforeAll(async ({ browser, request }) => {
     savedMockSettings = await getOrisMockSettings(request);
-    await setOrisMockSettings(request, { mode: 'normal' });
+    await setOrisMockSettings(request, {
+      mode: 'normal',
+      clubUserListForbidden: false,
+    });
 
     const run = createWorkflowRun('oris-connector-errors');
     state.runId = run.runId;
     state.memberToken = await loginViaApi(request, TEST_USERS.member);
     state.memberUser = await getCurrentUser(request, state.memberToken);
+
+    const clubAdminContext = await browser.newContext();
+    const clubAdminPage = await clubAdminContext.newPage();
+    await loginAs(clubAdminPage, 'clubAdmin');
+    await ensureClubMember(clubAdminPage, {
+      reg: state.currentSiReg,
+      surname: 'Testovska',
+      name: 'SiFallback9959',
+      chip: state.currentSi,
+      requireUnique: true,
+      updateExisting: true,
+    });
+    await clubAdminContext.close();
 
     await createOrisMockUser(request, {
       userId: state.memberOrisUserId,
@@ -149,6 +181,17 @@ test.describe('Oris Connector Errors', () => {
       firstName: state.memberUser.name || 'Zuzana',
       lastName: state.memberUser.surname || 'Novakova',
       si: state.memberUser.chip_number || '1341431',
+      licence: 'C',
+    });
+
+    await createOrisMockUser(request, {
+      userId: state.currentSiOrisUserId,
+      clubUserId: state.currentSiOrisClubUserId,
+      regNo: state.currentSiRegNo,
+      firstName: 'SiFallback9959',
+      lastName: 'Testovska',
+      si: state.currentSi,
+      regSi: state.staleRegistrationSi,
       licence: 'C',
     });
 
@@ -167,7 +210,10 @@ test.describe('Oris Connector Errors', () => {
   });
 
   test.afterEach(async ({ request }) => {
-    await setOrisMockSettings(request, { mode: 'normal' });
+    await setOrisMockSettings(request, {
+      mode: 'normal',
+      clubUserListForbidden: false,
+    });
   });
 
   test.afterAll(async ({ request }) => {
@@ -183,6 +229,30 @@ test.describe('Oris Connector Errors', () => {
     const elapsedMs = await expectRaceImportUnavailable(page, state);
 
     expect(elapsedMs).toBeGreaterThanOrEqual(29000);
+  });
+
+  test('getClubUserList failure can be simulated independently of other clubkey-protected methods', async ({ request }) => {
+    await setOrisMockSettings(request, { clubUserListForbidden: true });
+
+    const { httpStatus, body } = await getOrisApiClubUserList(request, 'mockClubKey');
+    expect(httpStatus).toBe(200);
+    expect(body.Status).toBe('Key not valid');
+    expect(body.Data).toEqual([]);
+
+    await setOrisMockSettings(request, { clubUserListForbidden: false });
+    const restored = await getOrisApiClubUserList(request, 'mockClubKey');
+    expect(restored.body.Status).toBe('OK');
+  });
+
+  test('members page falls back to the registration SI when getClubUserList fails', async ({ page, request }) => {
+    await setOrisMockSettings(request, { clubUserListForbidden: true });
+
+    await loginAs(page, 'clubAdmin');
+    await page.goto('./index.php?id=700&subid=2');
+
+    const row = memberRow(page, state.currentSiReg);
+    await expect(row).toContainText(state.staleRegistrationSi);
+    await expect(row.locator('a[href*="ads_oris_si_sync.php"]')).toHaveCount(1);
   });
 
   test('race import fails gracefully when the ORIS mock closes the connection', async ({ page, request }) => {
