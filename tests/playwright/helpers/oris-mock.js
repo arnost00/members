@@ -145,6 +145,7 @@ async function createOrisApiEntry(request, overrides = {}) {
     form: {
       method: 'createEntry',
       format: 'json',
+      clubkey: 'mockClubKey',
       ...overrides,
     },
   });

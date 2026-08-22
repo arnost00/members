@@ -15,7 +15,7 @@ const regularTestIgnore = [
 ];
 const alternateTestIgnore = [
   ...regularTestIgnore,
-  '**/workflows/oris-*.spec.js',
+  '**/oris-*.spec.js',
 ];
 const testIgnore = alternateOrisSuite ? alternateTestIgnore : regularTestIgnore;
 
