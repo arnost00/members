@@ -11,11 +11,14 @@ Development and autotest sidecar for the members ORIS integration.
 - treats `NULL` overlay columns as "leave the upstream value unchanged"
 - composes proxy-only objects from columns and defaults on every request
 - keeps mutating calls local-only: `createEntry`, `updateEntry`, `deleteEntry`, `createPerson`, `editPerson`, `createClubUser`, `editClubUser`
+- serves `getClubUserList` entirely from the local mock roster (all stored users, ignoring any `user` filter, matching real ORIS which takes only `clubkey`) rather than proxying upstream. The response shape matches real ORIS, verified against a live club roster: members are nested under `Data.ClubMembers.<key>` (not `Data` directly), keyed by `RegNum` (not `RegNo` like every other read method here), and mock members are always `Valid: 1` - real ORIS also returns historical/ended memberships that callers must filter out
+- tracks two SI values per mock user: `si` (current/live state, read by `getUser`, `getClubUsers`, `getClubUserList`) and `reg_si` (the sport/year registration snapshot, read only by `getRegistration`). `editPerson`/`createPerson` only ever update `si`, so tests can reproduce the real-world case where a synced SI change is visible via `getClubUserList` but not yet via that year's `getRegistration` snapshot. `reg_si` defaults to `si` when never set explicitly.
 - provides a testbench UI at `/__testbench`
 - provides JSON endpoints under `/__testbench/api/*` for automatic tests
 - logs ORIS-compatible `/API/` requests to `www/logs/oris_mock_api.log` by default
 - supports network disturbance modes: `normal`, `force_client_error`, `service_down`, `delay`, `hang`, `close_connection`
 - requires the exact key `mockClubKey` for the same protected methods as `OrisIntegrationService::CLUB_KEY_REQUIRED_METHODS`
+- can simulate `getClubUserList` failing (`Status: "Key not valid"`) even with a correct `clubkey`, via the `clubUserListForbidden` setting - for testing the caller's fallback path against a generic ORIS-side failure, not a proven permission distinction
 
 Protected methods without `clubkey` return the ORIS status `Zadejte všechny požadované informace`. A supplied key other than `mockClubKey` returns `Key not valid`. Both responses keep the normal ORIS JSON envelope (`Method`, `Format`, `Status`, `ExportCreated`, and an empty `Data` array).
 
@@ -69,6 +72,14 @@ For relay races (ORIS level `7`, `ČPŠ` / Czech Relay Cup), `createEntry` alway
 closed-registration response because relay teams and legs use a different ORIS API.
 
 The API log path can be overridden with `ORIS_MOCK_API_LOG_FILE`.
+
+Example simulating `getClubUserList` failing while other clubkey-protected methods keep working:
+
+```bash
+curl -X POST http://127.0.0.1:10301/__testbench/api/settings \
+  -H 'Content-Type: application/json' \
+  -d '{"clubUserListForbidden":true}'
+```
 
 Example service-down mode:
 
