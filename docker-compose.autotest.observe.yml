@@ -12,3 +12,6 @@ services:
       - db   # this line links this container to the db container
     environment:
       PMA_HOST: db
+  mailpit:
+    ports:
+      - "10095:8025"    # web UI + REST API
