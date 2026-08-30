@@ -4,6 +4,7 @@
 //==================================================================
 require_once("ctable.inc.php");
 require_once("common_race.inc.php");
+require_once("sql_filter.inc.php");
 
 interface IColumnHeaderRenderer {
     public function render(html_table_mc $tbl, int $col): void;
@@ -154,6 +155,56 @@ interface IBreakRowDetector {
     public function renderBreak(html_table_mc $tbl, RowData $row): string;
 }
 
+// Optional extension for break detectors which can represent unloaded time ranges.
+interface ITimeRangeExpander extends IBreakRowDetector {
+    public function getRangeKey(array $record): string;
+    public function renderRangeBreak(
+        html_table_mc $tbl,
+        string $range,
+        bool $expanded,
+        string $expansionUrl
+    ): string;
+    public function getRangeRowAttrs(RowData $row, bool $expanded): array;
+}
+
+abstract class TimeRangeExpanderDetector implements ITimeRangeExpander {
+    abstract protected function getRangeLabel(string $range): ?string;
+
+    public function renderRangeBreak(
+        html_table_mc $tbl,
+        string $range,
+        bool $expanded,
+        string $expansionUrl
+    ): string {
+        $label = $this->getRangeLabel($range);
+        if ($label === null) {
+            return '';
+        }
+
+        $arrow = $expanded ? '▲' : '▼';
+        $content = '<span class="time-range-expander" role="button" tabindex="0"'
+            .' aria-expanded="'.($expanded ? 'true' : 'false').'"'
+            .' data-range="'.htmlspecialchars($range).'"'
+            .' data-loaded="'.($expanded ? '1' : '0').'"'
+            .' data-expand-url="'.htmlspecialchars($expansionUrl).'"'
+            .' onclick="toggle_lazy_time_range(this)"'
+            .' onkeydown="toggle_lazy_time_range_by_key(event, this)">'
+            .'<span class="time-range-arrow">'.$arrow.'</span> '
+            .htmlspecialchars($label)
+            .'<span class="time-range-status" aria-live="polite"></span></span>';
+
+        return $tbl->get_info_row($content, ['data-range-heading' => $range]);
+    }
+
+    public function getRangeRowAttrs(RowData $row, bool $expanded): array {
+        $attrs = ['data-group' => $this->getRangeKey($row->rec)];
+        if (!$expanded) {
+            $attrs['style'] = 'display:none';
+        }
+        return $attrs;
+    }
+}
+
 // table column descriptor, holds header and content rendered
 class TableColumn {
     public IColumnHeaderRenderer $header;
@@ -226,6 +277,9 @@ class RenderedTable {
     // mandatory renderer factory for column creation
     private string $rendererFactoryClass;
 
+    private ?SqlFilter $filter = null;
+    private ?string $rangeExpansionEndpoint = null;
+
     public function __construct(string $rendererFactoryClass) {
         $this->rendererFactoryClass = $rendererFactoryClass;
     }
@@ -267,65 +321,147 @@ class RenderedTable {
         $this->rowFilter = $fn;
     }
 
+    public function setFilter(SqlFilter $filter): void {
+        $this->filter = $filter;
+    }
 
-    public function render( html_table_mc $tbl, array $records, array $options = []): string {
+    public function setRangeExpansionEndpoint(string $endpoint): void {
+        $this->rangeExpansionEndpoint = $endpoint;
+    }
 
-        // Render headers
+    private function configureTable(html_table_mc $tbl): void {
         $col = 0;
         foreach ($this->columns as $column) {
-            // get all defined headers
-            $column->header->render ( $tbl, $col++ );
+            $column->header->render($tbl, $col++);
         }
+        // Initializes column count and alignments for both full and rows-only output.
+        $tbl->get_header_row();
+    }
 
-        $rnd = $tbl->get_css()."\n";
-        $rnd .= $tbl->get_header()."\n";
-        $rnd .= $tbl->get_header_row()."\n";
+    private function getTimeRangeExpander(): ?ITimeRangeExpander {
+        foreach ($this->breakRowDetectors as $detector) {
+            if ($detector instanceof ITimeRangeExpander) {
+                return $detector;
+            }
+        }
+        return null;
+    }
 
+    private function renderRecords(
+        html_table_mc $tbl,
+        array $records,
+        array $options,
+        bool $includeBreaks,
+        ?ITimeRangeExpander $rangeExpander = null,
+        bool $rangeExpanded = true
+    ): string {
+        $rnd = '';
         $prev = null;
-        $row = new RowData( count($records) );
+        $row = new RowData(count($records));
         foreach ($records as $record) {
             $row->rec = $record;
 
-            if ( $this->rowFilter !== null ) {
-                if ( ! ($this->rowFilter) ( $row ) ) {
-                    // filtered
-                    continue;
-                }
+            if ($this->rowFilter !== null && !($this->rowFilter)($row)) {
+                continue;
             }
 
-            if ($prev !== null) {
-                // create first break between $prev and $record
+            if ($includeBreaks && $prev !== null) {
                 foreach ($this->breakRowDetectors as $detector) {
                     if ($detector->needsBreak($prev, $row)) {
-                        $rnd .= $detector->renderBreak($tbl,$row) . "\n";
-                        break; // only first one
+                        $rnd .= $detector->renderBreak($tbl, $row)."\n";
+                        break;
                     }
                 }
             }
 
-            if ( $this->rowTextPainter !== null ) {
-                // evaluate once per record
-                $ps = $this->rowTextPainter->getPrefixSuffix($row,$options);
+            $prefix = '';
+            $suffix = '';
+            if ($this->rowTextPainter !== null) {
+                $ps = $this->rowTextPainter->getPrefixSuffix($row, $options);
                 $prefix = $ps[0] ?? '';
                 $suffix = $ps[1] ?? '';
             }
 
             $rowCells = [];
             foreach ($this->columns as $column) {
-                // get all defined cells
-                $rowValue = $column->content->render($row,$options);
-
-                if ( $this->rowTextPainter !== null ) {
-                    // apply on each value
-                    $rowValue = preg_replace ( '/(\>|^)([^<]+)(\<|$)/', '${1}' . $prefix . '${2}' . $suffix . '${3}', $rowValue);
+                $rowValue = $column->content->render($row, $options);
+                if ($this->rowTextPainter !== null) {
+                    $rowValue = preg_replace('/(\>|^)([^<]+)(\<|$)/', '${1}'.$prefix.'${2}'.$suffix.'${3}', $rowValue);
                 }
                 $rowCells[] = $rowValue;
             }
 
-            $row_add_attrs = ( $this->rowAttrsExt !== null ) ? ($this->rowAttrsExt) ( $row ) : [];
-            $rnd .= $tbl->get_new_row_arr($rowCells,$row_add_attrs) . "\n";
+            $rowAttrs = $rangeExpander !== null
+                ? $rangeExpander->getRangeRowAttrs($row, $rangeExpanded)
+                : [];
+            if ($this->rowAttrsExt !== null) {
+                // Range grouping and visibility are authoritative on key collisions.
+                $rowAttrs = array_merge(($this->rowAttrsExt)($row), $rowAttrs);
+            }
+            $rnd .= $tbl->get_new_row_arr($rowCells, $rowAttrs)."\n";
             $prev = $record;
             $row->number++;
+        }
+
+        return $rnd;
+    }
+
+    public function renderRows(html_table_mc $tbl, array $records, array $options = []): string {
+        $this->configureTable($tbl);
+        return $this->renderRecords(
+            $tbl,
+            $records,
+            $options,
+            false,
+            $this->getTimeRangeExpander(),
+            true
+        );
+    }
+
+
+    public function render( html_table_mc $tbl, array $records, array $options = []): string {
+
+        $this->configureTable($tbl);
+
+        $rnd = $tbl->get_css()."\n";
+        $rnd .= $tbl->get_header()."\n";
+        $rnd .= $tbl->get_header_row()."\n";
+
+        $rangeExpander = $this->getTimeRangeExpander();
+        $lazyRanges = $rangeExpander !== null
+            && $this->filter instanceof TimeRangeSqlFilter
+            && $this->rangeExpansionEndpoint !== null;
+
+        if ($lazyRanges) {
+            $availableRanges = $this->filter->getAvailableRanges();
+            $expandedRanges = $this->filter->getExpandedRanges();
+            $recordsByRange = [];
+            foreach ($records as $record) {
+                $recordsByRange[$rangeExpander->getRangeKey($record)][] = $record;
+            }
+
+            if (count($availableRanges) === 0) {
+                $rnd .= $tbl->get_info_row('Nebyly nalezeny žádné záznamy.')."\n";
+            }
+
+            foreach ($availableRanges as $range) {
+                $expanded = in_array($range, $expandedRanges, true);
+                $separator = str_contains($this->rangeExpansionEndpoint, '?') ? '&' : '?';
+                $url = $this->rangeExpansionEndpoint.$separator.http_build_query(['range' => $range]);
+                $rnd .= $rangeExpander->renderRangeBreak($tbl, $range, $expanded, $url)."\n";
+                if ($expanded) {
+                    $rnd .= $this->renderRecords(
+                        $tbl,
+                        $recordsByRange[$range] ?? [],
+                        $options,
+                        false,
+                        $rangeExpander,
+                        true
+                    );
+                }
+            }
+        } else {
+            $rnd .= $this->renderRecords($tbl, $records, $options, true);
         }
 
         return $rnd . $tbl->get_footer() . "\n";

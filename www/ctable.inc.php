@@ -335,11 +335,20 @@ class html_table_mc extends html_table_base
 	}
 
 	//__________________________________________________________________
-	function get_info_row($text)// vytvori vystredeny text do tabulky pres vsechny sloupce
+	function get_info_row($text, $row_attrs = [])// vytvori vystredeny text do tabulky pres vsechny sloupce
 	{
-
 		$rc= ((++$this->row_idx % 2) == 0) ? 'r1' : 'r2';
-		$row = '<TR class="'.$rc.'" valign="top">';
+		$row_add_class = '';
+		$row_add_attrs = '';
+		if (is_array($row_attrs)) {
+			foreach ($row_attrs as $key => $value) {
+				if ($key === 'class')
+					$row_add_class = ' '.$value;
+				else
+					$row_add_attrs .= ' '.htmlspecialchars($key).'="'.htmlspecialchars($value).'"';
+			}
+		}
+		$row = '<TR class="'.$rc.$row_add_class.'"'.$row_add_attrs.' valign="top">';
 		$row.= '<TD colspan="'.$this->cols.'" class="'.$this->class_name.'center">';
 		$row.= $text;
 		$row.= '</TD>';
