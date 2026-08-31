@@ -3,6 +3,8 @@
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
 require_once ("./common.inc.php");
+if (isset($_POST[_VAR_LOGIN_RETURN]))
+	SetLoginReturnUrl($_POST[_VAR_LOGIN_RETURN]);
 if (!IsLogged())
 {
 	$login = (isset($_POST[_VAR_USER_LOGIN])) ? $_POST[_VAR_USER_LOGIN] : '';
@@ -83,7 +85,10 @@ if (!IsLogged())
 	header("location: ".$g_baseadr);
 else
 {
-	if (IsLoggedAdmin())
+	$return_url = ConsumeLoginReturnUrl();
+	if ($return_url !== null)
+		header("location: ".$g_baseadr.$return_url);
+	else if (IsLoggedAdmin())
 		header("location: ".$g_baseadr."index.php?id=300&subid=1");
 	else
 		header("location: ".$g_baseadr."index.php?id=4");

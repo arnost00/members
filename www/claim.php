@@ -10,12 +10,32 @@ $payment_id = (IsSet($payment_id) && is_numeric($payment_id)) ? (int)$payment_id
 
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
+RequirePageAccess(IsLogged());
+
 require_once ("./common.inc.php");
 require_once 'payment.inc.php';
 
 db_Connect();
 
 $user_id = $usr->user_id;
+
+$query = "SELECT f.id_users_user, u.chief_id FROM ".TBL_FINANCE." f"
+	." LEFT JOIN ".TBL_USER." u ON u.id = f.id_users_user"
+	." WHERE f.id = $payment_id LIMIT 1";
+@$result_payment_access = query_db($query);
+$record_payment_access = $result_payment_access ? mysqli_fetch_array($result_payment_access) : null;
+
+if (!$record_payment_access)
+{
+	header("location: ".$g_baseadr."error.php?code=201");
+	exit;
+}
+
+$is_related_member = ((int)$record_payment_access['id_users_user'] === (int)$user_id);
+$is_related_small_manager = IsLoggedSmallManager()
+	&& ((int)$record_payment_access['chief_id'] === (int)$user_id);
+
+RequirePageAccess($is_related_member || $is_related_small_manager || IsLoggedManager() || IsLoggedFinance());
 
 // vytvorit reklamaci, pokud byl odeslan formular
 if (IsSet($submit) or IsSet($close))

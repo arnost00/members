@@ -15,6 +15,9 @@ require_once ("./sess.inc.php");
 require_once ("./common.inc.php");
 require_once ("./ctable.inc.php");
 define('IS_INDEX',true);
+
+if (!IsLogged() && ($id == 3 || in_array($id, array(_USER_GROUP_ID_, _ADMIN_GROUP_ID_, _REGISTRATOR_GROUP_ID_, _MANAGER_GROUP_ID_, _SMALL_MANAGER_GROUP_ID_, _SMALL_ADMIN_GROUP_ID_, _FINANCE_GROUP_ID_), true)))
+	CaptureCurrentLoginReturnUrl();
 if (!isset($head_addons)) $head_addons = ''; 
 if ( $id ==	_FINANCE_GROUP_ID_ && $subid == 5  ) {
 	$head_addons .="\t".'<script src="finance.js" type="text/javascript"></script>'."\n";
@@ -28,6 +31,7 @@ if (defined('GC_NOTHING_VISIBLE_WO_LOGIN') && !IsLogged())
 DrawPageTitle('Přihlášení do přihláškového systému');
 ?>
 <FORM METHOD=POST ACTION="./login.php">
+<? if (GetLoginReturnUrl() !== null) { ?><INPUT TYPE="hidden" NAME="<? echo(_VAR_LOGIN_RETURN);?>" VALUE="<? echo(htmlspecialchars(GetLoginReturnUrl(), ENT_QUOTES, 'UTF-8'));?>"><? } ?>
 <TABLE border="0" cellpadding="0" cellspacing="2">
 <TR><TD class="login">Jméno&nbsp;</TD><TD><INPUT TYPE="text" NAME="<? echo(_VAR_USER_LOGIN);?>" SIZE=10 class="login"></TD></TR>
 <TR><TD class="login">Heslo&nbsp;</TD><TD><INPUT TYPE="password" NAME="<? echo(_VAR_USER_PASS);?>" SIZE=10 class="login"></TD></TR>
