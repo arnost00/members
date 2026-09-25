@@ -57,11 +57,8 @@ else
 $zebricek2 = CreateZebricekNumber($zebricek);
 $modify_flag = $g_modify_flag [1]['id'];
 
-$prihlasky1 = String2DateDMY($prihlasky1);
-$prihlasky2 = String2DateDMY($prihlasky2);
-$prihlasky3 = String2DateDMY($prihlasky3);
-$prihlasky4 = String2DateDMY($prihlasky4);
-$prihlasky5 = String2DateDMY($prihlasky5);
+$deadlineValues = RaceDeadlineFormValues($_POST);
+foreach ($deadlineValues as $field => $value) $$field = $value;
 $prihlasky = 0;
 if($prihlasky1 != 0) $prihlasky++;
 if($prihlasky2 != 0) $prihlasky++;
@@ -114,7 +111,7 @@ else
 	$entryStart = EntryStart2Sql($entryStart);
 	$entry_start_val = ($entryStart !== '') ? "'".correct_sql_string($entryStart)."'" : "NULL";
 
-	$result=query_db("INSERT INTO ".TBL_RACE." (ext_id, datum, datum2, nazev, misto, typ0, typ, zebricek, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, etap, poznamka, vicedenni, oddil, modify_flag, transport, ubytovani, kapacita, kategorie, entry_start, vedouci, poslano) VALUES ( '$ext_id', '$datum', '$datum2', '$nazev', '$misto', '$typ0', '$typ', '$zebricek2', '$ranking', '$odkaz', '$prihlasky', '$prihlasky1', '$prihlasky2', '$prihlasky3', '$prihlasky4', '$prihlasky5', '$etap', '$poznamka', '$vicedenni', '$oddil', '$modify_flag', '$transport', '$accommodation', $kapacita,'$kategorie', $entry_start_val, 0, 0)")
+	$result=query_db("INSERT INTO ".TBL_RACE." (ext_id, datum, datum2, nazev, misto, typ0, typ, zebricek, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, etap, poznamka, vicedenni, oddil, modify_flag, transport, ubytovani, kapacita, kategorie, entry_start, vedouci, poslano, transport_do, ubytovani_do) VALUES ( '$ext_id', '$datum', '$datum2', '$nazev', '$misto', '$typ0', '$typ', '$zebricek2', '$ranking', '$odkaz', '$prihlasky', '$prihlasky1', '$prihlasky2', '$prihlasky3', '$prihlasky4', '$prihlasky5', '$etap', '$poznamka', '$vicedenni', '$oddil', '$modify_flag', '$transport', '$accommodation', $kapacita,'$kategorie', $entry_start_val, 0, 0, $transport_do, $ubytovani_do)")
 		or die("Chyba při provádění dotazu do databáze.");
 	if ($result == FALSE)
 		die ("Nepodařilo se vložit údaje o závodě.");

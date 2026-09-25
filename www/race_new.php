@@ -203,6 +203,7 @@ if ($g_enable_race_transport)
 		<input type="radio" name="transport" value="1" id="radio_ff1" <?if ($race_transport_default==1) echo "checked=\"checked\"";?>><label for="radio_ff1">Společná doprava s výběrem účasti</label><br>
 		<input type="radio" name="transport" value="2" id="radio_ff2" <?if ($race_transport_default==2) echo "checked=\"checked\"";?>><label for="radio_ff2">Automatická společná doprava</label><br>
 		<input type="radio" name="transport" value="3" id="radio_ff3" <?if ($race_transport_default==3) echo "checked=\"checked\"";?>><label for="radio_ff3">Sdílená doprava</label>
+		<? echo RenderServiceDeadlineInput('transport', ['prihlasky1' => $raceInfo->prihlasky ?? 0]); ?>
 	</TD>
 </TR>
 <?
@@ -217,6 +218,7 @@ if ($g_enable_race_accommodation)
 		<input type="radio" name="accommodation" value="0" id="radio_acc0" <?if ($race_accommodation_default==0) echo "checked=\"checked\"";?>><label for="radio_acc0">Bez společného ubytování</label><br>
 		<input type="radio" name="accommodation" value="1" id="radio_acc1" <?if ($race_accommodation_default==1) echo "checked=\"checked\"";?>><label for="radio_acc1">Společné ubytování s výběrem účasti</label><br>
 		<input type="radio" name="accommodation" value="2" id="radio_acc2" <?if ($race_accommodation_default==2) echo "checked=\"checked\"";?>><label for="radio_acc2">Automatické společné ubytování</label>
+		<? echo RenderServiceDeadlineInput('accommodation', ['prihlasky1' => $raceInfo->prihlasky ?? 0]); ?>
 	</TD>
 </TR>
 <?
@@ -260,27 +262,27 @@ if($type == 1)
 <TR>
 	<TD width="130" align="right">1. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky1" SIZE=8 <? if (!empty($raceInfo->prihlasky))echo ('value="'. Date2String($raceInfo->prihlasky - 86400).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<? echo generateDeadlineField(null,"prihlasky1",$raceInfo->prihlasky ?? 0,0); ?>
 </TR>
 <TR>
 	<TD width="130" align="right">2. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky2" SIZE=8 <? if (!empty($raceInfo->prihlasky1))echo ('value="'. Date2String($raceInfo->prihlasky1 - 86400).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<? echo generateDeadlineField(null,"prihlasky2",$raceInfo->prihlasky1 ?? 0,0); ?>
 </TR>
 <TR>
 	<TD width="130" align="right">3. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky3" SIZE=8 <? if (!empty($raceInfo->prihlasky2))echo ('value="'. Date2String($raceInfo->prihlasky2 - 86400).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<? echo generateDeadlineField(null,"prihlasky3",$raceInfo->prihlasky2 ?? 0,0); ?>
 </TR>
 <TR>
 	<TD width="130" align="right">4. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky4" SIZE=8 <? if (!empty($raceInfo->prihlasky3))echo ('value="'. Date2String($raceInfo->prihlasky3 - 86400).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<? echo generateDeadlineField(null,"prihlasky4",$raceInfo->prihlasky3 ?? 0,0); ?>
 </TR>
 <TR>
 	<TD width="130" align="right">5. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" NAME="prihlasky5" SIZE=8 <? if (!empty($raceInfo->prihlasky4))echo ('value="'. Date2String($raceInfo->prihlasky4 - 86400).'"'); ?>>&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<? echo generateDeadlineField(null,"prihlasky5",$raceInfo->prihlasky4 ?? 0,0); ?>
 </TR>
 <TR>
 	<TD width="130" align="right">Otevření přihlášek</TD>

@@ -26,6 +26,10 @@ Production is not Docker-based.
 - Assume Playwright workflows run in parallel and may be repeated against an existing test database; every test must be reentrant.
 - Users shared by multiple workflows must come from the test-data import or be created by a prerequisite setup project before the parallel workflows start.
 - Use deterministic, dedicated IDs for test-owned users and mock records. Do not generate random user IDs.
+- The `no-race-services` fixtures reserve race IDs 24000–24004 from the 24000–25000 test range.
+- The `race-deadline-workflow` fixture reserves race ID 24010.
+- The `oris-deadline-workflow` fixture reserves race ID 24011.
+- When another test suite reserves a new race-ID range, leave at least five unused race IDs after the highest ID in the preceding suite's reserved range. For example, after the `no-race-services` range 24000–24004, another test suite's range must start at 24010 or later.
 - When a test creates dedicated persistent data, either delete it during teardown or ensure that a later run verifies and updates the existing record to the required state.
 - Keep tests that change shared mock-server behavior or configuration out of the regular parallel suite. ORIS mock changes belong in the dedicated ORIS error suite, bank mock changes belong in the dedicated bank error suite, and the existing no-ORIS/no-key suites cover their respective connector configurations.
 

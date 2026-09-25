@@ -36,7 +36,9 @@ services:
       - ./docker/config/dev/_tables.php:/var/www/html/members/www/cfg/_tables.php:ro
   db:
     image: mariadb:10.11
+    command: ["--default-time-zone=SYSTEM"]
     environment:
+      TZ: Europe/Prague    # CET/CEST according to the date, including daylight saving
       MARIADB_ROOT_PASSWORD: dev4password
       MARIADB_DATABASE: members_dev
       MARIADB_USER: appuser

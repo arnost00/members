@@ -45,7 +45,9 @@ services:
       start_period: 10s
   db:
     image: mariadb:10.11
+    command: ["--default-time-zone=SYSTEM"]
     environment:
+      TZ: Europe/Prague    # CET/CEST according to the date, including daylight saving
       MARIADB_ROOT_PASSWORD: lkj234@sf!--+KLM
       MARIADB_DATABASE: members_test
       MARIADB_USER: appuser

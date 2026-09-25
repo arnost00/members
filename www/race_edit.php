@@ -41,7 +41,7 @@ function addError(text)
 
 function stringDate2UnixTime(string, info)
 {
-  var str = string.value;
+  var str = string.value.split(" ")[0];
   if(str != "")
   {
 	var dtArr = str.split(".");
@@ -302,7 +302,8 @@ if ($g_enable_race_transport)
 		<input type="radio" name="transport" value="0" id="radio_ff0" <?if ($zaznam["transport"]==0) echo "checked=\"checked\"";?>><label for="radio_ff0">Bez společné dopravy</label><br>
 		<input type="radio" name="transport" value="1" id="radio_ff1" <?if ($zaznam["transport"]==1) echo "checked=\"checked\"";?>><label for="radio_ff1">Společná doprava s výběrem účasti</label><br>
 		<input type="radio" name="transport" value="2" id="radio_ff2" <?if ($zaznam["transport"]==2) echo "checked=\"checked\"";?>><label for="radio_ff2">Automatická společná doprava</label><br>
-		<input type="radio" name="transport" value="3" id="radio_ff3" <?if ($zaznam["transport"]==3) echo "checked=\"checked\"";?>><label for="radio_ff3">Sdílená doprava</label>		
+		<input type="radio" name="transport" value="3" id="radio_ff3" <?if ($zaznam["transport"]==3) echo "checked=\"checked\"";?>><label for="radio_ff3">Sdílená doprava</label>
+		<? echo RenderServiceDeadlineInput('transport', $zaznam); ?>
 	</TD>
 </TR>
 <?
@@ -317,6 +318,7 @@ if ($g_enable_race_accommodation)
 		<input type="radio" name="accommodation" value="0" id="radio_acc0" <?if ($zaznam["ubytovani"]==0) echo "checked=\"checked\"";?>><label for="radio_acc0">Bez společného ubytování</label><br>
 		<input type="radio" name="accommodation" value="1" id="radio_acc1" <?if ($zaznam["ubytovani"]==1) echo "checked=\"checked\"";?>><label for="radio_acc1">Společné ubytování s výběrem účasti</label><br>
 		<input type="radio" name="accommodation" value="2" id="radio_acc2" <?if ($zaznam["ubytovani"]==2) echo "checked=\"checked\"";?>><label for="radio_acc2">Automatické společné ubytování</label>
+		<? echo RenderServiceDeadlineInput('accommodation', $zaznam); ?>
 	</TD>
 </TR>
 <?
@@ -362,27 +364,27 @@ if ($g_enable_race_capacity)
 <TR>
 	<TD width="130" align="right">1. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<? echo generateDateField($connector,"prihlasky1",$zaznam["prihlasky1"],$raceInfo->prihlasky,-1)?>
+	<? echo generateDeadlineField($connector,"prihlasky1",RaceDeadlineTimestamp($zaznam["prihlasky1"]),$raceInfo->prihlasky)?>
 </TR>
 <TR>
 	<TD width="130" align="right">2. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<? echo generateDateField($connector,"prihlasky2",$zaznam["prihlasky2"],$raceInfo->prihlasky1,-1)?>
+	<? echo generateDeadlineField($connector,"prihlasky2",RaceDeadlineTimestamp($zaznam["prihlasky2"]),$raceInfo->prihlasky1)?>
 </TR>
 <TR>
 	<TD width="130" align="right">3. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<? echo generateDateField($connector,"prihlasky3",$zaznam["prihlasky3"],$raceInfo->prihlasky2,-1)?>
+	<? echo generateDeadlineField($connector,"prihlasky3",RaceDeadlineTimestamp($zaznam["prihlasky3"]),$raceInfo->prihlasky2)?>
 </TR>
 <TR>
 	<TD width="130" align="right">4. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" ID="prihlasky4" NAME="prihlasky4" SIZE=8 value="<?echo Date2String($zaznam["prihlasky4"])?>">&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<? echo generateDeadlineField($connector,"prihlasky4",RaceDeadlineTimestamp($zaznam["prihlasky4"]),0); ?>
 </TR>
 <TR>
 	<TD width="130" align="right">5. datum přihlášek</TD>
 	<TD width="5"></TD>
-	<TD class="DataValue"><INPUT TYPE="text" ID="prihlasky5" NAME="prihlasky5" SIZE=8 value="<?echo Date2String($zaznam["prihlasky5"])?>">&nbsp;&nbsp;(DD.MM.RRRR)</TD>
+	<? echo generateDeadlineField($connector,"prihlasky5",RaceDeadlineTimestamp($zaznam["prihlasky5"]),0); ?>
 </TR>
 <TR>
 	<TD width="130" align="right">Otevření přihlášek</TD>

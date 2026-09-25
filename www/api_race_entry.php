@@ -11,10 +11,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 
 // HTTP/1.0 
 header("Pragma: no-cache"); 
-?>
-
-<? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
-<?
+define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
 require_once ('timestamp.inc.php');
 require_once('cfg/_globals.php');
@@ -31,6 +28,21 @@ require_once ('url.inc.php');
 require_once ('functions.php');
 
 $race_id = (IsSet($_GET['id_race']) && is_numeric($_GET['id_race'])) ? (int)$_GET['id_race'] : 0;
+
+// Attendance and on-site entry changes require staff or the leader of this race.
+if (in_array($_GET['action'] ?? 'detail', ['entryByFin', 'participate', 'uncheckAll'], true)) {
+    require_once './sess.inc.php';
+    $leaderResult = query_db("SELECT vedouci FROM ".TBL_RACE." WHERE id = $race_id");
+    $leaderRow = $leaderResult ? mysqli_fetch_assoc($leaderResult) : null;
+    $isRaceLeader = $usr->logged && !empty($leaderRow['vedouci'])
+        && (int)$leaderRow['vedouci'] === (int)$usr->user_id;
+    if (!IsLoggedFinance() && !IsLoggedRegistrator() && !IsLoggedAdmin() && !IsLoggedManager() && !$isRaceLeader) {
+        http_response_code(403);
+        header('Content-Type: application/json');
+        echo json_encode(['error' => 'Nemáte oprávnění měnit účast.']);
+        exit;
+    }
+}
 
 $data = array(); //variable for return in json
 

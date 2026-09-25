@@ -3,7 +3,7 @@ const { DEFAULT_PASSWORD } = require('../constants/auth');
 
 async function login(page, user, password = DEFAULT_PASSWORD) {
   const testSuite = process.env.MEMBERS_E2E_SUITE;
-  if (testSuite === 'no-oris' || testSuite === 'no-oris-key') {
+  if (['no-oris', 'no-oris-key', 'no-race-services'].includes(testSuite)) {
     await page.context().setExtraHTTPHeaders({
       'X-Members-Autotest-Suite': testSuite,
     });

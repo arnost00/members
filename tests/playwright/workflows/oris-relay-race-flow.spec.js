@@ -53,11 +53,12 @@ const RELAY_RACE_WORKFLOW = {
 };
 
 function formatSavedRaceDate(date) {
-  return [
-    date.getUTCDate(),
-    date.getUTCMonth() + 1,
+  const day = [
+    String(date.getUTCDate()).padStart(2, '0'),
+    String(date.getUTCMonth() + 1).padStart(2, '0'),
     date.getUTCFullYear(),
   ].join('.');
+  return `${day} 23:59:59`;
 }
 
 test.describe(RELAY_RACE_WORKFLOW.name, () => {

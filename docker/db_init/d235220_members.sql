@@ -1114,7 +1114,9 @@ CREATE TABLE IF NOT EXISTS `tst_zavod` (
   `send` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `modify_flag` int(10) unsigned NOT NULL,
   `transport` tinyint(1) DEFAULT NULL,
+  `transport_do` int(11) DEFAULT NULL,
   `ubytovani` tinyint(1) DEFAULT NULL,
+  `ubytovani_do` int(11) DEFAULT NULL,
   `cancelled` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='tabulka popisu zavodu';
 

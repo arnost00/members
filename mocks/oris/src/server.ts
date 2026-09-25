@@ -107,6 +107,7 @@ const config = {
   dbPassword: process.env.ORIS_MOCK_DB_PASSWORD ?? 'dev4password',
   dbName: process.env.ORIS_MOCK_DB_NAME ?? 'oris_mock',
   upstreamBaseUrl: normalizeBaseUrl(process.env.ORIS_MOCK_UPSTREAM_BASE_URL ?? 'https://oris.ceskyorientak.cz/'),
+  upstreamTimeoutMs: parseInt(process.env.ORIS_MOCK_UPSTREAM_TIMEOUT_MS ?? '15000', 10),
   defaultClubId: process.env.ORIS_MOCK_DEFAULT_CLUB_ID ?? '205',
   defaultClubAbbr: process.env.ORIS_MOCK_DEFAULT_CLUB_ABBR ?? 'ZBM',
   apiLogFile: process.env.ORIS_MOCK_API_LOG_FILE ?? path.join(process.cwd(), 'www', 'logs', 'oris_mock_api.log'),
@@ -757,16 +758,17 @@ async function maybeApplyFaultMode(req: Request, res: Response): Promise<boolean
 
 async function fetchUpstream(params: URLSearchParams): Promise<JsonObject | null> {
   const url = `${config.upstreamBaseUrl}API/?${params.toString()}`;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), config.upstreamTimeoutMs);
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
     const response = await fetch(url, { signal: controller.signal });
-    clearTimeout(timeout);
     if (!response.ok) return null;
     return await response.json() as JsonObject;
   } catch (err) {
     console.error('fetchUpstream failed:', err);
     return null;
+  } finally {
+    clearTimeout(timeout);
   }
 }
 

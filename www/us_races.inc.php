@@ -25,7 +25,7 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 $order = ($fC == 1) ? "desc" : "";
 
 $query = 'SELECT r.id, r.datum, datum2, nazev, typ0, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, '.
-		'prihlasky4, prihlasky5, vicedenni, misto, oddil,  kapacita, prihlasenych, kat, termin, cancelled, r.vedouci, if(vedouci=0, "-", concat(u.jmeno, " ", u.prijmeni)) as vedouci_jmeno '.
+		'prihlasky4, prihlasky5, r.transport_do, r.ubytovani_do, r.transport, r.ubytovani,  vicedenni, misto, oddil,  kapacita, prihlasenych, kat, termin, cancelled, r.vedouci, if(vedouci=0, "-", concat(u.jmeno, " ", u.prijmeni)) as vedouci_jmeno '.
 		'FROM '.TBL_RACE.' r LEFT JOIN '.TBL_ZAVXUS.' zu ON r.id = zu.id_zavod AND zu.id_user='.$usr->user_id.' left join '.TBL_USER.' u on u.id = r.vedouci '.
 		$sql_sub_query." ORDER BY r.datum $order, datum2 $order, r.id $order";
 

@@ -9,22 +9,8 @@ public static function GetCurr4RegTerm(&$zaznam)
 // For reg/unreg
 // 1 .. 5 - active term
 // 0 - any active term / cannot process
-{	
-	if(GetTimeToRace($zaznam['datum']) <= 0)
-		return 0;
-	if($zaznam['prihlasky'] == 0)
-		return 1;
-	if (GetTimeToReg($zaznam['prihlasky1']) != -1 )
-		return 1;
-	if ($zaznam['prihlasky'] > 1 && GetTimeToReg($zaznam['prihlasky2']) != -1 )
-		return 2;
-	if ($zaznam['prihlasky'] > 2 && GetTimeToReg($zaznam['prihlasky3']) != -1 )
-		return 3;
-	if ($zaznam['prihlasky'] > 3 && GetTimeToReg($zaznam['prihlasky4']) != -1 )
-		return 4;
-	if ($zaznam['prihlasky'] > 4 && GetTimeToReg($zaznam['prihlasky5']) != -1 )
-		return 5;
-	return 0;
+{
+	return RaceRegistrationTerm($zaznam);
 }
 /////////////////////////////////////////////////////////////////////////
 
@@ -67,6 +53,8 @@ public static function GetActiveRegDateArr(&$zaznam)
 //	0. - reg. date
 //	1. - termin
 {
+	if (!empty($zaznam['cancelled']))
+		return array(0,0);
 	if ($zaznam['prihlasky'] == 0)
 		return array(0,0);
 	if ($zaznam['prihlasky'] == 1 || GetTimeToReg($zaznam['prihlasky1']) != -1 )
@@ -108,22 +96,22 @@ public static function ListRegDates(&$zaznam)
 	else if($zaznam['prihlasky'] > 1)
 	{
 		if ($zaznam['prihlasky1'] != 0)
-			$result[] = Date2String($zaznam['prihlasky1']);
+			$result[] = RaceDeadlineDisplay($zaznam, $zaznam['prihlasky1']);
 		if ($zaznam['prihlasky2'] != 0)
-			$result[] = Date2String($zaznam['prihlasky2']);
+			$result[] = RaceDeadlineDisplay($zaznam, $zaznam['prihlasky2']);
 		if ($zaznam['prihlasky3'] != 0)
-			$result[] = Date2String($zaznam['prihlasky3']);
+			$result[] = RaceDeadlineDisplay($zaznam, $zaznam['prihlasky3']);
 		if ($zaznam['prihlasky4'] != 0)
-			$result[] = Date2String($zaznam['prihlasky4']);
+			$result[] = RaceDeadlineDisplay($zaznam, $zaznam['prihlasky4']);
 		if ($zaznam['prihlasky5'] != 0)
-			$result[] = Date2String($zaznam['prihlasky5']);
+			$result[] = RaceDeadlineDisplay($zaznam, $zaznam['prihlasky5']);
 		if ($result != null)
 			return implode(' | ',$result);
 		else
 			return '';
 	}
 	else
-		return Date2String($zaznam['prihlasky1']);
+		return RaceDeadlineDisplay($zaznam, $zaznam['prihlasky1']);
 	return '';	// safety return.
 }
 

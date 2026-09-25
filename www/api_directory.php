@@ -32,7 +32,7 @@ $curr_date = GetCurrentDate();
 
 $d1 = $curr_date;
 
-$query="SELECT id,datum,typ,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,nazev,vicedenni,odkaz,vedouci, oddil,send,misto,cancelled,typ0, ubytovani, transport, zebricek, ranking, etap, poznamka FROM ".TBL_RACE.' WHERE datum >= '.$d1.' || datum2 >= '.$d1.' ORDER BY datum, datum2, id';
+$query="SELECT id,datum,typ,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,transport_do,ubytovani_do,nazev,vicedenni,odkaz,vedouci,oddil,misto,cancelled,typ0, ubytovani, transport, zebricek, ranking, etap, poznamka FROM ".TBL_RACE.' WHERE datum >= '.$d1.' || datum2 >= '.$d1.' ORDER BY datum, datum2, id';
 @$vysledek=$db_conn->query($query);
 
 $data = array();
@@ -65,6 +65,10 @@ if (mysqli_num_rows($vysledek) > 0)
 			$data['Data'][$race_key]['Entry4']=Date2ISO($zaznam['prihlasky4']);
 		if ($zaznam['prihlasky5'] != 0 && $zaznam['prihlasky'] > 4 )
 			$data['Data'][$race_key]['Entry5']=Date2ISO($zaznam['prihlasky5']);
+		if ($zaznam['transport_do'] != 0)
+			$data['Data'][$race_key]['TransportTo']=Date2ISO($zaznam['transport_do']);
+		if ($zaznam['ubytovani_do'] != 0)
+			$data['Data'][$race_key]['AccomodationTo']=Date2ISO($zaznam['ubytovani_do']);
 
 		$data['Data'][$race_key]['Name'] = $zaznam['nazev'];
 		$data['Data'][$race_key]['Cancelled'] = $zaznam['cancelled'];

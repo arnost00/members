@@ -5,6 +5,7 @@ $id_us = $_REQUEST['id_us'] ?? null;
 
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
+require_once ("./common.inc.php");
 require_once ("./lib/oris_sync.inc.php");
 
 if (!IsLogged())
@@ -27,12 +28,22 @@ if ($zaznam2=mysqli_fetch_array($vysledek2))
 
 if (!$entry_lock)
 {
-	$vysledek_z=query_db("SELECT ext_id FROM ".TBL_RACE." WHERE id='$id_zav'");
+	$vysledek_z=query_db("SELECT * FROM ".TBL_RACE." WHERE id='$id_zav'");
 	$zaznam_z = mysqli_fetch_array($vysledek_z);
 	$has_ext_id = !empty($zaznam_z['ext_id']);
 
-	$vysledek_zx=query_db("SELECT id, sync_status FROM ".TBL_ZAVXUS." WHERE id_zavod='$id_zav' AND id_user='$id_us'");
+	$vysledek_zx=query_db("SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod='$id_zav' AND id_user='$id_us'");
 	$zaznam_zx = mysqli_fetch_array($vysledek_zx);
+
+    if ($id_us !== (int)$usr->user_id && !IsLoggedRegistrator()) {
+        http_response_code(403); exit('Nemáte oprávnění měnit tuto přihlášku.');
+    }
+    $currentTerm = $zaznam_z ? RaceRegistrationTerm($zaznam_z) : 0;
+    $entryTermClosed = $zaznam_zx && !empty($zaznam_z['prihlasky']) && (int)$zaznam_zx['termin'] !== $currentTerm;
+    if (!$currentTerm || $entryTermClosed || ($zaznam_zx && RaceHasLockedBooking($zaznam_z, $zaznam_zx))) {
+        http_response_code(409);
+        exit('Odhlášení již není možné. Kontaktujte přihlašovatele.');
+    }
 
 	$sync_error_msg = null;
 	$sync_warn_msg = null;

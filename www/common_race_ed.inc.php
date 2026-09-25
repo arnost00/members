@@ -21,6 +21,16 @@ function generateDateField($connector, $fieldName, $currentDate, $systemDate, $c
 			</TD>';
 }
 
+function generateDeadlineField($connector, $fieldName, $currentDate, $systemDate) {
+    $display = FormatRaceDeadline($currentDate);
+    $button = '';
+    if ($connector && !empty($systemDate) && $systemDate != $currentDate) {
+        $source = FormatRaceDeadline($systemDate);
+        $button = '<button type="button" onclick="document.getElementById(\''.$fieldName.'\').value=\''.$source.'\'">⇐ ORIS ('.$source.')</button>';
+    }
+    return '<TD class="DataValue"><input type="text" id="'.$fieldName.'" name="'.$fieldName.'" size="19" value="'.$display.'"> (DD.MM.RRRR HH:MM:SS, Europe/Prague) '.$button.'</TD>';
+}
+
 function generateTextFieldWithValidator($fieldValue,$uiSize,$rc_arr)
 {
 	return '<TD class="DataError">

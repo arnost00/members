@@ -30,6 +30,17 @@ npm run mock:oris
 
 The server listens on port `10301` by default.
 
+Live ORIS requests time out after 15 seconds, including reading the response body.
+Override this with `ORIS_MOCK_UPSTREAM_TIMEOUT_MS` (milliseconds), for example:
+
+```bash
+ORIS_MOCK_UPSTREAM_TIMEOUT_MS=25000 npm run mock:oris
+```
+
+Restart the mock after changing this environment variable. The PHP connector has
+a 30-second total request timeout, so keep the mock timeout below that limit.
+This mock is for dev/test/CI only and must not be deployed into the productive web root.
+
 ## Testbench API
 
 - `GET /__testbench/api/settings`

@@ -54,14 +54,14 @@ if(db_Connect(true))
 	$rss_channel->items[] = $item;
 
 	$item = new rssGenerator_item();
-	$item->title = 'Seznam termínů přihlášek v nejbližších '.GC_SHOW_REG_DAYS.' dnech';
+	$item->title = 'Seznam termínů přihlášek, dopravy a ubytování v nejbližších '.GC_SHOW_REG_DAYS.' dnech';
 	$item->description = '';
 	//$item->link = $g_baseadr;
 	$item->pubDate = $curr_xml_date;
 
 	$d1 = $curr_date;
 	$d2 = IncDate($curr_date,GC_SHOW_REG_DAYS);
-	$query = 'SELECT id, datum, datum2, nazev, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, vicedenni, misto, oddil, vedouci, cancelled FROM '.TBL_RACE.' WHERE ((prihlasky1 >= '.$d1.' && prihlasky1 <= '.$d2.') || (prihlasky2 >= '.$d1.' && prihlasky2 <= '.$d2.') || (prihlasky3 >= '.$d1.' && prihlasky3 <= '.$d2.') || (prihlasky4 >= '.$d1.' && prihlasky4 <= '.$d2.') || (prihlasky5 >= '.$d1.' && prihlasky5 <= '.$d2.')) ORDER BY datum';
+	$query = 'SELECT id, datum, datum2, nazev, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, transport_do, ubytovani_do, vicedenni, misto, oddil, vedouci, cancelled FROM '.TBL_RACE.' WHERE ((prihlasky1 >= '.$d1.' && prihlasky1 <= '.$d2.') || (prihlasky2 >= '.$d1.' && prihlasky2 <= '.$d2.') || (prihlasky3 >= '.$d1.' && prihlasky3 <= '.$d2.') || (prihlasky4 >= '.$d1.' && prihlasky4 <= '.$d2.') || (prihlasky5 >= '.$d1.' && prihlasky5 <= '.$d2.') || (transport_do >= '.$d1.' && transport_do <= '.$d2.') || (ubytovani_do >= '.$d1.' && ubytovani_do <= '.$d2.')) ORDER BY datum';
 	@$vysledek=query_db($query);
 
 	if (mysqli_num_rows($vysledek) > 0)
@@ -80,11 +80,15 @@ if(db_Connect(true))
 				$item->description .= ' - '.GetFormatedTextDel($zaznam['misto'], $zaznam['cancelled']);
 			if($zaznam['oddil'] != '')
 				$item->description .= ' - '.$zaznam['oddil'];
+			if(!empty($zaznam['transport_do']) && $zaznam['transport_do'] >= $d1 && $zaznam['transport_do'] <= $d2)
+				$item->description .= ' - doprava do '.FormatRaceDeadline($zaznam['transport_do']);
+			if(!empty($zaznam['ubytovani_do']) && $zaznam['ubytovani_do'] >= $d1 && $zaznam['ubytovani_do'] <= $d2)
+				$item->description .= ' - ubytování do '.FormatRaceDeadline($zaznam['ubytovani_do']);
 		}
 	}
 	else
 	{
-		$item->description = 'V nejbližších '.GC_SHOW_REG_DAYS.' dnech není žádná přihláška na závod.';
+		$item->description = 'V nejbližších '.GC_SHOW_REG_DAYS.' dnech není žádný termín přihlášek, dopravy ani ubytování.';
 	}
 	$rss_channel->items[] = $item;
 

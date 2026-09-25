@@ -23,7 +23,7 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 //when show all races reverse order
 $order = ($fC == 1) ? "desc" : "";
 
-$query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, nazev,misto,ranking,typ0,typ,vicedenni,odkaz,oddil,kapacita,prihlasenych,cancelled FROM ".TBL_RACE.$sql_sub_query." ORDER BY datum $order, datum2 $order, id $order";
+$query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,transport_do,ubytovani_do,transport,ubytovani,nazev,misto,ranking,typ0,typ,vicedenni,odkaz,oddil,kapacita,prihlasenych,cancelled FROM ".TBL_RACE.$sql_sub_query." ORDER BY datum $order, datum2 $order, id $order";
 @$vysledek=query_db($query);
 
 ?>
@@ -69,7 +69,8 @@ if ($num_rows > 0)
 		}
 		else
 		{
-			return "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$row->rec['id']."&select=1','')\"><span class=\"TextAlertExpLight\">Zbr.čl.</span></A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$row->rec['id']."','')\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>";
+			return "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$row->rec['id']."&select=1','')\"><span class=\"TextAlertExpLight\">Zbr.čl.</span></A>&nbsp;/&nbsp;<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._SMALL_MANAGER_GROUP_ID_."&id=".$row->rec['id']."','')\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>"
+				.RaceServiceManagementLinks($row->rec, _SMALL_MANAGER_GROUP_ID_);
 		}
 	})]);
 	$tbl_renderer->addColumns('prihlasky');

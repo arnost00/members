@@ -60,19 +60,16 @@ else
 
 $zebricek2 = CreateZebricekNumber($zebricek);
 
-$prihlasky1 = String2DateDMY($prihlasky1);
-$prihlasky2 = String2DateDMY($prihlasky2);
-$prihlasky3 = String2DateDMY($prihlasky3);
-$prihlasky4 = String2DateDMY($prihlasky4);
-$prihlasky5 = String2DateDMY($prihlasky5);
+$result=query_db("SELECT * FROM ".TBL_RACE." WHERE id='$id'");
+$item=mysqli_fetch_array($result);
+$deadlineValues = RaceDeadlineFormValues($_POST, $item ?: []);
+foreach ($deadlineValues as $field => $value) $$field = $value;
 $prihlasky = 0;
 if($prihlasky1 != 0) $prihlasky++;
 if($prihlasky2 != 0) $prihlasky++;
 if($prihlasky3 != 0) $prihlasky++;
 if($prihlasky4 != 0) $prihlasky++;
 if($prihlasky5 != 0) $prihlasky++;
-$result=query_db("SELECT * FROM ".TBL_RACE." WHERE id='$id'");
-$item=mysqli_fetch_array($result);
 if ($item != FALSE)
 {	// zmena terminu prihlasek
 	$modify_flag = ($prihlasky != $item['prihlasky'] || $prihlasky1 != $item['prihlasky1'] || $prihlasky2 != $item['prihlasky2'] || $prihlasky3 != $item['prihlasky3'] || $prihlasky4 != $item['prihlasky4'] || $prihlasky5 != $item['prihlasky5']) ? $g_modify_flag [0]['id'] : 0;
@@ -128,7 +125,7 @@ else
 	$entryStart = EntryStart2Sql($entryStart);
 	$entry_start_val = ($entryStart !== '') ? "'".correct_sql_string($entryStart)."'" : "NULL";
 
-	$result=query_db("UPDATE ".TBL_RACE." SET ext_id='$ext_id', datum='$datum', datum2='$datum2', nazev='$nazev', misto='$misto', typ0='$typ0', typ='$typ', zebricek='$zebricek2', ranking='$ranking', prihlasky='$prihlasky', odkaz='$odkaz', prihlasky1='$prihlasky1', prihlasky2='$prihlasky2', prihlasky3='$prihlasky3', prihlasky4='$prihlasky4', prihlasky5='$prihlasky5', etap='$etap', poznamka='$poznamka', oddil='$oddil', modify_flag='$modify_flag', transport='$transport',  ubytovani='$accommodation', kapacita=$kapacitaSql, cancelled='$cancelled', entry_start=$entry_start_val WHERE id='$id'")
+	$result=query_db("UPDATE ".TBL_RACE." SET ext_id='$ext_id', datum='$datum', datum2='$datum2', nazev='$nazev', misto='$misto', typ0='$typ0', typ='$typ', zebricek='$zebricek2', ranking='$ranking', prihlasky='$prihlasky', odkaz='$odkaz', prihlasky1='$prihlasky1', prihlasky2='$prihlasky2', prihlasky3='$prihlasky3', prihlasky4='$prihlasky4', prihlasky5='$prihlasky5', etap='$etap', poznamka='$poznamka', oddil='$oddil', modify_flag='$modify_flag', transport='$transport',  ubytovani='$accommodation', kapacita=$kapacitaSql, cancelled='$cancelled', entry_start=$entry_start_val, transport_do=$transport_do, ubytovani_do=$ubytovani_do WHERE id='$id'")
 		or die("Chyba při provádění dotazu do databáze.");
 	if ($result == FALSE)
 		die ("Nepodařilo se změnit údaje o závodě.");

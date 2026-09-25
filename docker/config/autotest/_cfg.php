@@ -100,6 +100,10 @@ $g_enable_race_capacity = true;
 
 // Externi informacni system - podporovane hodnoty 'OrisCZConnector' a ''
 $members_autotest_suite = $_SERVER['HTTP_X_MEMBERS_AUTOTEST_SUITE'] ?? '';
+if ($members_autotest_suite === 'no-race-services') {
+    $g_enable_race_transport = false;
+    $g_enable_race_accommodation = false;
+}
 if ($members_autotest_suite === 'no-oris') {
     $g_external_is_connector = '';
     // Identifikator oddilu v informacnim systemu

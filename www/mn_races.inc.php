@@ -23,7 +23,7 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 //when show all races reverse order
 $order = ($fC == 1) ? "desc" : "";
 
-$query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5, nazev,oddil,ranking,typ0,typ,vicedenni,odkaz,misto,kapacita,prihlasenych,cancelled FROM ".TBL_RACE.$sql_sub_query." ORDER BY datum $order, datum2 $order, id $order";
+$query = "SELECT id,datum,datum2,prihlasky,prihlasky1,prihlasky2,prihlasky3,prihlasky4,prihlasky5,transport_do,ubytovani_do,transport,ubytovani,nazev,oddil,ranking,typ0,typ,vicedenni,odkaz,misto,kapacita,prihlasenych,cancelled FROM ".TBL_RACE.$sql_sub_query." ORDER BY datum $order, datum2 $order, id $order";
 @$vysledek=query_db($query);
 
 ?>
@@ -69,7 +69,8 @@ if ($num_rows > 0)
 		}
 		else
 		{
-			return "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._MANAGER_GROUP_ID_."&id=".$row->rec['id']."','')\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>".$ucast;
+			return "<A HREF=\"javascript:open_win('./race_reg_view.php?gr_id="._MANAGER_GROUP_ID_."&id=".$row->rec['id']."','')\"><span class=\"TextAlertExpLight\">Zobrazit</span></A>".$ucast
+				.RaceServiceManagementLinks($row->rec, _MANAGER_GROUP_ID_);
 		}
  
 	})]);

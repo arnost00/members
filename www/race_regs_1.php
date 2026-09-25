@@ -58,6 +58,15 @@ $num_rows = count ($zaznamy);
 $kapacita = $zaznam_z['kapacita'];
 DrawPageRaceTitle('Vybraný závod',$kapacita,$num_rows);
 
+$deadline_override = IsLoggedAdmin() || IsLoggedRegistrator();
+$registration_open = RaceRegistrationTerm($zaznam_z) !== 0;
+$transport_open = RaceServiceOpen($zaznam_z, 'transport');
+$accommodation_open = RaceServiceOpen($zaznam_z, 'accommodation');
+$service_only_open = !$registration_open && ($transport_open || $accommodation_open);
+$registration_disabled = (!$registration_open && !$deadline_override) ? ' disabled' : '';
+$transport_disabled = (!$transport_open && !$deadline_override) ? ' disabled' : '';
+$accommodation_disabled = (!$accommodation_open && !$deadline_override) ? ' disabled' : '';
+
 RaceInfoTable($zaznam_z,'',$gr_id != _REGISTRATOR_GROUP_ID_,false,true);
 ?>
 <BR>
@@ -67,7 +76,11 @@ DrawPageSubTitle('Přihlášky');
 
 $termin = raceterms::GetCurr4RegTerm($zaznam_z);
 
-if($termin == 0 && !IsLoggedAdmin() && !IsLoggedRegistrator())
+$is_spol_dopr_on = ($zaznam_z["transport"]==1) && $g_enable_race_transport;
+$is_sdil_dopr_on = ($zaznam_z["transport"]==3) && $g_enable_race_transport;
+$is_spol_ubyt_on = ($zaznam_z["ubytovani"]==1) && $g_enable_race_accommodation;
+
+if(!$deadline_override && !$registration_open && !$transport_open && !$accommodation_open)
 {
 	echo('Nelze provádět přihlášky, nejspíš už vypršely všechny termíny přihlášek, je po závodě, či není aktivní žádný termín pro přihlášení.');
 }
@@ -96,10 +109,7 @@ echo '<TD><SELECT name="user_id" size=1 onchange="javascript:aktu_line();">'."\n
 
 $is_registrator_on = IsCalledByRegistrator($gr_id);
 $is_termin_show_on = $is_registrator_on && ($zaznam_z['prihlasky'] > 1);
-$is_spol_dopr_on = ($zaznam_z["transport"]==1) && $g_enable_race_transport;
-$is_sdil_dopr_on = ($zaznam_z["transport"]==3) && $g_enable_race_transport;
 $is_spol_dopr_auto = ($zaznam_z["transport"]==2) && $g_enable_race_transport;
-$is_spol_ubyt_on = ($zaznam_z["ubytovani"]==1) && $g_enable_race_accommodation;
 $is_spol_ubyt_auto = ($zaznam_z["ubytovani"]==2) && $g_enable_race_accommodation;
 $is_multi_etapa = IsMultiEtapaRace($zaznam_z);
 $etap_count = $is_multi_etapa ? (int)$zaznam_z['etap'] : 0;
@@ -112,7 +122,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		if($zaznam['kat'] != NULL)
 		{
-			if(($zaznam['termin'] == $termin || $is_termin_show_on || $is_registrator_on) && $show_ed == 1 )
+			if(($zaznam['termin'] == $termin || $is_termin_show_on || $is_registrator_on || $deadline_override || $service_only_open) && $show_ed == 1 )
 			{
 				$us_rows[$i][0] = $zaznam['kat'];
 				$us_rows[$i][1] = $zaznam['pozn'];
@@ -155,7 +165,7 @@ echo'</SCRIPT>'."\n";
 echo '<TR>';
 echo '<TD align="right">Kategorie</TD>';
 echo '<TD width="5"></TD>';
-echo '<TD><INPUT TYPE="text" NAME="kateg" SIZE=5></TD>';
+echo '<TD><INPUT TYPE="text" NAME="kateg" SIZE=5'.$registration_disabled.'></TD>';
 echo '</TR>';
 if($is_multi_etapa)
 {
@@ -163,7 +173,9 @@ if($is_multi_etapa)
 	echo '<TD align="right">Etapy</TD>';
 	echo '<TD width="5"></TD>';
 	echo '<TD>';
+	echo '<fieldset style="border:0; margin:0; padding:0"'.$registration_disabled.'>';
 	RenderEtapyCheckboxes($etap_count, range(1, $etap_count));
+	echo '</fieldset>';
 	echo '</TD></TR>';
 }
 if($is_spol_dopr_on)
@@ -171,7 +183,7 @@ if($is_spol_dopr_on)
 	echo '<TR>';
 	echo '<TD align="right">Společná doprava</TD>';
 	echo '<TD width="5"></TD>';
-	echo '<TD><INPUT TYPE="checkbox" NAME="transport">';
+	echo '<TD><INPUT TYPE="checkbox" NAME="transport"'.$transport_disabled.'>';
 	echo '</TD></TR>';
 }
 if($is_sdil_dopr_on)
@@ -179,9 +191,9 @@ if($is_sdil_dopr_on)
 	echo '<TR>';
 	echo '<TD align="right">Ve sdílené dopravě</TD>';
 	echo '<TD width="5"></TD>';
-	echo '<TD>';
+	echo '<TD><fieldset style="border:0; margin:0; padding:0"'.$transport_disabled.'>';
 	RenderSharedTransportInput( "sedadel", 0, null );
-	echo '</TD></TR>';
+	echo '</fieldset></TD></TR>';
 }
 if ($is_spol_dopr_auto)
 {
@@ -196,7 +208,7 @@ if($is_spol_ubyt_on)
 	echo '<TR>';
 	echo '<TD align="right">Společné ubytování</TD>';
 	echo '<TD width="5"></TD>';
-	echo '<TD><INPUT TYPE="checkbox" NAME="ubytovani"></TD>';
+	echo '<TD><INPUT TYPE="checkbox" NAME="ubytovani"'.$accommodation_disabled.'></TD>';
 	echo '</TR>';
 }
 else if ($is_spol_ubyt_auto)
@@ -210,11 +222,11 @@ else if ($is_spol_ubyt_auto)
 echo '<TR>';
 echo '<TD align="right">Poznámka</TD>';
 echo '<TD width="5"></TD>';
-echo '<TD><INPUT TYPE="text" NAME="pozn" size="50" maxlength="250">&nbsp;(do&nbsp;přihlášky)</TD>';
+echo '<TD><INPUT TYPE="text" NAME="pozn" size="50" maxlength="250"'.$registration_disabled.'>&nbsp;(do&nbsp;přihlášky)</TD>';
 echo '</TR><TR>';
 echo '<TD align="right">Poznámka</TD>';
 echo '<TD width="5"></TD>';
-echo '<TD><INPUT TYPE="text" NAME="pozn2" size="50" maxlength="250">&nbsp;(interní)</TD>';
+echo '<TD><INPUT TYPE="text" NAME="pozn2" size="50" maxlength="250"'.$registration_disabled.'>&nbsp;(interní)</TD>';
 echo '</TR>';
 if($is_termin_show_on)
 {
@@ -233,7 +245,7 @@ if($is_termin_show_on)
 		for ($i=0; $i<count($kategorie); $i++)
 		{
 			if ($kategorie[$i] != '')
-				echo "<button onclick=\"javascript:zmen_kat('".$kategorie[$i]."');return false;\">".$kategorie[$i]."</button>";
+				echo "<button".$registration_disabled." onclick=\"javascript:zmen_kat('".$kategorie[$i]."');return false;\">".$kategorie[$i]."</button>";
 		}
 		echo "\n".'</TD></TR>';
 	}

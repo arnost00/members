@@ -47,12 +47,12 @@ class RegistrationRenderer implements IColumnContentRenderer {
     public function render(RowData $row, array $options = []): string {
 
 		$prihlasky_curr = raceterms::GetActiveRegDateArr($row->rec);
-		$prihlasky_out_term = Date2String($prihlasky_curr[0]);
+		$prihlasky_out_term = RaceDeadlineDisplay($row->rec, $prihlasky_curr[0]);
 		if($row->rec['prihlasky'] > 1)
 			$prihlasky_out_term .= '&nbsp;/&nbsp;'.$prihlasky_curr[1];
 		$time_to_reg = GetTimeToReg($prihlasky_curr[0]);
 
-		return raceterms::ColorizeTermUser($time_to_reg,$prihlasky_curr,$prihlasky_out_term);
+		return raceterms::ColorizeTermUser($time_to_reg,$prihlasky_curr,$prihlasky_out_term).RaceServiceIndicators($row->rec);
     }
 }
 
@@ -60,6 +60,26 @@ class ActivityRenderer implements IColumnContentRenderer {
 
     public function render(RowData $row, array $options = []): string {
 
+        global $usr;
+
+        $html = $this->renderRegistration($row, $options);
+        $registrationTerm = RaceRegistrationTerm($row->rec);
+        $registrationEditable = $registrationTerm !== 0
+            && (empty($row->rec['prihlasky']) || (int)($row->rec['termin'] ?? 0) === $registrationTerm);
+        if (trim((string)($row->rec['kat'] ?? '')) !== ''
+            && !($options['entry_lock'] ?? true)
+            && !$registrationEditable) {
+            $url = './us_race_regon.php?id_zav='.(int)$row->rec['id'].'&id_us='.(int)$usr->user_id;
+            foreach (['transport' => 'D', 'accommodation' => 'U'] as $service => $letter) {
+                if (RaceServiceOpen($row->rec, $service)) {
+                    $html .= ' / <a href="'.htmlspecialchars($url, ENT_QUOTES).'" onclick="open_win(this.href, &quot;&quot;); return false;" class="Highlight">'.$letter.'</a>';
+                }
+            }
+        }
+        return $html;
+    }
+
+    private function renderRegistration(RowData $row, array $options): string {
         global $usr;
 
         $entry_lock = $options['entry_lock'] ?? true; // locked if undefined
@@ -104,6 +124,19 @@ class ActivityRenderer implements IColumnContentRenderer {
 
         return '';
     }
+}
+
+function RaceServiceManagementLinks(array $race, int $groupId): string
+{
+    if (RaceRegistrationTerm($race) !== 0) return '';
+    $url = './race_regs_1.php?gr_id='.$groupId.'&id='.(int)$race['id'].'&show_ed=1';
+    $html = '';
+    foreach (['transport' => 'D', 'accommodation' => 'U'] as $service => $letter) {
+        if (RaceServiceOpen($race, $service)) {
+            $html .= '&nbsp;/&nbsp;<a href="'.htmlspecialchars($url, ENT_QUOTES).'" onclick="open_win(this.href, \'\'); return false;" class="Highlight">'.$letter.'</a>';
+        }
+    }
+    return $html;
 }
 
 class ParticipantsRenderer implements IColumnContentRenderer {

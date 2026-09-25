@@ -170,16 +170,17 @@ function GetTimeToRace($t_z)
 	return $diff;
 }
 
+require_once __DIR__.'/lib/race_deadlines.php';
+
 function GetTimeToReg($t_p)
 //	Parameters:
 //		t_p - datum prihlasek
 {
-	$t_p += (25*60*60); //+(25*60*60) - posun terminu prihlasek o 2 hodiny navic, kvuli time() ktery vraci UTC je tam +25 hodin
-//	$diff = (int)(($t_p) - GetCurrentDate());  // puvodni pred pridanim 2 hodin navic
+	$t_p = RaceDeadlineTimestamp($t_p);
 	$diff = (int)(($t_p) - time());
 	if ($diff > 0)
 		$diff = _todays($diff);
-	else if ($diff < 0)
+	else if ($diff <= 0)
 		$diff = -1;
 	return $diff;
 }

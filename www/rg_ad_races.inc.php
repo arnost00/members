@@ -30,7 +30,7 @@ $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&sub
 //when show all races reverse order
 $order = ($fC == 1) ? "desc" : "";
 
-@$vysledek=query_db("SELECT id, datum, typ0, typ, datum2, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, nazev, vicedenni, odkaz, vedouci, oddil, kapacita, prihlasenych, send, misto, cancelled, ext_id FROM ".TBL_RACE.$sql_sub_query." ORDER BY datum $order, datum2 $order, id $order");
+@$vysledek=query_db("SELECT id, datum, typ0, typ, datum2, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, transport_do, ubytovani_do, transport, ubytovani,  nazev, vicedenni, odkaz, vedouci, oddil, kapacita, prihlasenych, send, misto, cancelled, ext_id FROM ".TBL_RACE.$sql_sub_query." ORDER BY datum $order, datum2 $order, id $order");
 
 $ext_id_active_oris = ($g_external_is_connector === 'OrisCZConnector');
 
@@ -70,7 +70,7 @@ if ($num_rows > 0)
 	$tbl_renderer->addColumns(['prihlasky', new CallbackRenderer ( function ( RowData $row, array $options ) : string {
 			$race_is_old = (GetTimeToRace($row->rec['datum']) == -1);
 			$prihlasky_curr = raceterms::GetActiveRegDateArr($row->rec);
-			$prihlasky=Date2String($prihlasky_curr[0]);
+			$prihlasky=RaceDeadlineDisplay($row->rec, $prihlasky_curr[0]);
 			if($row->rec['prihlasky'] > 1)
 				$prihlasky .= '&nbsp;/&nbsp;'.$prihlasky_curr[1];
 
@@ -86,9 +86,9 @@ if ($num_rows > 0)
 				$prihlasky_prev = raceterms::GetActiveRegDateArrPrev($row->rec);
 
 				if ($prihlasky_prev[0] != 0)
-					$prihlasky_out = '<span class="TextAlert">'.Date2String($prihlasky_prev[0]).'&nbsp;/&nbsp;'.$prihlasky_prev[1].'</span><br>'.$prihlasky_out;
+					$prihlasky_out = '<span class="TextAlert">'.RaceDeadlineDisplay($row->rec, $prihlasky_prev[0]).'&nbsp;/&nbsp;'.$prihlasky_prev[1].'</span><br>'.$prihlasky_out;
 			}		
-			return $prihlasky_out;
+			return $prihlasky_out.RaceServiceIndicators($row->rec);
 		} )]);
 	if($g_enable_race_boss)
 		$tbl_renderer->addColumns(['vedouci', new CallbackRenderer ( function ( RowData $row, array $options ) : string {

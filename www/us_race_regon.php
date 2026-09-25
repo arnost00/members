@@ -44,6 +44,17 @@ $zaznam_rg=mysqli_fetch_array($vysledek_rg);
 @$vysledek_u=query_db("SELECT * FROM ".TBL_USER." WHERE id=$id_us");
 $zaznam_u = mysqli_fetch_array($vysledek_u);
 
+$deadlineTerm = RaceRegistrationTerm($zaznam_z);
+$raceEditable = $deadlineTerm && (!$zaznam_rg || empty($zaznam_z['prihlasky']) || (int)$zaznam_rg['termin'] === $deadlineTerm);
+$transportOpen = RaceServiceOpen($zaznam_z, 'transport');
+$accommodationOpen = RaceServiceOpen($zaznam_z, 'accommodation');
+$canCancel = $raceEditable && $zaznam_rg && !RaceHasLockedBooking($zaznam_z, $zaznam_rg);
+$registrationDeadline = empty($zaznam_z['prihlasky'])
+    ? (int)$zaznam_z['datum']
+    : (int)($zaznam_z['prihlasky'.($zaznam_rg['termin'] ?? $zaznam_z['prihlasky'])] ?? 0);
+$registrationTooltip = htmlspecialchars('Pouze do '.FormatRaceDeadline($registrationDeadline), ENT_QUOTES);
+
+
 $new = ($zaznam_rg && $zaznam_rg['kat'] != '') ? 0 : 1;
 
 ?>
@@ -56,12 +67,12 @@ function zmen_kat(kateg)
 
 function check_reg(vstup)
 {
-	if (vstup.kat.value == "")
+	if (!vstup.kat.matches(":disabled") && vstup.kat.value == "")
 	{
 		alert("Musíš zadat kategorii pro přihlášení do závodu.");
 		return false;
 	}
-	if (vstup.querySelectorAll('input[name="etapy[]"]:checked').length == 0
+	if (!vstup.kat.matches(':disabled') && vstup.querySelectorAll('input[name="etapy[]"]:checked').length == 0
 		&& vstup.querySelectorAll('input[name="etapy[]"]').length > 0)
 	{
 		alert("Musíš vybrat alespoň jednu etapu.");
@@ -155,6 +166,7 @@ else
 ?>
 <FORM METHOD=POST ACTION="us_race_regon_exc.php" name="form1" onsubmit="return check_reg(this);">
 
+<fieldset style="border:0; margin:0; padding:0" <? if (!$raceEditable) echo 'disabled title="'.$registrationTooltip.'"'; ?>>
 Do které kategorie chcete přihlásit:&nbsp;
 <?
 echo'<br>';
@@ -176,11 +188,13 @@ if ($is_multi_etapa)
 	echo "<BR>\n";
 }
 
+echo '</fieldset>';
 if ($g_enable_race_transport || $g_enable_race_accommodation)
 	echo "<BR>\n";
 
-if ($g_enable_race_transport)
+if ($g_enable_race_transport && !empty($zaznam_z['transport']))
 {
+    echo '<fieldset style="border:0; margin:0; padding:0" '.(!$transportOpen && (int)$zaznam_z['transport'] !== 2 ? 'disabled title="'.htmlspecialchars('Pouze do '.FormatRaceDeadline(RaceServiceDeadline($zaznam_z, 'transport')), ENT_QUOTES).'"' : '').'>';
 	if ($zaznam_z["transport"]==1)
 	{
 		$trans=$zaznam_rg["transport"]?"CHECKED":"";
@@ -188,7 +202,7 @@ if ($g_enable_race_transport)
 	}
 	else if ($zaznam_z["transport"]==2)
 	{
-		echo 'Společná doprava je zadána automaticky.';
+		echo 'Společná doprava je součástí přihlášky na závod automaticky.';
 	}
 	else if ($zaznam_z["transport"]==3)
 	{
@@ -196,9 +210,11 @@ if ($g_enable_race_transport)
 		RenderSharedTransportInput( "sedadel", $zaznam_rg["transport"], $zaznam_rg["sedadel"] );
 	}
 	echo("<BR>\n");
+	echo '</fieldset>';
 }
-if ($g_enable_race_accommodation)
+if ($g_enable_race_accommodation && !empty($zaznam_z['ubytovani']))
 {
+    echo '<fieldset style="border:0; margin:0; padding:0" '.(!$accommodationOpen && (int)$zaznam_z['ubytovani'] !== 2 ? 'disabled title="'.htmlspecialchars('Pouze do '.FormatRaceDeadline(RaceServiceDeadline($zaznam_z, 'accommodation')), ENT_QUOTES).'"' : '').'>';
 	if ($zaznam_z["ubytovani"]==1)
 	{
 		$trans=$zaznam_rg["ubytovani"]?"CHECKED":"";
@@ -206,30 +222,33 @@ if ($g_enable_race_accommodation)
 	}
 	else if ($zaznam_z["ubytovani"]==2)
 	{
-		echo 'Společné ubytování je zadáno automaticky.';
+		echo 'Společné ubytování je součástí přihlášky na závod automaticky.';
 	}
+	echo '</fieldset>';
 }
 ?>
+<fieldset style="border:0; margin:0; padding:0" <? if (!$raceEditable) echo 'disabled title="'.$registrationTooltip.'"'; ?>>
 <BR><BR>
 Poznámka&nbsp;<INPUT TYPE="text" name="pozn" size="50" maxlength="250" value="<?echo xss_prevent($zaznam_rg['pozn']) ?>">&nbsp;(do&nbsp;přihlášky)
 <BR><BR>
 Poznámka&nbsp;<INPUT TYPE="text" name="pozn2" size="50" maxlength="250" value="<?echo xss_prevent($zaznam_rg['pozn_in'])?>">&nbsp;(interní)
 <BR><BR>
 
+</fieldset>
 <INPUT TYPE="hidden" name="id_us" value="<?echo xss_prevent($id_us)?>">
 <INPUT TYPE="hidden" name="id_zav" value="<?echo xss_prevent($id_zav)?>">
 <?
 if ($new)
 {
 	echo ('<INPUT TYPE="hidden" name="novy" value="'.xss_prevent($new).'">'."\n");
-	echo ('<INPUT TYPE="submit" value="Přihlásit na závod">'."\n");
+	echo ('<INPUT TYPE="submit" '.(!$raceEditable ? 'disabled' : '').' value="Přihlásit na závod">'."\n");
 }
 else
 {
 	echo ('<INPUT TYPE="hidden" name="id_z" value="'.xss_prevent($zaznam_rg['id']).'">'."\n");
 ?>
-<INPUT TYPE="submit" value="Změnit údaje">
-&nbsp;&nbsp;&nbsp;&nbsp;<BUTTON onclick="return submit_off();">Odhlásit ze závodu</BUTTON>
+<INPUT TYPE="submit" value="Změnit údaje" <? if (!$raceEditable && !$transportOpen && !$accommodationOpen) echo "disabled"; ?>>
+&nbsp;&nbsp;&nbsp;&nbsp;<BUTTON <? if (!$canCancel) echo "disabled"; ?> onclick="return submit_off();">Odhlásit ze závodu</BUTTON>
 <?
 }
 ?>

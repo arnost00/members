@@ -274,13 +274,13 @@ function RIT_SH(divId1, divId2)
 		if($show_curr_term)
 		{
 			$prihlasky_curr = raceterms::GetActiveRegDateArr($zaznam);
-			$tp = ($prihlasky_curr[0] != 0) ? Date2String($prihlasky_curr[0]).' - termím č.'.$prihlasky_curr[1] : 'není';
+			$tp = ($prihlasky_curr[0] != 0) ? RaceDeadlineDisplay($zaznam, $prihlasky_curr[0]).' - termím č.'.$prihlasky_curr[1] : 'není';
 			echo $data_tbl->get_new_row('Aktivní termín',$tp);
 		}
 		echo $data_tbl->get_new_row('Termíny přihlášek',raceterms::ListRegDates($zaznam));
 	}
 	else
-		echo $data_tbl->get_new_row('Termín přihlášek',Date2String($zaznam['prihlasky1']));
+		echo $data_tbl->get_new_row('Termín přihlášek',RaceDeadlineDisplay($zaznam, $zaznam['prihlasky1']));
 	if(IsLoggedRegistrator())
 	{
 		if($zaznam['send'] > 0)

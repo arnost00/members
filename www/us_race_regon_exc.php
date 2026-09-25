@@ -28,16 +28,49 @@ $id_us = (IsSet($id_us) && is_numeric($id_us)) ? (int)$id_us: 0;
 $id_z = (IsSet($id_z) && is_numeric($id_z)) ? (int)$id_z: 0;
 $kat = (IsSet($kat)) ? $kat : '';
 
+// Resolve the entry by race and member, never by an untrusted entry ID.
+if ($id_us !== (int)$usr->user_id && !IsLoggedRegistrator()) {
+    http_response_code(403);
+    exit('Nemáte oprávnění měnit tuto přihlášku.');
+}
+db_Connect();
+$raceResult = query_db("SELECT * FROM ".TBL_RACE." WHERE id=$id_zav");
+$deadlineRace = mysqli_fetch_assoc($raceResult);
+$entryResult = query_db("SELECT * FROM ".TBL_ZAVXUS." WHERE id_zavod=$id_zav AND id_user=$id_us");
+$deadlineEntry = mysqli_fetch_assoc($entryResult) ?: null;
+if (!$deadlineRace) { http_response_code(404); exit('Závod nenalezen.'); }
+$userResult = query_db("SELECT entry_locked FROM ".TBL_USER." WHERE id=$id_us");
+$deadlineUser = mysqli_fetch_assoc($userResult);
+if (!$deadlineUser || $deadlineUser['entry_locked']) { http_response_code(403); exit('Přihlašování je zamknuto.'); }
+$deadlineTerm = RaceRegistrationTerm($deadlineRace);
+$raceEditable = $deadlineTerm && (!$deadlineEntry || empty($deadlineRace['prihlasky']) || (int)$deadlineEntry['termin'] === $deadlineTerm);
+try {
+    $serviceValues = RaceServiceValues($deadlineRace, $deadlineEntry, $_POST);
+} catch (InvalidArgumentException $e) {
+    http_response_code(409);
+    exit(htmlspecialchars($e->getMessage(), ENT_QUOTES));
+}
+if (!$raceEditable) {
+    if (!$deadlineEntry || (!RaceServiceOpen($deadlineRace, 'transport') && !RaceServiceOpen($deadlineRace, 'accommodation'))) {
+        http_response_code(409);
+        exit('Termín přihlášek již vypršel.');
+    }
+    $serviceTransport = RaceServiceSqlValue($serviceValues['transport']);
+    $serviceSeats = RaceServiceSqlValue($serviceValues['sedadel']);
+    $serviceAccommodation = RaceServiceSqlValue($serviceValues['ubytovani']);
+    if (!query_db("UPDATE ".TBL_ZAVXUS." SET transport=$serviceTransport, sedadel=$serviceSeats, ubytovani=$serviceAccommodation WHERE id=".(int)$deadlineEntry['id'])) {
+        http_response_code(500); exit('Nepodařilo se uložit dopravu a ubytování.');
+    }
+    header('Location: '.$g_baseadr.'us_race_regon.php?id_zav='.$id_zav.'&id_us='.$id_us);
+    exit;
+}
+$id_z = $deadlineEntry ? (int)$deadlineEntry['id'] : 0;
+$novy = $deadlineEntry ? 0 : 1;
+
 if ($kat != '')
 {
-	db_Connect();
 
-	@$vysledek2=query_db("SELECT * FROM ".TBL_USER." where id=$id_us");
-	$entry_lock = false;
-	if ($zaznam2=mysqli_fetch_array($vysledek2))
-	{
-		$entry_lock = ($zaznam2['entry_locked'] != 0);
-	}
+	$entry_lock = ($deadlineUser['entry_locked'] != 0);
 
 	if (!$entry_lock)
 	{
@@ -45,8 +78,7 @@ if ($kat != '')
 		$pozn=correct_sql_string($pozn);
 		$pozn2=correct_sql_string($pozn2);
 
-		@$vysledek_z=query_db("SELECT datum, vicedenni, etap, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, transport, ext_id FROM ".TBL_RACE." WHERE id=$id_zav");
-		$zaznam_z = mysqli_fetch_array($vysledek_z);
+		$zaznam_z = $deadlineRace;
 
 		$termin = raceterms::GetCurr4RegTerm($zaznam_z);
 
@@ -60,23 +92,9 @@ if ($kat != '')
 		else if ($termin != 0) // not process if invalid termin number
 		{
 			$etapy_sql = $is_multi_etapa ? "'".BuildEtapyString($selected_etapy)."'" : 'NULL';
-			if ( $zaznam_z["transport"] == 3 ) {
-				// shared transport
-				if ( !isset($sedadel) || $sedadel=='' || $sedadel=='null') {
-					// no seats no trasport
-					$sedadel = 'null';
-					$transport = 0;
-				} else {
-					// if seats set, transport automatically
-					$sedadel = intval($sedadel);
-					$transport = 1;
-				}	
-			} else {
-				$transport = !isset($transport)? 0: 1;
-				$sedadel = 'null';
-			}
-			$ubytovani = !isset($ubytovani)? 'null': 1;
-			$novy  = !isset($novy)? 0: (int)$novy;
+            $transport = RaceServiceSqlValue($serviceValues['transport']);
+            $sedadel = RaceServiceSqlValue($serviceValues['sedadel']);
+            $ubytovani = RaceServiceSqlValue($serviceValues['ubytovani']);
 
 			$has_ext_id = !empty($zaznam_z['ext_id']);
 			$inserted_or_updated_id = 0;
@@ -109,8 +127,8 @@ if ($kat != '')
 			}
 			else
 			{	// update
-				$vysledek=query_db("SELECT * FROM ".TBL_ZAVXUS." WHERE id='".$id_z."'");
-				if ($vysledek != FALSE && ($zaznam = mysqli_fetch_array($vysledek)) != FALSE )
+				$zaznam = $deadlineEntry;
+				if ($zaznam)
 				{
 					$previous_state = $zaznam;
 					$sync_status_update = ($has_ext_id && $zaznam['sync_status'] !== 'PENDING_CREATE') ? ", sync_status='PENDING_UPDATE'" : "";

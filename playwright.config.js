@@ -6,18 +6,20 @@ const testSuite = process.env.MEMBERS_E2E_SUITE || '';
 const noOrisSuite = testSuite === 'no-oris';
 const noOrisKeySuite = testSuite === 'no-oris-key';
 const alternateOrisSuite = noOrisSuite || noOrisKeySuite;
-const applicationHeaders = alternateOrisSuite
+const noRaceServicesSuite = testSuite === 'no-race-services';
+const applicationHeaders = alternateOrisSuite || noRaceServicesSuite
   ? { 'X-Members-Autotest-Suite': testSuite }
   : undefined;
 const regularTestIgnore = [
   '**/bank-connector-errors.spec.js',
   '**/oris-connector-errors.spec.js',
+  '**/no-race-services.spec.js',
 ];
 const alternateTestIgnore = [
   ...regularTestIgnore,
   '**/oris-*.spec.js',
 ];
-const testIgnore = alternateOrisSuite ? alternateTestIgnore : regularTestIgnore;
+const testIgnore = noRaceServicesSuite ? [] : alternateOrisSuite ? alternateTestIgnore : regularTestIgnore;
 
 module.exports = defineConfig({
   testDir: './tests/playwright',
@@ -45,6 +47,7 @@ module.exports = defineConfig({
     },
     {
       name: 'chromium',
+      ...(noRaceServicesSuite ? { testMatch: '**/no-race-services.spec.js' } : {}),
       testIgnore: [
         ...testIgnore,
         '**/member-7203.setup.js',

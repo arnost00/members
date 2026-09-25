@@ -13,7 +13,9 @@ services:
       - ./:/var/www/html/members    # mount the repository; Apache exposes only the www runtime
   db:
     image: mariadb:10.11
+    command: ["--default-time-zone=SYSTEM"]
     environment:
+      TZ: Europe/Prague    # CET/CEST according to the date, including daylight saving
       MARIADB_ROOT_PASSWORD: dev4password
       MARIADB_DATABASE: members
       MARIADB_USER: appuser

@@ -59,13 +59,17 @@ V kořenovém adresáři `members` spusť:
 
 ```bash
 docker compose -p members-autotest -f docker-compose.autotest.yml up -d --build --wait
+docker compose -p members-autotest -f docker-compose.autotest.yml exec web npm run test:php
 docker compose -p members-autotest -f docker-compose.autotest.yml exec web npm run test:e2e
 docker compose -p members-autotest -f docker-compose.autotest.yml exec web npm run test:e2e:no-oris
 docker compose -p members-autotest -f docker-compose.autotest.yml exec web npm run test:e2e:no-oris-key
+docker compose -p members-autotest -f docker-compose.autotest.yml exec web npm run test:e2e:no-race-services
 docker compose -p members-autotest -f docker-compose.autotest.yml exec web npm run test:e2e:bank-errors
 docker compose -p members-autotest -f docker-compose.autotest.yml exec web npm run test:e2e:oris-errors
 docker compose -p members-autotest -f docker-compose.autotest.yml down
 ```
+
+The PHP suite checks race deadlines and ORIS connector error handling without a database or external API. Run it locally from the repository root with `npm run test:php` or directly with `php tests/php/race-deadlines.php`. These tests are for development and CI only and must not be deployed to the productive web root.
 
 Přepínač `--wait` počká, až budou kontejnery označené jako `healthy`. V autotest stacku to znamená, že je připravená databáze, běží web a bank a ORIS mock odpovídají na health endpoint, takže testy můžeš spustit hned po startu bez další prodlevy.
 

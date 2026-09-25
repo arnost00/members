@@ -6,6 +6,7 @@ if (!isset($g_external_is_connector))
 }
 
 require_once __DIR__ . '/lib/OrisIntegrationService.php';
+require_once __DIR__ . '/lib/race_deadlines.php';
 
 class RacePayement {
     public int $raceId;
@@ -200,9 +201,9 @@ class OrisCZConnector implements ConnectorInterface {
 				),
 				'ranking' => $raceData['Ranking'],
 				'odkaz' => $this->getRaceURL($raceData['ID']),
-				'prihlasky' => strtotime($raceData['EntryDate1']),
-				'prihlasky1' => strtotime($raceData['EntryDate2']),
-				'prihlasky2' => strtotime($raceData['EntryDate3']),
+				'prihlasky' => ParseOrisDeadline($raceData['EntryDate1']),
+				'prihlasky1' => ParseOrisDeadline($raceData['EntryDate2']),
+				'prihlasky2' => ParseOrisDeadline($raceData['EntryDate3']),
 				'koeficient1' => $raceData['EntryKoef2'],
 				'koeficient2' => $raceData['EntryKoef3'],
 				'etap' => $raceData['Stages'],
@@ -214,7 +215,7 @@ class OrisCZConnector implements ConnectorInterface {
 				'cancelled' => (!empty($raceData['Cancelled']) || !empty($raceData['Canceled']) || !empty($raceData['cancelled']) || !empty($raceData['canceled'])) ? 1 : 0,
 				'entry_start' => !empty($raceData['EntryStart']) ? $raceData['EntryStart'] : null,
 			]);
-		} catch (OrisException $e) {
+		} catch (OrisException | InvalidArgumentException $e) {
 			return null;
 		}
 	}
