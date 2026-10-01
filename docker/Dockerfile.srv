@@ -39,8 +39,9 @@ RUN npm ci \
     && npx playwright install --with-deps chromium webkit
 
 COPY docker/entrypoint.sh /usr/local/bin/members-entrypoint.sh
-RUN chmod +x /usr/local/bin/members-entrypoint.sh
-
+RUN sed -i 's/\r$//' /usr/local/bin/members-entrypoint.sh \
+    && chmod +x /usr/local/bin/members-entrypoint.sh
+    
 ENTRYPOINT ["/usr/local/bin/members-entrypoint.sh"]
 
 FROM autotest AS dev
