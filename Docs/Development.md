@@ -31,6 +31,7 @@ Dostupné služby:
 
 * [members](http://127.0.0.1:10100/members)
 * [phpMyAdmin](http://127.0.0.1:10101)
+* [mailpit](http://127.0.0.1:10125)
 
 Bank mock pro vývoj:
 
@@ -89,6 +90,7 @@ Dostupné služby:
 * [phpMyAdmin](http://127.0.0.1:10091)
 * [bank](http://127.0.0.1:10093/__testbench)
 * [ORIS](http://127.0.0.1:10094/__testbench)
+* [mailpit](http://127.0.0.1:10095)
 
 ## Minimální konfigurace
 
