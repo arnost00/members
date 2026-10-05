@@ -31,7 +31,7 @@ Dostupné služby:
 
 * [members](http://127.0.0.1:10100/members)
 * [phpMyAdmin](http://127.0.0.1:10101)
-* [mailpit](http://127.0.0.1:8025)
+* [mailpit](http://127.0.0.1:10125)
 
 Bank mock pro vývoj:
 
@@ -135,10 +135,6 @@ Databáze:
 
 * [phpMyAdmin](http://127.0.0.1:8080)
 * uživatel `root`, heslo `dev4password`
-
-Email:
-
-* [mailpit](http://127.0.0.1:8025)
 
 Práce s kontejnery:
 

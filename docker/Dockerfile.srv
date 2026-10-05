@@ -20,6 +20,10 @@ Alias /members /var/www/html/members/www\n\
     > /etc/apache2/conf-available/members.conf \
     && a2enconf members
 
+EXPOSE 10100
+
+FROM base AS autotest
+
 # Relay PHP's mail() to the local mailpit catcher instead of a real MTA.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends msmtp ca-certificates \
@@ -42,10 +46,6 @@ RUN echo "defaults" > /etc/msmtprc && \
 
 RUN echo 'sendmail_path = "/usr/bin/msmtp -t -i"' \
     > /usr/local/etc/php/conf.d/mail.ini
-
-EXPOSE 10100
-
-FROM base AS autotest
 
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
