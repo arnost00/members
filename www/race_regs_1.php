@@ -235,6 +235,8 @@ if($is_termin_show_on)
 			if ($kategorie[$i] != '')
 				echo "<button onclick=\"javascript:zmen_kat('".$kategorie[$i]."');return false;\">".$kategorie[$i]."</button>";
 		}
+		if (!empty($zaznam_z['ext_id']))
+			echo "&nbsp;<button onclick=\"javascript:zmen_kat('".LOCAL_ONLY_CATEGORY."');return false;\" title=\"Přihláška jen v members, do ORISu se neposílá\">".LOCAL_ONLY_CATEGORY."</button>";
 		echo "\n".'</TD></TR>';
 	}
 ?>

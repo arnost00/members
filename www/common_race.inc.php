@@ -552,4 +552,11 @@ function RenderEtapyCheckboxes($etapCount, array $selected, $inputName = 'etapy[
 	}
 }
 
+// kategorie, ktera se zapise jen do members a neposila se do ORISu (napr. trener, ktery jede, ale nebezi)
+define('LOCAL_ONLY_CATEGORY', 'Nebezim');
+
+function IsLocalOnlyCategory($kat) {
+	return strcasecmp(trim((string)$kat), LOCAL_ONLY_CATEGORY) === 0;
+}
+
 ?>

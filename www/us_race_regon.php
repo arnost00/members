@@ -164,6 +164,8 @@ for ($i=0; $i<count($kategorie); $i++)
 	if ($kategorie[$i] != '')
 		echo "<button onclick=\"javascript:zmen_kat('".xss_prevent($kategorie[$i])."');return false;\">".xss_prevent($kategorie[$i])."</button>";
 }
+if (!empty($zaznam_z['ext_id']))
+	echo "&nbsp;<button onclick=\"javascript:zmen_kat('".LOCAL_ONLY_CATEGORY."');return false;\" title=\"Přihláška jen v members, do ORISu se neposílá\">".LOCAL_ONLY_CATEGORY."</button>";
 
 echo('<BR>Vybraná kategorie:&nbsp;');
 echo('<INPUT TYPE="text" NAME="kat" size=6 value="'.xss_prevent($zaznam_rg['kat']).'">');
