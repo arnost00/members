@@ -229,5 +229,67 @@ test.describe('Membership type workflow', () => {
       await loginAs(page, 'clubAdmin');
       await setMembershipType(page, member.userId, 'R');
     });
+
+    async function pickerUserIds(page, raceId) {
+      await page.goto(`./race_regs_1.php?gr_id=400&id=${raceId}&show_ed=1`);
+      return page.locator('select[name="user_id"] option').evaluateAll((options) => options.map((o) => o.value));
+    }
+
+    test('single signup picker hides members who cannot enter', async ({ page }) => {
+      await page.context().clearCookies();
+      await loginAs(page, 'registrar');
+      const raceIds = await pickerUserIds(page, state.races.race.id);
+      expect(raceIds).not.toContain(String(state.members.hosting.userId));
+      expect(raceIds).not.toContain(String(state.members.training.userId));
+      expect(raceIds).toContain(String(state.members.regular.userId));
+
+      const relayIds = await pickerUserIds(page, state.races.relay.id);
+      expect(relayIds).not.toContain(String(state.members.training.userId));
+    });
+
+    test('forged single signup is refused', async ({ page, browser }) => {
+      await page.context().clearCookies();
+      await loginAs(page, 'registrar');
+      await page.goto(`./race_regs_1.php?gr_id=400&id=${state.races.race.id}&show_ed=1`);
+      const result = await postFormInSession(page, `./race_regs_1_exc.php?gr_id=400&id=${state.races.race.id}&show_ed=1`, {
+        user_id: String(state.members.training.userId), kateg: 'H21', pozn: '', pozn2: '',
+      });
+      expect(result.text).toContain('Typ členství (tréninkové členství) neumožňuje přihlášku na tuto akci.');
+      const detail = await getRaceDetail(browser, state.races.race.id);
+      expect(detail.everyone.find((entry) => entry.user_id === Number(state.members.training.userId))).toBeUndefined();
+    });
+
+    test('bulk signup shows forbidden members read-only and refuses forged input', async ({ page, browser }) => {
+      await page.context().clearCookies();
+      await loginAs(page, 'registrar');
+      await page.goto(`./race_regs_all.php?gr_id=400&id=${state.races.race.id}`);
+      await expect(page.locator(`input[name="kateg[${state.members.hosting.userId}]"]`)).toHaveCount(0);
+      await expect(page.locator(`input[name="kateg[${state.members.regular.userId}]"]`)).toHaveCount(1);
+      const hostingRow = page.locator('tr', { hasText: '9711' });
+      await expect(hostingRow.locator('.membership-tag')).toHaveText('H');
+
+      const result = await postFormInSession(page, `./race_regs_all_exc.php?gr_id=400&id=${state.races.race.id}`, {
+        [`kateg[${state.members.hosting.userId}]`]: 'H21',
+        [`pozn[${state.members.hosting.userId}]`]: '',
+        [`pozn2[${state.members.hosting.userId}]`]: '',
+      });
+      expect(result.text).toContain('Typ členství (hostování) neumožňuje přihlášku na tuto akci.');
+      const detail = await getRaceDetail(browser, state.races.race.id);
+      expect(detail.everyone.find((entry) => entry.user_id === Number(state.members.hosting.userId))).toBeUndefined();
+    });
+
+    test('bulk signup lets a hosting member into an allowed event', async ({ page, browser }) => {
+      await page.context().clearCookies();
+      await loginAs(page, 'registrar');
+      await page.goto(`./race_regs_all.php?gr_id=400&id=${state.races.camp.id}`);
+      const result = await postFormInSession(page, `./race_regs_all_exc.php?gr_id=400&id=${state.races.camp.id}`, {
+        [`kateg[${state.members.hosting.userId}]`]: 'H21',
+        [`pozn[${state.members.hosting.userId}]`]: '',
+        [`pozn2[${state.members.hosting.userId}]`]: '',
+      });
+      expect(result.text).not.toContain('neumožňuje přihlášku');
+      const detail = await getRaceDetail(browser, state.races.camp.id);
+      expect(detail.everyone.find((entry) => entry.user_id === Number(state.members.hosting.userId))?.category).toBe('H21');
+    });
   });
 });

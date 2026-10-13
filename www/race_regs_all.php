@@ -125,7 +125,7 @@ else
 
 $sub_query2 = (IsLoggedRegistrator() || IsLoggedManager()) ? '' : ' AND '.TBL_USER.'.chief_id = '.$usr->user_id.' OR '.TBL_USER.'.id = '.$usr->user_id;
 
-$query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, datum, kat, pozn, pozn_in, termin, entry_locked, '.TBL_ZAVXUS.'.transport, '.TBL_ZAVXUS.'.sedadel, '.TBL_ZAVXUS.'.ubytovani, '.TBL_ZAVXUS.'.etapy, '.TBL_ZAVXUS.'.sync_status FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query2.$sub_query;
+$query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, clenstvi, datum, kat, pozn, pozn_in, termin, entry_locked, '.TBL_ZAVXUS.'.transport, '.TBL_ZAVXUS.'.sedadel, '.TBL_ZAVXUS.'.ubytovani, '.TBL_ZAVXUS.'.etapy, '.TBL_ZAVXUS.'.sync_status FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query2.$sub_query;
 
 @$vysledek=query_db($query);
 
@@ -192,12 +192,15 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	$row = array();
 	$row[] = $i++;
 	$row[] = RegNumToStr($zaznam['reg']);
-	$row[] = $zaznam['prijmeni'];
+	$row[] = $zaznam['prijmeni'].GetMembershipTag($zaznam['clenstvi']);
 	$row[] = $zaznam['jmeno'];
 	$age = CountManAge($zaznam['datum']);
 	$row[] = ($age != -1) ? (($age < GC_SHOW_AGE_LIMIT)? $age :'') : '?';
 	$u=$zaznam['id'];
 	$entry_lock = ($zaznam['entry_locked'] != 0) && !$is_registrator_on;
+	// novou prihlasku nelze vytvorit, pokud ji typ clenstvi nedovoluje (plati i pro prihlasovatele)
+	if ($zaznam['kat'] == NULL && !CanMembershipEnterRace($zaznam['clenstvi'], $zaznam_z))
+		$entry_lock = true;
 	$trans=$zaznam['transport']?"CHECKED":"";
 	$sedl=$zaznam['sedadel'];
 	$ubyt=$zaznam['ubytovani']?"CHECKED":"";
