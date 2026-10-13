@@ -79,6 +79,9 @@ $renderer_option['curr_date'] = $curr_date;
 $d1 = $curr_date;
 $d2 = IncDate($curr_date,GC_SHOW_REG_DAYS);
 $membership_cond = GetMembershipRaceCondition($clenstvi, 'r.');
+// zaneprihlasene zavody zustavaji viditelne (kvuli odhlaseni po zmene typu clenstvi)
+if ($membership_cond != '' && SHOW_USER)
+	$membership_cond = '('.$membership_cond.' OR zu.id IS NOT NULL)';
 $query = 'SELECT r.id, r.datum, datum2, nazev, typ0, typ, ranking, odkaz, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4,'
 	.' prihlasky5, vicedenni, misto, oddil, kapacita, prihlasenych, '. $user_fields .' vedouci, cancelled, concat(u.jmeno, \' \', u.prijmeni) as vedouci_jmeno '
 	.' FROM '.TBL_RACE.' r left join '.TBL_USER.' u on r.vedouci = u.id ' . $user_join

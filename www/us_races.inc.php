@@ -31,7 +31,11 @@ if ($zaznam2=mysqli_fetch_array($vysledek2))
 }
 $renderer_option['entry_lock'] = $entry_lock;
 // hostujici / treninkovi clenove vidi jen povolene akce
-$sql_sub_query = AppendSqlCondition($sql_sub_query, GetMembershipRaceCondition($clenstvi, 'r.'));
+$membership_cond = GetMembershipRaceCondition($clenstvi, 'r.');
+// zaneprihlasene zavody zustavaji viditelne (kvuli odhlaseni po zmene typu clenstvi)
+if ($membership_cond != '')
+	$membership_cond = '('.$membership_cond.' OR zu.id IS NOT NULL)';
+$sql_sub_query = AppendSqlCondition($sql_sub_query, $membership_cond);
 
 //when show all races reverse order
 $order = ($fC == 1) ? "desc" : "";

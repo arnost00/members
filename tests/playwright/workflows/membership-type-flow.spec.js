@@ -208,6 +208,9 @@ test.describe('Membership type workflow', () => {
 
       await page.context().clearCookies();
       await login(page, member.login, DEFAULT_PASSWORD);
+      // the already signed-up race stays reachable from the lists (needed for sign-off)
+      expect(await memberRaceListText(page)).toContain(state.races.race.name);
+      expect(await memberNewsText(page)).toContain(state.races.race.name);
       await page.goto(`./us_race_regon.php?id_zav=${state.races.race.id}&id_us=${member.userId}`);
       await expect(page.locator('form[name="form1"]')).toHaveCount(1);
       await postFormInSession(page, './us_race_regon_exc.php', {

@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const { loginAs, postFormInSession, readFormState } = require('../helpers/browser');
 const { ensureClubMember } = require('../helpers/app-actions');
-const { createOrisMockUser } = require('../helpers/oris-mock');
+const { callOrisApi, createOrisMockUser } = require('../helpers/oris-mock');
 
 // Issue #79: ORIS comparison page tags the membership type and offers the SI push
 // to ORIS ([<<] link) only for regular members.
@@ -29,6 +29,7 @@ test.describe('ORIS comparison page and membership type', () => {
 
     await page.context().clearCookies();
     await loginAs(page, 'clubAdmin');
+    const localIds = {};
     for (const member of MEMBERS) {
       const ensured = await ensureClubMember(page, {
         reg: member.reg,
@@ -37,6 +38,7 @@ test.describe('ORIS comparison page and membership type', () => {
         chip: member.si,
         updateExisting: true,
       });
+      localIds[member.reg] = ensured.userId;
       await page.goto(`./user_edit.php?id=${ensured.userId}&cb=700`);
       const form = await readFormState(page, 'form[action*="user_new_exc.php?update="]');
       const result = await postFormInSession(page, form.action, { ...form.fields, clenstvi: member.type });
@@ -53,5 +55,14 @@ test.describe('ORIS comparison page and membership type', () => {
     const regularRow = page.locator('table.ctmc tbody tr').filter({ has: page.locator('td', { hasText: /^9723$/ }) });
     await expect(regularRow).toHaveCount(1);
     await expect(regularRow.locator('a[href*="ads_oris_si_sync.php"]')).toHaveCount(1);
+
+    // server-side guard: a forged push for a non-regular member is refused and ORIS is untouched
+    const training = MEMBERS[0];
+    const forged = await page.request.get(
+      `./ads_oris_si_sync.php?oris_id=${training.orisUserId}&id=${localIds[training.reg]}`);
+    expect(await forged.text()).toContain('neposílají');
+    const orisUser = await callOrisApi(request, { method: 'getUser', rgnum: `ZBM${training.reg}` });
+    expect(JSON.stringify(orisUser.body)).toContain(training.orisSi);
+    expect(JSON.stringify(orisUser.body)).not.toContain(training.si);
   });
 });

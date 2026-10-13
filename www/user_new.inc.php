@@ -1,6 +1,6 @@
 <?php /* adminova stranka - vlozeni clena */
-if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
-<? require_once ('./common_race.inc.php'); ?>
+if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */
+require_once ('./common_race.inc.php'); ?>
 
 <script language="JavaScript">
 <!--
