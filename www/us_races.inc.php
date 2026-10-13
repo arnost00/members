@@ -21,6 +21,18 @@ $fC = (IsSet($fC) && is_numeric($fC)) ? (int)$fC : 0;  // old races
 $fD = (IsSet($fD) && is_numeric($fD)) ? (int)$fD : 0;  // type 0
 $sql_sub_query = form_filter_racelist('index.php?id='.$id.(($subid != 0) ? '&subid='.$subid : ''),$fA,$fB,$fC,$fD,'r.');
 
+@$vysledek2=query_db("SELECT * FROM ".TBL_USER." where id=$usr->user_id");
+$entry_lock = false;
+$clenstvi = 'R';
+if ($zaznam2=mysqli_fetch_array($vysledek2))
+{
+	$entry_lock = ($zaznam2['entry_locked'] != 0);
+	$clenstvi = $zaznam2['clenstvi'];
+}
+$renderer_option['entry_lock'] = $entry_lock;
+// hostujici / treninkovi clenove vidi jen povolene akce
+$sql_sub_query = AppendSqlCondition($sql_sub_query, GetMembershipRaceCondition($clenstvi, 'r.'));
+
 //when show all races reverse order
 $order = ($fC == 1) ? "desc" : "";
 
@@ -34,14 +46,6 @@ $query = 'SELECT r.id, r.datum, datum2, nazev, typ0, typ, ranking, odkaz, prihla
 // Fetch all rows into array
 $zaznamy  = $vysledek ? mysqli_fetch_all($vysledek, MYSQLI_ASSOC) : [];
 $num_rows = count ($zaznamy);
-
-@$vysledek2=query_db("SELECT * FROM ".TBL_USER." where id=$usr->user_id");
-$entry_lock = false;
-if ($zaznam2=mysqli_fetch_array($vysledek2))
-{
-	$entry_lock = ($zaznam2['entry_locked'] != 0);
-}
-$renderer_option['entry_lock'] = $entry_lock;
 
 ?>
 

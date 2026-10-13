@@ -11,6 +11,7 @@ $transport = $_REQUEST['transport'] ?? null;
 $ubytovani = $_REQUEST['ubytovani'] ?? null;
 $novy = $_REQUEST['novy'] ?? null;
 $etapy = $_REQUEST['etapy'] ?? [];
+$membership_error = null;
 
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
@@ -45,8 +46,13 @@ if ($kat != '')
 		$pozn=correct_sql_string($pozn);
 		$pozn2=correct_sql_string($pozn2);
 
-		@$vysledek_z=query_db("SELECT datum, vicedenni, etap, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, transport, ext_id FROM ".TBL_RACE." WHERE id=$id_zav");
+		@$vysledek_z=query_db("SELECT datum, vicedenni, etap, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, transport, ext_id, typ0, zebricek FROM ".TBL_RACE." WHERE id=$id_zav");
 		$zaznam_z = mysqli_fetch_array($vysledek_z);
+
+		// nova prihlaska musi odpovidat typu clenstvi, existujici lze upravit
+		@$vysledek_ex=query_db("SELECT id FROM ".TBL_ZAVXUS." WHERE id_zavod=$id_zav AND id_user=$id_us");
+		$has_entry = ($vysledek_ex && mysqli_num_rows($vysledek_ex) > 0);
+		$membership_denied = !$has_entry && !CanMembershipEnterRace($zaznam2['clenstvi'], $zaznam_z);
 
 		$termin = raceterms::GetCurr4RegTerm($zaznam_z);
 
@@ -56,6 +62,9 @@ if ($kat != '')
 
 		if ($is_multi_etapa && empty($selected_etapy)) {
 			$sync_error_msg = 'Musíte vybrat alespoň jednu etapu.';
+		}
+		else if ($membership_denied) {
+			$membership_error = GetMembershipDeniedMessage($zaznam2['clenstvi']);
 		}
 		else if ($termin != 0) // not process if invalid termin number
 		{
@@ -162,7 +171,14 @@ if ($kat != '')
 ?>
 <?php
 $return_url = $g_baseadr.'us_race_regon.php?id_zav='.$id_zav.'&id_us='.$id_us;
-if (!empty($sync_error_msg)) { ?>
+if (!empty($membership_error)) { ?>
+	<div style="color: red; font-weight: bold; padding: 20px; border: 1px solid red; margin: 20px; font-family: sans-serif;">
+		Přihlášku nelze uložit:<br><br>
+		<?php echo htmlspecialchars($membership_error); ?>
+		<br><br>
+		<a href="<?php echo htmlspecialchars($return_url); ?>">Zpět na přehled</a>
+	</div>
+<?php } elseif (!empty($sync_error_msg)) { ?>
 	<div style="color: red; font-weight: bold; padding: 20px; border: 1px solid red; margin: 20px; font-family: sans-serif;">
 		Chyba při synchronizaci s ORIS:<br><br>
 		<?php echo htmlspecialchars($sync_error_msg); ?>

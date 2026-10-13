@@ -107,4 +107,127 @@ test.describe('Membership type workflow', () => {
     await setMembershipType(page, userId, "X' OR 1=1 -- ");
     expect(await readMembershipType(page, userId)).toBe('R');
   });
+
+  test.describe('events', () => {
+    test.beforeAll(async ({ browser }) => {
+      const context = await browser.newContext();
+      const page = await context.newPage();
+      await loginAs(page, 'registrar');
+      const today = new Date();
+      const base = {
+        date: formatCzDate(addUtcDays(today, 10)),
+        entryDate1: formatCzDate(addUtcDays(today, 5)),
+        categories: 'H21;D21;',
+      };
+      const defs = {
+        training: { eventType: 'T' },
+        camp: { eventType: 'S' },
+        race: { eventType: 'Z' },
+        relay: { eventType: 'Z', fields: { 'zebricek[5]': '1' } },
+        medical: { eventType: 'V' },
+      };
+      state.races = {};
+      for (const [key, def] of Object.entries(defs)) {
+        const name = `PW clenstvi ${key} ${state.run.runId}`;
+        const race = await createRace(page, { ...base, ...def, name });
+        state.races[key] = { id: race.id, name };
+      }
+      await context.close();
+    });
+
+    async function memberRaceListText(page) {
+      await page.goto('./index.php?id=200&subid=2');
+      return page.locator('body').innerText();
+    }
+
+    async function memberNewsText(page) {
+      await page.goto('./index.php?id=4');
+      return page.locator('body').innerText();
+    }
+
+    const VISIBLE = {
+      hosting: ['training', 'camp', 'relay', 'medical'],
+      training: ['training', 'camp'],
+      regular: ['training', 'camp', 'race', 'relay', 'medical'],
+    };
+
+    for (const [memberKey, visible] of Object.entries(VISIBLE)) {
+      test(`${memberKey} member sees only allowed events`, async ({ page }) => {
+        await page.context().clearCookies();
+        await login(page, state.members[memberKey].login, DEFAULT_PASSWORD);
+        const listText = await memberRaceListText(page);
+        const newsText = await memberNewsText(page);
+        for (const [raceKey, race] of Object.entries(state.races)) {
+          const shouldSee = visible.includes(raceKey);
+          expect(listText.includes(race.name), `list ${memberKey}/${raceKey}`).toBe(shouldSee);
+          expect(newsText.includes(race.name), `news ${memberKey}/${raceKey}`).toBe(shouldSee);
+        }
+      });
+    }
+
+    test('forbidden event: form shows the message, forged POST creates no entry', async ({ page, browser }) => {
+      const member = state.members.hosting;
+      await page.context().clearCookies();
+      await login(page, member.login, DEFAULT_PASSWORD);
+      await page.goto(`./us_race_regon.php?id_zav=${state.races.race.id}&id_us=${member.userId}`);
+      await expect(page.locator('body')).toContainText('Typ členství (hostování) neumožňuje přihlášku na tuto akci.');
+      await expect(page.locator('form[name="form1"]')).toHaveCount(0);
+
+      const result = await postFormInSession(page, './us_race_regon_exc.php', {
+        id_us: String(member.userId), id_zav: String(state.races.race.id), novy: '1', kat: 'H21', pozn: '', pozn2: '',
+      });
+      expect(result.text).toContain('Typ členství (hostování) neumožňuje přihlášku na tuto akci.');
+      const detail = await getRaceDetail(browser, state.races.race.id);
+      expect(detail.everyone.find((entry) => entry.user_id === Number(member.userId))).toBeUndefined();
+    });
+
+    test('allowed event: hosting member can sign up for a relay', async ({ page, browser }) => {
+      const member = state.members.hosting;
+      await page.context().clearCookies();
+      await login(page, member.login, DEFAULT_PASSWORD);
+      await page.goto(`./us_race_regon.php?id_zav=${state.races.relay.id}&id_us=${member.userId}`);
+      await expect(page.locator('form[name="form1"]')).toHaveCount(1);
+      await postFormInSession(page, './us_race_regon_exc.php', {
+        id_us: String(member.userId), id_zav: String(state.races.relay.id), novy: '1', kat: 'H21', pozn: '', pozn2: '',
+      });
+      const detail = await getRaceDetail(browser, state.races.relay.id);
+      expect(detail.everyone.find((entry) => entry.user_id === Number(member.userId))?.category).toBe('H21');
+    });
+
+    test('existing signup survives a type change and can be edited and signed off', async ({ page, browser }) => {
+      const member = state.members.regular;
+      await page.context().clearCookies();
+      await login(page, member.login, DEFAULT_PASSWORD);
+      await postFormInSession(page, './us_race_regon_exc.php', {
+        id_us: String(member.userId), id_zav: String(state.races.race.id), novy: '1', kat: 'H21', pozn: '', pozn2: '',
+      });
+
+      await page.context().clearCookies();
+      await loginAs(page, 'clubAdmin');
+      await setMembershipType(page, member.userId, 'T');
+
+      await page.context().clearCookies();
+      await login(page, member.login, DEFAULT_PASSWORD);
+      await page.goto(`./us_race_regon.php?id_zav=${state.races.race.id}&id_us=${member.userId}`);
+      await expect(page.locator('form[name="form1"]')).toHaveCount(1);
+      await postFormInSession(page, './us_race_regon_exc.php', {
+        id_us: String(member.userId), id_zav: String(state.races.race.id), novy: '1', kat: 'D21', pozn: '', pozn2: '',
+      });
+      let detail = await getRaceDetail(browser, state.races.race.id);
+      expect(detail.everyone.find((entry) => entry.user_id === Number(member.userId))?.category).toBe('D21');
+
+      await page.goto(`./us_race_regon.php?id_zav=${state.races.race.id}&id_us=${member.userId}`);
+      page.on('dialog', (dialog) => dialog.accept());
+      await Promise.all([
+        page.waitForURL(/us_race_regoff_exc\.php/),
+        page.getByRole('button', { name: 'Odhlásit ze závodu' }).click(),
+      ]);
+      detail = await getRaceDetail(browser, state.races.race.id);
+      expect(detail.everyone.find((entry) => entry.user_id === Number(member.userId))).toBeUndefined();
+
+      await page.context().clearCookies();
+      await loginAs(page, 'clubAdmin');
+      await setMembershipType(page, member.userId, 'R');
+    });
+  });
 });

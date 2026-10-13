@@ -150,6 +150,10 @@ if ($zaznam_u['entry_locked'] != 0)
 		echo "<BR><BR>";
 	}
 }
+else if ($new && !CanMembershipEnterRace($zaznam_u['clenstvi'], $zaznam_z))
+{	// typ clenstvi neumoznuje novou prihlasku
+	echo('<span class="WarningText">'.GetMembershipDeniedMessage($zaznam_u['clenstvi']).'</span>'."<br>\n");
+}
 else
 {	// zacatek - povoleno prihlasovani
 ?>
