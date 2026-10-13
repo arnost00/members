@@ -6,8 +6,8 @@ const { createOrisMockUser } = require('../helpers/oris-mock');
 // Issue #79: ORIS comparison page tags the membership type and offers the SI push
 // to ORIS ([<<] link) only for regular members.
 const MEMBERS = [
-  { reg: '9712', surname: 'Treninkovy', name: 'Tomas', type: 'T', si: '1112', orisSi: '2212', orisUserId: '719712', clubUserId: '619712' },
-  { reg: '9713', surname: 'Radny', name: 'Rudolf', type: 'R', si: '1113', orisSi: '2213', orisUserId: '719713', clubUserId: '619713' },
+  { reg: '9722', surname: 'Treninkovy', name: 'Tomas', type: 'T', si: '1122', orisSi: '2222', orisUserId: '719722', clubUserId: '619722' },
+  { reg: '9723', surname: 'Radny', name: 'Rudolf', type: 'R', si: '1123', orisSi: '2223', orisUserId: '719723', clubUserId: '619723' },
 ];
 
 test.describe('ORIS comparison page and membership type', () => {
@@ -44,13 +44,13 @@ test.describe('ORIS comparison page and membership type', () => {
     }
 
     await page.goto('./index.php?id=700&subid=2');
-    const trainingRow = page.locator('table.ctmc tbody tr').filter({ has: page.locator('td', { hasText: /^9712$/ }) });
+    const trainingRow = page.locator('table.ctmc tbody tr').filter({ has: page.locator('td', { hasText: /^9722$/ }) });
     await expect(trainingRow).toHaveCount(1);
     await expect(trainingRow.locator('.membership-tag')).toHaveText('T');
-    await expect(trainingRow).toContainText('2212');
+    await expect(trainingRow).toContainText('2222');
     await expect(trainingRow.locator('a[href*="ads_oris_si_sync.php"]')).toHaveCount(0);
 
-    const regularRow = page.locator('table.ctmc tbody tr').filter({ has: page.locator('td', { hasText: /^9713$/ }) });
+    const regularRow = page.locator('table.ctmc tbody tr').filter({ has: page.locator('td', { hasText: /^9723$/ }) });
     await expect(regularRow).toHaveCount(1);
     await expect(regularRow.locator('a[href*="ads_oris_si_sync.php"]')).toHaveCount(1);
   });
