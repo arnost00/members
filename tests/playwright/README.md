@@ -35,6 +35,8 @@ These files are not part of the PHP runtime and must not be deployed to the prod
 ## Configuration
 
 - `PLAYWRIGHT_BASE_URL` overrides the application URL. Default: `http://web:10100/members/`
+- `MAILPIT_BASE_URL` overrides the local mail catcher API URL. Default: `http://mailpit:8025`
+- `member-account-email.spec.js` creates a temporary member, selects "Vygenerovat a zaslat emailem" in `user_login_edit.php`, checks the email delivered by `user_login_edit_exc.php`, and logs in with the generated credentials. It requires PHP mail delivery configured to Mailpit and removes its member/account and captured message afterward. Run it with `npx playwright test tests/playwright/member-account-email.spec.js --project=chromium --workers=1`.
 - `MEMBERS_E2E_SUITE=no-oris` disables all ORIS configuration for application requests and makes mock `/API` return HTTP 503
 - `MEMBERS_E2E_SUITE=no-oris-key` leaves ORIS enabled but omits `$g_oris_club_key` for application requests
 - `MAILPIT_URL` overrides the Mailpit API base URL used by `tests/playwright/helpers/mail.js`. Default: `http://mailpit:8025`
