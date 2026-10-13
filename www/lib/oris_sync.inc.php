@@ -38,6 +38,36 @@ function processEntry($row, $action, $service) {
         return;
     }
 
+    // Local-only category (e.g. a coach travelling with the club without running) -
+    // the entry lives only in members. An ORIS entry left over from a previous
+    // category is cancelled; otherwise ORIS is never contacted.
+    if (IsLocalOnlyCategory($row['kat'] ?? '')) {
+        $staleEntryId = $row['entry_id'] ?? null;
+        if (!empty($staleEntryId)) {
+            try {
+                $service->deleteEntry($staleEntryId);
+            } catch (Exception $e) {
+                $errMsg = $e->getMessage();
+                if ($e instanceof OrisNetworkException || ($e instanceof OrisApiException && strpos($errMsg, 'API Error or HTTP 5') !== false)) {
+                    return 'queued';
+                }
+                $errorPayload = correct_sql_string(json_encode(['status' => 'error', 'message' => $errMsg]));
+                $failedStatus = 'FAILED_' . strtoupper($action);
+                $res = query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_status` = '$failedStatus', `sync_error_payload` = '$errorPayload' WHERE `id` = " . (int)$id);
+                if (!$res) {
+                    query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_error_payload` = '$errorPayload' WHERE `id` = " . (int)$id);
+                }
+                return false;
+            }
+        }
+        if ($action === 'delete') {
+            query_db("DELETE FROM `" . TBL_ZAVXUS . "` WHERE `id` = " . (int)$id);
+        } else {
+            query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_status` = 'LOCAL_ONLY', `entry_id` = NULL, `sync_error_payload` = NULL WHERE `id` = " . (int)$id);
+        }
+        return true;
+    }
+
     // Get ORIS user ID
     $userQuery = "SELECT * FROM `" . TBL_USER . "` WHERE `id` = " . (int)$userId;
     $userRes = query_db($userQuery);
