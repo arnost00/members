@@ -245,7 +245,18 @@ function processEntry($row, $action, $service) {
             if (empty($entryIdToDelete)) {
                 $response = ['ID' => null];
             } else {
-                $response = $service->deleteEntry($entryIdToDelete);
+                try {
+                    $response = $service->deleteEntry($entryIdToDelete);
+                } catch (OrisApiException $e) {
+                    // The entry may already be gone from ORIS (e.g. removed by the organiser),
+                    // in which case ORIS refuses the delete. Then only the local entry is left
+                    // to remove; any other refusal (or a 5xx) is a real failure.
+                    if (strpos($e->getMessage(), 'API Error or HTTP 5') !== false
+                        || orisEntryExists($service, $comp, $entryIdToDelete)) {
+                        throw $e;
+                    }
+                    $response = ['ID' => null];
+                }
             }
         }
 
@@ -288,6 +299,26 @@ function processEntry($row, $action, $service) {
         }
         return false;
     }
+}
+
+// Whether the ORIS entry still exists in the event. Lookup failures count as "exists"
+// so the local entry is never deleted blindly.
+function orisEntryExists($service, $comp, $entryId) {
+    try {
+        $entriesRes = $service->getEventEntries($comp);
+    } catch (Exception $e) {
+        return true;
+    }
+    if (!is_array($entriesRes)) {
+        return true;
+    }
+    foreach ($entriesRes as $entry) {
+        if (!is_array($entry)) continue;
+        if ((string)($entry['ID'] ?? '') === (string)$entryId) {
+            return true;
+        }
+    }
+    return false;
 }
 
 function getOrisSyncError($id) {
