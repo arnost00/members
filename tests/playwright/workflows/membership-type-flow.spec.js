@@ -17,9 +17,9 @@ const {
 // Issue #79: membership type (R regular / H hosting / T training) limits which events
 // a member sees and can be signed up for.
 const MEMBERS = {
-  hosting: { reg: '9711', surname: 'Hostujici', name: 'Hana', login: 'tmt_host', type: 'H' },
-  training: { reg: '9712', surname: 'Treninkovy', name: 'Tomas', login: 'tmt_tren', type: 'T' },
-  regular: { reg: '9713', surname: 'Radny', name: 'Rudolf', login: 'tmt_radny', type: 'R' },
+  hosting: { reg: '9731', surname: 'Hostujici', name: 'Hana', login: 'tmt_host', type: 'H' },
+  training: { reg: '9732', surname: 'Cvicny', name: 'Cyril', login: 'tmt_tren', type: 'T' },
+  regular: { reg: '9733', surname: 'Pravidelny', name: 'Pavel', login: 'tmt_radny', type: 'R' },
 };
 
 async function openMemberEditForm(page, userId) {
@@ -68,10 +68,10 @@ test.describe('Membership type workflow', () => {
     }
 
     await page.goto('./index.php?id=700&subid=1');
-    const hostingRow = page.locator('table.ctmc tbody tr', { hasText: '9711' });
+    const hostingRow = page.locator('table.ctmc tbody tr', { hasText: '9731' });
     await expect(hostingRow.locator('.membership-tag')).toHaveText('H');
     await expect(hostingRow.locator('.membership-tag')).toHaveAttribute('title', 'hostování');
-    const regularRow = page.locator('table.ctmc tbody tr', { hasText: '9713' });
+    const regularRow = page.locator('table.ctmc tbody tr', { hasText: '9733' });
     await expect(regularRow.locator('.membership-tag')).toHaveCount(0);
   });
 
@@ -265,7 +265,7 @@ test.describe('Membership type workflow', () => {
       await page.goto(`./race_regs_all.php?gr_id=400&id=${state.races.race.id}`);
       await expect(page.locator(`input[name="kateg[${state.members.hosting.userId}]"]`)).toHaveCount(0);
       await expect(page.locator(`input[name="kateg[${state.members.regular.userId}]"]`)).toHaveCount(1);
-      const hostingRow = page.locator('tr', { hasText: '9711' });
+      const hostingRow = page.locator('tr', { hasText: '9731' });
       await expect(hostingRow.locator('.membership-tag')).toHaveText('H');
 
       const result = await postFormInSession(page, `./race_regs_all_exc.php?gr_id=400&id=${state.races.race.id}`, {
@@ -302,17 +302,17 @@ test.describe('Membership type workflow', () => {
     await page.context().clearCookies();
     await loginAs(page, 'clubAdmin');
     let regs = await listRegs('./index.php?id=700&subid=1&fclen=H');
-    expect(regs).toContain('9711');
-    expect(regs).not.toContain('9712');
-    expect(regs).not.toContain('9713');
+    expect(regs).toContain('9731');
+    expect(regs).not.toContain('9732');
+    expect(regs).not.toContain('9733');
     await expect(page.locator('select[name="fclen"]')).toHaveValue('H');
 
     regs = await listRegs('./index.php?id=700&subid=1&fclen=R');
-    expect(regs).toContain('9713');
-    expect(regs).not.toContain('9711');
+    expect(regs).toContain('9733');
+    expect(regs).not.toContain('9731');
 
     regs = await listRegs("./index.php?id=700&subid=1&fclen=X'%20OR%201=1");
-    expect(regs).toEqual(expect.arrayContaining(['9711', '9712', '9713']));
+    expect(regs).toEqual(expect.arrayContaining(['9731', '9732', '9733']));
 
     await page.goto('./index.php?id=700&subid=1&fclen=T');
     const sortLink = page.locator('thead a[href*="csd"]').first();
@@ -321,9 +321,9 @@ test.describe('Membership type workflow', () => {
     await page.context().clearCookies();
     await loginAs(page, 'manager');
     regs = await listRegs('./index.php?id=500&subid=1&fclen=T');
-    expect(regs).toContain('9712');
-    expect(regs).not.toContain('9711');
-    const trainingRow = page.locator('table.ctmc tbody tr', { hasText: '9712' });
+    expect(regs).toContain('9732');
+    expect(regs).not.toContain('9731');
+    const trainingRow = page.locator('table.ctmc tbody tr', { hasText: '9732' });
     await expect(trainingRow.locator('.membership-tag')).toHaveText('T');
 
     await page.context().clearCookies();
@@ -348,9 +348,9 @@ test.describe('Membership type workflow', () => {
 
     for (const oris of ['1', '2', '3']) {
       const text = await fetchText(`oris=${oris}`);
-      expect(text, `oris=${oris}`).not.toContain('9711');
-      expect(text, `oris=${oris}`).not.toContain('9712');
-      expect(text, `oris=${oris}`).toContain('9713');
+      expect(text, `oris=${oris}`).not.toContain('9731');
+      expect(text, `oris=${oris}`).not.toContain('9732');
+      expect(text, `oris=${oris}`).toContain('9733');
     }
   });
 });
