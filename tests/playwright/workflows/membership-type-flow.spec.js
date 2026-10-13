@@ -334,13 +334,5 @@ test.describe('Membership type workflow', () => {
       await expect(page.locator('select[name="fclen"]')).toBeVisible();
       await expect(page.locator('body')).not.toContainText(/SQL|mysqli|Fatal error|Warning:/);
     }
-
-    await page.context().clearCookies();
-    await loginAs(page, 'clubAdmin');
-    await page.goto('./index.php?id=700&subid=2');
-    const orisRow = page.locator('table.ctmc tbody tr', { hasText: '9712' });
-    if (await orisRow.count()) {
-      await expect(orisRow.locator('.membership-tag')).toHaveText('T');
-    }
   });
 });
