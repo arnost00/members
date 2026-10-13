@@ -335,4 +335,22 @@ test.describe('Membership type workflow', () => {
       await expect(page.locator('body')).not.toContainText(/SQL|mysqli|Fatal error|Warning:/);
     }
   });
+
+  test('exports: CSV has the type column, ORIS exports skip non-regular members', async ({ page }) => {
+    await loginAs(page, 'clubAdmin');
+    const fetchText = async (query) => (await page.request.get(`./export_directory_exc.php?${query}`)).text();
+
+    const csv = await fetchText('par1=1&par2=0&par3=0');
+    const header = csv.split('\n')[0];
+    expect(header).toContain('typ členství');
+    const hostingLine = csv.split('\n').find((line) => line.includes('Hostujici'));
+    expect(hostingLine.split(';')).toContain('H');
+
+    for (const oris of ['1', '2', '3']) {
+      const text = await fetchText(`oris=${oris}`);
+      expect(text, `oris=${oris}`).not.toContain('9711');
+      expect(text, `oris=${oris}`).not.toContain('9712');
+      expect(text, `oris=${oris}`).toContain('9713');
+    }
+  });
 });

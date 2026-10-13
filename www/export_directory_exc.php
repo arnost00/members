@@ -9,6 +9,7 @@ require_once ('./connect.inc.php');
 require_once ('./sess.inc.php');
 require_once ('./common.inc.php');
 require_once ('./common_user.inc.php');
+require_once ('./common_race.inc.php');
 
 if (!IsLoggedManager() && !IsLoggedRegistrator() && !IsLoggedSmallAdmin() && !IsLoggedAdmin())
 {
@@ -34,7 +35,8 @@ TXT_Header();
 
 db_Connect();
 
-$query = "SELECT * FROM ".TBL_USER." WHERE hidden = 0 ORDER BY sort_name ASC";
+// do ORISu jen radni clenove (hostujici a treninkovi se do ORISu nikdy neposilaji)
+$query = "SELECT * FROM ".TBL_USER." WHERE hidden = 0".(($oris != 0) ? " AND clenstvi = 'R'" : '')." ORDER BY sort_name ASC";
 @$vysledek=query_db($query)
 	or die("Chyba při provádění dotazu do databáze.");
 
