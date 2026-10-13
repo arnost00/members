@@ -488,11 +488,20 @@ TABLE.calendar TD.today
     margin-left: 50px;
 }
 
-.year-expander {
+.time-range-expander {
     cursor: pointer;
     user-select: none;
     font-weight: bold;
     font-size: 1.1em;
+}
+
+.time-range-status {
+    margin-left: 0.5em;
+    font-weight: normal;
+}
+
+.time-range-status.error {
+    color: <? echo $g_colors['form_data_error']; ?>;
 }
 
 <?
