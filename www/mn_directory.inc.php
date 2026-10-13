@@ -17,6 +17,7 @@ function confirm_delete(name) {
 <?
 require_once "./common_user.inc.php";
 require_once('./csort.inc.php');
+require_once('./common_race.inc.php');
 
 $csd = $_REQUEST['csd'] ?? null;
 $result = $_REQUEST['result'] ?? null;
@@ -24,11 +25,14 @@ $result = $_REQUEST['result'] ?? null;
 $sc = new column_sort_db();
 $sc->add_column('sort_name','');
 $sc->add_column('reg','');
-$sc->set_url('index.php?id=500&subid=1',true);
+$fclen = GetMembershipFilterParam();
+$sc->set_url('index.php?id=500&subid=1'.(($fclen != '') ? '&fclen='.$fclen : ''),true);
 $sub_query = $sc->get_sql_string();
+$where_query = ($fclen != '') ? AppendSqlCondition('', "u.clenstvi = '".$fclen."'").' ' : '';
 
-$query = "SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob,entry_locked, a.id aid, a.locked FROM ".TBL_USER." u"
+$query = "SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob,entry_locked,clenstvi, a.id aid, a.locked FROM ".TBL_USER." u"
 	." left join ".TBL_ACCOUNT." a on a.id_users = u.id "
+	.$where_query
 	.$sub_query;
 @$vysledek=query_db($query);
 
@@ -38,6 +42,8 @@ if (IsSet($result) && is_numeric($result) && $result != 0)
 	$res_text = GetResultString($result);
 	Print_Action_Result($res_text);
 }
+
+DrawMembershipFilter($fclen);
 
 $data_tbl = new html_table_mc();
 $col = 0;
@@ -66,7 +72,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	{
 		$row = array();
 		$row[] = $i++;
-		$row[] = $zaznam['prijmeni'];
+		$row[] = $zaznam['prijmeni'].GetMembershipTag($zaznam['clenstvi']);
 		$row[] = $zaznam['jmeno'];
 		$row[] = RegNumToStr($zaznam['reg']);
 		if ($zaznam['entry_locked'] != 0)

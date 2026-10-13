@@ -68,10 +68,13 @@ if (!isset($showHidden)) $showHidden = 0;
 $sc = new column_sort_db();
 $sc->add_column('sort_name','');
 $sc->add_column('reg','');
-$sc->set_url('index.php?id='._SMALL_ADMIN_GROUP_ID_.'&subid=1',true);
+$fclen = GetMembershipFilterParam();
+$sc->set_url('index.php?id='._SMALL_ADMIN_GROUP_ID_.'&subid=1'.(($fclen != '') ? '&fclen='.$fclen : ''),true);
 $sort_query = $sc->get_sql_string();
 $where_query = ' where u.hidden is false ';
 if ($showHidden) $where_query = ' ';
+if ($fclen != '')
+	$where_query = AppendSqlCondition($where_query, "u.clenstvi = '".$fclen."'").' ';
 
 $query = "SELECT u.id,u.prijmeni,u.jmeno,u.reg,u.hidden,u.entry_locked, u.clenstvi, a.locked, a.policy_news, a.policy_regs, a.policy_mng, a.policy_adm, a.policy_fin, a.id aid FROM ".TBL_USER." u"
 	." left join ".TBL_ACCOUNT." a on a.id_users = u.id "
@@ -87,6 +90,7 @@ if (IsSet($result) && is_numeric($result) && $result != 0)
 }
 
 echo "<button id='showHidden' name='showHidden' onclick='toggleShowHidden(this)' value='".$showHidden."'>".($showHidden?'Skryj':'Zobraz')." skryté uživatele</button><br/><br/>";
+DrawMembershipFilter($fclen);
 
 $data_tbl = new html_table_mc();
 $col = 0;

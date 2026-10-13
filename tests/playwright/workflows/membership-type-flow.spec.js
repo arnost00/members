@@ -292,4 +292,55 @@ test.describe('Membership type workflow', () => {
       expect(detail.everyone.find((entry) => entry.user_id === Number(state.members.hosting.userId))?.category).toBe('H21');
     });
   });
+
+  test('member lists filter by membership type', async ({ page }) => {
+    const listRegs = async (url) => {
+      await page.goto(url);
+      return page.locator('table.ctmc tbody tr').evaluateAll((rows) => rows.map((row) => row.querySelectorAll('td')[3]?.textContent.trim()));
+    };
+
+    await page.context().clearCookies();
+    await loginAs(page, 'clubAdmin');
+    let regs = await listRegs('./index.php?id=700&subid=1&fclen=H');
+    expect(regs).toContain('9711');
+    expect(regs).not.toContain('9712');
+    expect(regs).not.toContain('9713');
+    await expect(page.locator('select[name="fclen"]')).toHaveValue('H');
+
+    regs = await listRegs('./index.php?id=700&subid=1&fclen=R');
+    expect(regs).toContain('9713');
+    expect(regs).not.toContain('9711');
+
+    regs = await listRegs("./index.php?id=700&subid=1&fclen=X'%20OR%201=1");
+    expect(regs).toEqual(expect.arrayContaining(['9711', '9712', '9713']));
+
+    await page.goto('./index.php?id=700&subid=1&fclen=T');
+    const sortLink = page.locator('thead a[href*="csd"]').first();
+    expect(await sortLink.getAttribute('href')).toContain('fclen=T');
+
+    await page.context().clearCookies();
+    await loginAs(page, 'manager');
+    regs = await listRegs('./index.php?id=500&subid=1&fclen=T');
+    expect(regs).toContain('9712');
+    expect(regs).not.toContain('9711');
+    const trainingRow = page.locator('table.ctmc tbody tr', { hasText: '9712' });
+    await expect(trainingRow.locator('.membership-tag')).toHaveText('T');
+
+    await page.context().clearCookies();
+    await loginAs(page, 'smallManager');
+    for (const fclen of ['', '&fclen=T']) {
+      const response = await page.goto(`./index.php?id=600&subid=1${fclen}`);
+      expect(response.status()).toBe(200);
+      await expect(page.locator('select[name="fclen"]')).toBeVisible();
+      await expect(page.locator('body')).not.toContainText(/SQL|mysqli|Fatal error|Warning:/);
+    }
+
+    await page.context().clearCookies();
+    await loginAs(page, 'clubAdmin');
+    await page.goto('./index.php?id=700&subid=2');
+    const orisRow = page.locator('table.ctmc tbody tr', { hasText: '9712' });
+    if (await orisRow.count()) {
+      await expect(orisRow.locator('.membership-tag')).toHaveText('T');
+    }
+  });
 });
