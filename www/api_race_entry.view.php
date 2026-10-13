@@ -1,3 +1,16 @@
+<?
+define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
+require_once ('connect.inc.php');
+require_once ('sess.inc.php');
+require_once ('common_race.inc.php');
+db_Connect();
+$race_id = (IsSet($_GET['race_id']) && is_numeric($_GET['race_id'])) ? (int)$_GET['race_id'] : 0;
+if (!CanAccessRaceParticipation($race_id)) {
+	http_response_code(403);
+	echo 'Přístup odepřen.';
+	exit;
+}
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -118,9 +131,9 @@
     });
 
     $(document).on('click', '#uncheckAll', function() {
-        $.getJSON('api_race_entry.php?id_race='+id_race+'&action=uncheckAll', function(data) {
+        $.post('api_race_entry.php', {id_race: id_race, action: 'uncheckAll'}, function(data) {
             console.log('uncheckall|id_race:'+id_race+'|time:'+new Date().getTime());
-        }).done(function(result) {
+        }, 'json').done(function(result) {
             location.reload();
         });
     });
@@ -131,9 +144,9 @@
   function tickParticipate(elem, id_user, id_race) {
     event.stopPropagation(); // this is
     event.preventDefault(); // the magic
-    $.getJSON('api_race_entry.php?id_race='+id_race+'&action=participate&id_user='+id_user, function(data) {
+    $.post('api_race_entry.php', {id_race: id_race, action: 'participate', id_user: id_user}, function(data) {
         console.log('participate|user:'+id_user+'|id_race:'+id_race+'|result:'+data);
-    }).done(function(result) {
+    }, 'json').done(function(result) {
         if (result > 0) {
             $( elem ).toggleClass("active");
         }
@@ -143,9 +156,9 @@
   function tickEntry(elem, id_user, id_race) {
     event.stopPropagation(); // this is
     event.preventDefault(); // the magic
-    $.getJSON('api_race_entry.php?id_race='+id_race+'&action=entryByFin&id_user='+id_user, function(data) {
+    $.post('api_race_entry.php', {id_race: id_race, action: 'entryByFin', id_user: id_user}, function(data) {
         console.log('entryByFin|id_user:'+id_user+'|id_race:'+id_race+'|result:'+data);
-    }).done(function(result) {
+    }, 'json').done(function(result) {
         refresh(id_race, id_user, elem);
     })
   };
@@ -203,14 +216,11 @@
 </head>
 <body>
 <?
-    require_once ('connect.inc.php');
-    db_Connect();
-    $race_id = (IsSet($_GET['race_id']) && is_numeric($_GET['race_id'])) ? (int)$_GET['race_id'] : 0;
     $query = "select nazev from ".TBL_RACE." where id = $race_id";
     @$vysledek=$db_conn->query($query);
     $zaznam=mysqli_fetch_array($vysledek)
 ?>
-<h2 id='title'>Závod <?=$zaznam['nazev']?></h2>
+<h2 id='title'>Závod <?=htmlspecialchars($zaznam['nazev'] ?? '')?></h2>
 <button id="btnAccomodation" class="ui-button ui-widget ui-corner-all">Zobraz ubytované</button> <---||---> <button id="btnEntry" class="ui-button ui-widget ui-corner-all">Zobraz seznam</button>
 <button id="uncheckAll" class="ui-button ui-widget ui-corner-all uncheckAll">Odškrtni účast u všech</button>
 <hr/>

@@ -552,4 +552,16 @@ function RenderEtapyCheckboxes($etapCount, array $selected, $inputName = 'etapy[
 	}
 }
 
+// smi uzivatel pouzivat stranku "Ucast" (api_race_entry) pro zavod?
+// vedouci akce, trener, prihlasovatel, financnik, admin
+function CanAccessRaceParticipation($race_id) {
+	global $usr, $db_conn;
+	if (!IsLogged()) return false;
+	if (IsLoggedAdmin() || IsLoggedManager() || IsLoggedRegistrator() || IsLoggedFinance()) return true;
+	if ($usr->user_id <= 0) return false;
+	$result = $db_conn->query("SELECT vedouci FROM ".TBL_RACE." WHERE id = ".(int)$race_id);
+	$race = $result ? mysqli_fetch_assoc($result) : null;
+	return $race && (int)$race['vedouci'] === (int)$usr->user_id;
+}
+
 ?>
