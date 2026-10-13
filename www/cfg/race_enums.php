@@ -38,6 +38,19 @@ $g_racetype0 = [
 $g_racetype0_idx = array_keys($g_racetype0);
 $g_racetype0_cnt = count($g_racetype0_idx);
 
+// Typ clenstvi (users.clenstvi)
+$g_membership = [
+	'R' => 'řádný člen',
+	'H' => 'hostování',
+	'T' => 'tréninkové členství',
+];
+// povolene typy akci (typ0) pro typ clenstvi; 'relay' = zavod se zebrickem Štafety (zebricek & 32)
+// typ clenstvi, ktery zde neni uveden (R), je bez omezeni
+$g_membership_allowed = [
+	'H' => ['T', 'S', 'V', 'N', 'J', 'relay'],
+	'T' => ['T', 'S', 'N', 'J'],
+];
+
 // Typy plateb
 $g_payement_type = [
 	'C' => 'celá',

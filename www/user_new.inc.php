@@ -1,5 +1,6 @@
 <?php /* adminova stranka - vlozeni clena */
 if (!defined("__HIDE_TEST__")) exit; /* zamezeni samostatneho vykonani */ ?>
+<? require_once ('./common_race.inc.php'); ?>
 
 <script language="JavaScript">
 <!--
@@ -42,6 +43,7 @@ if (IsLogged())
 		$zaznam['bank_account'] = '';
 		$zaznam['finance_type'] = 0;
 		$zaznam['narodnost'] = GC_DEFAULT_NATIONALITY;
+		$zaznam['clenstvi'] = 'R';
 	}
 	$self_edit = IsSet($self_edit) ? (bool)$self_edit : false;
 
@@ -146,6 +148,11 @@ echo GetFinTypeLine($data_tbl,$zaznam["finance_type"]);
 if (IsLoggedSmallAdmin())
 {
 	echo $data_tbl->get_new_row_text('', '<INPUT TYPE="checkbox" NAME="hidden" SIZE=15 VALUE="1"'.(($zaznam["hidden"] == 1) ? ' checked' : '').'> Skrytý člen (vidí ho jen admin)');
+	$clenstvi_sel = '<SELECT NAME="clenstvi">';
+	foreach ($g_membership as $key => $name)
+		$clenstvi_sel .= '<OPTION VALUE="'.$key.'"'.((NormalizeMembership($zaznam['clenstvi'] ?? 'R') == $key) ? ' SELECTED' : '').'>'.$name.'</OPTION>';
+	$clenstvi_sel .= '</SELECT>';
+	echo $data_tbl->get_new_row('Typ členství', $clenstvi_sel);
 }
 if (IsLoggedSmallAdmin() || !IsSet($update))
 {

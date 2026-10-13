@@ -57,6 +57,7 @@ function toggleShowHidden(element) {
 <?
 require_once "./common_user.inc.php";
 require_once('./csort.inc.php');
+require_once('./common_race.inc.php');
 
 $csd = $_REQUEST['csd'] ?? null;
 $result = $_REQUEST['result'] ?? null;
@@ -72,7 +73,7 @@ $sort_query = $sc->get_sql_string();
 $where_query = ' where u.hidden is false ';
 if ($showHidden) $where_query = ' ';
 
-$query = "SELECT u.id,u.prijmeni,u.jmeno,u.reg,u.hidden,u.entry_locked, a.locked, a.policy_news, a.policy_regs, a.policy_mng, a.policy_adm, a.policy_fin, a.id aid FROM ".TBL_USER." u"
+$query = "SELECT u.id,u.prijmeni,u.jmeno,u.reg,u.hidden,u.entry_locked, u.clenstvi, a.locked, a.policy_news, a.policy_regs, a.policy_mng, a.policy_adm, a.policy_fin, a.id aid FROM ".TBL_USER." u"
 	." left join ".TBL_ACCOUNT." a on a.id_users = u.id "
 	.$where_query
 	.$sort_query;
@@ -114,7 +115,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 {
 	$row = array();
 	$row[] = $i++;
-	$row[] = '<a href="javascript:open_win(\'./view_adm_user_detail.php?id='.$zaznam['id'].'\',\'\')" class="adr_name">'.$zaznam['prijmeni'].'</a>';
+	$row[] = '<a href="javascript:open_win(\'./view_adm_user_detail.php?id='.$zaznam['id'].'\',\'\')" class="adr_name">'.$zaznam['prijmeni'].'</a>'.GetMembershipTag($zaznam['clenstvi']);
 	$row[] = $zaznam['jmeno'];
 	$row[] = RegNumToStr($zaznam['reg']);
 	//4. sloupec

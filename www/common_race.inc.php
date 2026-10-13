@@ -552,4 +552,79 @@ function RenderEtapyCheckboxes($etapCount, array $selected, $inputName = 'etapy[
 	}
 }
 
+// typ clenstvi (users.clenstvi) - viz $g_membership v cfg/race_enums.php
+function NormalizeMembership($clenstvi) {
+	global $g_membership;
+	$clenstvi = (string)$clenstvi;
+	return array_key_exists($clenstvi, $g_membership) ? $clenstvi : 'R';
+}
+
+function GetMembershipName($clenstvi) {
+	global $g_membership;
+	return $g_membership[NormalizeMembership($clenstvi)];
+}
+
+// kratky stitek za jmeno (H / T), pro radneho clena prazdny
+function GetMembershipTag($clenstvi) {
+	$clenstvi = NormalizeMembership($clenstvi);
+	if ($clenstvi == 'R')
+		return '';
+	return ' <span class="membership-tag" title="'.GetMembershipName($clenstvi).'">'.$clenstvi.'</span>';
+}
+
+function GetMembershipDeniedMessage($clenstvi) {
+	return 'Typ členství ('.GetMembershipName($clenstvi).') neumožňuje přihlášku na tuto akci.';
+}
+
+// muze se clen s danym typem clenstvi prihlasit na akci? $race musi obsahovat typ0 a zebricek
+function CanMembershipEnterRace($clenstvi, $race) {
+	global $g_membership_allowed;
+	$clenstvi = NormalizeMembership($clenstvi);
+	if (!isset($g_membership_allowed[$clenstvi]))
+		return true;
+	$allowed = $g_membership_allowed[$clenstvi];
+	if (in_array($race['typ0'], $allowed, true))
+		return true;
+	return in_array('relay', $allowed, true) && (((int)$race['zebricek']) & 32) != 0;
+}
+
+// SQL podminka pro seznam akci podle typu clenstvi, bez WHERE/AND; '' = bez omezeni
+function GetMembershipRaceCondition($clenstvi, $prefix = '') {
+	global $g_membership_allowed;
+	$clenstvi = NormalizeMembership($clenstvi);
+	if (!isset($g_membership_allowed[$clenstvi]))
+		return '';
+	$allowed = $g_membership_allowed[$clenstvi];
+	$types = array_values(array_filter($allowed, function ($type) { return $type !== 'relay'; }));
+	$parts = [];
+	if (count($types) > 0)
+		$parts[] = $prefix.'`typ0` IN (\''.implode('\',\'', $types).'\')';
+	if (in_array('relay', $allowed, true))
+		$parts[] = '('.$prefix.'`zebricek` & 32) <> 0';
+	return (count($parts) > 0) ? '('.implode(' OR ', $parts).')' : '(1=0)';
+}
+
+// pripoji podminku k WHERE casti dotazu (prida WHERE nebo AND)
+function AppendSqlCondition($where, $condition) {
+	if ($condition == '')
+		return $where;
+	return $where.((trim($where) == '') ? ' WHERE ' : ' AND ').$condition;
+}
+
+// filtr seznamu clenu podle typu clenstvi (parametr fclen), '' = vsichni
+function GetMembershipFilterParam() {
+	global $g_membership;
+	$filter = (string)($_REQUEST['fclen'] ?? '');
+	return array_key_exists($filter, $g_membership) ? $filter : '';
+}
+
+function DrawMembershipFilter($current) {
+	global $g_membership;
+	echo 'Typ členství&nbsp;<select name="fclen" onchange="window.location.href = changeParameterValueInURL(window.location.href, \'fclen\', this.value);">';
+	echo '<option value=""'.(($current == '') ? ' selected' : '').'>všichni</option>';
+	foreach ($g_membership as $key => $name)
+		echo '<option value="'.$key.'"'.(($current == $key) ? ' selected' : '').'>'.$name.'</option>';
+	echo "</select><br/><br/>\n";
+}
+
 ?>
