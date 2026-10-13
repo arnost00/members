@@ -11,6 +11,32 @@ function processEntry($row, $action, $service) {
     $userId = $row['id_user'];
     $raceId = $row['id_zavod'];
 
+    // Get Race ORIS ID
+    $raceQuery = "SELECT * FROM `" . TBL_RACE . "` WHERE `id` = " . (int)$raceId;
+    $raceRes = query_db($raceQuery);
+    $raceRow = mysqli_fetch_assoc($raceRes);
+
+    $comp = $raceRow['ext_id'] ?? null;
+    if (empty($comp)) {
+        query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_status` = 'LOCAL_ONLY' WHERE `id` = " . (int)$id);
+        return;
+    }
+
+    // Relay races (zebricek flag 32 = Štafety) use a completely different ORIS entry
+    // process (team/leg registration) - always skip, don't persist any sync_status so
+    // the entry resumes normal syncing automatically if the flag is ever corrected.
+    // Checked before any ORIS API call (user lookup included) so relay races never
+    // contact ORIS at all. A delete still has to complete locally (the entry may have been
+    // SYNCED before the flag was set), otherwise callers would report a sync error and
+    // leave the row stuck in PENDING_DELETE.
+    if (((int)($raceRow['zebricek'] ?? 0) & 32) !== 0) {
+        if ($action === 'delete') {
+            query_db("DELETE FROM `" . TBL_ZAVXUS . "` WHERE `id` = " . (int)$id);
+            return true;
+        }
+        return;
+    }
+
     // Get ORIS user ID
     $userQuery = "SELECT * FROM `" . TBL_USER . "` WHERE `id` = " . (int)$userId;
     $userRes = query_db($userQuery);
@@ -73,24 +99,6 @@ function processEntry($row, $action, $service) {
                 }
             }
         }
-    }
-
-    // Get Race ORIS ID
-    $raceQuery = "SELECT * FROM `" . TBL_RACE . "` WHERE `id` = " . (int)$raceId;
-    $raceRes = query_db($raceQuery);
-    $raceRow = mysqli_fetch_assoc($raceRes);
-
-    $comp = $raceRow['ext_id'] ?? null;
-    if (empty($comp)) {
-        query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_status` = 'LOCAL_ONLY' WHERE `id` = " . (int)$id);
-        return;
-    }
-
-    // Relay races (zebricek flag 32 = Štafety) use a completely different ORIS entry
-    // process (team/leg registration) - always skip, don't persist any sync_status so
-    // the entry resumes normal syncing automatically if the flag is ever corrected.
-    if (((int)($raceRow['zebricek'] ?? 0) & 32) !== 0) {
-        return;
     }
 
     // Check if ORIS entries are open yet
