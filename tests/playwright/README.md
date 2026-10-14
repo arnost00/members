@@ -64,3 +64,10 @@ These files are not part of the PHP runtime and must not be deployed to the prod
   - Config: `playwright.bank-errors.config.js`
   - ORIS connector error checks: `npm run test:e2e:oris-errors`
   - Config: `playwright.oris-errors.config.js`
+  - Deletion checks cover hung/closed connections and HTTP 503, including when
+    the organiser has already removed the ORIS entry. They verify that the local
+    entry survives the failure and that retrying after recovery removes it.
+    Run those organiser-removal cases with:
+    ```bash
+    npm run test:e2e:oris-errors -- --grep 'registration deletion preserves the local entry after organiser removal'
+    ```
