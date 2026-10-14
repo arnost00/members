@@ -45,7 +45,7 @@ if ($kat != '')
 		$pozn=correct_sql_string($pozn);
 		$pozn2=correct_sql_string($pozn2);
 
-		@$vysledek_z=query_db("SELECT datum, vicedenni, etap, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, transport, ext_id FROM ".TBL_RACE." WHERE id=$id_zav");
+		@$vysledek_z=query_db("SELECT datum, typ0, vicedenni, etap, prihlasky, prihlasky1, prihlasky2, prihlasky3, prihlasky4, prihlasky5, transport, ext_id FROM ".TBL_RACE." WHERE id=$id_zav");
 		$zaznam_z = mysqli_fetch_array($vysledek_z);
 
 		$termin = raceterms::GetCurr4RegTerm($zaznam_z);

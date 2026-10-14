@@ -522,8 +522,10 @@ function RenderCategoryCounts ( array $category_counts ) {
 }
 
 // vicedenni (etapovy) zavod s vice nez 1 etapou - ORIS vyzaduje vyber etap pri prihlasce
+// jen pro typ akce zavod, napr. soustredeni etapy nema (dny se nevybiraji)
 function IsMultiEtapaRace($race) {
-	return is_array($race) && !empty($race['vicedenni']) && (int)($race['etap'] ?? 0) > 1;
+	return is_array($race) && ($race['typ0'] ?? '') === 'Z'
+		&& !empty($race['vicedenni']) && (int)($race['etap'] ?? 0) > 1;
 }
 
 // serazeny, deduplikovany seznam cisel etap (1..N) jako retezec "1,2,3"
