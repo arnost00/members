@@ -1,6 +1,7 @@
 <?php
 require_once("connect.inc.php");
 require_once("lib/OrisIntegrationService.php");
+require_once __DIR__ . "/oris_entry_lookup.php";
 require_once("oris_user.class.php");
 require_once("common_race.inc.php");
 
@@ -299,26 +300,6 @@ function processEntry($row, $action, $service) {
         }
         return false;
     }
-}
-
-// Whether the ORIS entry still exists in the event. Lookup failures count as "exists"
-// so the local entry is never deleted blindly.
-function orisEntryExists($service, $comp, $entryId) {
-    try {
-        $entriesRes = $service->getEventEntries($comp);
-    } catch (Exception $e) {
-        return true;
-    }
-    if (!is_array($entriesRes)) {
-        return true;
-    }
-    foreach ($entriesRes as $entry) {
-        if (!is_array($entry)) continue;
-        if ((string)($entry['ID'] ?? '') === (string)$entryId) {
-            return true;
-        }
-    }
-    return false;
 }
 
 function getOrisSyncError($id) {
