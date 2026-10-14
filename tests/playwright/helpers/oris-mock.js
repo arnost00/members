@@ -176,8 +176,22 @@ function getOrisApiRegistration(request, sport, year) {
   return callOrisApi(request, { method: 'getRegistration', sport, year });
 }
 
+async function getOrisApiLog(request) {
+  const { log } = await getJson(request, '/log');
+  return log;
+}
+
+async function clearOrisApiLog(request) {
+  const response = await request.delete(`${DEFAULT_ORIS_MOCK_ADMIN_URL}/log`);
+  if (!response.ok()) {
+    throw new Error(`ORIS mock DELETE /log failed with HTTP ${response.status()}: ${await response.text()}`);
+  }
+  return response.json();
+}
+
 module.exports = {
   callOrisApi,
+  clearOrisApiLog,
   createOrisApiEntry,
   createOrisMockEntry,
   createOrisMockRace,
@@ -186,6 +200,7 @@ module.exports = {
   getOrisApiClubUserList,
   getOrisApiEvent,
   getOrisApiEventEntries,
+  getOrisApiLog,
   getOrisApiRegistration,
   getOrisMockParticipants,
   getOrisMockRaceEntries,

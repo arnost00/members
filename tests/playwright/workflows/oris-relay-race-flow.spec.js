@@ -12,9 +12,12 @@ const {
   updateRace,
 } = require('../helpers/app-actions');
 const {
+  clearOrisApiLog,
   createOrisMockRace,
+  createOrisMockUser,
   getOrisApiEvent,
   getOrisApiEventEntries,
+  getOrisApiLog,
 } = require('../helpers/oris-mock');
 const {
   ensureOrisRace,
@@ -51,6 +54,30 @@ const RELAY_RACE_WORKFLOW = {
     },
   ],
 };
+
+const LATE_RELAY_FLAG_WORKFLOW = {
+  name: 'Relay flag set after ORIS signup',
+  memberCategory: 'D21',
+  memberRegNo: 'ZBM9952',
+  memberOrisUserId: '29952',
+  memberOrisClubUserId: '39952',
+  // Index of the "Štafety" (id 32) checkbox in race_edit.php (see $g_zebricek)
+  relayCheckboxField: 'zebricek[5]',
+};
+
+// The ORIS mock log is global. With parallel workers other specs hit the mock at the
+// same time (sometimes with the same member), so only lines naming this race can be
+// attributed to it; a serial run (CI uses one worker) asserts the whole log.
+function relayRaceOrisLog(log, orisId, testInfo) {
+  const lines = log.split('\n').filter(Boolean);
+  if (testInfo.config.workers <= 1) {
+    return lines;
+  }
+  return lines.filter((line) => {
+    const params = new URLSearchParams(line.split(' params=')[1] || '');
+    return [...params.values()].includes(String(orisId));
+  });
+}
 
 function formatSavedRaceDate(date) {
   return [
@@ -117,7 +144,7 @@ test.describe(RELAY_RACE_WORKFLOW.name, () => {
     expect(await getOrisApiEventEntries(request, state.orisId)).toEqual([]);
   });
 
-  test('member can register to the imported mockup relay race locally', async ({ page, request, browser }) => {
+  test('member can register to the imported mockup relay race locally', async ({ page, request, browser }, testInfo) => {
     if (!state.race) {
       await loginAs(page, 'registrar');
       state.race = await ensureOrisRace(page, state.orisId);
@@ -127,6 +154,8 @@ test.describe(RELAY_RACE_WORKFLOW.name, () => {
     await page.goto(`./us_race_regon.php?id_zav=${state.race.id}&id_us=${state.memberUser.user_id}`);
     await expect(page.locator('body')).toContainText(state.race.name);
 
+    await clearOrisApiLog(request);
+
     await submitMemberRaceRegistration(page, {
       id_us: String(state.memberUser.user_id),
       id_zav: String(state.race.id),
@@ -135,6 +164,9 @@ test.describe(RELAY_RACE_WORKFLOW.name, () => {
       pozn: `member relay note ${state.run.runId}`,
       pozn2: 'member relay internal',
     });
+    // Captured right after the action: getRaceDetail() below reads the race via the
+    // members API, which itself calls ORIS getEvent.
+    const orisLog = await getOrisApiLog(request);
 
     await page.goto(`./us_race_regon.php?id_zav=${state.race.id}&id_us=${state.memberUser.user_id}`);
     await expect(page.locator('input[name="kat"]')).toHaveValue(RELAY_RACE_WORKFLOW.memberCategory);
@@ -145,27 +177,32 @@ test.describe(RELAY_RACE_WORKFLOW.name, () => {
     expect(entry).toBeTruthy();
     expect(entry.category).toBe(RELAY_RACE_WORKFLOW.memberCategory);
     expect(await getOrisApiEventEntries(request, state.orisId)).toEqual([]);
+    expect(relayRaceOrisLog(orisLog, state.orisId, testInfo)).toEqual([]);
   });
 
   test('ORIS API contains no member or participant race entries', async ({ request }) => {
     expect(await getOrisApiEventEntries(request, state.orisId)).toEqual([]);
   });
 
-  test('member can unregister from the mockup relay race locally', async ({ page, request, browser }) => {
+  test('member can unregister from the mockup relay race locally', async ({ page, request, browser }, testInfo) => {
     await loginAs(page, 'member');
     await page.goto(`./us_race_regon.php?id_zav=${state.race.id}&id_us=${state.memberUser.user_id}`);
     await expect(page.getByRole('button', { name: 'Odhlásit ze závodu' })).toBeVisible();
+
+    await clearOrisApiLog(request);
 
     page.once('dialog', (dialog) => dialog.accept());
     await Promise.all([
       page.waitForURL(/us_race_regoff_exc\.php/),
       page.getByRole('button', { name: 'Odhlásit ze závodu' }).click(),
     ]);
+    const orisLog = await getOrisApiLog(request);
 
     const detail = await getRaceDetail(browser, state.race.id);
     const localEntry = detail.everyone.find((item) => item.user_id === state.memberUser.user_id);
     expect(localEntry).toBeUndefined();
     expect(await getOrisApiEventEntries(request, state.orisId)).toEqual([]);
+    expect(relayRaceOrisLog(orisLog, state.orisId, testInfo)).toEqual([]);
   });
 
   test('registrar can move registration dates to past', async ({ page }) => {
@@ -254,5 +291,89 @@ test.describe(RELAY_RACE_WORKFLOW.name, () => {
     } finally {
       await financePopup.close();
     }
+  });
+});
+
+test.describe(LATE_RELAY_FLAG_WORKFLOW.name, () => {
+  test.describe.configure({ mode: 'serial' });
+
+  const state = {};
+
+  test.beforeAll(async ({ browser, request }) => {
+    state.run = createWorkflowRun('relay-flag-late-flow');
+    state.memberUser = await getCurrentUser(browser, TEST_USERS.member);
+
+    await createOrisMockUser(request, {
+      userId: LATE_RELAY_FLAG_WORKFLOW.memberOrisUserId,
+      clubUserId: LATE_RELAY_FLAG_WORKFLOW.memberOrisClubUserId,
+      regNo: LATE_RELAY_FLAG_WORKFLOW.memberRegNo,
+      firstName: state.memberUser.name || 'Zuzana',
+      lastName: state.memberUser.surname || 'Novakova',
+      si: state.memberUser.chip_number || '1341431',
+      licence: 'C',
+    });
+
+    state.mockRace = await createOrisMockRace(request, {
+      name: `Playwright ORIS mock late relay ${state.run.runId}`,
+      place: 'Playwright late relay arena',
+      classes: [
+        { Name: 'H21', Fee: 150 },
+        { Name: 'D21', Fee: 150 },
+      ],
+    });
+    state.orisId = String(state.mockRace.race.ID);
+  });
+
+  test('registrar can load the mockup non-relay race into members', async ({ page }) => {
+    await loginAs(page, 'registrar');
+    state.race = await ensureOrisRace(page, state.orisId);
+    expect(state.race.id).toBeTruthy();
+  });
+
+  test('member registration on a non-relay race is synced to ORIS', async ({ page, request }) => {
+    await loginAs(page, 'member');
+    await page.goto(`./us_race_regon.php?id_zav=${state.race.id}&id_us=${state.memberUser.user_id}`);
+    await submitMemberRaceRegistration(page, {
+      id_us: String(state.memberUser.user_id),
+      id_zav: String(state.race.id),
+      novy: '1',
+      kat: LATE_RELAY_FLAG_WORKFLOW.memberCategory,
+      pozn: `member late relay note ${state.run.runId}`,
+      pozn2: '',
+    });
+
+    const entries = await getOrisApiEventEntries(request, state.orisId);
+    expect(entries.find((entry) => entry.RegNo === LATE_RELAY_FLAG_WORKFLOW.memberRegNo)).toBeTruthy();
+  });
+
+  test('registrar can mark the race as relay after members signed up', async ({ page, browser }) => {
+    await loginAs(page, 'registrar');
+    await updateRace(page, state.race.id, { [LATE_RELAY_FLAG_WORKFLOW.relayCheckboxField]: '1' });
+    const raceDetail = await getRaceDetail(browser, state.race.id);
+    expect(raceDetail.rankings).toContain('Štafety');
+  });
+
+  test('member can unregister after the race is marked as relay, without contacting ORIS', async ({ page, request, browser }, testInfo) => {
+    await loginAs(page, 'member');
+    await page.goto(`./us_race_regon.php?id_zav=${state.race.id}&id_us=${state.memberUser.user_id}`);
+    await expect(page.getByRole('button', { name: 'Odhlásit ze závodu' })).toBeVisible();
+
+    await clearOrisApiLog(request);
+
+    const dialogs = [];
+    page.on('dialog', (dialog) => {
+      dialogs.push(dialog.message());
+      dialog.accept();
+    });
+    await Promise.all([
+      page.waitForURL(/us_race_regoff_exc\.php/),
+      page.getByRole('button', { name: 'Odhlásit ze závodu' }).click(),
+    ]);
+    const orisLog = await getOrisApiLog(request);
+
+    const detail = await getRaceDetail(browser, state.race.id);
+    expect(detail.everyone.find((item) => item.user_id === state.memberUser.user_id)).toBeUndefined();
+    expect(dialogs.filter((message) => message.includes('ORIS'))).toEqual([]);
+    expect(relayRaceOrisLog(orisLog, state.orisId, testInfo)).toEqual([]);
   });
 });
