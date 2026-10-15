@@ -59,7 +59,7 @@ docker compose -p members-dev -f docker-compose.dev.yml exec web npm run mock:or
 V kořenovém adresáři `members` spusť:
 
 ```bash
-docker compose -p members-autotest -f docker-compose.autotest.yml up -d --build --wait
+docker compose -p members-autotest -f docker-compose.autotest.yml up -d --wait --build
 docker compose -p members-autotest -f docker-compose.autotest.yml exec web npm run test:e2e
 docker compose -p members-autotest -f docker-compose.autotest.yml exec web npm run test:e2e:no-oris
 docker compose -p members-autotest -f docker-compose.autotest.yml exec web npm run test:e2e:no-oris-key
