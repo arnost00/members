@@ -8,6 +8,7 @@ require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
 require_once ("./cfg/_cfg.php");
 require_once ("./common.inc.php"); // For GetFirstEmail
+require_once ("./common_race.inc.php");
 require_once ("./lib/OrisIntegrationService.php");
 
 if (!IsLoggedSmallAdmin())
@@ -25,7 +26,17 @@ if ($oris_id > 0 && $user_id > 0)
     $vysledek=query_db("SELECT * FROM ".TBL_USER." WHERE id = '$user_id' LIMIT 1");
     $zaznam=mysqli_fetch_array($vysledek);
 
-    if ($zaznam)
+    if ($zaznam && NormalizeMembership($zaznam['clenstvi']) != 'R')
+    {
+        // udaje neradnych clenu se do ORISu neposilaji
+        require_once ("./header.inc.php");
+        DrawPageTitle('Chyba synchronizace s ORIS');
+        echo "Člen není řádný člen oddílu (typ členství: ".htmlspecialchars(GetMembershipName($zaznam['clenstvi'])).
+            "), jeho údaje se do ORISu neposílají.<br>";
+        echo "<br><a href=\"".$g_baseadr."index.php?id="._SMALL_ADMIN_GROUP_ID_."&subid=2\">Zpět</a>";
+        HTML_Footer();
+    }
+    else if ($zaznam)
     {
         $params = array(
             'userid' => $oris_id,

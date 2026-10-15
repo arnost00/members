@@ -8,15 +8,18 @@ DrawPageTitle('Členská základna');
 <?
 require_once "./common_user.inc.php";
 require_once('./csort.inc.php');
+require_once('./common_race.inc.php');
 
 $sc = new column_sort_db();
 $sc->add_column('sort_name','');
 $sc->add_column('reg','');
-$sc->set_url('index.php?id=600&subid=1',true);
+$fclen = GetMembershipFilterParam();
+$sc->set_url('index.php?id=600&subid=1'.(($fclen != '') ? '&fclen='.$fclen : ''),true);
 $sub_query = $sc->get_sql_string();
+$where_query = AppendSqlCondition(' WHERE (u.chief_id = '.$usr->user_id.' OR u.id = '.$usr->user_id.')', ($fclen != '') ? "u.clenstvi = '".$fclen."'" : '');
 
-$query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob,entry_locked, a.id aid FROM '.TBL_USER.' u'
-	.' left join '.TBL_ACCOUNT.' a on a.id_users = u.id WHERE u.chief_id = '.$usr->user_id.' OR u.id = '.$usr->user_id.$sub_query;
+$query = 'SELECT u.id,prijmeni,jmeno,reg,hidden,lic,lic_mtbo,lic_lob,entry_locked,clenstvi, a.id aid FROM '.TBL_USER.' u'
+	.' left join '.TBL_ACCOUNT.' a on a.id_users = u.id'.$where_query.$sub_query;
 @$vysledek=query_db($query);
 
 if (IsSet($result) && is_numeric($result) && $result != 0)
@@ -25,6 +28,8 @@ if (IsSet($result) && is_numeric($result) && $result != 0)
 	$res_text = GetResultString($result);
 	Print_Action_Result($res_text);
 }
+
+DrawMembershipFilter($fclen);
 
 $i=1;
 if ($vysledek != FALSE && mysqli_num_rows($vysledek) > 0)
@@ -56,7 +61,7 @@ if ($vysledek != FALSE && mysqli_num_rows($vysledek) > 0)
 		{
 			$row = array();
 			$row[] = $i++;
-			$row[] = $zaznam['prijmeni'];
+			$row[] = $zaznam['prijmeni'].GetMembershipTag($zaznam['clenstvi']);
 			$row[] = $zaznam['jmeno'];
 			$row[] = RegNumToStr($zaznam['reg']);
 			if ($zaznam['entry_locked'] != 0)

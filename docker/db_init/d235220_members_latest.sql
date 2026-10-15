@@ -1046,7 +1046,8 @@ CREATE TABLE `tst_users` (
   `narodnost` varchar(2) NOT NULL DEFAULT 'CZ',
   `entry_locked` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `chief_pay` smallint(5) UNSIGNED DEFAULT NULL,
-  `finance_type` int(10) UNSIGNED NOT NULL DEFAULT 0
+  `finance_type` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `clenstvi` enum('R','H','T') NOT NULL DEFAULT 'R'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci COMMENT='vsechny informace o uzivatelich';
 
 --

@@ -91,8 +91,17 @@ $etap_count = $is_multi_etapa ? (int)$zaznam_z['etap'] : 0;
 $selected_etapy = $is_multi_etapa ? array_values(array_intersect(range(1, $etap_count), array_map('intval', (array)$etapy))) : [];
 $etapy_sql = $is_multi_etapa ? "'".BuildEtapyString($selected_etapy)."'" : 'NULL';
 
+@$vysledek_u=query_db('SELECT clenstvi FROM '.TBL_USER.' WHERE id='.(int)$user_id);
+$zaznam_u = $vysledek_u ? mysqli_fetch_array($vysledek_u) : null;
+$clenstvi = $zaznam_u ? $zaznam_u['clenstvi'] : 'R';
+$membership_error = null;
+
 if ($is_multi_etapa && $kateg != '' && empty($selected_etapy)) {
 	$sync_error = 'Musíte vybrat alespoň jednu etapu.';
+}
+else if ($zaznam == false && $kateg != '' && !CanMembershipEnterRace($clenstvi, $zaznam_z)) {
+	// nova prihlaska, kterou typ clenstvi nedovoluje
+	$membership_error = GetMembershipDeniedMessage($clenstvi);
 }
 else if($termin != 0)
 {
@@ -224,6 +233,19 @@ else if($termin != 0)
 			}
 		}
 	}
+}
+
+if (!empty($membership_error)) {
+	$return_url = ($gr_id != 0) ? $g_baseadr.'race_regs_1.php?gr_id='.$gr_id.'&id='.$id.'&show_ed='.$show_ed : $g_baseadr.'race_regs_1.php?id='.$id.'&show_ed='.$show_ed;
+?>
+	<div style="color: red; font-weight: bold; padding: 20px; border: 1px solid red; margin: 20px; font-family: sans-serif;">
+		Přihlášku nelze uložit:<br><br>
+		<?php echo htmlspecialchars($membership_error); ?>
+		<br><br>
+		<a href="<?php echo htmlspecialchars($return_url); ?>">Zpět na přehled</a>
+	</div>
+<?php
+	exit;
 }
 
 if (!empty($sync_error)) {
