@@ -185,24 +185,61 @@ test.describe(ORIS_MOCKUP_CONFLICT_WORKFLOW.name, () => {
     await expectMemberEntryAbsent(browser, request, state);
   });
 
-  test('registrar cannot remove user 7203 after the API removes the ORIS entry', async ({ page, request, browser }) => {
+  test('registrar can remove user 7203 after the API removes the ORIS entry', async ({ page, request, browser }) => {
     await deleteOrisMockRaceEntry(request, state.orisId, state.user7203EntryId);
 
     const remoteEntries = await getOrisApiEventEntries(request, state.orisId);
     expect(remoteEntries.find((entry) => String(entry.ID) === state.user7203EntryId)).toBeUndefined();
 
     await loginAs(page, 'registrar');
-    const result = await removeRaceParticipant(page, state.race.id, ORIS_MOCKUP_CONFLICT_WORKFLOW.user7203Reg, {
-      expectedOutcome: 'message',
-    });
-
-    expect(result.text).toContain('Chyby při synchronizaci s ORIS');
-    expect(result.text).toContain('Entry not found');
+    await removeRaceParticipant(page, state.race.id, ORIS_MOCKUP_CONFLICT_WORKFLOW.user7203Reg);
 
     const detail = await getRaceDetail(browser, state.race.id);
     const user7203LocalEntry = detail.everyone.find((entry) => String(entry.user_id) === String(state.user7203.userId));
-    expect(user7203LocalEntry).toBeTruthy();
-    expect(user7203LocalEntry.category).toBe(ORIS_MOCKUP_CONFLICT_WORKFLOW.user7203Category);
+    expect(user7203LocalEntry).toBeUndefined();
+  });
+
+  test('member can register with a defined category', async ({ page, request, browser }) => {
+    await login(page, ORIS_MOCKUP_CONFLICT_WORKFLOW.memberLogin, DEFAULT_PASSWORD);
+    await page.goto(`./us_race_regon.php?id_zav=${state.race.id}&id_us=${state.memberUser.user_id}`);
+
+    await submitMemberRaceRegistration(page, {
+      id_us: String(state.memberUser.user_id),
+      id_zav: String(state.race.id),
+      novy: '1',
+      kat: ORIS_MOCKUP_CONFLICT_WORKFLOW.definedCategory,
+      pozn: `entry removed by organiser ${state.run.runId}`,
+      pozn2: '',
+    });
+
+    const detail = await getRaceDetail(browser, state.race.id);
+    expect(detail.everyone.find((item) => item.user_id === state.memberUser.user_id)).toBeTruthy();
+
+    const entries = await getOrisApiEventEntries(request, state.orisId);
+    const memberEntry = entries.find((entry) => entry.RegNo === ORIS_MOCKUP_CONFLICT_WORKFLOW.memberRegNo);
+    expect(memberEntry).toBeTruthy();
+    state.memberEntryId = String(memberEntry.ID);
+  });
+
+  test('member can unregister after the organiser removed the ORIS entry', async ({ page, request, browser }) => {
+    await deleteOrisMockRaceEntry(request, state.orisId, state.memberEntryId);
+
+    await login(page, ORIS_MOCKUP_CONFLICT_WORKFLOW.memberLogin, DEFAULT_PASSWORD);
+    await page.goto(`./us_race_regon.php?id_zav=${state.race.id}&id_us=${state.memberUser.user_id}`);
+    await expect(page.getByRole('button', { name: 'Odhlásit ze závodu' })).toBeVisible();
+
+    const dialogs = [];
+    page.on('dialog', (dialog) => {
+      dialogs.push(dialog.message());
+      dialog.accept();
+    });
+    await Promise.all([
+      page.waitForURL(/us_race_regoff_exc\.php/),
+      page.getByRole('button', { name: 'Odhlásit ze závodu' }).click(),
+    ]);
+
+    expect(dialogs.filter((message) => message.includes('ORIS'))).toEqual([]);
+    await expectMemberEntryAbsent(browser, request, state);
   });
 
   test('API changes the ORIS registration deadline to yesterday', async ({ request }) => {

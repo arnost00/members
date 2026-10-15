@@ -1,6 +1,7 @@
 <?php
 require_once("connect.inc.php");
 require_once("lib/OrisIntegrationService.php");
+require_once __DIR__ . "/oris_entry_lookup.php";
 require_once("oris_user.class.php");
 require_once("common_race.inc.php");
 
@@ -10,6 +11,32 @@ function processEntry($row, $action, $service) {
     $id = $row['id'];
     $userId = $row['id_user'];
     $raceId = $row['id_zavod'];
+
+    // Get Race ORIS ID
+    $raceQuery = "SELECT * FROM `" . TBL_RACE . "` WHERE `id` = " . (int)$raceId;
+    $raceRes = query_db($raceQuery);
+    $raceRow = mysqli_fetch_assoc($raceRes);
+
+    $comp = $raceRow['ext_id'] ?? null;
+    if (empty($comp)) {
+        query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_status` = 'LOCAL_ONLY' WHERE `id` = " . (int)$id);
+        return;
+    }
+
+    // Relay races (zebricek flag 32 = Štafety) use a completely different ORIS entry
+    // process (team/leg registration) - always skip, don't persist any sync_status so
+    // the entry resumes normal syncing automatically if the flag is ever corrected.
+    // Checked before any ORIS API call (user lookup included) so relay races never
+    // contact ORIS at all. A delete still has to complete locally (the entry may have been
+    // SYNCED before the flag was set), otherwise callers would report a sync error and
+    // leave the row stuck in PENDING_DELETE.
+    if (((int)($raceRow['zebricek'] ?? 0) & 32) !== 0) {
+        if ($action === 'delete') {
+            query_db("DELETE FROM `" . TBL_ZAVXUS . "` WHERE `id` = " . (int)$id);
+            return true;
+        }
+        return;
+    }
 
     // Local-only category (e.g. a coach travelling with the club without running) -
     // the entry lives only in members. An ORIS entry left over from a previous
@@ -103,24 +130,6 @@ function processEntry($row, $action, $service) {
                 }
             }
         }
-    }
-
-    // Get Race ORIS ID
-    $raceQuery = "SELECT * FROM `" . TBL_RACE . "` WHERE `id` = " . (int)$raceId;
-    $raceRes = query_db($raceQuery);
-    $raceRow = mysqli_fetch_assoc($raceRes);
-
-    $comp = $raceRow['ext_id'] ?? null;
-    if (empty($comp)) {
-        query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_status` = 'LOCAL_ONLY' WHERE `id` = " . (int)$id);
-        return;
-    }
-
-    // Relay races (zebricek flag 32 = Štafety) use a completely different ORIS entry
-    // process (team/leg registration) - always skip, don't persist any sync_status so
-    // the entry resumes normal syncing automatically if the flag is ever corrected.
-    if (((int)($raceRow['zebricek'] ?? 0) & 32) !== 0) {
-        return;
     }
 
     // Check if ORIS entries are open yet
@@ -275,7 +284,18 @@ function processEntry($row, $action, $service) {
             if (empty($entryIdToDelete)) {
                 $response = ['ID' => null];
             } else {
-                $response = $service->deleteEntry($entryIdToDelete);
+                try {
+                    $response = $service->deleteEntry($entryIdToDelete);
+                } catch (OrisApiException $e) {
+                    // The entry may already be gone from ORIS (e.g. removed by the organiser),
+                    // in which case ORIS refuses the delete. Then only the local entry is left
+                    // to remove; any other refusal (or a 5xx) is a real failure.
+                    if (strpos($e->getMessage(), 'API Error or HTTP 5') !== false
+                        || orisEntryExists($service, $comp, $entryIdToDelete)) {
+                        throw $e;
+                    }
+                    $response = ['ID' => null];
+                }
             }
         }
 

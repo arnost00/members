@@ -35,6 +35,8 @@ These files are not part of the PHP runtime and must not be deployed to the prod
 ## Configuration
 
 - `PLAYWRIGHT_BASE_URL` overrides the application URL. Default: `http://web:10100/members/`
+- `MAILPIT_BASE_URL` overrides the local mail catcher API URL. Default: `http://mailpit:8025`
+- `member-account-email.spec.js` creates a temporary member, selects "Vygenerovat a zaslat emailem" in `user_login_edit.php`, checks the email delivered by `user_login_edit_exc.php`, and logs in with the generated credentials. It requires PHP mail delivery configured to Mailpit and removes its member/account and captured message afterward. Run it with `npx playwright test tests/playwright/member-account-email.spec.js --project=chromium --workers=1`.
 - `MEMBERS_E2E_SUITE=no-oris` disables all ORIS configuration for application requests and makes mock `/API` return HTTP 503
 - `MEMBERS_E2E_SUITE=no-oris-key` leaves ORIS enabled but omits `$g_oris_club_key` for application requests
 - `MAILPIT_URL` overrides the Mailpit API base URL used by `tests/playwright/helpers/mail.js`. Default: `http://mailpit:8025`
@@ -62,3 +64,10 @@ These files are not part of the PHP runtime and must not be deployed to the prod
   - Config: `playwright.bank-errors.config.js`
   - ORIS connector error checks: `npm run test:e2e:oris-errors`
   - Config: `playwright.oris-errors.config.js`
+  - Deletion checks cover hung/closed connections and HTTP 503, including when
+    the organiser has already removed the ORIS entry. They verify that the local
+    entry survives the failure and that retrying after recovery removes it.
+    Run those organiser-removal cases with:
+    ```bash
+    npm run test:e2e:oris-errors -- --grep 'registration deletion preserves the local entry after organiser removal'
+    ```

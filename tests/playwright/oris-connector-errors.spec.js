@@ -15,6 +15,7 @@ const {
 const {
   createOrisMockRace,
   createOrisMockUser,
+  deleteOrisMockRaceEntry,
   getOrisApiClubUserList,
   getOrisApiEvent,
   getOrisApiEventEntries,
@@ -481,6 +482,43 @@ test.describe('Oris Connector Errors', () => {
       await deleteRegistration(page, state);
       expect(await localMemberEntry(browser, state)).toBeUndefined();
       await expectRemoteMemberEntry(request, state, false);
+    });
+  }
+
+  for (const failure of TRANSIENT_FAILURES) {
+    test(`registration deletion preserves the local entry after organiser removal during ${failure.name}`, async ({ page, request, browser }) => {
+      if (failure.slow) test.slow();
+      await ensureSeededRace(browser, state);
+      await loginAs(page, 'member');
+      try {
+        await submitRegistration(
+          page,
+          state,
+          `organiser removal ${failure.name} ${state.runId}`,
+          'overview'
+        );
+        const entries = await getOrisApiEventEntries(request, state.orisId);
+        const remoteEntry = memberEntry(entries, state);
+        expect(remoteEntry).toBeTruthy();
+        await deleteOrisMockRaceEntry(request, state.orisId, String(remoteEntry.ID));
+        await expectRemoteMemberEntry(request, state, false);
+
+        await setOrisMockSettings(request, failure.settings);
+        await deleteRegistration(page, state, 'Zrušení v ORIS se nezdařilo (síťová chyba)');
+
+        await setOrisMockSettings(request, { mode: 'normal' });
+        expect(await localMemberEntry(browser, state)).toBeTruthy();
+        await expectRemoteMemberEntry(request, state, false);
+
+        await deleteRegistration(page, state);
+        expect(await localMemberEntry(browser, state)).toBeUndefined();
+        await expectRemoteMemberEntry(request, state, false);
+      } finally {
+        await setOrisMockSettings(request, { mode: 'normal' });
+        if (await localMemberEntry(browser, state)) {
+          await deleteRegistration(page, state);
+        }
+      }
     });
   }
 
