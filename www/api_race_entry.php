@@ -11,10 +11,8 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 
 // HTTP/1.0 
 header("Pragma: no-cache"); 
-?>
 
-<? define("__HIDE_TEST__", "_KeAr_PHP_WEB_"); ?>
-<?
+define("__HIDE_TEST__", "_KeAr_PHP_WEB_");
 
 require_once ('timestamp.inc.php');
 require_once('cfg/_globals.php');
@@ -29,18 +27,35 @@ require_once ('common_race.inc.php');
 require_once ('url.inc.php');
 
 require_once ('functions.php');
+require_once ('sess.inc.php');
 
-$race_id = (IsSet($_GET['id_race']) && is_numeric($_GET['id_race'])) ? (int)$_GET['id_race'] : 0;
+$race_id = (IsSet($_REQUEST['id_race']) && is_numeric($_REQUEST['id_race'])) ? (int)$_REQUEST['id_race'] : 0;
+$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : 'detail';
+
+header('Content-Type: application/json; charset=utf-8');
+
+if (!CanAccessRaceParticipation($race_id)) {
+	http_response_code(403);
+	echo json_encode('forbidden');
+	exit;
+}
+
+// zapisove akce jen pres POST
+if (in_array($action, ['participate', 'entryByFin', 'uncheckAll'], true) && $_SERVER['REQUEST_METHOD'] !== 'POST') {
+	http_response_code(405);
+	header('Allow: POST');
+	echo json_encode('method not allowed');
+	exit;
+}
 
 $data = array(); //variable for return in json
 
-$userSelected = (isset($_GET['id_user']));
+$userSelected = (isset($_REQUEST['id_user']));
 
 if ($userSelected) {
 	// user selected
-	$id_user = (IsSet($_GET['id_user']) && is_numeric($_GET['id_user'])) ? (int)$_GET['id_user'] : 0;
+	$id_user = (IsSet($_REQUEST['id_user']) && is_numeric($_REQUEST['id_user'])) ? (int)$_REQUEST['id_user'] : 0;
 	// now select what to do with user
-	$action = (isset($_GET['action'])) ? $_GET['action'] : 'detail';
 	switch ($action) {
 		case 'participate':
 			//id_race=X&id_user=X&action=participate
@@ -61,7 +76,7 @@ if ($userSelected) {
 				}
 
 			} else {
-				$kat = isset($_GET['kat']) ? correct_sql_string($_GET['kat']) : '';
+				$kat = isset($_REQUEST['kat']) ? correct_sql_string($_REQUEST['kat']) : '';
 				$pozn = '';
 				$pozn2 = 'vlozeno financnikem na miste';
 				$termin = 0;
@@ -86,7 +101,6 @@ if ($userSelected) {
 			break;
 	}
 } else {
-	$action = (isset($_GET['action'])) ? $_GET['action'] : 'detail';
 	switch ($action) {
 		case 'accomodation':
 			$query="SELECT sort_name as `name`, adresa, mesto, psc from ".TBL_ZAVXUS." zu join ".TBL_USER." u on u.id = zu.id_user where id_zavod = $race_id and (zu.participated = 1 or zu.participated is null) and u.hidden = 0";
