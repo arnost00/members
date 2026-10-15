@@ -45,7 +45,16 @@ function processEntry($row, $action, $service) {
         $staleEntryId = $row['entry_id'] ?? null;
         if (!empty($staleEntryId)) {
             try {
-                $service->deleteEntry($staleEntryId);
+                try {
+                    $service->deleteEntry($staleEntryId);
+                } catch (OrisApiException $e) {
+                    // An organiser may already have removed the previous entry.
+                    // Only confirmed absence allows the local-only change to proceed.
+                    if (strpos($e->getMessage(), 'API Error or HTTP 5') !== false
+                        || orisEntryExists($service, $comp, $staleEntryId)) {
+                        throw $e;
+                    }
+                }
             } catch (Exception $e) {
                 $errMsg = $e->getMessage();
                 if ($e instanceof OrisNetworkException || ($e instanceof OrisApiException && strpos($errMsg, 'API Error or HTTP 5') !== false)) {

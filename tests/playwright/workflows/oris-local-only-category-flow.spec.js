@@ -9,6 +9,7 @@ const { submitMemberRaceRegistration } = require('../helpers/app-actions');
 const {
   createOrisMockRace,
   createOrisMockUser,
+  deleteOrisMockRaceEntry,
   getOrisApiEventEntries,
 } = require('../helpers/oris-mock');
 const {
@@ -131,6 +132,21 @@ test.describe(LOCAL_ONLY_CATEGORY_WORKFLOW.name, () => {
 
   test('member switching back to the local-only category cancels the ORIS entry', async ({ page, request, browser }) => {
     await registerMember(page, LOCAL_ONLY_CATEGORY_WORKFLOW.localOnlyCategory);
+
+    await expectMemberLocalCategory(browser, LOCAL_ONLY_CATEGORY_WORKFLOW.localOnlyCategory);
+    expect(findMemberOrisEntry(await getOrisApiEventEntries(request, state.orisId))).toBeUndefined();
+  });
+
+  test('member can switch to the local-only category after the organiser removes the ORIS entry', async ({ page, request, browser }) => {
+    await registerMember(page, LOCAL_ONLY_CATEGORY_WORKFLOW.orisCategory);
+    const remoteEntry = findMemberOrisEntry(await getOrisApiEventEntries(request, state.orisId));
+    expect(remoteEntry).toBeTruthy();
+    await deleteOrisMockRaceEntry(request, state.orisId, String(remoteEntry.ID));
+
+    await page.goto(`./us_race_regon.php?id_zav=${state.race.id}&id_us=${state.memberUser.user_id}`);
+    await submitMemberRaceRegistration(page, {
+      kat: LOCAL_ONLY_CATEGORY_WORKFLOW.localOnlyCategory,
+    });
 
     await expectMemberLocalCategory(browser, LOCAL_ONLY_CATEGORY_WORKFLOW.localOnlyCategory);
     expect(findMemberOrisEntry(await getOrisApiEventEntries(request, state.orisId))).toBeUndefined();
