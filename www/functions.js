@@ -150,6 +150,92 @@ function toggle_expand_by_group(group,el) {
     }
 }
 
+function get_lazy_time_range_rows(el) {
+    var heading = el.closest('tr[data-range-heading]');
+    if (!heading || !heading.parentNode)
+        return [];
+
+    var range = el.getAttribute('data-range');
+    return Array.prototype.filter.call(
+        heading.parentNode.querySelectorAll('tr[data-group]'),
+        function(row) { return row.getAttribute('data-group') === range; }
+    );
+}
+
+function set_lazy_time_range_state(el, expanded) {
+    var rows = get_lazy_time_range_rows(el);
+    for (var i = 0; i < rows.length; ++i)
+        rows[i].style.display = expanded ? '' : 'none';
+
+    el.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    var arrow = el.querySelector('.time-range-arrow');
+    if (arrow)
+        arrow.textContent = expanded ? '▲' : '▼';
+}
+
+async function toggle_lazy_time_range(el) {
+    if (el.getAttribute('data-loading') === '1')
+        return;
+
+    var expanded = el.getAttribute('aria-expanded') === 'true';
+    if (expanded) {
+        set_lazy_time_range_state(el, false);
+        return;
+    }
+
+    if (el.getAttribute('data-loaded') === '1') {
+        set_lazy_time_range_state(el, true);
+        return;
+    }
+
+    var status = el.querySelector('.time-range-status');
+    var url = el.getAttribute('data-expand-url');
+    el.setAttribute('data-loading', '1');
+    if (status) {
+        status.classList.remove('error');
+        status.textContent = 'Načítám…';
+    }
+
+    try {
+        var response = await fetch(url, {
+            credentials: 'same-origin',
+            headers: {'X-Requested-With': 'XMLHttpRequest'}
+        });
+        if (!response.ok)
+            throw new Error('HTTP '+response.status);
+
+        var html = await response.text();
+        var template = document.createElement('template');
+        template.innerHTML = '<table><tbody>'+html+'</tbody></table>';
+        var loadedRows = Array.prototype.slice.call(template.content.querySelectorAll('tbody > tr'));
+        var heading = el.closest('tr[data-range-heading]');
+        var insertionPoint = heading.nextSibling;
+        for (var i = 0; i < loadedRows.length; ++i)
+            heading.parentNode.insertBefore(loadedRows[i], insertionPoint);
+
+        el.setAttribute('data-loaded', '1');
+        if (status)
+            status.textContent = '';
+        set_lazy_time_range_state(el, true);
+    } catch (error) {
+        if (status) {
+            status.classList.add('error');
+            status.textContent = 'Načtení se nezdařilo';
+        }
+        set_lazy_time_range_state(el, false);
+    } finally {
+        el.removeAttribute('data-loading');
+    }
+}
+
+function toggle_lazy_time_range_by_key(event, el) {
+    if (event.key !== 'Enter' && event.key !== ' ')
+        return;
+
+    event.preventDefault();
+    toggle_lazy_time_range(el);
+}
+
 // function toggleDisplayByToggleClass(cls) {
 // 	let elems = document.getElementsByClassName(cls)
 // 	Array.prototype.forEach.call(elems, function(el) {

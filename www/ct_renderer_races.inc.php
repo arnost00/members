@@ -210,17 +210,25 @@ class FutureRaceBreakDetector implements IBreakRowDetector {
 }
 
 // Button Break between years
-class YearExpanderDetector implements IBreakRowDetector {
+class YearExpanderDetector extends TimeRangeExpanderDetector {
+    public function getRangeKey(array $record): string {
+        return (string)Date2Year($record['datum']);
+    }
+
     public function needsBreak(array $prev, RowData $curr): bool {
         return Date2Year($prev['datum']) !== Date2Year($curr->rec['datum']);
     }
 
     public function renderBreak(html_table_mc $tbl, RowData $row): string {
         $year = Date2Year($row->rec['datum']);
-        $odkaz = '<span class="year-expander"
+        $odkaz = '<span class="time-range-expander year-expander"
             onclick="toggle_expand_by_group(\''. $year . '\', this)">' .
             ($year < date('Y') ? '▼' : '▲') . ' '. $year . '</span>';
         return $tbl->get_info_row($odkaz)."\n";
+    }
+
+    protected function getRangeLabel(string $range): ?string {
+        return $range;
     }
 
     // helper function for attribute setting
