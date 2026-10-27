@@ -1,7 +1,0 @@
-# Disable PHP's originating-script header in outgoing emails
-php_flag mail.add_x_header Off
-
-# Redirect HTTP to HTTPS
-RewriteEngine On
-RewriteCond %{HTTPS} off
-RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
