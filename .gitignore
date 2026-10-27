@@ -3,6 +3,7 @@
 www/cfg/_tables.php
 www/cfg/_globals.php
 www/cfg/_cfg.php
+www/.htaccess
 db_data/
 /logs
 www/logs/*
