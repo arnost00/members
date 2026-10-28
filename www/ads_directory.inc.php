@@ -57,6 +57,7 @@ function toggleShowHidden(element) {
 <?
 require_once "./common_user.inc.php";
 require_once('./csort.inc.php');
+require_once('./common_race.inc.php');
 
 $csd = $_REQUEST['csd'] ?? null;
 $result = $_REQUEST['result'] ?? null;
@@ -67,12 +68,15 @@ if (!isset($showHidden)) $showHidden = 0;
 $sc = new column_sort_db();
 $sc->add_column('sort_name','');
 $sc->add_column('reg','');
-$sc->set_url('index.php?id='._SMALL_ADMIN_GROUP_ID_.'&subid=1',true);
+$fclen = GetMembershipFilterParam();
+$sc->set_url('index.php?id='._SMALL_ADMIN_GROUP_ID_.'&subid=1'.(($fclen != '') ? '&fclen='.$fclen : ''),true);
 $sort_query = $sc->get_sql_string();
 $where_query = ' where u.hidden is false ';
 if ($showHidden) $where_query = ' ';
+if ($fclen != '')
+	$where_query = AppendSqlCondition($where_query, "u.clenstvi = '".$fclen."'").' ';
 
-$query = "SELECT u.id,u.prijmeni,u.jmeno,u.reg,u.hidden,u.entry_locked, a.locked, a.policy_news, a.policy_regs, a.policy_mng, a.policy_adm, a.policy_fin, a.id aid FROM ".TBL_USER." u"
+$query = "SELECT u.id,u.prijmeni,u.jmeno,u.reg,u.hidden,u.entry_locked, u.clenstvi, a.locked, a.policy_news, a.policy_regs, a.policy_mng, a.policy_adm, a.policy_fin, a.id aid FROM ".TBL_USER." u"
 	." left join ".TBL_ACCOUNT." a on a.id_users = u.id "
 	.$where_query
 	.$sort_query;
@@ -86,6 +90,7 @@ if (IsSet($result) && is_numeric($result) && $result != 0)
 }
 
 echo "<button id='showHidden' name='showHidden' onclick='toggleShowHidden(this)' value='".$showHidden."'>".($showHidden?'Skryj':'Zobraz')." skryté uživatele</button><br/><br/>";
+DrawMembershipFilter($fclen);
 
 $data_tbl = new html_table_mc();
 $col = 0;
@@ -114,7 +119,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 {
 	$row = array();
 	$row[] = $i++;
-	$row[] = '<a href="javascript:open_win(\'./view_adm_user_detail.php?id='.$zaznam['id'].'\',\'\')" class="adr_name">'.$zaznam['prijmeni'].'</a>';
+	$row[] = '<a href="javascript:open_win(\'./view_adm_user_detail.php?id='.$zaznam['id'].'\',\'\')" class="adr_name">'.$zaznam['prijmeni'].'</a>'.GetMembershipTag($zaznam['clenstvi']);
 	$row[] = $zaznam['jmeno'];
 	$row[] = RegNumToStr($zaznam['reg']);
 	//4. sloupec

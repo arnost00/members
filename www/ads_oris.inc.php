@@ -14,6 +14,7 @@ if ($g_external_is_connector !== 'OrisCZConnector')
 <?
 require_once "./common_user.inc.php";
 require_once('./csort.inc.php');
+require_once('./common_race.inc.php');
 
 $csd = $_REQUEST['csd'] ?? null;
 $ORIS_year = $_REQUEST['ORIS_year'] ?? null;
@@ -33,7 +34,7 @@ $sc->add_column('reg','');
 $sc->set_url($curr_url,true);
 $sub_query = $sc->get_sql_string();
 
-$query = "SELECT u.id,u.prijmeni,u.jmeno,u.reg,u.si_chip as si,u.hidden,u.entry_locked, a.locked, a.policy_news, a.policy_regs, a.policy_mng, a.policy_adm, a.policy_fin, a.id aid FROM ".TBL_USER." u"
+$query = "SELECT u.id,u.prijmeni,u.jmeno,u.reg,u.si_chip as si,u.hidden,u.entry_locked, u.clenstvi, a.locked, a.policy_news, a.policy_regs, a.policy_mng, a.policy_adm, a.policy_fin, a.id aid FROM ".TBL_USER." u"
 	." left join ".TBL_ACCOUNT." a on a.id_users = u.id where (u.hidden = False or u.hidden is null) "
 	.$sub_query;
 @$vysledek=query_db($query);
@@ -138,7 +139,7 @@ else
 	{
 		$row = array();
 		$row[] = $i++;
-		$row[] = $zaznam['prijmeni'];
+		$row[] = $zaznam['prijmeni'].GetMembershipTag($zaznam['clenstvi']);
 		$row[] = $zaznam['jmeno'];
 		$reg =  RegNumToStr($zaznam['reg']);;
 		$row[] = $reg;
@@ -168,7 +169,8 @@ else
 				$oris_user_id = $arr_oris["user"][$fullreg]->getUserId();
 				$local_si = $zaznam['si'];
 				$local_id = $zaznam['id'];
-				if ($orisWriteEnabled) {
+				// do ORISu se posilaji jen radni clenove
+				if ($orisWriteEnabled && NormalizeMembership($zaznam['clenstvi']) == 'R') {
 					$oris_si .= "&nbsp;<a href=\"ads_oris_si_sync.php?oris_id=$oris_user_id&id=$local_id\" title=\"Synchronizovat SI do ORISu (nastavit na $local_si)\">[<<]</a>";
 				}
 			}

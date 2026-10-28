@@ -233,7 +233,7 @@ class CSV_Export
 	public function generate_users()
 	{
 		$text = '';
-		$text .= 'příjmeni;jméno;datum narození;reg;email;adresa;mesto;psc;tel.domů;tel.práce; tel.mobilní;si.čip;licence OB;licence MTBO;licence LOB;národnost;';
+		$text .= 'příjmeni;jméno;datum narození;reg;email;adresa;mesto;psc;tel.domů;tel.práce; tel.mobilní;si.čip;licence OB;licence MTBO;licence LOB;národnost;typ členství;';
 		if (IsLoggedSmallAdmin() || IsLoggedAdmin())
 			$text .= 'rodné číslo;';
 		$text .= "\n";
@@ -272,6 +272,8 @@ class CSV_Export
 			$str .= $this->get_col($zaznam['lic_lob']);
 			$str .= $this->delim;
 			$str .= $this->get_col($zaznam['narodnost']);
+			$str .= $this->delim;
+			$str .= $this->get_col(NormalizeMembership($zaznam['clenstvi'] ?? 'R'));
 			$str .= $this->delim;
 			if (IsLoggedSmallAdmin() || IsLoggedAdmin())
 			{

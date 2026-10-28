@@ -84,7 +84,7 @@ echo('<FORM METHOD=POST ACTION="./race_regs_1_exc.php?gr_id='.$gr_id.'&id='.$id.
 
 $sub_query = (IsLoggedRegistrator() || IsLoggedManager()) ? '' : ' AND '.TBL_USER.'.chief_id = '.$usr->user_id.' OR '.TBL_USER.'.id = '.$usr->user_id;
 
-$query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, kat, pozn, pozn_in, termin, entry_locked, '.TBL_ZAVXUS.'.transport, '.TBL_ZAVXUS.'.sedadel, '.TBL_ZAVXUS.'.ubytovani, '.TBL_ZAVXUS.'.etapy FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query.' ORDER BY sort_name ASC';
+$query = 'SELECT '.TBL_USER.'.id, prijmeni, jmeno, reg, clenstvi, kat, pozn, pozn_in, termin, entry_locked, '.TBL_ZAVXUS.'.transport, '.TBL_ZAVXUS.'.sedadel, '.TBL_ZAVXUS.'.ubytovani, '.TBL_ZAVXUS.'.etapy FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query.' ORDER BY sort_name ASC';
 
 @$vysledek=query_db($query);
 
@@ -108,7 +108,8 @@ $i=0;
 $us_rows = array();
 while ($zaznam=mysqli_fetch_array($vysledek))
 {
-	if ($zaznam['entry_locked'] == 0)
+	// nove prihlasky jen pro cleny, kterym to typ clenstvi dovoluje
+	if ($zaznam['entry_locked'] == 0 && ($zaznam['kat'] != NULL || CanMembershipEnterRace($zaznam['clenstvi'], $zaznam_z)))
 	{
 		if($zaznam['kat'] != NULL)
 		{
@@ -128,7 +129,8 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 				continue;
 			}
 		}
-		echo '<option value="'.$zaznam['id'].'">'.$zaznam['prijmeni'].' '.$zaznam['jmeno'].' ['.RegNumToStr($zaznam['reg'])."]</option>\n";
+		$clenstvi_txt = (NormalizeMembership($zaznam['clenstvi']) != 'R') ? ' ('.NormalizeMembership($zaznam['clenstvi']).')' : '';
+		echo '<option value="'.$zaznam['id'].'">'.$zaznam['prijmeni'].' '.$zaznam['jmeno'].' ['.RegNumToStr($zaznam['reg']).']'.$clenstvi_txt."</option>\n";
 		$i++;
 	}
 }

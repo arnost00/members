@@ -23,6 +23,7 @@ if (!IsLoggedRegistrator() && !IsLoggedManager()&& !IsLoggedSmallManager())
 
 require_once ("./common.inc.php");
 require_once ("./common_race.inc.php");
+require_once ("./common_user.inc.php");
 require_once ("./lib/oris_sync.inc.php");
 
 $gr_id = (IsSet($gr_id) && is_numeric($gr_id)) ? (int)$gr_id : 0;
@@ -32,7 +33,7 @@ db_Connect();
 
 $sub_query = (IsLoggedRegistrator() || IsLoggedManager()) ? '' : ' AND '.TBL_USER.'.chief_id = '.$usr->user_id.' OR '.TBL_USER.'.id = '.$usr->user_id;
 
-$query = 'SELECT '.TBL_USER.'.id, kat, termin, sync_status FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query;
+$query = 'SELECT '.TBL_USER.'.id, reg, clenstvi, kat, termin, sync_status FROM '.TBL_USER.' LEFT JOIN '.TBL_ZAVXUS.' ON '.TBL_USER.'.id = '.TBL_ZAVXUS.'.id_user AND '.TBL_ZAVXUS.'.id_zavod='.$id.' WHERE '.TBL_USER.'.hidden = 0'.$sub_query;
 
 @$vysledek=query_db($query);
 
@@ -48,6 +49,7 @@ $is_spol_ubyt_on = ($zaznam_z["ubytovani"]==1);
 $termin = raceterms::GetCurr4RegTerm($zaznam_z);
 $has_ext_id = !empty($zaznam_z['ext_id']);
 $sync_queue = [];
+$membership_skipped = [];
 
 // vicedenni (etapovy) zavod - vyber etap se preberě ze zaskrtavatek, pokud nejsou
 // vyplnene (napr. radek zamceny/needitovatelny), zustava puvodni vyber zachovan
@@ -148,7 +150,11 @@ while ($zaznamZ=mysqli_fetch_array($vysledek))
 		}
 		else
 		{
-			if ($kat != "")
+			if ($kat != "" && !CanMembershipEnterRace($zaznamZ['clenstvi'], $zaznam_z))
+			{	// new, ale typ clenstvi ji nedovoluje
+				$membership_skipped[] = 'Reg.č. '.$g_shortcut.RegNumToStr($zaznamZ['reg']).': '.GetMembershipDeniedMessage($zaznamZ['clenstvi']);
+			}
+			else if ($kat != "")
 			{	// new
 				$kat=correct_sql_string($kat);
 				$poz=correct_sql_string($poz);
@@ -245,6 +251,14 @@ if ($has_ext_id && count($sync_queue) > 0) {
 ?>
 <?php
 $return_url = ($gr_id != 0) ? $g_baseadr.'race_regs_all.php?gr_id='.$gr_id.'&id='.$id : $g_baseadr.'race_regs_all.php?id='.$id;
+if (!empty($membership_skipped)) { ?>
+	<div style="color: red; font-weight: bold; padding: 20px; border: 1px solid red; margin: 20px; font-family: sans-serif;">
+		Některé přihlášky nebyly uloženy:<br><br>
+		<?php echo implode('<br>', array_map('htmlspecialchars', $membership_skipped)); ?>
+		<br><br>
+		<a href="<?php echo htmlspecialchars($return_url); ?>">Zpět na přehled</a>
+	</div>
+<?php }
 if (!empty($sync_errors)) { ?>
 	<div style="color: red; font-weight: bold; padding: 20px; border: 1px solid red; margin: 20px; font-family: sans-serif;">
 		Chyby při synchronizaci s ORIS:<br><br>
@@ -261,7 +275,7 @@ if (!empty($sync_warns)) { ?>
 		<a href="<?php echo htmlspecialchars($return_url); ?>">Zpět na přehled</a>
 	</div>
 <?php }
-if (empty($sync_errors) && empty($sync_warns)) {
+if (empty($sync_errors) && empty($sync_warns) && empty($membership_skipped)) {
 	header("Location: $return_url");
 	exit;
 } ?>
