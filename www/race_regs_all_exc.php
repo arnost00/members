@@ -59,9 +59,10 @@ while ($zaznamZ=mysqli_fetch_array($vysledek))
 	$user=$zaznamZ["id"];
 	if (IsSet($kateg[$user]))
 	{
-		$kat = correct_sql_string($kateg[$user]);
-		$poz = correct_sql_string($pozn[$user]);
-		$poz2 = correct_sql_string($pozn2[$user]);
+		// escapuje se az tesne pred sestavenim SQL (vetve update / new)
+		$kat = $kateg[$user];
+		$poz = $pozn[$user];
+		$poz2 = $pozn2[$user];
 		$cterm = $termin;
 		if ($is_spol_dopr_on) {
 			$trans = (IsSet($transport[$user])) ? 1 : 'NULL';
