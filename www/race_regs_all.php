@@ -97,6 +97,38 @@ function zmen_kat(kat)
 	return false;
 }
 
+// odesilaji se jen radky se zmenou (nebo s nedokoncenou ORIS synchronizaci) - ostatni server
+// preskoci bez dotazu do DB i ORISu
+function skip_unchanged_rows(form)
+{
+	var rows = {};
+	for (var i = 0; i < form.elements.length; i++) {
+		var el = form.elements[i];
+		var m = el.name ? el.name.match(/^\w+\[(\d+)\]/) : null;
+		if (!m || el.disabled) continue;
+		var changed = el.hasAttribute('data-oris-retry') || ((el.type === 'checkbox') ? (el.checked !== el.defaultChecked) : (el.value !== el.defaultValue));
+		if (!rows[m[1]]) rows[m[1]] = { changed: false, elements: [] };
+		rows[m[1]].changed = rows[m[1]].changed || changed;
+		rows[m[1]].elements.push(el);
+	}
+	for (var u in rows) {
+		if (rows[u].changed) continue;
+		rows[u].elements.forEach(function (el) {
+			el.disabled = true;
+			el.setAttribute('data-skipped', '1');
+		});
+	}
+	form.elements['only_changed'].value = '1';
+}
+
+// navrat tlacitkem zpet (bfcache) - vratit radky vypnute pri odeslani
+window.addEventListener('pageshow', function () {
+	document.querySelectorAll('[data-skipped]').forEach(function (el) {
+		el.disabled = false;
+		el.removeAttribute('data-skipped');
+	});
+});
+
 window.addEventListener('load', registerRaceCategoryStageSelection);
 
 //-->
@@ -120,7 +152,8 @@ else
 {
 ?>
 
-<FORM METHOD=POST ACTION="./race_regs_all_exc.php?gr_id=<?echo $gr_id;?>&id=<?echo $id;?>" name="form1">
+<FORM METHOD=POST ACTION="./race_regs_all_exc.php?gr_id=<?echo $gr_id;?>&id=<?echo $id;?>" name="form1" onsubmit="skip_unchanged_rows(this);">
+<INPUT TYPE="hidden" NAME="only_changed" value="0">
 <?
 
 $sub_query2 = (IsLoggedRegistrator() || IsLoggedManager()) ? '' : ' AND '.TBL_USER.'.chief_id = '.$usr->user_id.' OR '.TBL_USER.'.id = '.$usr->user_id;
@@ -201,12 +234,14 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 	$trans=$zaznam['transport']?"CHECKED":"";
 	$sedl=$zaznam['sedadel'];
 	$ubyt=$zaznam['ubytovani']?"CHECKED":"";
+	// nedokoncena synchronizace s ORIS - radek se odesila vzdy, opakovane ulozeni je retry
+	$oris_retry = (!empty($zaznam_z['ext_id']) && preg_match('/^(PENDING|FAILED)_/', $zaznam['sync_status'] ?? '')) ? ' data-oris-retry="1"' : '';
 
 	if ($zaznam['kat'] != NULL)
 	{	// jiz prihlasen
 		if($zaznam['termin'] == $termin || $is_termin_edit_on || $zaznam_z['prihlasky'] == 1)
 		{	// aktualni termin nebo povelena komplet editace
-			$row[] = ($entry_lock) ? $zaznam['kat']:'<INPUT TYPE="text" NAME="kateg['.$u.']" SIZE=5 value="'.$zaznam['kat'].'" onfocus="javascript:select_row('.$u.');">';
+			$row[] = ($entry_lock) ? $zaznam['kat']:'<INPUT TYPE="text" NAME="kateg['.$u.']" SIZE=5 value="'.$zaznam['kat'].'"'.$oris_retry.' onfocus="javascript:select_row('.$u.');">';
 			if($is_multi_etapa)
 				$row[] = RenderEtapyCell($u, $etap_count, ParseEtapyString($zaznam['etapy'] ?? null), $entry_lock);
 			if($is_spol_dopr_on||$is_sdil_dopr_on) {

@@ -10,6 +10,8 @@ $sedadel = $_REQUEST['sedadel'] ?? null;
 $ubytovani = $_REQUEST['ubytovani'] ?? null;
 $term = $_REQUEST['term'] ?? null;
 $etapy = $_REQUEST['etapy'] ?? [];
+// 1 = prohlizec poslal jen zmenene radky; jinak prisel cely formular (napr. bez JS)
+$only_changed = ($_REQUEST['only_changed'] ?? '') === '1';
 
 //TBD: podpora entry_locked
 
@@ -48,6 +50,7 @@ $is_spol_ubyt_on = ($zaznam_z["ubytovani"]==1);
 $termin = raceterms::GetCurr4RegTerm($zaznam_z);
 $has_ext_id = !empty($zaznam_z['ext_id']);
 $sync_queue = [];
+$unchanged_sent = 0;
 
 // vicedenni (etapovy) zavod - vyber etap se preberě ze zaskrtavatek, pokud nejsou
 // vyplnene (napr. radek zamceny/needitovatelny), zustava puvodni vyber zachovan
@@ -129,20 +132,24 @@ while ($zaznamZ=mysqli_fetch_array($vysledek))
 				$poz=correct_sql_string($poz);
 				$poz2=correct_sql_string($poz2);
 				$cterm=correct_sql_string($cterm);
-			
-				$sync_status_update = "";
-				if ($has_ext_id && $row_zx && $row_zx['sync_status'] !== 'PENDING_CREATE') {
-					$sync_status_update = ", sync_status='PENDING_UPDATE'";
-				}
 
-				$result=query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$poz', pozn_in='$poz2', termin='$cterm', transport=$trans, sedadel=$sedl, ubytovani=$ubyt, etapy=".$etapy_sql.$sync_status_update." WHERE id_zavod = '$id' AND id_user = '$user'")
+				$result=query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$poz', pozn_in='$poz2', termin='$cterm', transport=$trans, sedadel=$sedl, ubytovani=$ubyt, etapy=".$etapy_sql." WHERE id_zavod = '$id' AND id_user = '$user'")
 					or die("Chyba při provádění dotazu do databáze.");
 				if ($result == FALSE)
 					die ("Nepodařilo se změnit přihlášku člena.");
 
+				// do ORISu jen radky, kde se zmenilo neco, co ORIS dostava; cely formular
+				// (bez vyberu v prohlizeci) posila vse jako drive a uzivatel dostane varovani
 				if ($has_ext_id && $zx_id) {
-					$action = ($row_zx['sync_status'] === 'PENDING_CREATE') ? 'create' : 'update';
-					$sync_queue[] = ['id' => $zx_id, 'action' => $action, 'previous_state' => $row_zx];
+					$action = OrisSyncActionAfterUpdate($row_zx, $zx_id);
+					if ($action === '' && !$only_changed) {
+						query_db("UPDATE ".TBL_ZAVXUS." SET sync_status='PENDING_UPDATE' WHERE id='$zx_id'");
+						$action = 'update';
+						$unchanged_sent++;
+					}
+					if ($action !== '') {
+						$sync_queue[] = ['id' => $zx_id, 'action' => $action, 'previous_state' => $row_zx];
+					}
 				}
 			}
 		}
@@ -240,6 +247,10 @@ if ($has_ext_id && count($sync_queue) > 0) {
 			}
 		}
 	}
+}
+
+if ($unchanged_sent > 0) {
+	$sync_warns[] = "Formulář byl odeslán celý (prohlížeč nevybral jen změněné řádky) - do ORISu bylo znovu odesláno i $unchanged_sent nezměněných přihlášek.";
 }
 
 ?>
