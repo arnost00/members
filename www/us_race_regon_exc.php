@@ -90,9 +90,8 @@ if ($kat != '')
 				if ($vysledek != FALSE && ($zaznam = mysqli_fetch_array($vysledek)) != FALSE )
 				{	// latest new == update
 					$previous_state = $zaznam;
-					$sync_status_update = ($has_ext_id && $zaznam['sync_status'] !== 'PENDING_CREATE') ? ", sync_status='PENDING_UPDATE'" : "";
-					$sync_action = ($has_ext_id && $zaznam['sync_status'] === 'PENDING_CREATE') ? 'create' : 'update';
-					query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$pozn', pozn_in='$pozn2', termin='$termin', transport=$transport, sedadel=$sedadel, ubytovani=$ubytovani, etapy=$etapy_sql".$sync_status_update." WHERE id='".$zaznam['id']."'");
+					query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$pozn', pozn_in='$pozn2', termin='$termin', transport=$transport, sedadel=$sedadel, ubytovani=$ubytovani, etapy=$etapy_sql WHERE id='".$zaznam['id']."'");
+					$sync_action = $has_ext_id ? OrisSyncActionAfterUpdate($zaznam, $zaznam['id']) : '';
 					$inserted_or_updated_id = $zaznam['id'];
 				}
 				else
@@ -113,9 +112,8 @@ if ($kat != '')
 				if ($vysledek != FALSE && ($zaznam = mysqli_fetch_array($vysledek)) != FALSE )
 				{
 					$previous_state = $zaznam;
-					$sync_status_update = ($has_ext_id && $zaznam['sync_status'] !== 'PENDING_CREATE') ? ", sync_status='PENDING_UPDATE'" : "";
-					$sync_action = ($has_ext_id && $zaznam['sync_status'] === 'PENDING_CREATE') ? 'create' : 'update';
-					query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$pozn', pozn_in='$pozn2', transport=$transport, sedadel=$sedadel, ubytovani=$ubytovani, etapy=$etapy_sql".$sync_status_update." WHERE id='".$id_z."'");
+					query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kat', pozn='$pozn', pozn_in='$pozn2', transport=$transport, sedadel=$sedadel, ubytovani=$ubytovani, etapy=$etapy_sql WHERE id='".$id_z."'");
+					$sync_action = $has_ext_id ? OrisSyncActionAfterUpdate($zaznam, $id_z) : '';
 					$inserted_or_updated_id = $id_z;
 				}
 			}

@@ -131,18 +131,13 @@ else if($termin != 0)
 			$pozn=correct_sql_string($pozn);
 			$pozn2=correct_sql_string($pozn2);
 			$termin=correct_sql_string($termin);
-			
-			$sync_status_update = "";
-			if (!empty($zaznam_z['ext_id']) && $zaznam['sync_status'] !== 'PENDING_CREATE') {
-				$sync_status_update = ", sync_status='PENDING_UPDATE'";
-			}
-			
-			$result=query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kateg', pozn='$pozn', pozn_in='$pozn2', termin='$termin', transport = '$transport', sedadel = ".$sedadel.", ubytovani = '$ubytovani', etapy = ".$etapy_sql.$sync_status_update." WHERE id_zavod = '$id' AND id_user = '$user_id'")
+
+			$result=query_db("UPDATE ".TBL_ZAVXUS." SET kat='$kateg', pozn='$pozn', pozn_in='$pozn2', termin='$termin', transport = '$transport', sedadel = ".$sedadel.", ubytovani = '$ubytovani', etapy = ".$etapy_sql." WHERE id_zavod = '$id' AND id_user = '$user_id'")
 				or die("Chyba při provádění dotazu do databáze.");
 			if ($result == FALSE)
 				die ("Nepodařilo se změnit přihlášku člena.");
 			
-			$sync_action = ($has_ext_id && $zaznam['sync_status'] === 'PENDING_CREATE') ? 'create' : 'update';
+			$sync_action = $has_ext_id ? OrisSyncActionAfterUpdate($zaznam, $zaznam['id']) : '';
 			$inserted_or_updated_id = $zaznam['id'];
 		}
 	}

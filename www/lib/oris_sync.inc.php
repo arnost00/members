@@ -349,6 +349,36 @@ function processEntry($row, $action, $service) {
     }
 }
 
+// Does an edited entry have to be sent to ORIS? Only fields ORIS receives count -
+// local-only ones (pozn_in, termin, transport, ...) do not. Rows not settled in ORIS
+// (PENDING_* / FAILED_*) are always sent so the save retries the sync.
+function OrisEntryNeedsSync($prev, $curr) {
+    if (!in_array($prev['sync_status'] ?? '', ['SYNCED', 'LOCAL_ONLY'], true)) {
+        return true;
+    }
+    foreach (['kat', 'pozn', 'etapy', 'si_chip', 'rent_si'] as $field) {
+        if ((string)($prev[$field] ?? '') !== (string)($curr[$field] ?? '')) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Applied after the UPDATE of an existing entry: decides the ORIS action from the
+// stored row and marks it PENDING_UPDATE when needed. Returns '' when nothing to send.
+function OrisSyncActionAfterUpdate($prev, $zavxusId) {
+    if ($prev['sync_status'] === 'PENDING_CREATE') {
+        return 'create';
+    }
+    $q = query_db("SELECT * FROM `" . TBL_ZAVXUS . "` WHERE `id` = " . (int)$zavxusId);
+    $curr = $q ? mysqli_fetch_assoc($q) : null;
+    if (!$curr || !OrisEntryNeedsSync($prev, $curr)) {
+        return '';
+    }
+    query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_status` = 'PENDING_UPDATE' WHERE `id` = " . (int)$zavxusId);
+    return 'update';
+}
+
 function getOrisSyncError($id) {
     $q = query_db("SELECT sync_error_payload FROM `" . TBL_ZAVXUS . "` WHERE `id` = " . (int)$id);
     if ($q && $r = mysqli_fetch_assoc($q)) {
