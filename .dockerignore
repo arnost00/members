@@ -1,0 +1,7 @@
+# Image build needs only the npm manifests and docker/ - the repository itself is
+# bind-mounted at runtime (see docker-compose*.yml). Allowlist keeps the build context
+# small (db_data/, node_modules/, worktrees, test output would otherwise be sent).
+*
+!package.json
+!package-lock.json
+!docker/
