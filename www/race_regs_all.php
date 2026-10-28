@@ -210,7 +210,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 			if($is_multi_etapa)
 				$row[] = RenderEtapyCell($u, $etap_count, ParseEtapyString($zaznam['etapy'] ?? null), $entry_lock);
 			if($is_spol_dopr_on||$is_sdil_dopr_on) {
-				$nextRow = '<INPUT TYPE="checkbox" NAME="transport['.$u.']" '.$trans.' onfocus="javascri]pt:select_row('.$u.');"';
+				$nextRow = '<INPUT TYPE="checkbox" NAME="transport['.$u.']" '.$trans.' onfocus="javascript:select_row('.$u.');"';
 				if($is_sdil_dopr_on) 
 					$nextRow .= ' onchange="javascript:update_transport(this,'.$u.');"';				
 				$nextRow .= '>';				
