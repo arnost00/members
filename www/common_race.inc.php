@@ -522,8 +522,10 @@ function RenderCategoryCounts ( array $category_counts ) {
 }
 
 // vicedenni (etapovy) zavod s vice nez 1 etapou - ORIS vyzaduje vyber etap pri prihlasce
+// jen pro typ akce zavod, napr. soustredeni etapy nema (dny se nevybiraji)
 function IsMultiEtapaRace($race) {
-	return is_array($race) && !empty($race['vicedenni']) && (int)($race['etap'] ?? 0) > 1;
+	return is_array($race) && ($race['typ0'] ?? '') === 'Z'
+		&& !empty($race['vicedenni']) && (int)($race['etap'] ?? 0) > 1;
 }
 
 // serazeny, deduplikovany seznam cisel etap (1..N) jako retezec "1,2,3"
@@ -538,6 +540,18 @@ function AllEtapyString($etapCount) {
 	return implode(',', range(1, (int)$etapCount));
 }
 
+// smi uzivatel pouzivat stranku "Ucast" (api_race_entry) pro zavod?
+// vedouci akce, trener, prihlasovatel, financnik, admin
+function CanAccessRaceParticipation($race_id) {
+	global $usr, $db_conn;
+	if (!IsLogged()) return false;
+	if (IsLoggedAdmin() || IsLoggedManager() || IsLoggedRegistrator() || IsLoggedFinance()) return true;
+	if ($usr->user_id <= 0) return false;
+	$result = $db_conn->query("SELECT vedouci FROM ".TBL_RACE." WHERE id = ".(int)$race_id);
+	$race = $result ? mysqli_fetch_assoc($result) : null;
+	return $race && (int)$race['vedouci'] === (int)$usr->user_id;
+}
+
 // rozparsuje ulozeny retezec "1,2,3" na pole celych cisel
 function ParseEtapyString($etapy) {
 	if (empty($etapy)) return [];
@@ -550,6 +564,13 @@ function RenderEtapyCheckboxes($etapCount, array $selected, $inputName = 'etapy[
 		$checked = in_array($e, $selected) ? ' checked' : '';
 		echo '<label><input type="checkbox" name="'.$inputName.'" value="'.$e.'"'.$checked.'> Etapa '.$e.'</label> ';
 	}
+}
+
+// kategorie, ktera se zapise jen do members a neposila se do ORISu (napr. trener, ktery jede, ale nebezi)
+define('LOCAL_ONLY_CATEGORY', 'Nebezim');
+
+function IsLocalOnlyCategory($kat) {
+	return strcasecmp(trim((string)$kat), LOCAL_ONLY_CATEGORY) === 0;
 }
 
 // typ clenstvi (users.clenstvi) - viz $g_membership v cfg/race_enums.php

@@ -290,6 +290,8 @@ Možnosti (kategorie)<BR>
 		if ($kategorie[$i] != '')
 			echo "<button onclick=\"javascript:zmen_kat('".$kategorie[$i]."');return false;\">".$kategorie[$i]."</button>";
 	}
+	if (!empty($zaznam_z['ext_id']))
+		echo "&nbsp;<button onclick=\"javascript:zmen_kat('".LOCAL_ONLY_CATEGORY."');return false;\" title=\"Přihláška jen v members, do ORISu se neposílá\">".LOCAL_ONLY_CATEGORY."</button>";
 ?>
 <BR>
 Vyberte závodníka klepnutím do políčka kategorie u závodníka a následně vložte vybranou kategorii pomocí tlačítka s názvem kategorie.<BR>

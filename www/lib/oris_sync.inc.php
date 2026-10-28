@@ -1,6 +1,7 @@
 <?php
 require_once("connect.inc.php");
 require_once("lib/OrisIntegrationService.php");
+require_once __DIR__ . "/oris_entry_lookup.php";
 require_once("oris_user.class.php");
 require_once("common_race.inc.php");
 
@@ -35,6 +36,45 @@ function processEntry($row, $action, $service) {
             return true;
         }
         return;
+    }
+
+    // Local-only category (e.g. a coach travelling with the club without running) -
+    // the entry lives only in members. An ORIS entry left over from a previous
+    // category is cancelled; otherwise ORIS is never contacted.
+    if (IsLocalOnlyCategory($row['kat'] ?? '')) {
+        $staleEntryId = $row['entry_id'] ?? null;
+        if (!empty($staleEntryId)) {
+            try {
+                try {
+                    $service->deleteEntry($staleEntryId);
+                } catch (OrisApiException $e) {
+                    // An organiser may already have removed the previous entry.
+                    // Only confirmed absence allows the local-only change to proceed.
+                    if (strpos($e->getMessage(), 'API Error or HTTP 5') !== false
+                        || orisEntryExists($service, $comp, $staleEntryId)) {
+                        throw $e;
+                    }
+                }
+            } catch (Exception $e) {
+                $errMsg = $e->getMessage();
+                if ($e instanceof OrisNetworkException || ($e instanceof OrisApiException && strpos($errMsg, 'API Error or HTTP 5') !== false)) {
+                    return 'queued';
+                }
+                $errorPayload = correct_sql_string(json_encode(['status' => 'error', 'message' => $errMsg]));
+                $failedStatus = 'FAILED_' . strtoupper($action);
+                $res = query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_status` = '$failedStatus', `sync_error_payload` = '$errorPayload' WHERE `id` = " . (int)$id);
+                if (!$res) {
+                    query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_error_payload` = '$errorPayload' WHERE `id` = " . (int)$id);
+                }
+                return false;
+            }
+        }
+        if ($action === 'delete') {
+            query_db("DELETE FROM `" . TBL_ZAVXUS . "` WHERE `id` = " . (int)$id);
+        } else {
+            query_db("UPDATE `" . TBL_ZAVXUS . "` SET `sync_status` = 'LOCAL_ONLY', `entry_id` = NULL, `sync_error_payload` = NULL WHERE `id` = " . (int)$id);
+        }
+        return true;
     }
 
     // Get ORIS user ID
@@ -253,7 +293,18 @@ function processEntry($row, $action, $service) {
             if (empty($entryIdToDelete)) {
                 $response = ['ID' => null];
             } else {
-                $response = $service->deleteEntry($entryIdToDelete);
+                try {
+                    $response = $service->deleteEntry($entryIdToDelete);
+                } catch (OrisApiException $e) {
+                    // The entry may already be gone from ORIS (e.g. removed by the organiser),
+                    // in which case ORIS refuses the delete. Then only the local entry is left
+                    // to remove; any other refusal (or a 5xx) is a real failure.
+                    if (strpos($e->getMessage(), 'API Error or HTTP 5') !== false
+                        || orisEntryExists($service, $comp, $entryIdToDelete)) {
+                        throw $e;
+                    }
+                    $response = ['ID' => null];
+                }
             }
         }
 

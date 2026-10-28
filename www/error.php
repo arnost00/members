@@ -14,6 +14,7 @@ DrawPageTitle('Chybový stav :');
 <?
 if (IsSet($code) && $code != 0)
 {
+	$code2 = (int)$code;
 	$errors_list = array ( // preddefinovany seznam chybovych hlasek
 		11 => 'Nepodařilo se navázat spojení s databází.',
 		12 => 'Chyba při komunikaci s databází.',
@@ -29,13 +30,14 @@ if (IsSet($code) && $code != 0)
 		103 => 'Učet je zablokován! Pokud nevíte důvod, kontaktujte správce stránek.',
 		201 => 'Nebyl nalezen požadovaný záznam.',
 		202 => 'Nelze smazat sebe sama.',
-		9999 => 'Neznámá chyba.'
+		9999 => 'Neznámá chyba č.'.$code2
 	);
-	$text = $errors_list[$code];
-	if (strlen($text) == 0)
-		$text = $errors_list[9999];
+	if (!array_key_exists($code2,$errors_list))
+		$code2 = 9999;
+	$text = $errors_list[$code2];
 	echo $text;
 	//--> log file
+	
 	{
 		$ipa = getenv ('REMOTE_ADDR');
 		$www = getenv ('HTTP_USER_AGENT');
