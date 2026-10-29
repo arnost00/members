@@ -33,6 +33,29 @@ test.describe('Bulk registration form transport focus', () => {
     }
   });
 
+  test('common transport can be toggled for an unregistered member without a seat field', async ({ page }) => {
+    const run = createWorkflowRun('race-regs-all-common-transport');
+    await loginAs(page, 'registrar');
+    const race = await createRace(page, {
+      name: `PW bulk common transport ${run.runId}`,
+      date: formatCzDate(addUtcDays(new Date(), 14)),
+      categories: 'H21;D21',
+      transport: '1',
+      entryDate1: formatCzDate(addUtcDays(new Date(), 10)),
+    });
+    const errors = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    await page.goto(`./race_regs_all.php?gr_id=400&id=${race.id}`);
+    const row = memberRow(page, MEMBERS[0]);
+    await expect(row.locator('input[name^="sedadel["]')).toHaveCount(0);
+    const transport = row.locator('input[name^="transport["]');
+    await transport.check();
+    await expect(transport).toBeChecked();
+    await transport.uncheck();
+    await expect(transport).not.toBeChecked();
+    expect(errors).toEqual([]);
+  });
+
   test('focusing the transport checkbox selects its row for category buttons', async ({ page }) => {
     const run = createWorkflowRun('race-regs-all-transport-focus');
     await loginAs(page, 'registrar');
