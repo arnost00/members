@@ -11,7 +11,8 @@ require_once("./cfg/_colors.php");
 require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
 
-if (!IsLogged())
+// popup je z adresare maleho admina (ads_directory), zmeny smi jen maly admin / admin
+if (!IsLoggedSmallAdmin() && !IsLoggedAdmin())
 {
 	header("location: ".$g_baseadr."error.php?code=21");
 	exit;
