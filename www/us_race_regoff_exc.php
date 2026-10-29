@@ -7,7 +7,8 @@ require_once ("./connect.inc.php");
 require_once ("./sess.inc.php");
 require_once ("./lib/oris_sync.inc.php");
 
-if (!IsLogged())
+// clen se prihlasuje / odhlasuje jen sam za sebe, za ostatni prihlasuji role pres race_regs_*
+if (!IsLogged() || $usr->user_id <= 0 || !is_numeric($id_us) || (int)$id_us !== (int)$usr->user_id)
 {
 	header("location: ".$g_baseadr."error.php?code=21");
 	exit;

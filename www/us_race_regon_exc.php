@@ -18,7 +18,8 @@ require_once ("./common.inc.php");
 require_once ("./common_race.inc.php");
 require_once ("./lib/oris_sync.inc.php");
 
-if (!IsLogged())
+// clen se prihlasuje / odhlasuje jen sam za sebe, za ostatni prihlasuji role pres race_regs_*
+if (!IsLogged() || $usr->user_id <= 0 || !is_numeric($id_us) || (int)$id_us !== (int)$usr->user_id)
 {
 	header("location: ".$g_baseadr."error.php?code=21");
 	exit;
@@ -109,7 +110,8 @@ if ($kat != '')
 			}
 			else
 			{	// update
-				$vysledek=query_db("SELECT * FROM ".TBL_ZAVXUS." WHERE id='".$id_z."'");
+				// upravit lze jen vlastni prihlasku na tuto akci
+				$vysledek=query_db("SELECT * FROM ".TBL_ZAVXUS." WHERE id='".$id_z."' AND id_user='".$id_us."' AND id_zavod='".$id_zav."'");
 				if ($vysledek != FALSE && ($zaznam = mysqli_fetch_array($vysledek)) != FALSE )
 				{
 					$previous_state = $zaznam;
