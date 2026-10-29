@@ -210,7 +210,7 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 			if($is_multi_etapa)
 				$row[] = RenderEtapyCell($u, $etap_count, ParseEtapyString($zaznam['etapy'] ?? null), $entry_lock);
 			if($is_spol_dopr_on||$is_sdil_dopr_on) {
-				$nextRow = '<INPUT TYPE="checkbox" NAME="transport['.$u.']" '.$trans.' onfocus="javascri]pt:select_row('.$u.');"';
+				$nextRow = '<INPUT TYPE="checkbox" NAME="transport['.$u.']" '.$trans.' onfocus="javascript:select_row('.$u.');"';
 				if($is_sdil_dopr_on) 
 					$nextRow .= ' onchange="javascript:update_transport(this,'.$u.');"';				
 				$nextRow .= '>';				
@@ -251,8 +251,13 @@ while ($zaznam=mysqli_fetch_array($vysledek))
 		$row[] = ($entry_lock) ? '-':'<INPUT TYPE="text" NAME="kateg['.$u.']" SIZE=5 onfocus="javascript:select_row('.$u.');">';
 		if($is_multi_etapa)
 			$row[] = ($entry_lock) ? '-' : RenderEtapyCell($u, $etap_count, [], false);
-		if($is_spol_dopr_on||$is_sdil_dopr_on)
-			$row[] = '<INPUT TYPE="checkbox" NAME="transport['.$u.']" onfocus="javascript:select_row('.$u.');" onchange="javascript:update_transport(this,'.$u.');">';
+		if($is_spol_dopr_on||$is_sdil_dopr_on) {
+			$nextRow = '<INPUT TYPE="checkbox" NAME="transport['.$u.']" onfocus="javascript:select_row('.$u.');"';
+			if($is_sdil_dopr_on)
+				$nextRow .= ' onchange="javascript:update_transport(this,'.$u.');"';
+			$nextRow .= '>';
+			$row[] = $nextRow;
+		}
 		if($is_sdil_dopr_on)
 			$row[] = '<INPUT TYPE="number" NAME="sedadel['.$u.']" value="'.$sedl.'" min="-99" max="999" style="width: 3.5em;" onfocus="javascript:select_row('.$u.');" onchange="javascript:update_transport(this,'.$u.');">';
 		if($is_spol_ubyt_on)
